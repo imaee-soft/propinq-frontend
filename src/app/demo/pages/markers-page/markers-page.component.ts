@@ -1,4 +1,5 @@
-import { Component, computed, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MapComponent } from '../../../maps/components/map/map.component';
 import { MapClickEvent } from '../../../maps/interfaces/click-event.interface';
 import { MapMarker } from '../../../maps/interfaces/marker.interface';
@@ -10,14 +11,15 @@ import { MapMarker } from '../../../maps/interfaces/marker.interface';
   styleUrl: './markers-page.component.css',
 })
 export class MarkersPageComponent {
+  private _snackBar = inject(MatSnackBar);
   private _markers = signal<MapMarker[]>([]);
+
   mapConfig = computed(() => ({
     markers: this._markers(),
     enableClick: true,
   }));
 
   onMapClick({ coordinate }: MapClickEvent): void {
-    console.log('Map clicked at:', coordinate);
     this._markers.update((markers) => [
       ...markers,
       {
@@ -31,7 +33,16 @@ export class MarkersPageComponent {
     ]);
   }
 
-  onMarkerClick(marker: MapMarker): void {
-    console.log('Marker clicked:', marker);
+  onMarkerClick({ title, coordinate }: MapMarker): void {
+    this._snackBar.open(
+      `${title} clicked at coordinates (${coordinate.latitude}, ${coordinate.longitude})`,
+      'Close',
+      {
+        duration: 1500,
+        panelClass: ['marker-snackbar'],
+        horizontalPosition: 'right',
+        verticalPosition: 'top',
+      }
+    );
   }
 }

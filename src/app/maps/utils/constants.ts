@@ -9,4 +9,6 @@ export const DEFAULT_CENTER: MapCoordinate = {
 export const DEFAULT_MAP_CONFIG: MapConfig = {
   center: DEFAULT_CENTER,
   zoom: 14.5,
+  enableClick: true,
+  enableControls: false,
 };

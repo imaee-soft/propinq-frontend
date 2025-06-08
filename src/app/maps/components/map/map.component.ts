@@ -122,6 +122,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private initializeMapListeners(map: Map): void {
+    if (!this._mapConfig().enableClick) return;
     map.on('click', (event: any) => {
       const coordinate = event.coordinate;
       const lonLat = this.transformFromMap(coordinate);

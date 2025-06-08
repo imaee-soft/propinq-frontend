@@ -1,0 +1,9 @@
+import { MapCoordinate } from './coordinate.interface';
+import { MarkerIcon } from './marker-icon.interface';
+
+export interface MapMarker {
+  id: string;
+  coordinate: MapCoordinate;
+  title?: string;
+  icon?: MarkerIcon;
+}

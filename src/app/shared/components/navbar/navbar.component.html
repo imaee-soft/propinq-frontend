@@ -1,0 +1,23 @@
+<nav class="navbar" [class.scrolled]="isScrolled()">
+  <div class="nav-container">
+    <div class="nav-brand">
+      <a href="#" class="brand-link">
+        <span class="brand-text">PropInq</span>
+      </a>
+    </div>
+
+    <div class="nav-menu">
+      <ul class="nav-list">
+        @for (navEl of navElements(); track $index) {
+        <li class="nav-item">
+          <a [href]="navEl.url" class="nav-link"> {{ navEl.name }}</a>
+        </li>
+        }
+      </ul>
+    </div>
+
+    <div class="nav-cta">
+      <button class="cta-button">Comenzar</button>
+    </div>
+  </div>
+</nav>

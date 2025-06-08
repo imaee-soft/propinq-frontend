@@ -1,0 +1,35 @@
+.address-page {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-width: 400px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+mat-label {
+  font-weight: 600;
+  margin-bottom: 4px;
+  color: #333;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+button[mat-button] {
+  align-self: flex-end;
+  background: #1976d2;
+  color: #fff;
+  font-weight: 500;
+  border-radius: 4px;
+  padding: 8px 24px;
+  transition: background 0.2s;
+}
+
+button[mat-button]:hover {
+  background: #1565c0;
+}

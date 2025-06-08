@@ -8,7 +8,7 @@ import { MapMarker } from '../../../maps/interfaces/marker.interface';
   selector: 'app-markers-page',
   imports: [MapComponent],
   templateUrl: './markers-page.component.html',
-  styleUrl: './markers-page.component.css',
+  styleUrls: ['./markers-page.component.css'],
 })
 export class MarkersPageComponent {
   private _snackBar = inject(MatSnackBar);

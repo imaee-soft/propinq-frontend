@@ -12,5 +12,6 @@ export class AppLayoutComponent {
   navElements = [
     { name: 'Markers', url: '/demo/markers' },
     { name: 'Address', url: '/demo/address' },
+    { name: 'User Position', url: '/demo/user-position' },
   ];
 }

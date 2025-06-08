@@ -1,3 +1,5 @@
+import { Coordinate } from 'ol/coordinate';
+import { toLonLat } from 'ol/proj';
 import { MapCoordinate } from '../interfaces/coordinate.interface';
 import { MapConfig } from '../interfaces/map-config.interface';
 
@@ -11,4 +13,12 @@ export const DEFAULT_MAP_CONFIG: MapConfig = {
   zoom: 14.5,
   enableClick: true,
   enableControls: false,
+};
+
+export const transformFromMap = (coordinate: Coordinate) => {
+  const [longitude, latitude] = toLonLat(coordinate);
+  return {
+    longitude,
+    latitude,
+  };
 };

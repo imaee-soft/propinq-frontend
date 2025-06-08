@@ -1,15 +1,26 @@
 import { Routes } from '@angular/router';
-import { AddressPageComponent } from './pages/address-page/address-page.component';
-import { MarkersPageComponent } from './pages/markers-page/markers-page.component';
 
 export const routes: Routes = [
   {
     path: 'markers',
-    component: MarkersPageComponent,
+    loadComponent: () =>
+      import('./pages/markers-page/markers-page.component').then(
+        (m) => m.MarkersPageComponent
+      ),
   },
   {
     path: 'address',
-    component: AddressPageComponent,
+    loadComponent: () =>
+      import('./pages/address-page/address-page.component').then(
+        (m) => m.AddressPageComponent
+      ),
+  },
+  {
+    path: 'user-position',
+    loadComponent: () =>
+      import('./pages/user-position-page/user-position-page.component').then(
+        (m) => m.UserPositionPageComponent
+      ),
   },
   {
     path: '**',

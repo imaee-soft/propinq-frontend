@@ -14,11 +14,10 @@ import {
 import { Feature } from 'ol';
 import Map from 'ol/Map';
 import View from 'ol/View';
-import { Coordinate } from 'ol/coordinate';
 import { Point } from 'ol/geom';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
-import { fromLonLat, toLonLat } from 'ol/proj';
+import { fromLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { Icon, Style } from 'ol/style';
@@ -27,7 +26,11 @@ import { MapCoordinate } from '../../interfaces/coordinate.interface';
 import { MapConfig } from '../../interfaces/map-config.interface';
 import { MarkerIcon } from '../../interfaces/marker-icon.interface';
 import { MapMarker } from '../../interfaces/marker.interface';
-import { DEFAULT_CENTER, DEFAULT_MAP_CONFIG } from '../../utils/constants';
+import {
+  DEFAULT_CENTER,
+  DEFAULT_MAP_CONFIG,
+  transformFromMap,
+} from '../../utils/constants';
 
 @Component({
   selector: 'app-map',
@@ -110,10 +113,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       ],
       controls: enableControls ? undefined : [],
       view: new View({
-        center: fromLonLat([
-          center?.longitude ?? DEFAULT_CENTER.longitude,
-          center?.latitude ?? DEFAULT_CENTER.latitude,
-        ]),
+        center: fromLonLat([center!.longitude, center!.latitude]),
         zoom,
         minZoom,
         maxZoom,
@@ -125,7 +125,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!this._mapConfig().enableClick) return;
     map.on('click', (event: any) => {
       const coordinate = event.coordinate;
-      const lonLat = this.transformFromMap(coordinate);
+      const lonLat = transformFromMap(coordinate);
 
       const feature = map.forEachFeatureAtPixel(
         event.pixel,
@@ -196,13 +196,5 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         scale: 1,
       }),
     });
-  }
-
-  private transformFromMap(coordinate: Coordinate): MapCoordinate {
-    const [longitude, latitude] = toLonLat(coordinate);
-    return {
-      longitude,
-      latitude,
-    };
   }
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, of } from 'rxjs';
+import { catchError, map, Observable, of } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { Address } from '../adapters/address.adapter';
 import { MapCoordinate } from '../interfaces/map-coordinate.interface';
@@ -9,7 +9,7 @@ import { MapCoordinate } from '../interfaces/map-coordinate.interface';
 export class AddressService {
   private _http = inject(HttpClient);
 
-  geocodeAddress(address: string) {
+  geocodeAddress(address: string): Observable<MapCoordinate | null> {
     return this._http
       .get<Address[]>(`${environment.addressesUrl}/search`, {
         params: {

@@ -25,7 +25,6 @@ import { MapClickEvent } from '../../interfaces/click-event.interface';
 import { MapConfig } from '../../interfaces/map-config.interface';
 import { MapCoordinate } from '../../interfaces/map-coordinate.interface';
 import { MapMarker } from '../../interfaces/map-marker.interface';
-import { MarkerIcon } from '../../interfaces/marker-icon.interface';
 import {
   DEFAULT_CENTER,
   DEFAULT_MAP_CONFIG,
@@ -162,25 +161,19 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private updateMarkers(): void {
     this._vectorSource.clear();
     this._markers().forEach((marker) => {
-      const feature = this.createMarkerFeature(marker);
-      this._vectorSource.addFeature(feature);
+      const markerFeature = this.buildMarkerFeature(marker);
+      this._vectorSource.addFeature(markerFeature);
     });
     this._vectorSource.changed();
   }
 
-  private createMarkerFeature({
+  private buildMarkerFeature({
     id,
     coordinate,
     title,
     icon,
   }: MapMarker): Feature {
-    const feature = this.buildFeature({ id, coordinate, title });
-    if (icon) feature.setStyle(this.buildStyle(icon));
-    return feature;
-  }
-
-  private buildFeature({ id, coordinate, title }: MapMarker): Feature {
-    return new Feature({
+    const feature = new Feature({
       geometry: new Point(
         fromLonLat([coordinate.longitude, coordinate.latitude])
       ),
@@ -188,14 +181,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       title,
       marker: { id, coordinate, title },
     });
-  }
 
-  private buildStyle({ url }: MarkerIcon): Style {
-    return new Style({
-      image: new Icon({
-        src: url,
-        scale: 1,
-      }),
-    });
+    if (icon)
+      feature.setStyle(
+        new Style({
+          image: new Icon({
+            src: icon.url,
+            scale: 1,
+          }),
+        })
+      );
+
+    return feature;
   }
 }

@@ -28,24 +28,28 @@ export class AddressPageComponent {
 
   private readonly _addressResource = rxResource({
     request: () => this._addressTrigger(),
-    loader: ({ request: address }) => {
-      if (!address) return of(null);
-      return this._addressService.geocodeAddress(address);
-    },
+    loader: ({ request: address }) =>
+      address ? this._addressService.geocodeAddress(address) : of(null),
   });
 
   private _addressCoordinate = computed(() => {
     return this._addressResource.value() || DEFAULT_CENTER;
   });
 
+  private _marker = computed(() => ({
+    id: 'address-marker',
+    coordinate: this._addressCoordinate(),
+    title: 'Address Location',
+  }));
+
   addressInput = new FormControl('');
   mapConfig = computed(() => ({
     center: this._addressCoordinate(),
     enableClick: false,
+    markers: [this._marker()],
   }));
 
   updateAddress() {
-    console.log('Updating address with:', this.addressInput.value);
     const address = this.addressInput.value || '';
     this._addressTrigger.set(address);
   }

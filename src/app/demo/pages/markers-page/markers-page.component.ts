@@ -2,7 +2,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MapComponent } from '../../../maps/components/map/map.component';
 import { MapClickEvent } from '../../../maps/interfaces/click-event.interface';
-import { MapMarker } from '../../../maps/interfaces/marker.interface';
+import { MapMarker } from '../../../maps/interfaces/map-marker.interface';
 
 @Component({
   selector: 'app-markers-page',

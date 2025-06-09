@@ -1,4 +1,4 @@
-import { MapCoordinate } from './coordinate.interface';
+import { MapCoordinate } from './map-coordinate.interface';
 import { MarkerIcon } from './marker-icon.interface';
 
 export interface MapMarker {

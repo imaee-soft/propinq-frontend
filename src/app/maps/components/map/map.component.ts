@@ -9,7 +9,7 @@ import {
   OnInit,
   output,
   signal,
-  ViewChild,
+  viewChild,
 } from '@angular/core';
 import { Feature } from 'ol';
 import Map from 'ol/Map';
@@ -22,10 +22,10 @@ import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { Icon, Style } from 'ol/style';
 import { MapClickEvent } from '../../interfaces/click-event.interface';
-import { MapCoordinate } from '../../interfaces/coordinate.interface';
 import { MapConfig } from '../../interfaces/map-config.interface';
+import { MapCoordinate } from '../../interfaces/map-coordinate.interface';
+import { MapMarker } from '../../interfaces/map-marker.interface';
 import { MarkerIcon } from '../../interfaces/marker-icon.interface';
-import { MapMarker } from '../../interfaces/marker.interface';
 import {
   DEFAULT_CENTER,
   DEFAULT_MAP_CONFIG,
@@ -39,7 +39,8 @@ import {
   standalone: true,
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
-  @ViewChild('mapElement', { static: false }) mapElement!: ElementRef;
+  mapElement = viewChild<ElementRef>('mapElement');
+
   config = input<MapConfig>({});
   width = input<string>('100%');
   height = input<string>('100%');
@@ -104,7 +105,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     enableControls,
   }: MapConfig): Map {
     return new Map({
-      target: this.mapElement.nativeElement,
+      target: this.mapElement()!.nativeElement,
       layers: [
         new TileLayer({
           source: new OSM(),

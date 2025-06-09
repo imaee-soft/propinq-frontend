@@ -1,5 +1,5 @@
-import { MapCoordinate } from './coordinate.interface';
-import { MapMarker } from './marker.interface';
+import { MapCoordinate } from './map-coordinate.interface';
+import { MapMarker } from './map-marker.interface';
 
 export interface MapConfig {
   center?: MapCoordinate;

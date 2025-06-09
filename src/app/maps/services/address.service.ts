@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { catchError, map, of } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { Address } from '../adapters/address.adapter';
-import { MapCoordinate } from '../interfaces/coordinate.interface';
+import { MapCoordinate } from '../interfaces/map-coordinate.interface';
 
 @Injectable({ providedIn: 'root' })
 export class AddressService {

@@ -1,10 +1,11 @@
 import { Component, computed, inject, signal } from '@angular/core';
+import { rxResource } from '@angular/core/rxjs-interop';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
+import { of } from 'rxjs';
 import { MapComponent } from '../../../maps/components/map/map.component';
-import { MapCoordinate } from '../../../maps/interfaces/coordinate.interface';
 import { AddressService } from '../../../maps/services/address.service';
 import { DEFAULT_CENTER } from '../../../maps/utils/constants';
 
@@ -23,7 +24,19 @@ import { DEFAULT_CENTER } from '../../../maps/utils/constants';
 })
 export class AddressPageComponent {
   private _addressService = inject(AddressService);
-  private _addressCoordinate = signal<MapCoordinate>(DEFAULT_CENTER);
+  private _addressTrigger = signal<string>('');
+
+  private readonly _addressResource = rxResource({
+    request: () => this._addressTrigger(),
+    loader: ({ request: address }) => {
+      if (!address) return of(null);
+      return this._addressService.geocodeAddress(address);
+    },
+  });
+
+  private _addressCoordinate = computed(() => {
+    return this._addressResource.value() || DEFAULT_CENTER;
+  });
 
   addressInput = new FormControl('');
   mapConfig = computed(() => ({
@@ -32,11 +45,8 @@ export class AddressPageComponent {
   }));
 
   updateAddress() {
-    this._addressService
-      .geocodeAddress(this.addressInput.value || '')
-      .subscribe((coordinate) => {
-        if (!coordinate) return;
-        this._addressCoordinate.set(coordinate);
-      });
+    console.log('Updating address with:', this.addressInput.value);
+    const address = this.addressInput.value || '';
+    this._addressTrigger.set(address);
   }
 }

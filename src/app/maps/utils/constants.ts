@@ -1,7 +1,7 @@
 import { Coordinate } from 'ol/coordinate';
 import { toLonLat } from 'ol/proj';
-import { MapCoordinate } from '../interfaces/coordinate.interface';
 import { MapConfig } from '../interfaces/map-config.interface';
+import { MapCoordinate } from '../interfaces/map-coordinate.interface';
 
 export const DEFAULT_CENTER: MapCoordinate = {
   latitude: -32.4075,

@@ -1,7 +1,7 @@
 import { Component, computed, OnInit as NgOnInit, signal } from '@angular/core';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MapComponent } from '../../../maps/components/map/map.component';
-import { MapMarker } from '../../../maps/interfaces/marker.interface';
+import { MapMarker } from '../../../maps/interfaces/map-marker.interface';
 
 @Component({
   selector: 'app-user-position-page',

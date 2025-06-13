@@ -12,8 +12,14 @@ import { SidebarComponent } from '../../shared/components/sidebar/sidebar.compon
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LayoutComponent {
- sidebarOpen = signal(false);
+  sidebarOpen = signal(false);
 
-  openSidebar = () => this.sidebarOpen.set(true);
-  closeSidebar = () => this.sidebarOpen.set(false);
+  toggleSidebar() {
+    this.sidebarOpen.set(!this.sidebarOpen());
+  }
+
+  closeSidebar() {
+    this.sidebarOpen.set(false);
+  }
 }
+

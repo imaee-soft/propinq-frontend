@@ -8,8 +8,12 @@
         </a>
       </div>
       <!-- Botón para mostrar sidebar -->
-      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" (click)="sidebarOpen.set(true)">
-        ☰ Abrir
+      <button class="sidebar-toggle-btn" (click)="toggleSidebar.emit()">
+        @if (sidebarOpen()) {
+          <span>&#x25B2; Cerrar</span>
+        } @else {
+        <span>&#x25BC; Abrir</span>
+        }
       </button>
     </div>
 
@@ -31,9 +35,7 @@
     </div>
   </div>
 
-  <!-- Sidebar (oculto por defecto) -->
- @if (sidebarOpen()) {
-    <app-sidebar (close)="sidebarOpen.set(false)"></app-sidebar>
-    <div class="sidebar-backdrop" (click)="sidebarOpen.set(false)"></div>
-  }
+
 </nav>
+
+

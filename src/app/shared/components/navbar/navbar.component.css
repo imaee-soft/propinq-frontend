@@ -97,11 +97,10 @@
 
 .sidebar-backdrop {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0,0,0,0.14);
-  z-index: 2000;
-  display: none;
-  transition: opacity 0.2s;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.3);
+  z-index: 1000;
 }
 .sidebar-backdrop.active {
   display: block;

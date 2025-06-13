@@ -1,3 +1,16 @@
-:host {
-  display: block;
+.main-layout {
+  display: flex;
+  flex-direction: row;
+  margin-top: 110px; /* igual al alto de tu navbar fija */
+  height: calc(100vh - 110px); /* 100vh menos navbar */
+}
+
+
+.page-content {
+  flex: 1 1 0;
+  min-width: 0;
+  height: 100%;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
 }

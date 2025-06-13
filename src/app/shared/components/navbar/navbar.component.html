@@ -1,23 +1,39 @@
-<nav class="navbar" [class.scrolled]="isScrolled()">
+<nav class="navbar">
+
   <div class="nav-container">
-    <div class="nav-brand">
-      <a href="#" class="brand-link">
-        <span class="brand-text">PropInq</span>
-      </a>
+    <div class="nav-brand-with-sidebar">
+      <div class="nav-brand">
+        <a href="#" class="brand-link">
+          <span class="brand-text">PropInq</span>
+        </a>
+      </div>
+      <!-- Botón para mostrar sidebar -->
+      <button class="sidebar-toggle-btn" id="sidebarToggleBtn" (click)="sidebarOpen.set(true)">
+        ☰ Abrir
+      </button>
     </div>
 
-    <div class="nav-menu">
-      <ul class="nav-list">
-        @for (navEl of navElements(); track $index) {
-        <li class="nav-item">
-          <a [href]="navEl.url" class="nav-link"> {{ navEl.name }}</a>
-        </li>
-        }
-      </ul>
+    <div class="nav-actions-group">
+      <div class="nav-actions-buttons">
+        <button class="action-btn">Publicar vivienda</button>
+        <button class="action-btn">Crear alquiler</button>
+        <button class="action-btn">Favoritos</button>
+        <button class="action-btn">Mensajes</button>
+      </div>
+      <div class="nav-input">
+        <input type="text" placeholder="Search..." class="input" />
+      </div>
     </div>
 
-    <div class="nav-cta">
-      <button class="cta-button">Comenzar</button>
+    <!-- Usuario a la derecha -->
+    <div class="nav-user-menu">
+      <span class="user-name">MartinCrosetto</span>
     </div>
   </div>
+
+  <!-- Sidebar (oculto por defecto) -->
+ @if (sidebarOpen()) {
+    <app-sidebar (close)="sidebarOpen.set(false)"></app-sidebar>
+    <div class="sidebar-backdrop" (click)="sidebarOpen.set(false)"></div>
+  }
 </nav>

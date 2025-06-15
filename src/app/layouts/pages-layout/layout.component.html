@@ -1,13 +1,7 @@
-<app-navbar
-  [sidebarOpen]="sidebarOpen()"
-  (toggleSidebar)="toggleSidebar()"
-></app-navbar>
+<app-navbar></app-navbar>
 <div class="main-layout">
-  @if (sidebarOpen()) {
-    <app-sidebar (close)="sidebarOpen.set(false)"></app-sidebar>
-  }
-<div class="page-content">
+  <app-sidebar></app-sidebar>
+  <div class="content-area">
     <router-outlet></router-outlet>
   </div>
 </div>
-

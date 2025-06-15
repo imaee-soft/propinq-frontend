@@ -24,7 +24,7 @@ import { DEFAULT_CENTER } from '../../../maps/utils/constants';
 })
 export class AddressPageComponent {
   private _addressService = inject(AddressService);
-  private _addressTrigger = signal<string>('');
+  private _addressTrigger = signal('');
 
   private readonly _addressResource = rxResource({
     request: () => this._addressTrigger(),

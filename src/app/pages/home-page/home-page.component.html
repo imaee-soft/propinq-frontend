@@ -1,14 +1,1 @@
-<div class="address-page">
-  <mat-label>Dirección: </mat-label>
-  <mat-form-field appearance="outline">
-    <input
-      matInput
-      [formControl]="addressInput"
-      type="text"
-      placeholder="Ingrese una dirección"
-      required
-    />
-  </mat-form-field>
-  <button (click)="updateAddress()" mat-button>Consultar</button>
-</div>
-<app-map [config]="mapConfig()" />
+<app-map [config]="mapConfig" />

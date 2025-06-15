@@ -1,13 +1,43 @@
-import { ChangeDetectionStrategy, Component, output } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, computed, inject, input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { Router, RouterModule } from '@angular/router';
+import { SideConfig } from '../../interfaces/side-config';
+import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
   selector: 'app-sidebar',
-  imports: [],
-  templateUrl: './sidebar.component.html',
-  styleUrl: './sidebar.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule,
+    MatSidenavModule,
+    MatListModule,
+    MatIconModule,
+    MatButtonModule,
+    MatToolbarModule,
+    MatDividerModule,
+    MatTooltipModule,
+  ],
+  templateUrl: 'sidebar.component.html',
+  styleUrls: ['sidebar.component.css'],
 })
 export class SidebarComponent {
-  close = output<void>();
+  private _router = inject(Router);
+  private _sidebarService = inject(SidebarService);
 
- }
+  config = input<SideConfig>(this._sidebarService.config());
+
+  isOpen = computed(() => this._sidebarService.isOpen());
+  sidenavWidth = computed(() => (this._sidebarService.isOpen() ? 320 : 60));
+
+  toggleItem(route: string) {
+    this._router.navigateByUrl(route);
+  }
+}

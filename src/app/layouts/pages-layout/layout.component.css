@@ -1,16 +1,16 @@
 .main-layout {
   display: flex;
   flex-direction: row;
-  margin-top: 110px; /* igual al alto de tu navbar fija */
-  height: calc(100vh - 110px); /* 100vh menos navbar */
+  margin-top: 50px;
+  min-height: calc(100vh - 50px);
+  width: 100%;
 }
 
+.content-area {
+  width: 100%;
+  overflow-y: hidden;
+}
 
-.page-content {
-  flex: 1 1 0;
-  min-width: 0;
-  height: 100%;
-  overflow: auto;
-  display: flex;
-  flex-direction: column;
+app-sidebar {
+  flex-shrink: 0;
 }

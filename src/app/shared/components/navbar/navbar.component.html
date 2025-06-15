@@ -1,41 +1,63 @@
-<nav class="navbar">
+<mat-toolbar color="primary" class="navbar">
+  <div class="nav-left">
+    @if (userLogged()) {
+    <button
+      mat-icon-button
+      (click)="toggleSidebar()"
+      matTooltipPosition="below"
+      class="sidebar-toggle"
+    >
+      <mat-icon>{{ isSidebarOpen() ? "menu_open" : "menu" }}</mat-icon>
+    </button>
+    }
 
-  <div class="nav-container">
-    <div class="nav-brand-with-sidebar">
-      <div class="nav-brand">
-        <a href="#" class="brand-link">
-          <span class="brand-text">PropInq</span>
-        </a>
-      </div>
-      <!-- Botón para mostrar sidebar -->
-      <button class="sidebar-toggle-btn" (click)="toggleSidebar.emit()">
-        @if (sidebarOpen()) {
-          <span>&#x25B2; Cerrar</span>
-        } @else {
-        <span>&#x25BC; Abrir</span>
-        }
-      </button>
-    </div>
-
-    <div class="nav-actions-group">
-      <div class="nav-actions-buttons">
-        <button class="action-btn">Publicar vivienda</button>
-        <button class="action-btn">Crear alquiler</button>
-        <button class="action-btn">Favoritos</button>
-        <button class="action-btn">Mensajes</button>
-      </div>
-      <div class="nav-input">
-        <input type="text" placeholder="Search..." class="input" />
-      </div>
-    </div>
-
-    <!-- Usuario a la derecha -->
-    <div class="nav-user-menu">
-      <span class="user-name">MartinCrosetto</span>
+    <div class="brand-container">
+      <a routerLink="/" class="brand-link">
+        <mat-icon>cottage</mat-icon>
+        <span class="brand-text">PropInq</span>
+      </a>
     </div>
   </div>
 
+  <div class="nav-center">
+    <div class="nav-actions">
+      @for (item of items(); track $index) {
+      <a
+        [routerLink]="item.url"
+        class="nav-action-link"
+        [ngClass]="{ 'nav-action-featured': item.featured }"
+      >
+        {{ item.name }}
+      </a>
+      }
+    </div>
+  </div>
 
-</nav>
+  <div class="nav-right">
+    <mat-divider class="vertical-divider" [vertical]="true"></mat-divider>
+    @if (!user()) {
+    <button
+      mat-icon-button
+      matTooltip="Notificaciones"
+      matTooltipPosition="below"
+    >
+      <mat-icon>notifications</mat-icon>
+    </button>
 
-
+    <button mat-icon-button matTooltip="Mensajes" matTooltipPosition="below">
+      <mat-icon>message</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      matTooltip="Mi cuenta"
+      matTooltipPosition="below"
+      class="user-menu-trigger"
+    >
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    } @else {
+    <a routerLink="/ofertas" class="nav-action-link">Creá tu cuenta</a>
+    <a routerLink="/ofertas" class="nav-action-link">Ingresá</a>
+    }
+  </div>
+</mat-toolbar>

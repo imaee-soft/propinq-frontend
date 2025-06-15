@@ -7,6 +7,10 @@
   color: #e2e8f0;
   padding: 0 8px;
   border-right: 1px solid rgba(255, 255, 255, 0.05);
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .nav-list {
@@ -14,6 +18,7 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  flex-grow: 1;
 }
 
 .side-item {
@@ -51,10 +56,6 @@
   padding: 10px;
 }
 
-.menu-group {
-  margin-bottom: 4px;
-}
-
 .side-item.active {
   background-color: rgba(99, 179, 237, 0.15);
   color: #63b3ed;
@@ -62,4 +63,13 @@
 
 .side-item.active .mat-icon {
   color: #63b3ed;
+}
+
+.sidenav-footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }

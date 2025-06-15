@@ -12,7 +12,7 @@
         <mat-list-item
           class="side-item"
           [class.collapsed]="!this.isOpen()"
-          (click)="toggleItem(item.route)"
+          (click)="navigate(item.route)"
         >
           <span>{{ item.label }}</span>
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
@@ -20,5 +20,16 @@
       </div>
       }
     </mat-nav-list>
+
+    <div class="sidenav-footer">
+      <mat-list-item class="side-item">
+        <span>Ayuda</span>
+        <mat-icon matListItemIcon>help</mat-icon>
+      </mat-list-item>
+      <mat-list-item class="side-item" (click)="logout()">
+        <span>Cerrar sesión</span>
+        <mat-icon matListItemIcon>logout</mat-icon>
+      </mat-list-item>
+    </div>
   </mat-sidenav>
 </mat-sidenav-container>

@@ -8,6 +8,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../../auth/services/auth.service';
 import { SideConfig } from '../../interfaces/side-config';
 import { SidebarService } from '../../services/sidebar.service';
 
@@ -31,13 +32,18 @@ import { SidebarService } from '../../services/sidebar.service';
 export class SidebarComponent {
   private _router = inject(Router);
   private _sidebarService = inject(SidebarService);
+  private _authService = inject(AuthService);
 
   config = input<SideConfig>(this._sidebarService.config());
 
   isOpen = computed(() => this._sidebarService.isOpen());
   sidenavWidth = computed(() => (this._sidebarService.isOpen() ? 320 : 60));
 
-  toggleItem(route: string) {
+  navigate(route: string) {
     this._router.navigateByUrl(route);
+  }
+
+  logout() {
+    this._authService.logout();
   }
 }

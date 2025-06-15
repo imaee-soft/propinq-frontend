@@ -13,4 +13,11 @@ export class AuthService {
 
   user = computed(() => this._authState().user);
   status = computed(() => this._authState().status);
+
+  logout() {
+    this._authState.set({
+      user: null,
+      status: AuthStatus.UNAUTHENTICATED,
+    });
+  }
 }

@@ -41,17 +41,10 @@ export class NavbarComponent {
 
   items = input<NavElement[]>(this._navbarService.config());
 
-  isSidebarOpen = this._sidebarService.isOpen;
-  user = this._authService.user;
-
+  sidebarOpened = this._sidebarService.isOpen;
   userLogged = computed(
     () => this._authService.status() === AuthStatus.AUTHENTICATED
   );
-
-  fullName = computed(() => {
-    const user = this._authService.user();
-    return user ? `${user.firstName} ${user.lastName}` : '';
-  });
 
   toggleSidebar() {
     this._sidebarService.toggle();

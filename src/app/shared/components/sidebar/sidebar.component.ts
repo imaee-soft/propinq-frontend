@@ -37,7 +37,7 @@ export class SidebarComponent {
   config = input<SideConfig>(this._sidebarService.config());
 
   isOpen = computed(() => this._sidebarService.isOpen());
-  sidenavWidth = computed(() => (this._sidebarService.isOpen() ? 320 : 60));
+  sidenavWidth = computed(() => (this._sidebarService.isOpen() ? 320 : 0));
 
   navigate(route: string) {
     this._router.navigateByUrl(route);

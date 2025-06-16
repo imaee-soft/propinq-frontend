@@ -7,7 +7,7 @@
       matTooltipPosition="below"
       class="sidebar-toggle"
     >
-      <mat-icon>{{ isSidebarOpen() ? "menu_open" : "menu" }}</mat-icon>
+      <mat-icon>{{ sidebarOpened() ? "menu_open" : "menu" }}</mat-icon>
     </button>
     }
 
@@ -35,7 +35,7 @@
 
   <div class="nav-right">
     <mat-divider class="vertical-divider" vertical></mat-divider>
-    @if (user()) {
+    @if (userLogged()) {
     <button
       mat-icon-button
       matTooltip="Notificaciones"

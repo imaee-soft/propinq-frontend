@@ -9,6 +9,10 @@ export const UNLOGGED_NAVBAR_ITEMS = [
     url: '/',
   },
   {
+    name: 'Reseñas',
+    url: '/',
+  },
+  {
     name: 'Ayuda',
     url: '/',
   },

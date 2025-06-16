@@ -35,7 +35,7 @@
 
   <div class="nav-right">
     <mat-divider class="vertical-divider" vertical></mat-divider>
-    @if (!user()) {
+    @if (user()) {
     <button
       mat-icon-button
       matTooltip="Notificaciones"
@@ -56,8 +56,8 @@
       <mat-icon>account_circle</mat-icon>
     </button>
     } @else {
-    <a routerLink="/ofertas" class="nav-action-link">Creá tu cuenta</a>
-    <a routerLink="/ofertas" class="nav-action-link">Ingresá</a>
+    <a routerLink="/signup" class="nav-action-link">Creá tu cuenta</a>
+    <a routerLink="/login" class="nav-action-link">Ingresá</a>
     }
   </div>
 </mat-toolbar>

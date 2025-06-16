@@ -10,7 +10,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 300px;
+  padding: 0 400px;
   gap: 24px;
   font-family: "Montserrat", sans-serif;
   font-weight: bold;
@@ -57,7 +57,6 @@
   align-items: center;
   justify-content: center;
   padding: 6px 0;
-  gap: 4px;
 }
 
 .nav-actions {

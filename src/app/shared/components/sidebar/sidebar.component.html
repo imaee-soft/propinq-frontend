@@ -8,7 +8,7 @@
   >
     <mat-nav-list class="nav-list">
       @for (item of config().items; track item.route) {
-      <div class="menu-group">
+      <div>
         <mat-list-item
           class="side-item"
           [class.collapsed]="!this.isOpen()"
@@ -22,14 +22,16 @@
     </mat-nav-list>
 
     <div class="sidenav-footer">
-      <mat-list-item class="side-item">
-        <span>Ayuda</span>
-        <mat-icon matListItemIcon>help</mat-icon>
-      </mat-list-item>
-      <mat-list-item class="side-item" (click)="logout()">
-        <span>Cerrar sesión</span>
-        <mat-icon matListItemIcon>logout</mat-icon>
-      </mat-list-item>
+      <mat-nav-list class="footer-nav-list">
+        <mat-list-item class="side-item">
+          <span>Ayuda</span>
+          <mat-icon matListItemIcon>help</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="side-item" (click)="logout()">
+          <span>Cerrar sesión</span>
+          <mat-icon matListItemIcon>logout</mat-icon>
+        </mat-list-item>
+      </mat-nav-list>
     </div>
   </mat-sidenav>
 </mat-sidenav-container>

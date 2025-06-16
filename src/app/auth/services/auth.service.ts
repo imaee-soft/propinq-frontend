@@ -4,7 +4,7 @@ import { AuthState } from '../interfaces/auth-state.interface';
 
 const INITIAL_STATE: AuthState = {
   user: null,
-  status: AuthStatus.AUTHENTICATED,
+  status: AuthStatus.PENDING,
 };
 
 @Injectable({ providedIn: 'root' })

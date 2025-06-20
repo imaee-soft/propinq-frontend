@@ -1,1 +1,16 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #0f111a 0%, #1c2230 100%);
+  color: #f0f0f0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  min-height: 100vh;
+}
+
+.marker-snackbar {
+  margin-top: 70px !important;
+}

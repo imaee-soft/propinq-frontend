@@ -1,0 +1,63 @@
+<mat-toolbar color="primary" class="navbar">
+  <div class="nav-left">
+    @if (userLogged()) {
+    <button
+      mat-icon-button
+      (click)="toggleSidebar()"
+      matTooltipPosition="below"
+      class="sidebar-toggle"
+    >
+      <mat-icon>{{ sidebarOpened() ? "menu_open" : "menu" }}</mat-icon>
+    </button>
+    }
+
+    <div class="brand-container">
+      <a routerLink="/" class="brand-link">
+        <mat-icon>cottage</mat-icon>
+        <span class="brand-text">PropInq</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="nav-center">
+    <div class="nav-actions">
+      @for (item of items(); track $index) {
+      <a
+        [routerLink]="item.url"
+        class="nav-action-link"
+        [ngClass]="{ 'nav-action-featured': item.featured }"
+      >
+        {{ item.name }}
+      </a>
+      }
+    </div>
+  </div>
+
+  <div class="nav-right">
+    <mat-divider class="vertical-divider" vertical></mat-divider>
+    @if (userLogged()) {
+    <button
+      mat-icon-button
+      matTooltip="Notificaciones"
+      matTooltipPosition="below"
+    >
+      <mat-icon>notifications</mat-icon>
+    </button>
+
+    <button mat-icon-button matTooltip="Mensajes" matTooltipPosition="below">
+      <mat-icon>message</mat-icon>
+    </button>
+    <button
+      mat-icon-button
+      matTooltip="Mi cuenta"
+      matTooltipPosition="below"
+      class="user-menu-trigger"
+    >
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    } @else {
+    <a routerLink="/signup" class="nav-action-link">Creá tu cuenta</a>
+    <a routerLink="/login" class="nav-action-link">Ingresá</a>
+    }
+  </div>
+</mat-toolbar>

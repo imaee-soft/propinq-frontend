@@ -12,8 +12,26 @@ body {
   min-height: 100vh;
 }
 
-.marker-snackbar {
-  margin-top: 70px !important;
+.generic-dialog {
+  padding: 4px;
+  border-radius: 6px;
+  max-width: 95vw !important;
+  width: 95vw !important;
+  height: 80vh !important;
+  max-height: 90vh !important;
+  background: #1a1e2b;
+  animation: slideUp 0.5s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 

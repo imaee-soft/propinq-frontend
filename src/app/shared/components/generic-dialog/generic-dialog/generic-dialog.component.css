@@ -1,0 +1,33 @@
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: 100%;
+  justify-content: start;
+  margin: 20px;
+}
+
+mat-dialog-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 10px;
+}
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background-color: var(--overlay);
+  pointer-events: all;
+  z-index: 99999999;
+  outline: none;
+  user-select: none;
+}
+
+.overlay:focus {
+  outline: none;
+}
+
+.overlay * {
+  pointer-events: none;
+  outline: none !important;
+}

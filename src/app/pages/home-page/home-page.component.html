@@ -1,1 +1,4 @@
-<app-map [config]="mapConfig" />
+<app-map [config]="mapConfig"
+ (markerClick)="onMarkerClick($event)"/>
+
+<app-building-component (mapConfigChange)= onMapConfigChange($event)"/>

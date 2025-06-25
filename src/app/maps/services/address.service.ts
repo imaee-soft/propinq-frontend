@@ -24,6 +24,24 @@ export class AddressService {
       );
   }
 
+  decodeAddress({
+    latitude,
+    longitude,
+  }: MapCoordinate): Observable<string | null> {
+    return this._http
+      .get<Address>(`${environment.addressesUrl}/reverse`, {
+        params: {
+          format: 'json',
+          lat: latitude,
+          lon: longitude,
+        },
+      })
+      .pipe(
+        map(this.mapAddress),
+        catchError(() => of(null))
+      );
+  }
+
   private mapCoordinate(response: Address[]): MapCoordinate | null {
     return response && response.length > 0
       ? {
@@ -31,5 +49,13 @@ export class AddressService {
           latitude: parseFloat(response[0].lat),
         }
       : null;
+  }
+
+  private mapAddress({ address }: Address): string {
+    return address
+      ? [address.road, address.house_number, address.town]
+          .filter(Boolean)
+          .join(', ')
+      : '';
   }
 }

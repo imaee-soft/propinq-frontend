@@ -1,4 +1,3 @@
-import { CdkTrapFocus } from '@angular/cdk/a11y';
 import { CommonModule } from '@angular/common';
 import { Component, contentChild, input, TemplateRef } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
@@ -11,7 +10,6 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
   imports: [
     MatDialogModule,
     CommonModule,
-    CdkTrapFocus,
     MatButtonModule,
     MatProgressSpinnerModule,
     MatProgressBarModule,

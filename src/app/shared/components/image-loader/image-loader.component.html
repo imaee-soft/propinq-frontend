@@ -1,0 +1,20 @@
+<div class="image-upload">
+  <mat-label for="imageInput">{{ title() }}</mat-label>
+  <input
+    type="file"
+    id="imageInput"
+    multiple
+    (change)="onImagesSelected($event)"
+    accept="image/*"
+  />
+</div>
+
+@if (previewUrls().length > 0) {
+<div class="image-preview-container">
+  @for (image of previewUrls(); track $index) {
+  <div class="image-preview">
+    <img [src]="image" alt="Image preview" />
+  </div>
+  }
+</div>
+}

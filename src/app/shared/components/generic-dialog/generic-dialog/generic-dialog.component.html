@@ -1,10 +1,10 @@
-<mat-dialog-content cdkTrapFocus [cdkTrapFocusAutoCapture]="true">
-  <h2 mat-dialog-title>{{ dialogTitle() }}</h2>
+<mat-dialog-content>
+  <h1 mat-dialog-title>{{ dialogTitle() }}</h1>
   <ng-container *ngTemplateOutlet="content()"></ng-container>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="false">Close</button>
+  <button mat-button [mat-dialog-close]="false">Cerrar</button>
   <button mat-flat-button type="submit" [disabled]="activeSaveButton()">
-    Save
+    Guardar
   </button>
 </mat-dialog-actions>

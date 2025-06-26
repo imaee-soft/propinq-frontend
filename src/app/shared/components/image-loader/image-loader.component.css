@@ -1,46 +1,39 @@
 .image-upload {
+  margin: 0px 5px;
   display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 0.5rem;
+  flex-direction: row;
+  justify-content: start;
+  align-items: center;
+  gap: 0.75rem;
 }
 
 .image-upload mat-label {
-  color: #cbd5e1;
-  font-weight: 600;
   font-size: 0.875rem;
-  margin-bottom: 0.25rem;
+  font-weight: 500;
+  color: #cbd5e1;
+  margin-bottom: 0.1rem;
 }
 
-.image-upload input[type="file"] {
-  padding: 0.6rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 8px;
-  background: linear-gradient(135deg, #2a2f45 0%, #3a3f5a 100%);
-  font-size: 0.85rem;
-  color: #e2e8f0;
-  cursor: pointer;
-  transition: border-color 0.2s ease;
+.file-input-wrapper {
+  display: flex;
+  align-items: center;
 }
 
-.image-upload input[type="file"]:hover {
-  border-color: rgba(255, 255, 255, 0.4);
-}
-
-.image-upload input[type="file"]::file-selector-button {
+.custom-upload-button {
   background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
   color: white;
-  border: none;
-  padding: 0.4rem 0.9rem;
-  border-radius: 6px;
-  margin-right: 0.75rem;
-  font-weight: 575;
+  font-weight: 700;
   font-size: 0.875rem;
+  text-transform: none;
+  padding: 0.4rem 1rem;
+  border-radius: 6px;
   cursor: pointer;
+  border: none;
   transition: all 0.2s ease;
+  line-height: 1;
 }
 
-.image-upload input[type="file"]::file-selector-button:hover {
+.custom-upload-button:hover {
   background: linear-gradient(135deg, #5b52e8 0%, #8b4cf0 100%);
   transform: translateY(-1px);
 }
@@ -51,6 +44,7 @@
   gap: 0.6rem;
   margin-top: 0.75rem;
   padding: 0.75rem;
+  height: 65px;
   background: linear-gradient(
     135deg,
     rgba(0, 0, 0, 0.2) 0%,
@@ -65,8 +59,9 @@
   position: relative;
   border-radius: 12px;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
+  animation: fadeInSlideIn 0.4s ease-out;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s;
 }
 
 .image-preview:hover {
@@ -89,9 +84,10 @@
 }
 
 .delete-button {
+  font-size: 0.65rem;
   position: absolute;
-  top: -6px;
-  right: -6px;
+  top: 4px;
+  right: 4px;
   width: 22px;
   height: 22px;
   border-radius: 50%;
@@ -124,4 +120,15 @@
   width: 12px;
   height: 12px;
   line-height: 12px;
+}
+
+@keyframes fadeInSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }

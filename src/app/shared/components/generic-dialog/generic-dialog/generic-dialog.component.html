@@ -4,7 +4,7 @@
 </mat-dialog-content>
 <mat-dialog-actions>
   <button mat-button [mat-dialog-close]="false">Cerrar</button>
-  <button mat-flat-button type="submit" [disabled]="activeSaveButton()">
+  <button mat-flat-button type="submit" [disabled]="!activeSaveButton()">
     Guardar
   </button>
 </mat-dialog-actions>

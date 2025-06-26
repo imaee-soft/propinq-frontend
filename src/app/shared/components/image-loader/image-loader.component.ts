@@ -1,10 +1,9 @@
 import { Component, input, output, signal } from '@angular/core';
 import { MatLabel } from '@angular/material/form-field';
-import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'image-loader',
-  imports: [MatLabel, MatIcon],
+  imports: [MatLabel],
   templateUrl: './image-loader.component.html',
   styleUrl: './image-loader.component.css',
 })
@@ -30,6 +29,7 @@ export class ImageLoaderComponent {
     });
 
     this.imageUploaded.emit(files);
+    input.value = '';
   }
 
   removeImage(index: number): void {

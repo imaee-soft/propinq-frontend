@@ -13,6 +13,7 @@ import { MapConfig } from '../../../maps/interfaces/map-config.interface';
 import { MapCoordinate } from '../../../maps/interfaces/map-coordinate.interface';
 import { MapMarker } from '../../../maps/interfaces/map-marker.interface';
 import { AddressService } from '../../../maps/services/address.service';
+import { DEFAULT_CENTER } from '../../../maps/utils/constants';
 import { GenericDialogComponent } from '../../../shared/components/generic-dialog/generic-dialog/generic-dialog.component';
 import { ImageLoaderComponent } from '../../../shared/components/image-loader/image-loader.component';
 import { UppercaseDirective } from '../../../shared/directives/uppercase.directive';
@@ -22,6 +23,8 @@ interface BuildingFormData {
   description: string;
   address: string;
 }
+
+const url = 'icons/building.png';
 
 @Component({
   selector: 'new-building-dialog',
@@ -78,6 +81,7 @@ export class NewBuildingPageComponent {
   );
 
   mapConfig = computed<MapConfig>(() => ({
+    center: this._coordinate() || DEFAULT_CENTER,
     markers: this._markers(),
   }));
 
@@ -85,6 +89,9 @@ export class NewBuildingPageComponent {
     name: this._formBuilder.control<string>('', [Validators.required]),
     description: this._formBuilder.control<string>(''),
     address: this._formBuilder.control<string>('', [Validators.required]),
+    coordinate: this._formBuilder.control<MapCoordinate | null>(null, [
+      Validators.required,
+    ]),
     images: this._formBuilder.control<File[] | null>([], [Validators.required]),
   });
 
@@ -106,7 +113,13 @@ export class NewBuildingPageComponent {
   }
 
   handleMapClick({ coordinate }: MapClickEvent) {
-    this._markers.update(() => [{ coordinate }]);
+    this._markers.update(() => [
+      {
+        coordinate,
+        icon: { url },
+      },
+    ]);
+    this.form.patchValue({ coordinate });
   }
 
   handleImageUploaded(files: File[]) {
@@ -126,7 +139,6 @@ export class NewBuildingPageComponent {
       const buildingData = this.form.value as BuildingFormData;
       console.log('Building data submitted:', buildingData);
     } else {
-      console.error('Form is invalid');
       this.markFormGroupTouched();
     }
   }

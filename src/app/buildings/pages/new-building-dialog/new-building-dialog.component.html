@@ -86,12 +86,22 @@
           </div>
         </div>
 
-        <image-loader
-          [title]="'Subí las imágenes del inmueble'"
-          [images]="imagesControl?.value ?? null"
-          (imageUploaded)="handleImageUploaded($event)"
-          (imageRemoved)="handleImageRemoved($event)"
-        ></image-loader>
+        <div class="image-section">
+          <image-loader
+            [title]="'Subí las imágenes del inmueble'"
+            [images]="imagesControl?.value ?? null"
+            (imageUploaded)="handleImageUploaded($event)"
+            (imageRemoved)="handleImageRemoved($event)"
+          ></image-loader>
+
+          <div class="image-error-wrapper">
+            @if (imagesControl?.invalid && imagesControl?.touched) {
+            <mat-error class="image-error"
+              >Al menos una imagen es requerida</mat-error
+            >
+            }
+          </div>
+        </div>
       </div>
     </ng-template>
   </app-generic-dialog>

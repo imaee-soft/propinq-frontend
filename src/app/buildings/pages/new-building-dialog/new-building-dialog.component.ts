@@ -1,10 +1,10 @@
 import { Component, computed, effect, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatButton } from '@angular/material/button';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
 import { of } from 'rxjs';
 import { MapComponent } from '../../../maps/components/map/map.component';
@@ -34,8 +34,8 @@ interface BuildingFormData {
     MatInput,
     MatIcon,
     MatTooltip,
+    MatProgressSpinner,
     MapComponent,
-    MatButton,
     ImageLoaderComponent,
     UppercaseDirective,
   ],
@@ -46,18 +46,36 @@ export class NewBuildingPageComponent {
   private readonly _formBuilder = inject(FormBuilder);
   private readonly _addressService = inject(AddressService);
 
-  private readonly _addressResource = rxResource({
+  private readonly _textAddressResource = rxResource({
     request: () => this._coordinate(),
     loader: ({ request: coordinate }) =>
       coordinate ? this._addressService.decodeAddress(coordinate) : of(null),
   });
+
+  private readonly _coordinateAddressResource = rxResource({
+    request: () => this._textAddress(),
+    loader: ({ request: address }) =>
+      address ? this._addressService.geocodeAddress(address) : of(null),
+  });
+
+  private _textAddress = signal<string>('');
 
   private _markers = signal<MapMarker[]>([]);
   private _coordinate = computed<MapCoordinate | null>(() => {
     const marker = this._markers()[0];
     return marker ? marker.coordinate : null;
   });
-  private _addressFetched = computed(() => this._addressResource.value());
+
+  private _addressFetched = computed(() => this._textAddressResource.value());
+  private _coordinateFetched = computed(() =>
+    this._coordinateAddressResource.value()
+  );
+
+  searchingAddress = computed(
+    () =>
+      this._textAddressResource.isLoading() ||
+      this._coordinateAddressResource.isLoading()
+  );
 
   mapConfig = computed<MapConfig>(() => ({
     markers: this._markers(),
@@ -75,6 +93,16 @@ export class NewBuildingPageComponent {
       const address = this._addressFetched();
       if (address) this.form.patchValue({ address });
     });
+
+    effect(() => {
+      const coordinate = this._coordinateFetched();
+      if (coordinate) this.handleMapClick({ coordinate });
+    });
+  }
+
+  handleSearchAddress() {
+    const address = this.form.get('address')?.value;
+    if (address) this._textAddress.set(address);
   }
 
   handleMapClick({ coordinate }: MapClickEvent) {

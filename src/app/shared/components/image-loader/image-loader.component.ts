@@ -1,14 +1,15 @@
 import { Component, input, output, signal } from '@angular/core';
 import { MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'image-loader',
-  imports: [MatLabel],
+  imports: [MatLabel, MatIcon],
   templateUrl: './image-loader.component.html',
   styleUrl: './image-loader.component.css',
 })
 export class ImageLoaderComponent {
-  title = input<string>('Subí las imágenes');
+  title = input<string>('Subir imágenes');
   images = input<File[] | null>(null);
   imageUploaded = output<File[]>();
   imageRemoved = output<number>();

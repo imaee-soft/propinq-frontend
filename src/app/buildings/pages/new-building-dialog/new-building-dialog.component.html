@@ -5,68 +5,84 @@
   >
     <ng-template #content>
       <div class="form-container">
-        <mat-form-field appearance="outline" class="compact-field">
-          <mat-label>Nombre</mat-label>
-          <input
-            matInput
-            formControlName="name"
-            [maxLength]="50"
-            cdkFocusInitial
-            placeholder="Ingresá el nombre del inmueble..."
-            appUppercase
-          />
-          @if (nameControl?.invalid && nameControl?.touched) {
-          <mat-error>El nombre es requerido</mat-error>
-          }
-        </mat-form-field>
+        <div class="form-layout">
+          <div class="form-left">
+            <mat-form-field appearance="outline" class="compact-field">
+              <mat-label>Nombre</mat-label>
+              <input
+                matInput
+                formControlName="name"
+                [maxLength]="50"
+                cdkFocusInitial
+                placeholder="Ingresá el nombre del inmueble..."
+                appUppercase
+              />
+              @if (nameControl?.invalid && nameControl?.touched) {
+              <mat-error>El nombre es requerido</mat-error>
+              }
+            </mat-form-field>
 
-        <mat-form-field appearance="outline" class="compact-field">
-          <mat-label>Descripción</mat-label>
-          <textarea
-            matInput
-            formControlName="description"
-            [maxLength]="200"
-            rows="2"
-            placeholder="Describí brevemente el inmueble..."
-          ></textarea>
-        </mat-form-field>
+            <mat-form-field appearance="outline" class="compact-field">
+              <mat-label>Descripción</mat-label>
+              <textarea
+                matInput
+                formControlName="description"
+                [maxLength]="400"
+                rows="3"
+                placeholder="Describí brevemente el inmueble..."
+              ></textarea>
+            </mat-form-field>
 
-        <div class="address-container">
-          <mat-form-field
-            appearance="outline"
-            class="compact-field address-field"
-          >
-            <mat-label>Dirección</mat-label>
-            <input
-              matInput
-              formControlName="address"
-              [maxLength]="100"
-              placeholder="Ingresá la dirección del inmueble..."
-            />
-            @if (addressControl?.invalid && addressControl?.touched) {
-            <mat-error>La dirección es requerida</mat-error>
-            }
-          </mat-form-field>
+            <div class="address-container">
+              <mat-form-field
+                appearance="outline"
+                class="compact-field address-field"
+              >
+                <mat-label>Dirección</mat-label>
+                <input
+                  matInput
+                  formControlName="address"
+                  [maxLength]="100"
+                  placeholder="Ingresá la dirección del inmueble..."
+                />
+                @if (addressControl?.invalid && addressControl?.touched) {
+                <mat-error>La dirección es requerida</mat-error>
+                }
+              </mat-form-field>
 
-          <div class="address-actions">
-            <mat-button
-              matTooltip="Formato: Nombre de la calle + Número + Ciudad. Ejemplo: Av. Corrientes 1234, Buenos Aires"
-            >
-              <mat-icon>info</mat-icon>
-            </mat-button>
-            <mat-button matTooltip="Buscar dirección">
-              <mat-icon>search</mat-icon>
-            </mat-button>
+              <div class="address-actions">
+                <mat-button
+                  matTooltip="Formato: Nombre de la calle, Número, Ciudad y Provincia. Ejemplo: Corrientes 1234, Villa María, Córdoba"
+                >
+                  <mat-icon>info</mat-icon>
+                </mat-button>
+                @if (searchingAddress()) {
+                <mat-progress-spinner
+                  mode="indeterminate"
+                  diameter="24"
+                ></mat-progress-spinner>
+                } @else {
+                <mat-button
+                  matTooltip="Buscar dirección"
+                  (click)="handleSearchAddress()"
+                >
+                  <mat-icon>map_search</mat-icon>
+                </mat-button>
+                }
+              </div>
+            </div>
           </div>
-        </div>
 
-        <div class="map-container">
-          <mat-label>O marcá la dirección en el mapa</mat-label>
-          <div class="map-wrapper">
-            <app-map
-              [config]="mapConfig()"
-              (mapClick)="handleMapClick($event)"
-            ></app-map>
+          <div class="form-right">
+            <div class="map-container">
+              <mat-label>O marcá la dirección en el mapa</mat-label>
+              <div class="map-wrapper">
+                <app-map
+                  [config]="mapConfig()"
+                  (mapClick)="handleMapClick($event)"
+                ></app-map>
+              </div>
+            </div>
           </div>
         </div>
 

@@ -14,6 +14,14 @@
   @for (image of previewUrls(); track $index) {
   <div class="image-preview">
     <img [src]="image" alt="Image preview" />
+    <button
+      class="delete-button"
+      (click)="removeImage($index)"
+      type="button"
+      aria-label="Eliminar imagen"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
   </div>
   }
 </div>

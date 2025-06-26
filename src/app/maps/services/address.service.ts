@@ -53,7 +53,7 @@ export class AddressService {
 
   private mapAddress({ address }: Address): string {
     return address
-      ? [address.road, address.house_number, address.town]
+      ? [address.road, address.house_number, address.town, address.state]
           .filter(Boolean)
           .join(', ')
       : '';

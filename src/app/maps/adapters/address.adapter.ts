@@ -10,4 +10,5 @@ export interface ExplicitAddress {
   house_number?: string;
   road?: string;
   town?: string;
+  state?: string;
 }

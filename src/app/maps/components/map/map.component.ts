@@ -34,8 +34,6 @@ import {
 @Component({
   selector: 'app-map',
   templateUrl: 'map.component.html',
-  styleUrl: 'map.component.css',
-  standalone: true,
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   mapElement = viewChild<ElementRef>('mapElement');

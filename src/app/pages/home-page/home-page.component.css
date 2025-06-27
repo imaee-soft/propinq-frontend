@@ -18,7 +18,7 @@ app-map {
   height: 100%;
 }
 
-/* Panel lateral */
+
 .details-panel {
   width: 49vw;
   max-width: none;
@@ -38,13 +38,14 @@ app-map {
 
 }
 
-/* Card con estructura de scroll */
+
 .building-card {
   width: 98%;
   max-width: none;
-  height: calc(100vh - 130px); /* CAMBIADO: resta el padding aumentado (20px + 20px) */
+  height: calc(100vh - 130px);
   max-height: calc(100vh - 40px);
-  margin: 20px auto; /* CAMBIADO: margin directo en la card */  display: flex;
+  margin: 20px auto;
+  display: flex;
   flex-direction: column;
   box-shadow: 0 6px 20px rgba(0,0,0,0.25);
   border-radius: 16px;
@@ -53,7 +54,7 @@ app-map {
   color: white;
 }
 
-/* Header fijo (no scrollea) */
+
 mat-card-header {
   display: flex;
   align-items: center;
@@ -71,7 +72,7 @@ mat-card-header mat-card-subtitle {
   color: #b0b0b0;
 
 }
-/* Línea divisoria después del contenido */
+
 .content-divider {
   width: 100%;
   height: 1px;
@@ -79,43 +80,41 @@ mat-card-header mat-card-subtitle {
   margin: 20px 0;
 }
 
-/* Contenido scrolleable - AQUÍ ESTÁ EL CAMBIO PRINCIPAL */
+
 mat-card-content {
   padding-left: 1px;
   padding-right: 1px;
-  flex: 1; /* ocupa todo el espacio disponible */
-  overflow-y: scroll; /* SCROLL VERTICAL aquí */
-  overflow-x: hidden; /* sin scroll horizontal */
-  /* REMOVIDO max-height que limitaba el scroll */
-  min-height: 0; /* permite que flex funcione correctamente */
+  flex: 1;
+  overflow-y: scroll;
+  overflow-x: hidden;
+
+  min-height: 0;
   color: white;
-  display: flex; /* AGREGADO */
-  flex-direction: column; /* AGREGADO */
-  gap: 16px; /* AGREGADO */
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
-/* Contenedor horizontal para carrusel y detalles */
 .content-row {
-  display: flex; /* AGREGADO */
-  flex-direction: row; /* AGREGADO */
-  gap: 16px; /* AGREGADO */
-  width: 100%; /* AGREGADO */
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
+  width: 100%;
 }
 
 
-  /* Contenedor para los detalles */
 .building-details {
-  width: 50%; /* AGREGADO */
-  padding: 0 8px; /* AGREGADO */
-  display: flex; /* AGREGADO */
-  flex-direction: column; /* AGREGADO */
+  width: 50%;
+  padding: 0 8px;
+  display: flex;
+  flex-direction: column;
 }
 
 mat-card-content p {
   padding: 4px 8px;
-  margin: 0; /* elimina márgenes por defecto */
+  margin: 0;
 }
 
-/* Botón cerrar */
+
 .close-button {
   margin-left: auto;
   background: transparent !important;
@@ -140,14 +139,14 @@ mat-card-content p {
   pointer-events: none;
 }
 
-/* Carrusel */
+
 .carrousel-img-outer {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-bottom: 16px;
-  width: 50%; /* CAMBIADO */
-  flex-shrink: 0; /* AGREGADO */
+  width: 50%;
+  flex-shrink: 0;
   padding: 0 3px;
 }
 
@@ -182,7 +181,7 @@ mat-card-content p {
   transition: opacity 0.4s cubic-bezier(.55,0,.1,1);
 }
 
-/* Flechas del carrusel */
+
 .carousel-arrow {
   position: absolute;
   top: 50%;
@@ -203,7 +202,7 @@ mat-card-content p {
   right: 8px;
 }
 
-/* Área sensible para hover/click */
+
 .carrousel-img-inner::before,
 .carrousel-img-inner::after {
   content: "";
@@ -224,21 +223,21 @@ mat-card-content p {
   right: 0;
 }
 
-/* Mostrar flechas en hover */
+
 .carrousel-img-inner:hover .carousel-arrow-left,
 .carrousel-img-inner:hover .carousel-arrow-right {
   opacity: 1;
   pointer-events: auto;
 }
 
-/* Indicador de carrusel */
+
 .carousel-indicator {
   margin-top: 8px;
   color: #ffffff;
   font-size: 14px;
 }
 
-/* Responsive Mobile */
+
 @media (max-width: 800px) {
   .carousel-arrow {
     opacity: 1 !important;

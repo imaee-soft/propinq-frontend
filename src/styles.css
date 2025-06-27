@@ -1,6 +1,7 @@
 html,
 body {
   height: 100%;
+  overflow:hidden;
 }
 body {
   margin: 0;
@@ -14,3 +15,5 @@ body {
 .marker-snackbar {
   margin-top: 70px !important;
 }
+
+

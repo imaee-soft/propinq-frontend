@@ -1,0 +1,286 @@
+.home-page-container {
+  height: 100vh;
+  width: 100vw;
+  background: #f3f3f3;
+  overflow: hidden;
+}
+
+mat-drawer-content {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+app-map {
+  flex: 2 1 0;
+  min-width: 400px;
+  height: 100%;
+}
+
+/* Panel lateral */
+.details-panel {
+  width: 49vw;
+  max-width: none;
+  min-width: 360px;
+  background: transparent;
+  box-shadow: none;
+  border-left: none;
+  min-height: 0;
+  padding: 20px 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+  gap: 0;
+  height: 95vh;
+  overflow: hidden;
+
+}
+
+/* Card con estructura de scroll */
+.building-card {
+  width: 98%;
+  max-width: none;
+  height: calc(100vh - 130px); /* CAMBIADO: resta el padding aumentado (20px + 20px) */
+  max-height: calc(100vh - 40px);
+  margin: 20px auto; /* CAMBIADO: margin directo en la card */  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25);
+  border-radius: 16px;
+  background: linear-gradient(to right, #1a1e2b, #232a3b);
+  overflow: hidden;
+  color: white;
+}
+
+/* Header fijo (no scrollea) */
+mat-card-header {
+  display: flex;
+  align-items: center;
+  position: relative;
+  padding: 16px;
+  padding-right: 8px;
+  flex-shrink: 0;
+  background: linear-gradient(to right, #1a1e2b, #232a3b);
+  color: white;
+  z-index: 10;
+  border-radius: 16px 16px 0 0;
+}
+mat-card-header mat-card-subtitle {
+  font-size: 14px;
+  color: #b0b0b0;
+
+}
+/* Línea divisoria después del contenido */
+.content-divider {
+  width: 100%;
+  height: 1px;
+  background: #5e5e5e;
+  margin: 20px 0;
+}
+
+/* Contenido scrolleable - AQUÍ ESTÁ EL CAMBIO PRINCIPAL */
+mat-card-content {
+  padding-left: 1px;
+  padding-right: 1px;
+  flex: 1; /* ocupa todo el espacio disponible */
+  overflow-y: scroll; /* SCROLL VERTICAL aquí */
+  overflow-x: hidden; /* sin scroll horizontal */
+  /* REMOVIDO max-height que limitaba el scroll */
+  min-height: 0; /* permite que flex funcione correctamente */
+  color: white;
+  display: flex; /* AGREGADO */
+  flex-direction: column; /* AGREGADO */
+  gap: 16px; /* AGREGADO */
+}
+/* Contenedor horizontal para carrusel y detalles */
+.content-row {
+  display: flex; /* AGREGADO */
+  flex-direction: row; /* AGREGADO */
+  gap: 16px; /* AGREGADO */
+  width: 100%; /* AGREGADO */
+}
+
+
+  /* Contenedor para los detalles */
+.building-details {
+  width: 50%; /* AGREGADO */
+  padding: 0 8px; /* AGREGADO */
+  display: flex; /* AGREGADO */
+  flex-direction: column; /* AGREGADO */
+}
+
+mat-card-content p {
+  padding: 4px 8px;
+  margin: 0; /* elimina márgenes por defecto */
+}
+
+/* Botón cerrar */
+.close-button {
+  margin-left: auto;
+  background: transparent !important;
+  box-shadow: none;
+  border: none;
+  outline: none;
+  color: #222;
+  opacity: 1;
+  padding: 4px;
+  border-radius: 10px;
+}
+
+.close-button:hover,
+.close-button:focus {
+  background: rgba(139, 137, 137, 0.192) !important;
+}
+
+.close-button mat-icon {
+  color: #ffffff;
+  font-size: 28px;
+  opacity: 1;
+  pointer-events: none;
+}
+
+/* Carrusel */
+.carrousel-img-outer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 16px;
+  width: 50%; /* CAMBIADO */
+  flex-shrink: 0; /* AGREGADO */
+  padding: 0 3px;
+}
+
+.carrousel-img-inner {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-width: 200px;
+  min-height: 220px;
+  max-width: 100%;
+  margin: 0 auto;
+  transition: box-shadow 0.2s;
+}
+
+.carousel-image {
+  width: 100%;
+  max-width: 100%;
+  max-height: 220px;
+  aspect-ratio: 1.1/1;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
+  position: relative;
+  z-index: 1;
+  transition: opacity 0.4s cubic-bezier(.55,0,.1,1);
+  opacity: 1;
+  border-radius: 12px;
+}
+
+.fade {
+  transition: opacity 0.4s cubic-bezier(.55,0,.1,1);
+}
+
+/* Flechas del carrusel */
+.carousel-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0);
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 0.2s;
+  z-index: 2;
+  pointer-events: none;
+}
+
+.carousel-arrow-left {
+  left: 8px;
+}
+
+.carousel-arrow-right {
+  right: 8px;
+}
+
+/* Área sensible para hover/click */
+.carrousel-img-inner::before,
+.carrousel-img-inner::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 48px;
+  height: 100%;
+  z-index: 1;
+  cursor: pointer;
+  background: transparent;
+}
+
+.carrousel-img-inner::before {
+  left: 0;
+}
+
+.carrousel-img-inner::after {
+  right: 0;
+}
+
+/* Mostrar flechas en hover */
+.carrousel-img-inner:hover .carousel-arrow-left,
+.carrousel-img-inner:hover .carousel-arrow-right {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Indicador de carrusel */
+.carousel-indicator {
+  margin-top: 8px;
+  color: #ffffff;
+  font-size: 14px;
+}
+
+/* Responsive Mobile */
+@media (max-width: 800px) {
+  .carousel-arrow {
+    opacity: 1 !important;
+    width: 32px;
+    height: 32px;
+    font-size: 1.3rem;
+  }
+
+  .carrousel-img-inner::before,
+  .carrousel-img-inner::after {
+    width: 32px;
+  }
+
+  .home-page-container {
+    flex-direction: column;
+  }
+
+  app-map {
+    min-width: 0;
+    width: 100vw;
+    height: 50vh;
+  }
+
+  .details-panel {
+    width: 100vw;
+    min-width: 0;
+    height: auto;
+    align-items: center;
+    justify-content: flex-start;
+    padding-top: 16px;
+  }
+
+  .building-card {
+    width: 96vw;
+    max-width: 99vw;
+    height: auto;
+    max-height: none;
+    border-radius: 16px;
+  }
+
+  mat-card-content {
+    max-height: none;
+    overflow-y: visible;
+  }
+}

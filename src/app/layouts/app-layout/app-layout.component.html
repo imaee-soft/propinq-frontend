@@ -1,4 +1,7 @@
-<app-navbar></app-navbar>
+@if(!isAuthWall() || !isRegisterPage()) {
+  <app-navbar></app-navbar>
+}
+
 <div class="main-layout">
   <app-sidebar></app-sidebar>
   <div class="content-area">

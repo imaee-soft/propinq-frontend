@@ -9,6 +9,20 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'auth-wall-page',
+    loadComponent: () =>
+      import('./auth-wall-page/auth-wall-page.component').then(
+        (m) => m.AuthWallPageComponent
+      ),
+  },
+  {
+    path: 'register-page',
+    loadComponent: () =>
+      import('./register-page/register-page.component').then(
+        (m) => m.RegisterPageComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

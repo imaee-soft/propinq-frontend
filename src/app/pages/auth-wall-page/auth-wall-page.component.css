@@ -1,0 +1,51 @@
+.auth-wall-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 2rem; /* Espacio entre los recuadros */
+  flex-direction: row; /* Los pone en la misma fila */
+}
+
+.auth-wall-option {
+  background: #fff;
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.10);
+  padding: 3rem 2.5rem;
+  width: 320px;
+  min-height: 180px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: box-shadow 0.2s, transform 0.2s;
+  border: 2px solid transparent;
+  text-align: center;
+  user-select: none;
+}
+
+.auth-wall-option:focus,
+.auth-wall-option:hover {
+  box-shadow: 0 8px 32px rgba(26, 115, 232, 0.17), 0 2px 8px rgba(0,0,0,0.08);
+  border-color: #1a73e8;
+  transform: translateY(-2px) scale(1.03);
+}
+
+.auth-wall-option h2 {
+  margin: 0;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #1a237e;
+}
+
+@media (max-width: 700px) {
+  .auth-wall-container {
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .auth-wall-option {
+    width: 90vw;
+    min-width: unset;
+    padding: 2rem 1rem;
+  }
+}

@@ -1,4 +1,4 @@
-import { Component, computed, inject, Input, output, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { MapComponent } from '../../maps/components/map/map.component';
 import { DEFAULT_MAP_CONFIG } from '../../maps/utils/constants';
 import { BuildingComponent } from '../../buildings/components/building.component';
@@ -24,11 +24,8 @@ export class HomePageComponent {
   buildingDetails = signal<BuildingDetails | null>(null);
 
   onMarkerClick({ id, coordinate }: MapMarker): void {
-    console.log(`Marker clicked: ${id} at (${coordinate.latitude}, ${coordinate.longitude})`);
-
     if (!this.buildingMarkerQueried() || this.buildingMarkerQueried()!.id !== id) {
       this.buildingMarkerQueried.set({ id, coordinate });
-      console.log(`Building marker queried: ${this.buildingMarkerQueried()}`);
     }
  }
 
@@ -38,15 +35,12 @@ export class HomePageComponent {
 
  onBuildingsDetailsChange(buildingDetails: BuildingDetails | null): void {
   this.buildingDetails.set(buildingDetails);
-  console.log(`Building details updated: ${JSON.stringify(buildingDetails)}`);
  }
 
  onMapClick(): void {
-   console.log(`Map clicked`);
    if(this.buildingDetails() !== null) {
     this.buildingMarkerQueried.set(null);
     this.buildingDetails.set(null);
-    console.log(`Building marker and details reset`);
   }
  }
  onCloseDetails(): void {

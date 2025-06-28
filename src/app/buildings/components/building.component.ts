@@ -16,11 +16,11 @@ import { BuildingDetails } from '../interfaces/building-details.interface';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BuildingComponent {
-  buildingService = inject(BuildingService);
+  private _buildingService = inject(BuildingService);
 
   buildingsResource = rxResource({
     loader: () => {
-      return this.buildingService.getBuildings();
+      return this._buildingService.getBuildings();
     }
   });
 
@@ -53,7 +53,7 @@ export class BuildingComponent {
     loader: () => {
       const buildingQueried = this.buildingMarkerQueried();
       if (buildingQueried == null) return of(null);
-      return this.buildingService.getBuildingDetails(buildingQueried.id);
+      return this._buildingService.getBuildingDetails(buildingQueried.id);
     }
   });
 
@@ -68,6 +68,5 @@ export class BuildingComponent {
     effect(() =>{
       this.buildingsDetailsChange.emit(this.buildingDetails() || null);
     });
-    effect(() => {console.log(`Building details: ${JSON.stringify(this.buildingDetails())}`);});
   }
 }

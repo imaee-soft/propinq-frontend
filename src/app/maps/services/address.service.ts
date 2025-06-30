@@ -1,13 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { catchError, map, Observable, of } from 'rxjs';
+import { catchError, map, Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
+import { NotificationService } from '../../shared/services/notification.service';
 import { Address } from '../adapters/address.adapter';
 import { MapCoordinate } from '../interfaces/map-coordinate.interface';
+
+const ADDRESS_NOT_FOUND_ERROR =
+  'No se encontró la dirección ingresada. Por favor, verificala e intentalo de nuevo.';
 
 @Injectable({ providedIn: 'root' })
 export class AddressService {
   private _http = inject(HttpClient);
+  private _notificationService = inject(NotificationService);
 
   geocodeAddress(address: string): Observable<MapCoordinate | null> {
     return this._http
@@ -19,6 +24,7 @@ export class AddressService {
         },
       })
       .pipe(
+        tap(this.notifyIfAddressNotFound.bind(this)),
         map(this.mapCoordinate),
         catchError(() => of(null))
       );
@@ -40,6 +46,11 @@ export class AddressService {
         map(this.mapAddress),
         catchError(() => of(null))
       );
+  }
+
+  private notifyIfAddressNotFound(response: Address[]): void {
+    if (response.length === 0)
+      this._notificationService.showError(ADDRESS_NOT_FOUND_ERROR);
   }
 
   private mapCoordinate(response: Address[]): MapCoordinate | null {

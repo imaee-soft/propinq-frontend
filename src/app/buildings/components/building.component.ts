@@ -24,7 +24,8 @@ export class BuildingComponent {
     }
   });
 
-  buildingMarkers: Signal<MapMarker[]> = computed(() => (this.buildingsResource.value() ?? []).map(building => ({
+  buildingMarkers: Signal<MapMarker[]> = computed(() => (
+    this.buildingsResource.value() ?? []).map(building => ({
     id: building.buildingId,
     coordinate: {
       latitude: building.latitude,
@@ -35,15 +36,7 @@ export class BuildingComponent {
     }
   })));
 
-  private mapConfig: Signal<MapConfig> = computed(() => ({
-    center: DEFAULT_CENTER,
-    zoom: 14.5,
-    enableClick: true,
-    enableControls: false,
-    markers: this.buildingMarkers()
-  }));
-
-  mapConfigChange = output<MapConfig>();
+  markersChange = output<MapMarker[] | null>();
 
   buildingMarkerQueried = input<MapMarker | null>(null);
 
@@ -61,9 +54,11 @@ export class BuildingComponent {
 
   buildingsDetailsChange = output<BuildingDetails | null>();
 
+
  constructor() {
-    effect(() => {
-    this.mapConfigChange.emit(this.mapConfig());
+
+  effect(() => {
+      this.markersChange.emit(this.buildingMarkers() || null);
     });
     effect(() =>{
       this.buildingsDetailsChange.emit(this.buildingDetails() || null);

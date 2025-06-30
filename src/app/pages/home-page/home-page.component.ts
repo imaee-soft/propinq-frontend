@@ -1,6 +1,6 @@
-import { Component, signal } from '@angular/core';
+import { Component, computed, Signal, signal } from '@angular/core';
 import { MapComponent } from '../../maps/components/map/map.component';
-import { DEFAULT_MAP_CONFIG } from '../../maps/utils/constants';
+import { DEFAULT_CENTER, DEFAULT_MAP_CONFIG } from '../../maps/utils/constants';
 import { BuildingComponent } from '../../buildings/components/building.component';
 import { MapMarker } from '../../maps/interfaces/map-marker.interface';
 import { MapConfig } from '../../maps/interfaces/map-config.interface';
@@ -19,9 +19,21 @@ import { MatButtonModule } from '@angular/material/button';
 export class HomePageComponent {
 
   buildingMarkers = signal<MapMarker[]>;
-  mapConfig = signal<MapConfig>(DEFAULT_MAP_CONFIG);
+
+  private mapConfig: Signal<MapConfig> = computed(() => ({
+    center: DEFAULT_CENTER,
+    zoom: 14.5,
+    enableClick: true,
+    enableControls: false,
+    markers: this.markers()
+  }));
+  markers = signal<MapMarker[]>([]);
   buildingMarkerQueried = signal<MapMarker | null>(null);
   buildingDetails = signal<BuildingDetails | null>(null);
+
+  getMapConfig(): MapConfig {
+    return this.mapConfig();
+  }
 
   onMarkerClick({ id, coordinate }: MapMarker): void {
     if (!this.buildingMarkerQueried() || this.buildingMarkerQueried()!.id !== id) {
@@ -29,8 +41,8 @@ export class HomePageComponent {
     }
  }
 
- onMapConfigChange(newConfig: MapConfig): void{
-   this.mapConfig.set(newConfig);
+ onMapMarkersChange(markers: MapMarker[] | null): void{
+   this.markers.set(markers || []);
  }
 
  onBuildingsDetailsChange(buildingDetails: BuildingDetails | null): void {

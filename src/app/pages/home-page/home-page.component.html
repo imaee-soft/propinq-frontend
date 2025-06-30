@@ -1,11 +1,11 @@
 <mat-drawer-container class="home-page-container">
   <mat-drawer-content>
-    <app-map [config]="mapConfig()"
+    <app-map [config]="getMapConfig()"
       (markerClick)="onMarkerClick($event)"
       (mapClick)="onMapClick()"
     />
 
-    <app-building-component (mapConfigChange)="onMapConfigChange($event)"
+    <app-building-component (markersChange)="onMapMarkersChange($event)"
       [buildingMarkerQueried]="buildingMarkerQueried()"
     (buildingsDetailsChange)="onBuildingsDetailsChange($event)"
     />

@@ -44,6 +44,10 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   background: #1a1e2b;
 }
 
+.error-snackbar {
+  margin: 20px !important;
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(20%);

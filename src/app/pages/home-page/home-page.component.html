@@ -1,1 +1,112 @@
-<app-map [config]="mapConfig" />
+<mat-drawer-container class="home-page-container">
+  <mat-drawer-content>
+    <app-map [config]="getMapConfig()"
+      (markerClick)="onMarkerClick($event)"
+      (mapClick)="onMapClick()"
+    />
+
+    <app-building-component (markersChange)="onMapMarkersChange($event)"
+      [buildingMarkerQueried]="buildingMarkerQueried()"
+    (buildingsDetailsChange)="onBuildingsDetailsChange($event)"
+    />
+  </mat-drawer-content>
+
+  @if (buildingDetails() != null) {
+  <mat-drawer
+    position="end"
+    mode="side"
+    opened
+    class="details-panel"
+    [disableClose]="true"
+  >
+    <mat-card class="building-card">
+      <mat-card-header>
+        <mat-card-title>{{ buildingDetails()!.name }}</mat-card-title>
+        <mat-card-subtitle>{{ buildingDetails()!.buildingTypeName }}</mat-card-subtitle>
+        <button
+        mat-icon-button
+        class="close-button"
+        (click)="onCloseDetails()"
+        aria-label="Cerrar">
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content>
+        <div class="content-row">
+        @if(buildingDetails()!.imagesURL.length > 0) {
+
+          <div class="carrousel-img-outer">
+            <div
+            class="carrousel-img-inner slide"
+            [style.--current-index]="currentImageIndex()"
+            [style.--img-count]="images.length">
+              <button
+                mat-icon-button
+                class="carousel-arrow carousel-arrow-left"
+                (click)="prevImage()"
+                [disabled]="currentImageIndex() === 0"
+                type="button"
+                tabindex="-1"
+              >
+                <mat-icon>chevron_left</mat-icon>
+              </button>
+
+              @for (image of buildingDetails()!.imagesURL; let index = $index; track index) {
+                @if(index === currentImageIndex() ) {
+                  <img
+                    [src]="image"
+                    alt="Imagen del edificio"
+                    class="carousel-image fade"
+                  >
+                }
+              }
+              <button
+                mat-icon-button
+                class="carousel-arrow carousel-arrow-right"
+                (click)="nextImage()"
+                [disabled]="currentImageIndex() === images.length - 1"
+                type="button"
+                tabindex="-1"
+              >
+                <mat-icon>chevron_right</mat-icon>
+              </button>
+            </div>
+            <div class="carousel-indicator">
+              {{ currentImageIndex() + 1 }} / {{ images.length }}
+            </div>
+          </div>
+        }
+        <div class="building-details">
+          <p><strong>Descripción: </strong>{{ buildingDetails()!.description }}</p>
+          <p><strong>Dirección: </strong> {{ buildingDetails()!.address }}</p>
+          <p><strong>Dueño: </strong> {{ buildingDetails()!.userFullName}}</p>
+        </div>
+
+        </div>
+        <div class="content-divider"></div>
+        <div class="properties-section">
+          <h3>Propiedades</h3>
+          <div class="properties-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px;">
+            <div class="property-item">
+              <strong>Propiedad de ejemplo 1</strong>
+            </div>
+            <div class="property-item">
+              <strong>Propiedad de ejemplo 2</strong>
+            </div>
+            <div class="property-item">
+              <strong>Propiedad de ejemplo 3</strong>
+            </div>
+            <div class="property-item">
+              <strong>Propiedad de ejemplo 4</strong>
+            </div>
+            <div class="property-item">
+              <strong>Propiedad de ejemplo 5</strong>
+            </div>
+          </div>
+        </div>
+
+      </mat-card-content>
+    </mat-card>
+  </mat-drawer>
+}
+</mat-drawer-container>

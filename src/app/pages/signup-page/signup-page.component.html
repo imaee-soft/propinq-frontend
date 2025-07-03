@@ -1,0 +1,49 @@
+<section class="signup-page-container">
+  <form autocomplete="off" [formGroup]="myForm" (ngSubmit)="onSignup()" class="signup-form">
+    <h1>PropInq</h1>
+    <p><strong>Crea una cuenta</strong></p>
+    <p>Es fácil y rápido.</p>
+    <mat-divider class="divider"></mat-divider>
+    <div class="row-fields">
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Nombre</mat-label>
+        <input matInput placeholder="Ej. John" formControlName="firstName" required>
+      </mat-form-field>
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Apellido</mat-label>
+        <input matInput placeholder="Ej. Doe" formControlName="lastName" required>
+      </mat-form-field>
+    </div>
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput type="email" formControlName="email" required>
+      </mat-form-field>
+    <div class="row-fields">
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input matInput type="password" formControlName="password" required>
+      </mat-form-field>
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Confirmar contraseña</mat-label>
+        <input matInput type="password" formControlName="confirmPassword" required>
+      </mat-form-field>
+    </div>
+    <div class="row-fields">
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Dirección</mat-label>
+        <input matInput placeholder="Ej. Calle Falsa 123" formControlName="address" required>
+      </mat-form-field>
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Teléfono</mat-label>
+        <input matInput placeholder="Ej. 3535693858" formControlName="phoneNumber" required>
+      </mat-form-field>
+    </div>
+    <mat-form-field class="input-field" appearance="outline">
+      <mat-label>Cuit</mat-label>
+      <input matInput placeholder="Ej. 20-12345678-9" formControlName="cuit">
+    </mat-form-field>
+    <button mat-raised-button color="primary" type="submit" routerLink="/account-activation" class="submit-btn">Registrarse</button>
+    <a routerLink="/login" class="login-link">¿Ya tienes una cuenta?</a>
+  </form>
+</section>
+

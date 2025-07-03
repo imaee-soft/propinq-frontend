@@ -9,10 +9,24 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'register',
+    path: 'signup',
     loadComponent: () =>
-      import('./register-page/register-page.component').then(
-        (m) => m.RegisterPageComponent
+      import('./signup-page/signup-page.component').then(
+        (m) => m.SignupPageComponent
+      ),
+  },
+  {
+    path: 'account-activation',
+    loadComponent: () =>
+      import('./account-activation-page/account-activation-page.component').then(
+        (m) => m.AccountActivationPageComponent
+      ),
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('./login-page/login-page.component').then(
+        (m) => m.LoginPageComponent
       ),
   },
   {

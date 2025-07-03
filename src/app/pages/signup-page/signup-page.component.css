@@ -1,0 +1,100 @@
+.signup-page-container {
+  background-color: #000000;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.signup-page-container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/edificios.webp');
+  background-size: cover;
+  background-position: center;
+  filter: blur(8px);
+  z-index: 0;
+}
+
+.signup-page-container::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.8); /* Ajusta la opacidad según lo necesites */
+  z-index: 0;
+  pointer-events: none;
+}
+
+.signup-page-container > * {
+  position: relative;
+  z-index: 1;
+}
+
+.signup-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  background: #f6f7fb;
+  padding: 36px 32px;
+  border-radius: 10px;
+  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.15);
+  min-width: 520px;
+  max-width: 600px;
+  width: 100%;
+}
+
+h1 {
+  font-size: 48px;
+  color: #253ecc;
+  font-weight: bold;
+  margin: 0;
+  text-align: center;
+}
+
+p strong {
+  font-size: 28px;
+  color: #000000;
+  text-align: center;
+  margin: 0;
+}
+p{
+  font-size: 16px;
+  color: #9c9b9b;
+  text-align: center;
+  margin: 0;
+}
+
+.input-field {
+  width: 100%;
+}
+
+.submit-btn {
+  margin-top: 14px;
+  width: 100%;
+  font-weight: bold;
+  letter-spacing: 1px;
+  padding: 12px 0;
+  border-radius: 8px;
+  background-color: rgb(50, 186, 0);
+  color: white;
+}
+
+.row-fields {
+  display: flex;
+  gap: 16px;
+}
+
+.row-fields .input-field {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.login-link {
+  margin-top: 16px;
+  text-align: center;
+  color: #3f51b5;
+  text-decoration: none;
+}

@@ -1,55 +1,57 @@
 .signup-page-container {
-  background-color: #000000;
-  min-height: 100vh;
   display: flex;
-  flex-direction: column;
-  justify-content: center;
+  flex-direction: row;
+  min-height: 100vh;
+  width: 100vw;
+  padding: 0;
+}
+
+.signup-bg-half {
+  width: 50vw;
+  height: 100vh;
+  background: linear-gradient(to right, #1a1e2b, #232a3b);
+  display: flex;
   align-items: center;
-  position: relative;
+  justify-content: center;
 }
 
-.signup-page-container::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image: url('/edificios.webp');
-  background-size: cover;
-  background-position: center;
-  filter: blur(8px);
-  z-index: 0;
+
+.signup-bg-half img {
+  max-width: 400px;
+  max-height: 400px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 8px;
 }
 
-.signup-page-container::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.8); /* Ajusta la opacidad según lo necesites */
-  z-index: 0;
-  pointer-events: none;
-}
-
-.signup-page-container > * {
-  position: relative;
-  z-index: 1;
+.signup-form-half {
+  width: 50vw;
+  height: 100vh;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .signup-form {
+  width: 100%;
+  max-width: 500px;
+  min-width: 320px;
+  margin: 0 auto;
+  box-shadow: none;
+  border-radius: 0;
+  background: none;
+  padding: 48px 40px;
   display: flex;
   flex-direction: column;
-  gap: 18px;
-  background: #f6f7fb;
-  padding: 36px 32px;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px 0 rgba(0, 0, 0, 0.15);
-  min-width: 520px;
-  max-width: 600px;
-  width: 100%;
+  gap: 5px;
 }
 
 h1 {
-  font-size: 48px;
-  color: #253ecc;
-  font-weight: bold;
+  font-size: 58px;
+  color: #000000;
+  font-weight: normal;
   margin: 0;
   text-align: center;
 }
@@ -67,6 +69,14 @@ p{
   margin: 0;
 }
 
+.login-link {
+  margin-top: 16px;
+  text-align: center;
+  color: #3f51b5;
+  text-decoration: none;
+  display: block;
+}
+
 .input-field {
   width: 100%;
 }
@@ -78,7 +88,7 @@ p{
   letter-spacing: 1px;
   padding: 12px 0;
   border-radius: 8px;
-  background-color: rgb(50, 186, 0);
+  background: linear-gradient(to right, #1a1e2b, #232a3b);
   color: white;
 }
 
@@ -98,3 +108,27 @@ p{
   color: #3f51b5;
   text-decoration: none;
 }
+
+
+button[mat-icon-button][matSuffix] {
+  background: transparent;
+  border: none !important;
+  border-radius: 16px;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+button[mat-icon-button][matSuffix]:hover {
+  background: rgba(171, 169, 169, 0.163);
+}
+
+button[mat-icon-button][matSuffix]:focus {
+  background: transparent !important;
+  outline: none !important;
+}
+
+button[mat-icon-button][matSuffix] .mat-mdc-button-persistent-ripple {
+  display: none !important;
+}
+
+

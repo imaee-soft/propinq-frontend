@@ -1,16 +1,16 @@
 export const UNLOGGED_NAVBAR_ITEMS = [
   {
     name: 'Publicar',
-    url: '/',
+    url: '/login',
     featured: true,
   },
   {
     name: 'Favoritos',
-    url: '/',
+    url: '/login',
   },
   {
     name: 'Reseñas',
-    url: '/',
+    url: '/login',
   },
   {
     name: 'Ayuda',

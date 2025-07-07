@@ -55,11 +55,12 @@
         <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword.set(!hideConfirmPassword())">
           <mat-icon>{{hideConfirmPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
+        <mat-error>
         @if (formUtils.isValidField(myForm,'confirmPassword')) {
-          <mat-error>{{
-            formUtils.getFieldError(myForm, "confirmPassword")
-          }}</mat-error>
+          {{formUtils.getFieldError(myForm, "confirmPassword")}}
         }
+        </mat-error>
+
       </mat-form-field>
     </div>
     <div class="row-fields">
@@ -80,6 +81,9 @@
             formUtils.getFieldError(myForm, "phoneNumber")
           }}</mat-error>
         }
+
+
+
       </mat-form-field>
     </div>
     <mat-form-field class="input-field" appearance="outline">
@@ -91,8 +95,10 @@
         }}</mat-error>
       }
     </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" routerLink="/account-activation" class="submit-btn">Registrarse</button>
+    <button mat-raised-button color="primary" type="submit" class="submit-btn">Registrarse</button>
     <a routerLink="/login" class="login-link">¿Ya tienes una cuenta?</a>
   </form>
   </div>
+
 </section>
+

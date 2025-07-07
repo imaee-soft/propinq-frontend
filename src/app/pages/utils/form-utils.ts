@@ -1,31 +1,28 @@
-import { FormGroup, ValidationErrors } from "@angular/forms";
+import { AbstractControl, FormGroup, ValidationErrors, ValidatorFn } from "@angular/forms";
 
 export class FormUtils {
-  static firstNamePattern = '^[a-zA-Z]+( [a-zA-Z]+)?$';
-  static lastNamePattern = '^[a-zA-Z]+( [a-zA-Z]+)?$';
+  static firstNamePattern = "^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+( [a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+)?$";
+  static lastNamePattern = "^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+( [a-zA-ZáéíóúÁÉÍÓÚñÑüÜ]+)?$";
   static emailPattern = '^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$';
+  static addressPattern = '^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ.,#\\s]+$';
   static notSpacesPattern = '^\\S+$';
   static phoneNumberPattern = '^[0-9]{10}$';
   static cuitPattern = '^[0-9]{2}-[0-9]{8}-[0-9]$';
 
 
-  static isValidField(form: FormGroup, fieldName: string): boolean | null {
-    return (
-      // si el form tiene errores y fue tocado
-      // la doble negación !! convierte el valor en un booleano
-      !!form.controls[fieldName].errors && form.controls[fieldName].touched
-    );
-  }
+static isValidField(form: FormGroup, fieldName: string): boolean | null {
+  const control = form.controls[fieldName];
+  return !!control.errors && control.touched;
+}
 
-    static getFieldError(form: FormGroup, fieldName: string, inputName?: string): string | null {
-    if (!form.controls[fieldName]) return null; // si el campo no existe, retornamos null
+static getFieldError(form: FormGroup, fieldName: string, inputName?: string): string | null {
+  if (!form.controls[fieldName]) return null;
 
-    const errors = form.controls[fieldName].errors ?? {}; //
+  const errors = form.controls[fieldName].errors ?? {};
+  return FormUtils.getTextError(errors, inputName);
+}
 
-    return FormUtils.getTextError(errors, inputName);
-  }
-
-    static getTextError(errors: ValidationErrors, inputName?: string):string | null {
+  static getTextError(errors: ValidationErrors, inputName?: string):string | null {
     console.log(errors)
     for (const key of Object.keys(errors)) {
       switch (key) {
@@ -65,6 +62,9 @@ export class FormUtils {
         case 'emailTaken':
           return 'El correo electrónico ya está siendo utilizado'
 
+        case 'passwordMismatch':
+          return 'Las contraseñas no coinciden';
+
         default:
           return `Error de validación no controlado ${key}`;
 
@@ -73,5 +73,27 @@ export class FormUtils {
     return null;
   }
 
+  static passwordMatchValidator: ValidatorFn = (control: AbstractControl): ValidationErrors | null => {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+    if (!password || !confirmPassword) {
+      return null;
+    }
 
+    const passwordsMatch = password.value === confirmPassword.value;
+
+
+    if (!passwordsMatch) {
+      confirmPassword.setErrors({ ...confirmPassword.errors, passwordMismatch: true });
+      return { passwordMismatch: true };
+    } else {
+
+      if (confirmPassword.errors?.['passwordMismatch']) {
+        const { passwordMismatch, ...otherErrors } = confirmPassword.errors;
+        const hasOtherErrors = Object.keys(otherErrors).length > 0;
+        confirmPassword.setErrors(hasOtherErrors ? otherErrors : null);
+      }
+    return null;
+    }
+  }
 }

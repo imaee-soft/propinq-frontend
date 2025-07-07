@@ -16,7 +16,14 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'account-activation',
+    path: 'auth/verify-email',
+    loadComponent: () =>
+      import('./verify-email-page/verify-email-page.component').then(
+        (m) => m.VerifyEmailPageComponent
+      ),
+  },
+  {
+    path: 'auth/activate',
     loadComponent: () =>
       import('./account-activation-page/account-activation-page.component').then(
         (m) => m.AccountActivationPageComponent

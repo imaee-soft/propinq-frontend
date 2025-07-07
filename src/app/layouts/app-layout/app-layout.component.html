@@ -1,4 +1,4 @@
-@if(!isSignup() && !isLogin()){
+@if(!isSignup() && !isLogin() && !isAccountActivation()) {
  <app-navbar></app-navbar>
 <div class="main-layout">
   <app-sidebar></app-sidebar>
@@ -7,6 +7,6 @@
   </div>
 </div>
 }
-@if(isSignup()||isLogin()) {
-      <router-outlet></router-outlet>
+@if(isSignup() || isLogin() || isAccountActivation()) {
+  <router-outlet></router-outlet>
 }

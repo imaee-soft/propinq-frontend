@@ -1,10 +1,36 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ActivatedRoute, RouterLink } from '@angular/router';
+import { UserService } from '../../../users/services/user.service';
 
 @Component({
   selector: 'app-account-activation-page',
-  imports: [],
-  template: `<p>account-activation-page works!</p>`,
+  imports: [RouterLink],
+  templateUrl: './account-activation-page.component.html',
   styleUrl: './account-activation-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountActivationPageComponent { }
+export class AccountActivationPageComponent implements OnInit {
+  userId = signal<string | null>(null);
+  activationToken = signal<string | null>(null);
+  canActivate = computed(() => !!this.userId() && !!this.activationToken());
+  private userService = inject(UserService);
+
+  constructor(private route: ActivatedRoute) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe(params => {
+      this.userId.set(params['userId'] || null);
+      this.activationToken.set(params['activationToken'] || null);
+      // Puedes hacer un console.log aquí para revisar
+
+      if (this.canActivate()) {
+        const userId = this.userId();
+        const activationToken = this.activationToken();
+        if (userId && activationToken) {
+          console.log('userId:', this.userId(), 'activationToken:', this.activationToken());
+          this.userService.activateUser(userId, activationToken).subscribe();
+        } 
+      }
+    });
+  }
+}

@@ -37,7 +37,11 @@ export class LayoutComponent implements OnInit, OnDestroy {
     return this.actualPath() === '/login';
   }
 
-  isAccountActivation(): boolean {
-    return this.actualPath() === '/account-activation';
+  isVerifyEmail(): boolean {
+    return this.actualPath() === '/auth/verify-email';
+  }
+
+  isActivate(): boolean {
+    return this.actualPath().startsWith('/auth/activate');
   }
 }

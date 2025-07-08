@@ -1,14 +1,11 @@
 <section class="activation-page-container">
   <div class="activation-content">
-    <!-- ✅ Ícono de éxito -->
     <div class="success-icon">
       <mat-icon class="check-icon">mark_email_read</mat-icon>
     </div>
 
-    <!-- ✅ Título principal -->
     <h1 class="activation-title">¡Registro Exitoso!</h1>
 
-    <!-- ✅ Mensaje de confirmación -->
     <div class="activation-message">
       <p class="main-message">
         Se ha enviado un correo electrónico de verificación a tu dirección de email.
@@ -19,7 +16,6 @@
       </p>
     </div>
 
-    <!-- ✅ Información adicional -->
     <div class="info-box">
       <mat-icon class="info-icon">info</mat-icon>
       <div class="info-content">
@@ -32,7 +28,6 @@
       </div>
     </div>
 
-    <!-- ✅ Botones de acción -->
     <div class="action-buttons">
       <button
         mat-raised-button
@@ -53,11 +48,10 @@
       </button>
     </div>
 
-    <!-- ✅ Enlace para reenviar correo (opcional) -->
     <div class="resend-section">
       <p class="resend-text">
         ¿No recibiste el correo?
-        <button mat-button color="primary" class="resend-link">
+        <button mat-button color="primary" class="resend-link" (click)="onResendEmail()">
           Reenviar correo de verificación
         </button>
       </p>

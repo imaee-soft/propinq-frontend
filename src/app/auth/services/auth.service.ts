@@ -75,21 +75,6 @@ export class AuthService {
       })
     );
   }
-
-  resendActivationEmail(email: string):Observable<{success: boolean; status: number}> {
-    if (this.isLoading()) {
-      return EMPTY;
-    }
-    this.isLoading.set(true);
-    return this.http.post<{success: boolean; status: number}>(`${environment.API_URL}/users/resend-activation-email`, { email })
-    .pipe(
-      tap({
-        next: () => this.isLoading.set(false),
-        error: () => this.isLoading.set(false),
-        complete: () => this.isLoading.set(false)
-      })
-    );
-  }
 }
 
 

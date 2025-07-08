@@ -23,14 +23,15 @@ export class SignupPageComponent {
   private formBuilder = inject(FormBuilder);
   formUtils = FormUtils;
   myForm = this.formBuilder.group({
-    password: ['', [Validators.required, Validators.pattern(FormUtils.notSpacesPattern)]],
+    password: ['', [Validators.required, Validators.pattern(FormUtils.notSpacesPattern), Validators.minLength(6)]],
     confirmPassword: ['', [Validators.required, Validators.pattern(FormUtils.notSpacesPattern)]],
-    firstName: ['', [Validators.required, Validators.pattern(FormUtils.firstNamePattern)]],
-    lastName: ['', [Validators.required, Validators.pattern(FormUtils.lastNamePattern)]],
+    firstName: ['', [Validators.required, Validators.pattern(FormUtils.firstNamePattern),Validators.minLength(3), Validators.maxLength(20)]],
+    lastName: ['', [Validators.required, Validators.pattern(FormUtils.lastNamePattern), Validators.minLength(3), Validators.maxLength(20)]],
     email: ['', [Validators.required, Validators.pattern(FormUtils.emailPattern)]],
-    address: ['', [Validators.required, Validators.pattern(FormUtils.addressPattern)]],
+    address: ['', [Validators.required, Validators.pattern(FormUtils.addressPattern), Validators.minLength(3), Validators.maxLength(20)]],
     phoneNumber: ['', [Validators.required, Validators.pattern(FormUtils.phoneNumberPattern)]],
     cuit: ['', [Validators.pattern(FormUtils.cuitPattern)]],
+    dni: ['', [Validators.required, Validators.pattern(FormUtils.dniPattern)]]
   },{
     validators: FormUtils.passwordMatchValidator
   });

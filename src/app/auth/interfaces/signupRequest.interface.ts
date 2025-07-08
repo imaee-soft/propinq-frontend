@@ -1,4 +1,5 @@
 export interface SignupRequest {
+  dni: string;
   firstName: string;
   lastName: string;
   email: string;

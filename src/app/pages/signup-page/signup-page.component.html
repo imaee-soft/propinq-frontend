@@ -81,11 +81,17 @@
             formUtils.getFieldError(myForm, "phoneNumber")
           }}</mat-error>
         }
-
-
-
       </mat-form-field>
     </div>
+    <mat-form-field class="input-field" appearance="outline">
+      <mat-label>DNI</mat-label>
+      <input matInput placeholder="Ej. 20-12345678-9" formControlName="dni">
+      @if (formUtils.isValidField(myForm,'dni')) {
+        <mat-error>{{
+          formUtils.getFieldError(myForm, "dni")
+        }}</mat-error>
+      }
+    </mat-form-field>
     <mat-form-field class="input-field" appearance="outline">
       <mat-label>Cuit</mat-label>
       <input matInput placeholder="Ej. 20-12345678-9" formControlName="cuit">

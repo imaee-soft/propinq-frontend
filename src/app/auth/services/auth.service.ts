@@ -60,6 +60,7 @@ export class AuthService {
     this.saveUserToLocalStorage(signupRequest);
 
     return this.http.post<{ success: boolean; status: number }>(`${environment.API_URL}/auth/signup`, {
+      dni: signupRequest.dni,
       firstName: signupRequest.firstName,
       lastName: signupRequest.lastName,
       email: signupRequest.email,

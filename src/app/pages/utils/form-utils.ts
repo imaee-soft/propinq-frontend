@@ -8,6 +8,7 @@ export class FormUtils {
   static notSpacesPattern = '^\\S+$';
   static phoneNumberPattern = '^[0-9]{10}$';
   static cuitPattern = '^[0-9]{2}-[0-9]{8}-[0-9]$';
+  static dniPattern = '^[0-9]{8}$';
 
 
 static isValidField(form: FormGroup, fieldName: string): boolean | null {
@@ -30,7 +31,10 @@ static getFieldError(form: FormGroup, fieldName: string, inputName?: string): st
           return 'Este campo es requerido';
 
         case 'minlength':
-          return `Este campo debe tener al menos ${errors['minlength'].requiredLength} caracteres`;
+          return `Debe ingresar al menos ${errors['minlength'].requiredLength} caracteres`;
+
+        case 'maxlength':
+          return `Debe ingresar como máximo ${errors['maxlength'].requiredLength} caracteres`;
 
         case 'min':
           return `Este campo debe ser mayor o igual ${errors['min'].min}`;
@@ -55,6 +59,9 @@ static getFieldError(form: FormGroup, fieldName: string, inputName?: string): st
           }
           if (errors['pattern'].requiredPattern === FormUtils.cuitPattern) {
             return 'El CUIT no es válido';
+          }
+          if (errors['pattern'].requiredPattern === FormUtils.dniPattern) {
+            return 'El DNI no es válido';
           }
 
           return 'Error de patrón contra expresión regular'

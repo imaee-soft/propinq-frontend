@@ -62,7 +62,7 @@ export class SignupPageComponent {
       const result = this.signupResource.value();
       const request = this.executeSignup();
 
-      if (result && request) {
+      if (request) {
         this.router.navigate(['/auth/verify-email']);
         this.executeSignup.set(null);
       }

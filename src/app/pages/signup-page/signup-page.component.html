@@ -101,6 +101,15 @@
         }}</mat-error>
       }
     </mat-form-field>
+  <mat-form-field class="input-field" appearance="outline">
+    <mat-label>Fecha de nacimiento</mat-label>
+    <input matInput type="date" formControlName="birthDate" required>
+    @if (formUtils.isValidField(myForm,'birthDate')) {
+      <mat-error>{{
+        formUtils.getFieldError(myForm, "birthDate")
+      }}</mat-error>
+    }
+  </mat-form-field>
     <button mat-raised-button color="primary" type="submit" class="submit-btn">Registrarse</button>
     <a routerLink="/login" class="login-link">¿Ya tienes una cuenta?</a>
   </form>

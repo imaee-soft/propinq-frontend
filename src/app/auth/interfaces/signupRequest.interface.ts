@@ -7,4 +7,5 @@ export interface SignupRequest {
   address: string;
   phoneNumber: string;
   cuit?: string;
+  birthDate: string;
 }

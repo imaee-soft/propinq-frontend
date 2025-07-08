@@ -67,7 +67,8 @@ export class AuthService {
       password: signupRequest.password,
       address: signupRequest.address,
       phoneNumber: signupRequest.phoneNumber,
-      cuit: signupRequest.cuit
+      cuit: signupRequest.cuit,
+      birthDate: signupRequest.birthDate
     }, { responseType: 'text' as 'json' }).pipe(
       tap({
         next: () => this.isLoading.set(false),

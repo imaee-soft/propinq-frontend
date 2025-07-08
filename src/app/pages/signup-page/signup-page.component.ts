@@ -31,7 +31,8 @@ export class SignupPageComponent {
     address: ['', [Validators.required, Validators.pattern(FormUtils.addressPattern), Validators.minLength(3), Validators.maxLength(20)]],
     phoneNumber: ['', [Validators.required, Validators.pattern(FormUtils.phoneNumberPattern)]],
     cuit: ['', [Validators.pattern(FormUtils.cuitPattern)]],
-    dni: ['', [Validators.required, Validators.pattern(FormUtils.dniPattern)]]
+    dni: ['', [Validators.required, Validators.pattern(FormUtils.dniPattern)]],
+    birthDate: ['', [Validators.required, Validators.pattern(FormUtils.datePattern)]]
   },{
     validators: FormUtils.passwordMatchValidator
   });

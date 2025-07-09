@@ -2,25 +2,56 @@
   <app-generic-dialog
     dialogTitle="Nuevo inmueble"
     [activeSaveButton]="form.valid"
+    [isLoading]="isLoading()"
   >
     <ng-template #content>
       <div class="form-container">
         <div class="form-layout">
           <div class="form-left">
-            <mat-form-field appearance="outline" class="compact-field">
-              <mat-label>Nombre</mat-label>
-              <input
-                matInput
-                formControlName="name"
-                [maxLength]="50"
-                cdkFocusInitial
-                placeholder="Ingresá el nombre del inmueble..."
-                appUppercase
-              />
-              @if (nameControl?.invalid && nameControl?.touched) {
-              <mat-error>El nombre es requerido</mat-error>
-              }
-            </mat-form-field>
+            <div class="header-fields">
+              <mat-form-field appearance="outline" class="compact-field">
+                <mat-label>Nombre</mat-label>
+                <input
+                  matInput
+                  formControlName="name"
+                  [maxLength]="50"
+                  cdkFocusInitial
+                  placeholder="Ingresá el nombre del inmueble..."
+                  appUppercase
+                />
+                @if (nameControl?.invalid && nameControl?.touched &&
+                nameControl?.errors?.['required']) {
+                <mat-error>El nombre es requerido</mat-error>
+                } @if (nameControl?.invalid && nameControl?.touched &&
+                nameControl?.errors?.['minlength']) {
+                <mat-error
+                  >El nombre debe tener al menos 5 caracteres</mat-error
+                >
+                }
+              </mat-form-field>
+
+              <mat-form-field appearance="outline" class="compact-field">
+                <mat-label>Tipo</mat-label>
+                <mat-select
+                  formControlName="type"
+                  placeholder="Seleccioná el tipo de inmueble"
+                  panelClass="building-type-options"
+                >
+                  <mat-option [value]="'EDIFICIO'">
+                    <div class="building-option-content">
+                      <mat-icon fontIcon="apartment"></mat-icon>
+                      Edificio
+                    </div>
+                  </mat-option>
+                  <mat-option [value]="'COMPLEJO'">
+                    <div class="building-option-content">
+                      <mat-icon fontIcon="domain"></mat-icon>
+                      Complejo
+                    </div>
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+            </div>
 
             <mat-form-field appearance="outline" class="compact-field">
               <mat-label>Descripción</mat-label>
@@ -45,28 +76,34 @@
                   [maxLength]="100"
                   placeholder="Ingresá la dirección del inmueble..."
                 />
-                @if (addressControl?.invalid && addressControl?.touched) {
+                @if (addressControl?.invalid && addressControl?.touched &&
+                addressControl?.errors?.['required']) {
                 <mat-error>La dirección es requerida</mat-error>
+                } @if (addressControl?.invalid && addressControl?.touched &&
+                addressControl?.errors?.['minlength']) {
+                <mat-error
+                  >La dirección debe tener al menos 5 caracteres</mat-error
+                >
+                } @if (!addressControl?.dirty) {
+                <mat-hint
+                  >Formato: Calle, Número, Ciudad, Provincia. Ejemplo: Alberdi,
+                  493, Villa María, Córdoba</mat-hint
+                >
                 }
               </mat-form-field>
 
               <div class="address-actions">
-                <mat-button
-                  matTooltip="Formato: Nombre de la calle, Número, Ciudad y Provincia. Ejemplo: Corrientes 1234, Villa María, Córdoba"
-                >
-                  <mat-icon>info</mat-icon>
-                </mat-button>
                 @if (searchingAddress()) {
                 <mat-progress-spinner
                   mode="indeterminate"
-                  diameter="24"
+                  diameter="30"
                 ></mat-progress-spinner>
                 } @else {
                 <mat-button
                   matTooltip="Buscar dirección"
                   (click)="handleSearchAddress()"
                 >
-                  <mat-icon>map_search</mat-icon>
+                  <mat-icon>search</mat-icon>
                 </mat-button>
                 }
               </div>

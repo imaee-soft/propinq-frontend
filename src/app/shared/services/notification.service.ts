@@ -5,10 +5,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class NotificationService {
   private _snackBar = inject(MatSnackBar);
 
-  showError(message: string, duration = 3000) {
+  notify(message: string, duration = 3000) {
     this._snackBar.open(message, 'Cerrar', {
       duration,
-      panelClass: 'error-snackbar',
+      panelClass: 'message-snackbar',
       horizontalPosition: 'right',
       verticalPosition: 'bottom',
     });

@@ -18,10 +18,17 @@
 
 .form-left,
 .form-right {
-  flex: 1 1 48%;
+  flex: 1 1 4%;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+}
+
+.header-fields {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
 }
 
 mat-form-field {
@@ -39,6 +46,25 @@ mat-label {
   font-weight: 400;
   font-size: 1rem;
   color: #cbd5e1;
+}
+
+::ng-deep .building-type-options {
+  background: #1c2230 !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(15, 17, 26, 0.4) !important;
+  margin-top: 10px !important;
+}
+
+::ng-deep .building-type-options .mat-option:hover {
+  background: #374151 !important;
+  color: #f9fafb !important;
+}
+
+.building-option-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .address-container {
@@ -60,10 +86,13 @@ mat-label {
 
 .address-actions mat-button:hover {
   color: #f1f5f9;
+  cursor: pointer;
 }
 
 .address-actions mat-icon {
-  font-size: 25px;
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
 }
 
 .address-actions mat-progress-spinner {

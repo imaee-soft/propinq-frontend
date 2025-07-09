@@ -12,7 +12,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { AuthStatus } from '../../../auth/enums/auth-status.enum';
 import { AuthService } from '../../../auth/services/auth.service';
-import { NewBuildingPageComponent } from '../../../buildings/pages/new-building-dialog/new-building-dialog.component';
+import { NewBuildingPageComponent } from '../../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
 import { NavElement } from '../../interfaces/nav-element.interface';
 import { EntityDialogService } from '../../services/entity-dialog.service';
 import { NavbarService } from '../../services/navbar.service';
@@ -58,6 +58,8 @@ export class NavbarComponent {
       event.preventDefault();
       this._entityDialogService
         .openNewEntityDialog(NewBuildingPageComponent, {
+          autoFocus: true,
+          restoreFocus: true,
           panelClass: 'generic-dialog',
           entity: 'building',
         })

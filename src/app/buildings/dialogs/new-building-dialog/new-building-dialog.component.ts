@@ -72,7 +72,7 @@ const url = 'icons/building.png';
   templateUrl: './new-building-dialog.component.html',
   styleUrl: './new-building-dialog.component.css',
 })
-export class NewBuildingPageComponent {
+export class NewBuildingDialogComponent {
   private readonly _formBuilder = inject(FormBuilder);
   private readonly _buildingsService = inject(BuildingsService);
   private readonly _addressService = inject(AddressService);

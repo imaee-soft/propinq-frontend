@@ -3,6 +3,11 @@ import { Component, OnInit } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { SnackbarConfig } from '../../interfaces/snackbar-config.interface';
 
+const ICON_MAP = {
+  success: 'check_circle',
+  error: 'error',
+};
+
 @Component({
   selector: 'app-snackbar',
   imports: [CommonModule, MatIcon],
@@ -14,14 +19,7 @@ export class SnackbarComponent implements OnInit {
   onClose!: () => void;
 
   get icon(): string {
-    switch (this.config.type) {
-      case 'success':
-        return 'check_circle';
-      case 'error':
-        return 'error';
-      default:
-        return 'info';
-    }
+    return ICON_MAP[this.config.type];
   }
 
   ngOnInit() {

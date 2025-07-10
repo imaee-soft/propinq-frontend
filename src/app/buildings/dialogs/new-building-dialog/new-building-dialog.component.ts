@@ -33,13 +33,11 @@ import { DEFAULT_CENTER } from '../../../maps/utils/constants';
 import { GenericDialogComponent } from '../../../shared/components/generic-dialog/generic-dialog/generic-dialog.component';
 import { ImageLoaderComponent } from '../../../shared/components/image-loader/image-loader.component';
 import { UppercaseDirective } from '../../../shared/directives/uppercase.directive';
+import { ImageValidator } from '../../../shared/pipes/image.validator';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { BuildingRequest } from '../../adapters/building-request';
 import { BuildingsService } from '../../buildings.service';
-import {
-  BUILDING_CREATED_MESSAGE,
-  BUILDING_CREATION_ERROR_MESSAGE,
-} from '../../constants';
+import { BUILDING_CREATED_MESSAGE } from '../../constants';
 
 interface BuildingFormData {
   name: string;
@@ -137,7 +135,14 @@ export class NewBuildingPageComponent {
     coordinate: this._formBuilder.control<MapCoordinate | null>(null, [
       Validators.required,
     ]),
-    images: this._formBuilder.control<File[] | null>([], [Validators.required]),
+    images: this._formBuilder.control<File[] | null>(
+      [],
+      [
+        Validators.required,
+        ImageValidator.maxSize(3 * 1024 * 1024),
+        ImageValidator.allowedTypes(['jpg', 'jpeg', 'png', 'webp']),
+      ]
+    ),
   });
 
   constructor() {
@@ -153,18 +158,13 @@ export class NewBuildingPageComponent {
 
     effect(() => {
       const resource = this._createBuildingResource;
-
       if (
         resource &&
         resource.status() === ResourceStatus.Resolved &&
         resource.value()?.status === 201
       ) {
-        this._notificationService.notify(BUILDING_CREATED_MESSAGE, 3000);
+        this._notificationService.success(BUILDING_CREATED_MESSAGE, 3000);
         this._matDialogRef.close();
-      }
-
-      if (resource && resource.status() === ResourceStatus.Error) {
-        this._notificationService.notify(BUILDING_CREATION_ERROR_MESSAGE, 3000);
       }
     });
   }
@@ -186,17 +186,17 @@ export class NewBuildingPageComponent {
 
   handleImageUploaded(files: File[]) {
     const updatedFiles = [...this.currentImages, ...files];
-    this.uploadImagesAndMarkDirtyForm(updatedFiles);
+    this.uploadImagesAndMarkTouchedControl(updatedFiles);
   }
 
   handleImageRemoved(index: number) {
     const updatedFiles = this.currentImages.filter((_, i) => i !== index);
-    this.uploadImagesAndMarkDirtyForm(updatedFiles);
+    this.uploadImagesAndMarkTouchedControl(updatedFiles);
   }
 
-  uploadImagesAndMarkDirtyForm(updatedImages: File[]) {
+  uploadImagesAndMarkTouchedControl(updatedImages: File[]) {
     this.form.patchValue({ images: updatedImages });
-    this.form.get('images')?.markAsDirty();
+    this.form.get('images')?.markAsTouched();
   }
 
   handleSubmit() {
@@ -208,9 +208,9 @@ export class NewBuildingPageComponent {
     const { name, description, type, address, coordinate, images } = this.form
       .value as BuildingFormData;
     this._buildingRequest.set({
+      type,
       name,
       description,
-      type,
       address,
       longitude: coordinate?.longitude || 0,
       latitude: coordinate?.latitude || 0,

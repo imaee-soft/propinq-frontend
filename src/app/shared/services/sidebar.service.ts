@@ -2,7 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { Role } from '../../auth/enums/role.enum';
 import { AuthService } from '../../auth/services/auth.service';
-import { SideConfig } from '../interfaces/side-config';
+import { SideConfig } from '../interfaces/side-config.interface';
 import { OWNER_SIDEBAR_CONFIG } from '../utilities/owner.config';
 import { TENANT_SIDEBAR_CONFIG } from '../utilities/tenant.config';
 import { UNLOGGED_SIDEBAR_CONFIG } from '../utilities/unlogged.config';

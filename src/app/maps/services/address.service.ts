@@ -50,7 +50,7 @@ export class AddressService {
 
   private notifyIfAddressNotFound(response: Address[]): void {
     if (response.length === 0)
-      this._notificationService.notify(ADDRESS_NOT_FOUND_ERROR);
+      this._notificationService.error(ADDRESS_NOT_FOUND_ERROR);
   }
 
   private mapCoordinate(response: Address[]): MapCoordinate | null {

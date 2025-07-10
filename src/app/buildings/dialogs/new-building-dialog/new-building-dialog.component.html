@@ -132,10 +132,21 @@
           ></image-loader>
 
           <div class="image-error-wrapper">
-            @if (imagesControl?.invalid && imagesControl?.touched) {
+            @if (imagesControl?.errors?.['required'] && imagesControl?.touched)
+            {
             <mat-error class="image-error"
               >Al menos una imagen es requerida</mat-error
             >
+            } @if (imagesControl?.errors?.['maxSize'] && imagesControl?.touched)
+            {
+            <mat-error class="image-error"
+              >Las imágenes deben pesar como máximo 3MB</mat-error
+            >
+            } @if (imagesControl?.errors?.['allowedTypes'] &&
+            imagesControl?.touched) {
+            <mat-error class="image-error">
+              Las imágenes deben ser de tipo JPG, JPEG, PNG o WEBP
+            </mat-error>
             }
           </div>
         </div>

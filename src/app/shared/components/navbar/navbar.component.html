@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" class="navbar">
+<mat-toolbar color="primary" class="navbar" [class.disabled]="navbarDisabled()">
   <div class="nav-left">
     @if (userLogged()) {
     <button

@@ -1,16 +1,15 @@
 import { inject, Injectable } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { CustomSnackbarService } from './snackbar.service';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationService {
-  private _snackBar = inject(MatSnackBar);
+  private _snackbarService = inject(CustomSnackbarService);
 
-  notify(message: string, duration = 3000) {
-    this._snackBar.open(message, 'Cerrar', {
-      duration,
-      panelClass: 'message-snackbar',
-      horizontalPosition: 'right',
-      verticalPosition: 'bottom',
-    });
+  success(message: string, duration = 3000) {
+    this._snackbarService.success(message, duration);
+  }
+
+  error(message: string, duration = 3000) {
+    this._snackbarService.error(message, duration);
   }
 }

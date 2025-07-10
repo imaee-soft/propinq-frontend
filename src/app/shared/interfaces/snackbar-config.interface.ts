@@ -1,6 +1,6 @@
 export interface SnackbarConfig {
   message: string;
-  type: 'success' | 'error' | 'info' | 'warning';
+  type: 'success' | 'error';
   duration?: number;
   position?:
     | 'top-right'

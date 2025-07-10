@@ -61,8 +61,7 @@ button[mat-flat-button] {
   font-size: 0.875rem !important;
   text-transform: none !important;
   transition: all 0.2s ease !important;
-  min-width: 100px !important;
-  height: 40px !important;
+  width: 150px !important;
   box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3) !important;
 }
 
@@ -73,4 +72,20 @@ button[mat-flat-button]:disabled {
   box-shadow: none !important;
   cursor: not-allowed !important;
   transform: none !important;
+}
+
+.button-content {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 0.5rem !important;
+  padding: 0 !important;
+}
+
+.button-content mat-progress-spinner {
+  color: #cbd5e1;
+}
+
+.button-content mat-progress-spinner ::ng-deep circle {
+  stroke: #cbd5e1;
 }

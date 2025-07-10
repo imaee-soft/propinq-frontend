@@ -45,6 +45,7 @@ export class NavbarComponent {
   items = input<NavElement[]>(this._navbarService.config());
 
   sidebarOpened = this._sidebarService.isOpen;
+  navbarDisabled = computed(() => this._navbarService.disabled());
   userLogged = computed(
     () => this._authService.status() === AuthStatus.AUTHENTICATED
   );
@@ -58,8 +59,6 @@ export class NavbarComponent {
       event.preventDefault();
       this._entityDialogService
         .openNewEntityDialog(NewBuildingPageComponent, {
-          autoFocus: true,
-          restoreFocus: true,
           panelClass: 'generic-dialog',
           entity: 'building',
         })

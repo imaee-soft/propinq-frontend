@@ -1,0 +1,10 @@
+<div
+  class="snackbar"
+  [ngClass]="config.type"
+  [attr.data-position]="config.position"
+>
+  <div class="snackbar-content">
+    <mat-icon>{{ icon }}</mat-icon>
+    <span class="snackbar-message">{{ config.message }}</span>
+  </div>
+</div>

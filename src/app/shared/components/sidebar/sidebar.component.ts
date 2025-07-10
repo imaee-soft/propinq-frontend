@@ -9,7 +9,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
-import { SideConfig } from '../../interfaces/side-config';
+import { SideConfig } from '../../interfaces/side-config.interface';
 import { SidebarService } from '../../services/sidebar.service';
 
 @Component({

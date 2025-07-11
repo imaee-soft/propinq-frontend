@@ -1,24 +1,26 @@
-import { ChangeDetectionStrategy, Component, computed, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, computed, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { UserService } from '../../../users/services/user.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-account-activation-page',
   imports: [RouterLink],
   templateUrl: './account-activation-page.component.html',
-  styleUrl: './account-activation-page.component.css',
+  styleUrls: ['./account-activation-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AccountActivationPageComponent implements OnInit {
+export class AccountActivationPageComponent implements OnInit, OnDestroy {
   userId = signal<string | null>(null);
   activationToken = signal<string | null>(null);
   canActivate = computed(() => !!this.userId() && !!this.activationToken());
   private userService = inject(UserService);
+  private queryParamsSubscription?: Subscription;
 
   constructor(private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.route.queryParams.subscribe(params => {
+    this.queryParamsSubscription = this.route.queryParams.subscribe(params => {
       this.userId.set(params['userId'] || null);
       this.activationToken.set(params['activationToken'] || null);
       // Puedes hacer un console.log aquí para revisar
@@ -27,10 +29,15 @@ export class AccountActivationPageComponent implements OnInit {
         const userId = this.userId();
         const activationToken = this.activationToken();
         if (userId && activationToken) {
-          console.log('userId:', this.userId(), 'activationToken:', this.activationToken());
           this.userService.activateUser(userId, activationToken).subscribe();
-        } 
+        }
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.userId.set(null);
+    this.activationToken.set(null);
+    this.queryParamsSubscription?.unsubscribe();
   }
 }

@@ -85,7 +85,7 @@
     </div>
     <mat-form-field class="input-field" appearance="outline">
       <mat-label>DNI</mat-label>
-      <input matInput placeholder="Ej. 20-12345678-9" formControlName="dni">
+      <input matInput placeholder="Ej. 12345678" formControlName="dni">
       @if (formUtils.isValidField(myForm,'dni')) {
         <mat-error>{{
           formUtils.getFieldError(myForm, "dni")

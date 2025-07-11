@@ -4,7 +4,7 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
   selector: 'app-user',
   imports: [],
   template: `<p>user works!</p>`,
-  styleUrl: './user.component.css',
+  styleUrls: ['./user.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UserComponent { }

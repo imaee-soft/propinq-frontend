@@ -10,9 +10,6 @@ import { SnackbarComponent } from '../components/snackbar/snackbar.component';
 import { SnackbarConfig } from '../interfaces/snackbar-config.interface';
 
 @Injectable({ providedIn: 'root' })
-@Injectable({
-  providedIn: 'root',
-})
 export class CustomSnackbarService {
   private _snackbars: ComponentRef<SnackbarComponent>[] = [];
   private _appRef = inject(ApplicationRef);

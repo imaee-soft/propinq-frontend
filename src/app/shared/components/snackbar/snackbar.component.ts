@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatIcon } from '@angular/material/icon';
 import { SnackbarConfig } from '../../interfaces/snackbar-config.interface';
 
@@ -14,23 +14,11 @@ const ICON_MAP = {
   templateUrl: './snackbar.component.html',
   styleUrl: './snackbar.component.css',
 })
-export class SnackbarComponent implements OnInit {
+export class SnackbarComponent {
   config!: SnackbarConfig;
   onClose!: () => void;
 
   get icon(): string {
     return ICON_MAP[this.config.type];
-  }
-
-  ngOnInit() {
-    this.updatePosition();
-  }
-
-  private updatePosition() {
-    if (this.config.position?.includes('bottom')) {
-      (this.onClose as any).element = document.querySelector(
-        '.snackbar:last-child'
-      );
-    }
   }
 }

@@ -37,7 +37,7 @@ import { ImageValidator } from '../../../shared/pipes/image.validator';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { BuildingRequest } from '../../adapters/building-request';
 import { BuildingsService } from '../../buildings.service';
-import { BUILDING_CREATED_MESSAGE } from '../../constants';
+import { BUILDING_CREATED_MESSAGE, BUILDING_ICON_URL } from '../../constants';
 
 interface BuildingFormData {
   name: string;
@@ -47,8 +47,6 @@ interface BuildingFormData {
   coordinate: MapCoordinate | null;
   images: File[] | null;
 }
-
-const url = 'icons/building.png';
 
 @Component({
   selector: 'new-building-dialog',
@@ -178,7 +176,7 @@ export class NewBuildingDialogComponent {
     this._markers.update(() => [
       {
         coordinate,
-        icon: { url },
+        icon: { url: BUILDING_ICON_URL },
       },
     ]);
     this.form.patchValue({ coordinate });

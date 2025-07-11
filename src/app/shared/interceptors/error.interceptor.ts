@@ -19,7 +19,9 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
-        const errorMessage = error.error?.message || 'An error occurred';
+        const errorMessage =
+          error.error?.message ||
+          'Ocurrió un error inesperado. Contacte a un administrador.';
         this._notificationService.error(errorMessage, 3000);
         return throwError(() => new Error(errorMessage));
       })

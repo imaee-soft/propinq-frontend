@@ -5,7 +5,7 @@ import { AuthState } from '../interfaces/auth-state.interface';
 
 const INITIAL_STATE: AuthState = {
   user: {
-    id: '0362aba9-e4d9-4ff3-8b5a-886ee42ff467',
+    id: '0362aba9-e4d9-4ff3-8b5a-886ee42ff468',
     firstName: 'John',
     lastName: 'Doe',
     email: '',

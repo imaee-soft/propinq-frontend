@@ -42,7 +42,7 @@ export class AuthService {
 
     this.isLoading.set(true);
 
-    return this.http.post<{ success: boolean; status: number }>(`${environment.API_URL}/auth/signup`, {
+    return this.http.post<{ success: boolean; status: number }>(`${environment.apiUrl}api/v1/auth/signup`, {
       dni: signupRequest.dni,
       firstName: signupRequest.firstName,
       lastName: signupRequest.lastName,

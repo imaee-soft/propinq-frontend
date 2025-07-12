@@ -14,7 +14,7 @@ export class UserService {
         return EMPTY;
       }
       this.isLoading.set(true);
-      return this.http.post<{success: boolean; status: number}>(`${environment.API_URL}/users/resend-activation-email`, { email })
+      return this.http.post<{success: boolean; status: number}>(`${environment.apiUrl}/api/v1/users/resend-activation-email`, { email })
       .pipe(
         tap({
           next: () => this.isLoading.set(false),
@@ -29,7 +29,7 @@ export class UserService {
         return EMPTY;
       }
       this.isLoading.set(true);
-      return this.http.post<{ success: boolean; status: number }>(`${environment.API_URL}/users/${userId}/activate`, { activationToken })
+      return this.http.post<{ success: boolean; status: number }>(`${environment.apiUrl}/api/v1/users/${userId}/activate`, { activationToken })
         .pipe(
           tap({
             next: () => this.isLoading.set(false),

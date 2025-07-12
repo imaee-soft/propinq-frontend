@@ -30,6 +30,7 @@
   width: 50vw;
   height: 100vh;
   background: #ffffff;
+
   display: flex;
   align-items: center;
   justify-content: center;
@@ -49,23 +50,23 @@
   gap: 15px;
 }
 
-h1 {
-  font-size: 48px;
-  color: #000000;
-  font-weight: normal;
-  margin: 0;
-  text-align: center;
-}
 
 p strong {
   font-size: 28px;
-  color: #000000;
+  color: #000000 ;
   text-align: center;
   margin: 0;
 }
+
 p{
   font-size: 16px;
   color: #9c9b9b;
+  text-align: center;
+  margin: 0;
+}
+h1 {
+  font-size: 32px;
+  color: #000000;
   text-align: center;
   margin: 0;
 }
@@ -89,8 +90,8 @@ p{
   letter-spacing: 1px;
   padding: 12px 0;
   border-radius: 8px;
-  background: linear-gradient(to right, #1a1e2b, #232a3b);
-  color: white;
+  background: linear-gradient(to right, #1a1e2b, #232a3b)!important;
+  color: white !important;
 }
 
 .row-fields {
@@ -112,7 +113,7 @@ p{
 
 mat-progress-spinner {
   display: block;
-  margin: 0 auto 16px auto; /* Centrado horizontal y espacio abajo */
+  margin: 0 auto 16px auto;
 }
 
 button[mat-icon-button][matSuffix] {

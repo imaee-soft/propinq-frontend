@@ -65,7 +65,7 @@ export class SignupPageComponent {
       const request = this.executeSignup();
       const result = this.signupResource.value();
       if (request && result !== undefined) {
-        this.router.navigate(['/verify-email'], { state: { email: this.myForm.value.email } });
+        this.router.navigate(['/auth/verify-email'], { queryParams: { email: this.myForm.value.email } });
         this.executeSignup.set(null);
       }
     });

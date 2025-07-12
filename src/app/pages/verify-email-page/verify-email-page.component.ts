@@ -1,11 +1,12 @@
 import { UserService } from './../../../users/services/user.service';
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
-import { Router, RouterLink } from "@angular/router";
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../auth/services/auth.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { rxResource } from "@angular/core/rxjs-interop";
 import { EMPTY} from "rxjs";
+import { CustomSnackbarService } from '../../shared/services/snackbar.service';
 
 @Component({
   selector: 'app-verify-email-page',
@@ -15,16 +16,18 @@ import { EMPTY} from "rxjs";
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerifyEmailPageComponent implements OnInit {
-  private authService = inject(AuthService);
-  private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private userService = inject(UserService);
+  private route = inject(ActivatedRoute);
+  private snackbarService = inject(CustomSnackbarService);
+
   maxResends = signal(3);
   resendCount = signal(0);
   email = signal<string>('');
   ngOnInit(){
-    const navigation = this.router.getCurrentNavigation();
-    this.email.set(navigation?.extras.state?.['email'] || '');
+    this.route.queryParams.subscribe(params => {
+    this.email.set(params['email'] || '');
+  });
   }
   private executeResend = signal<string | null>(null);
 
@@ -39,7 +42,9 @@ export class VerifyEmailPageComponent implements OnInit {
   onResendEmail() {
     this.resendCount.update(count => count + 1);
     if (!this.email()) {
-      this.snackBar.open('No se pudo obtener el email registrado', 'Cerrar', { duration: 5000 });
+      this.snackbarService.show({message:'No se pudo obtener el email registrado',
+        type: 'error', duration: 5000, position: 'bottom-center'
+      });
       return;
     }
 
@@ -48,7 +53,9 @@ export class VerifyEmailPageComponent implements OnInit {
     }
 
     if (this.resendCount() >= this.maxResends()) {
-      this.snackBar.open('Límite de reenvíos alcanzado', 'Cerrar', { duration: 5000 });
+      this.snackbarService.show({message:'Límite de reenvíos alcanzado',
+        type: 'error', duration: 5000, position: 'bottom-center'
+      });
       return;
     }
 
@@ -62,7 +69,9 @@ export class VerifyEmailPageComponent implements OnInit {
       const request = this.executeResend();
 
       if (request && result !== undefined) {
-        this.snackBar.open('Email de activación reenviado', 'Cerrar', { duration: 5000 });
+        this.snackbarService.show({message: 'Email de verificación reenviado correctamente',
+          type: 'success', duration: 5000, position: 'bottom-center'
+        });
         this.executeResend.set(null);
       }
     });

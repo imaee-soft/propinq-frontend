@@ -1,5 +1,5 @@
 import { UserService } from './../../../users/services/user.service';
-import { ChangeDetectionStrategy, Component, effect, inject, signal } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { Router, RouterLink } from "@angular/router";
 import { AuthService } from "../../auth/services/auth.service";
@@ -11,15 +11,21 @@ import { EMPTY} from "rxjs";
   selector: 'app-verify-email-page',
   imports: [MatIcon, RouterLink],
   templateUrl: './verify-email-page.component.html',
-  styleUrl: './verify-email-page.component.css',
+  styleUrls: ['./verify-email-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class VerifyEmailPageComponent {
+export class VerifyEmailPageComponent implements OnInit {
   private authService = inject(AuthService);
   private router = inject(Router);
   private snackBar = inject(MatSnackBar);
   private userService = inject(UserService);
-
+  maxResends = signal(3);
+  resendCount = signal(0);
+  email = signal<string>('');
+  ngOnInit(){
+    const navigation = this.router.getCurrentNavigation();
+    this.email.set(navigation?.extras.state?.['email'] || '');
+  }
   private executeResend = signal<string | null>(null);
 
     private resendResource = rxResource({
@@ -31,9 +37,8 @@ export class VerifyEmailPageComponent {
   });
 
   onResendEmail() {
-    const email = this.authService.getUserFromLocalStorage()?.email || null;
-
-    if (!email) {
+    this.resendCount.update(count => count + 1);
+    if (!this.email()) {
       this.snackBar.open('No se pudo obtener el email registrado', 'Cerrar', { duration: 5000 });
       return;
     }
@@ -42,7 +47,12 @@ export class VerifyEmailPageComponent {
       return;
     }
 
-    this.executeResend.set(email);
+    if (this.resendCount() >= this.maxResends()) {
+      this.snackBar.open('Límite de reenvíos alcanzado', 'Cerrar', { duration: 5000 });
+      return;
+    }
+
+    this.executeResend.set(this.email());
   }
 
 

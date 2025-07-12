@@ -28,22 +28,6 @@ export class AuthService {
   status = computed(() => this._authState().status);
   isLoading = signal(false);
 
-  saveUserToLocalStorage(userData: SignupRequest): void {
-    localStorage.setItem('user', JSON.stringify(userData));
-  }
-
-  getUserFromLocalStorage(): SignupRequest | null {
-    const data = localStorage.getItem('user');
-    localStorage.removeItem('user');
-    if (!data) return null;
-
-    try {
-      return JSON.parse(data) as SignupRequest;
-    } catch {
-      return null;
-    }
-  }
-
   logout() {
     this._authState.set({
       user: null,
@@ -57,7 +41,6 @@ export class AuthService {
     }
 
     this.isLoading.set(true);
-    this.saveUserToLocalStorage(signupRequest);
 
     return this.http.post<{ success: boolean; status: number }>(`${environment.API_URL}/auth/signup`, {
       dni: signupRequest.dni,
@@ -70,11 +53,7 @@ export class AuthService {
       cuit: signupRequest.cuit,
       birthDate: signupRequest.birthDate
     }, { responseType: 'text' as 'json' }).pipe(
-      tap({
-        next: () => this.isLoading.set(false),
-        error: () => this.isLoading.set(false),
-        complete: () => this.isLoading.set(false)
-      })
+      tap({ finalize: () => this.isLoading.set(false) })
     );
   }
 }

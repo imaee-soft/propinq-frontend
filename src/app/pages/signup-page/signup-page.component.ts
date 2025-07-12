@@ -25,7 +25,7 @@ export class SignupPageComponent {
   formUtils = FormUtils;
   myForm = this.formBuilder.group({
     password: ['', [Validators.required, Validators.pattern(FormUtils.notSpacesPattern), Validators.minLength(6)]],
-    confirmPassword: ['', [Validators.required, Validators.pattern(FormUtils.notSpacesPattern)]],
+    confirmPassword: ['', [Validators.required, Validators.pattern(FormUtils.notSpacesPattern), Validators.minLength(6)]],
     firstName: ['', [Validators.required, Validators.pattern(FormUtils.firstNamePattern),Validators.minLength(3), Validators.maxLength(20)]],
     lastName: ['', [Validators.required, Validators.pattern(FormUtils.lastNamePattern), Validators.minLength(3), Validators.maxLength(20)]],
     email: ['', [Validators.required, Validators.pattern(FormUtils.emailPattern)]],
@@ -65,7 +65,7 @@ export class SignupPageComponent {
       const request = this.executeSignup();
       const result = this.signupResource.value();
       if (request && result !== undefined) {
-        this.router.navigate(['/auth/verify-email']);
+        this.router.navigate(['/verify-email'], { state: { email: this.myForm.value.email } });
         this.executeSignup.set(null);
       }
     });

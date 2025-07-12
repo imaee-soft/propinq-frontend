@@ -23,11 +23,11 @@ export class AccountActivationPageComponent implements OnInit, OnDestroy {
     this.queryParamsSubscription = this.route.queryParams.subscribe(params => {
       this.userId.set(params['userId'] || null);
       this.activationToken.set(params['activationToken'] || null);
-      // Puedes hacer un console.log aquí para revisar
 
       if (this.canActivate()) {
         const userId = this.userId();
         const activationToken = this.activationToken();
+        
         if (userId && activationToken) {
           this.userService.activateUser(userId, activationToken).subscribe();
         }

@@ -43,10 +43,8 @@
         <button mat-icon-button matSuffix type="button" (click)="hidePassword.set(!hidePassword())">
           <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        @if (formUtils.isValidField(myForm,'password')) {
-          <mat-error>{{
-            formUtils.getFieldError(myForm, "password")
-          }}</mat-error>
+        @if (formUtils.isValidField(myForm, 'password')) {
+          <mat-error>{{ formUtils.getFieldError(myForm, 'password') }}</mat-error>
         }
       </mat-form-field>
       <mat-form-field class="input-field" appearance="outline">
@@ -55,14 +53,15 @@
         <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword.set(!hideConfirmPassword())">
           <mat-icon>{{hideConfirmPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error>
-        @if (formUtils.isValidField(myForm,'confirmPassword')) {
-          {{formUtils.getFieldError(myForm, "confirmPassword")}}
-        }
-        </mat-error>
-
+        @if (formUtils.isValidField(myForm, 'confirmPassword')) {
+          <mat-error>{{ formUtils.getFieldError(myForm, 'confirmPassword') }}</mat-error>
+        } @else if (myForm.hasError('passwordMismatch')) {
+            <mat-error>Las contraseñas no coinciden</mat-error>
+          }
       </mat-form-field>
+
     </div>
+
     <div class="row-fields">
       <mat-form-field class="input-field" appearance="outline">
         <mat-label>Dirección</mat-label>

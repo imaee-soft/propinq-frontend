@@ -10,9 +10,10 @@ import { Router, RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { SignupRequest } from '../../auth/interfaces/signupRequest.interface';
 import { of } from 'rxjs';
+import { MatButton } from '@angular/material/button';
 
 @Component({
-  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, RouterLink, MatProgressSpinnerModule],
+  imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, RouterLink, MatProgressSpinnerModule, MatButton, MatProgressSpinnerModule],
   templateUrl: './signup-page.component.html',
   styleUrls: ['./signup-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -61,14 +62,16 @@ export class SignupPageComponent {
 
   constructor() {
     effect(() => {
-      const result = this.signupResource.value();
       const request = this.executeSignup();
-
+      const result = this.signupResource.value();
       if (request && result !== undefined) {
         this.router.navigate(['/auth/verify-email']);
         this.executeSignup.set(null);
       }
     });
+  }
+  getIsLoading() {
+    return this.authService.isLoading();
   }
 }
 

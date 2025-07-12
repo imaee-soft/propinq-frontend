@@ -110,7 +110,22 @@
       }}</mat-error>
     }
   </mat-form-field>
-    <button mat-raised-button color="primary" type="submit" class="submit-btn">Registrarse</button>
+
+    @if (getIsLoading()) {
+        <mat-progress-spinner
+        mode="indeterminate"
+        diameter="30"
+        ></mat-progress-spinner>
+    } @else {
+      <button
+        mat-raised-button color="primary"
+        type="submit"
+        class="submit-btn"
+        (click)="onSignup()"
+      >
+      Registrarse
+      </button>
+    }
     <a routerLink="/login" class="login-link">¿Ya tienes una cuenta?</a>
   </form>
   </div>

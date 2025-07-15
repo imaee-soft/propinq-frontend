@@ -6,6 +6,7 @@ import { NavElement } from '../interfaces/nav-element.interface';
 import { OWNER_NAVBAR_ITEMS } from '../utilities/owner.config';
 import { TENANT_NAVBAR_ITEMS } from '../utilities/tenant.config';
 import { UNLOGGED_NAVBAR_ITEMS } from '../utilities/unlogged.config';
+import { DialogStateService } from './dialog-state.service';
 
 const NAVBAR_ITEMS: Record<string, NavElement[]> = {
   unlogged: UNLOGGED_NAVBAR_ITEMS,
@@ -16,6 +17,7 @@ const NAVBAR_ITEMS: Record<string, NavElement[]> = {
 @Injectable({ providedIn: 'root' })
 export class NavbarService {
   private _authService = inject(AuthService);
+  private _dialogStateService = inject(DialogStateService);
 
   config = computed((): NavElement[] => {
     const status = this._authService.status();
@@ -28,4 +30,6 @@ export class NavbarService {
         : 'unlogged'
     ];
   });
+
+  disabled = computed(() => this._dialogStateService.isDialogOpen());
 }

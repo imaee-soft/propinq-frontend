@@ -1,0 +1,27 @@
+<mat-dialog-content>
+  <h1 mat-dialog-title>{{ dialogTitle() }}</h1>
+  <ng-container *ngTemplateOutlet="content()"></ng-container>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="false">
+    <mat-icon>close</mat-icon>
+    Cerrar
+  </button>
+  <button
+    mat-flat-button
+    type="submit"
+    [disabled]="!activeSaveButton() || isLoading()"
+  >
+    <div class="button-content">
+      @if (isLoading()) {
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="20"
+      ></mat-progress-spinner>
+      } @else {
+      <mat-icon>save</mat-icon>
+      <span>Guardar</span>
+      }
+    </div>
+  </button>
+</mat-dialog-actions>

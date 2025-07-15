@@ -1,7 +1,7 @@
 html,
 body {
   height: 100%;
-  overflow:hidden;
+  overflow: hidden;
 }
 body {
   margin: 0;
@@ -12,8 +12,45 @@ body {
   min-height: 100vh;
 }
 
-.marker-snackbar {
-  margin-top: 70px !important;
+mat-dialog-content {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #1a1e2b;
+  scroll-behavior: smooth;
 }
 
+mat-dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
 
+mat-dialog-content::-webkit-scrollbar-track {
+  background: #1a1e2b;
+}
+
+mat-dialog-content::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+  border-radius: 6px;
+  border: 1px solid #1a1e2b;
+}
+
+mat-dialog-content::-webkit-scrollbar-thumb:hover {
+  background-color: #64748b;
+}
+
+.generic-dialog {
+  padding: 4px;
+  border-radius: 6px;
+  max-width: 90vw !important;
+  width: 90vw !important;
+  background: #1a1e2b;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}

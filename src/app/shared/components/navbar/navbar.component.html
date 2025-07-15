@@ -1,4 +1,4 @@
-<mat-toolbar color="primary" class="navbar">
+<mat-toolbar color="primary" class="navbar" [class.disabled]="navbarDisabled()">
   <div class="nav-left">
     @if (userLogged()) {
     <button
@@ -23,6 +23,7 @@
     <div class="nav-actions">
       @for (item of items(); track $index) {
       <a
+        (click)="handleNavItemClick(item, $event)"
         [routerLink]="item.url"
         class="nav-action-link"
         [ngClass]="{ 'nav-action-featured': item.featured }"

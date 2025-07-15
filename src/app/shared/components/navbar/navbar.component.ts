@@ -12,7 +12,9 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
 import { AuthStatus } from '../../../auth/enums/auth-status.enum';
 import { AuthService } from '../../../auth/services/auth.service';
+import { NewBuildingDialogComponent } from '../../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
 import { NavElement } from '../../interfaces/nav-element.interface';
+import { EntityDialogService } from '../../services/entity-dialog.service';
 import { NavbarService } from '../../services/navbar.service';
 import { SidebarService } from '../../services/sidebar.service';
 
@@ -38,15 +40,29 @@ export class NavbarComponent {
   private _navbarService = inject(NavbarService);
   private _authService = inject(AuthService);
   private _sidebarService = inject(SidebarService);
+  private _entityDialogService = inject(EntityDialogService);
 
   items = input<NavElement[]>(this._navbarService.config());
 
   sidebarOpened = this._sidebarService.isOpen;
+  navbarDisabled = computed(() => this._navbarService.disabled());
   userLogged = computed(
     () => this._authService.status() === AuthStatus.AUTHENTICATED
   );
 
   toggleSidebar() {
     this._sidebarService.toggle();
+  }
+
+  handleNavItemClick(item: NavElement, event: Event): void {
+    if (item.featured) {
+      event.preventDefault();
+      this._entityDialogService
+        .openNewEntityDialog(NewBuildingDialogComponent, {
+          panelClass: 'generic-dialog',
+          entity: 'building',
+        })
+        .subscribe();
+    }
   }
 }

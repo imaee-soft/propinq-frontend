@@ -1,15 +1,21 @@
-import { ApplicationConfig, provideZoneChangeDetection, ErrorHandler, importProvidersFrom} from '@angular/core';
-import { provideRouter } from '@angular/router';
 import {
+  HTTP_INTERCEPTORS,
   provideHttpClient,
   withInterceptorsFromDi,
-  HTTP_INTERCEPTORS
 } from '@angular/common/http';
-import { routes } from './app.routes';
+import {
+  ApplicationConfig,
+  ErrorHandler,
+  importProvidersFrom,
+  provideZoneChangeDetection,
+} from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { AppErrorHandler } from './app-error-handler.service';
 import { provideAnimations } from '@angular/platform-browser/animations';
+import { provideRouter } from '@angular/router';
+import { AppErrorHandler } from './app-error-handler.service';
+import { routes } from './app.routes';
 import { GlobalHttpErrorInterceptor } from './interceptors/global-http-error.interceptor';
+import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -19,6 +25,15 @@ export const appConfig: ApplicationConfig = {
     { provide: ErrorHandler, useClass: AppErrorHandler },
     provideAnimations(),
     importProvidersFrom(MatSnackBarModule),
-    { provide: HTTP_INTERCEPTORS, useClass: GlobalHttpErrorInterceptor, multi: true },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: GlobalHttpErrorInterceptor,
+      multi: true,
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: ErrorInterceptor,
+      multi: true,
+    },
   ],
 };

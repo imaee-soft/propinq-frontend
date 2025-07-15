@@ -7,7 +7,7 @@ export const routes: Routes = [
     component: LayoutComponent,
     children: [
       {
-        path: '',
+        path: 'home',
         loadChildren: () =>
           import('./pages/pages.routes').then((m) => m.routes),
       },
@@ -18,7 +18,7 @@ export const routes: Routes = [
       },
       {
         path: '**',
-        redirectTo: '',
+        redirectTo: 'home',
       },
     ],
   },

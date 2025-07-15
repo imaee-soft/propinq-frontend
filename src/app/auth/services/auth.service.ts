@@ -16,7 +16,9 @@ const INITIAL_STATE: AuthState = {
     role: Role.OWNER,
     phoneNumber: '',
   },
-  status: AuthStatus.UNAUTHENTICATED,
+
+  status: AuthStatus.AUTHENTICATED,
+
 };
 
 @Injectable({ providedIn: 'root' })

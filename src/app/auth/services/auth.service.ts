@@ -7,9 +7,8 @@ import { ClientStorageService } from '../../shared/services/client-storage.servi
 import { AuthStatus } from '../enums/auth-status.enum';
 import { AuthResponse } from '../interfaces/auth-response.interface';
 import { AuthState } from '../interfaces/auth-state.interface';
-import { LoginRequest } from '../interfaces/login-request.interface';
 import { UserAuth } from '../interfaces/user-auth.interface';
-
+import { LoginRequest } from '../interfaces/login-request.interface';
 
 const INITIAL_STATE: AuthState = {
   user: null,

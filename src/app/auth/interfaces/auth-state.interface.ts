@@ -1,7 +1,9 @@
 import { AuthStatus } from '../enums/auth-status.enum';
-import { User } from './user.interface';
+import { UserAuth } from './user-auth.interface';
 
 export interface AuthState {
-  user: User | null;
+  user: UserAuth | null;
+  accessToken: string | null;
+  refreshToken: string | null;
   status: AuthStatus;
 }

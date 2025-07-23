@@ -87,6 +87,7 @@ export class AuthService {
   }
 
   private clearTokens(): void {
+    console.log('Clearing auth tokens');
     this._storage.remove('accessToken');
     this._storage.remove('refreshToken');
   }

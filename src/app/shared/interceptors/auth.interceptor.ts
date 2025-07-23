@@ -4,14 +4,14 @@ import {
   HttpInterceptor,
   HttpRequest,
 } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Observable } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private readonly _EXCLUDED_BEARER_ROUTES = ['/auth'];
-  private readonly _authService = inject(AuthService);
+  constructor(private injector: Injector) {}
 
   intercept(
     req: HttpRequest<any>,
@@ -19,7 +19,7 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     if (this.shouldExcludeBearerRoute(req.url)) return next.handle(req);
 
-    const accessToken = this._authService.accessToken();
+    const accessToken = this.injector.get(AuthService).accessToken();
     if (!accessToken) return next.handle(req);
 
     const authReq = req.clone({
@@ -30,6 +30,15 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private shouldExcludeBearerRoute(url: string): boolean {
-    return this._EXCLUDED_BEARER_ROUTES.some((route) => url.startsWith(route));
+    try {
+      const path = new URL(url, window.location.origin).pathname;
+      return this._EXCLUDED_BEARER_ROUTES.some((route) =>
+        path.startsWith(route)
+      );
+    } catch {
+      return this._EXCLUDED_BEARER_ROUTES.some((route) =>
+        url.startsWith(route)
+      );
+    }
   }
 }

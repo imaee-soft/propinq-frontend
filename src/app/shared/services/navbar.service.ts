@@ -32,4 +32,16 @@ export class NavbarService {
   });
 
   disabled = computed(() => this._dialogStateService.isDialogOpen());
+  userLogged = computed(
+    () => this._authService.status() === AuthStatus.AUTHENTICATED
+  );
+
+  handleLogin() {
+    this._authService
+      .login({
+        email: 'esosa@gmail.com',
+        password: 'password',
+      })
+      .subscribe();
+  }
 }

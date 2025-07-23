@@ -58,7 +58,9 @@
     </button>
     } @else {
     <a routerLink="/signup" class="nav-action-link">Creá tu cuenta</a>
-    <a routerLink="/login" class="nav-action-link">Ingresá</a>
+    <a (click)="handleLogin()" routerLink="/login" class="nav-action-link"
+      >Ingresá</a
+    >
     }
   </div>
 </mat-toolbar>

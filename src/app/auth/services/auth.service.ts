@@ -7,8 +7,8 @@ import { ClientStorageService } from '../../shared/services/client-storage.servi
 import { AuthStatus } from '../enums/auth-status.enum';
 import { AuthResponse } from '../interfaces/auth-response.interface';
 import { AuthState } from '../interfaces/auth-state.interface';
-import { UserAuth } from '../interfaces/user-auth.interface';
 import { LoginRequest } from '../interfaces/login-request.interface';
+import { UserAuth } from '../interfaces/user-auth.interface';
 
 const INITIAL_STATE: AuthState = {
   user: null,
@@ -87,6 +87,7 @@ export class AuthService {
   }
 
   private clearTokens(): void {
+    console.log('Clearing auth tokens');
     this._storage.remove('accessToken');
     this._storage.remove('refreshToken');
   }

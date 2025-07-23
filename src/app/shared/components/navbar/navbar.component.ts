@@ -10,8 +10,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { RouterModule } from '@angular/router';
-import { AuthStatus } from '../../../auth/enums/auth-status.enum';
-import { AuthService } from '../../../auth/services/auth.service';
 import { NewBuildingDialogComponent } from '../../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
 import { NavElement } from '../../interfaces/nav-element.interface';
 import { EntityDialogService } from '../../services/entity-dialog.service';
@@ -38,20 +36,21 @@ import { SidebarService } from '../../services/sidebar.service';
 })
 export class NavbarComponent {
   private _navbarService = inject(NavbarService);
-  private _authService = inject(AuthService);
   private _sidebarService = inject(SidebarService);
   private _entityDialogService = inject(EntityDialogService);
 
   items = input<NavElement[]>(this._navbarService.config());
-
+  userLogged = this._navbarService.userLogged;
   sidebarOpened = this._sidebarService.isOpen;
   navbarDisabled = computed(() => this._navbarService.disabled());
-  userLogged = computed(
-    () => this._authService.status() === AuthStatus.AUTHENTICATED
-  );
 
   toggleSidebar() {
     this._sidebarService.toggle();
+  }
+
+  // TODO: Implement login handling logic
+  handleLogin() {
+    this._navbarService.handleLogin();
   }
 
   handleNavItemClick(item: NavElement, event: Event): void {

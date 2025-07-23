@@ -1,10 +1,12 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Observable, of, timeout } from 'rxjs';
+import { Observable, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { ClientStorageService } from '../../shared/services/client-storage.service.abstract';
 import { AuthStatus } from '../enums/auth-status.enum';
+import { AuthResponse } from '../interfaces/auth-response.interface';
 import { AuthState } from '../interfaces/auth-state.interface';
+import { LoginRequest } from '../interfaces/login-request.interface';
 import { UserAuth } from '../interfaces/user-auth.interface';
 
 const INITIAL_STATE: AuthState = {
@@ -40,12 +42,29 @@ export class AuthService {
     });
   }
 
+  login(credentials: LoginRequest): Observable<AuthResponse> {
+    return this._http
+      .post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials)
+      .pipe(
+        tap((response) => {
+          const { accessToken, refreshToken, user } = response;
+          this._authState.set({
+            accessToken,
+            refreshToken,
+            user,
+            status: AuthStatus.AUTHENTICATED,
+          });
+          this.setTokens(accessToken, refreshToken);
+        })
+      );
+  }
+
   checkStatus(): Observable<UserAuth | null> {
     const accessToken = this._storage.get<string>('accessToken');
     if (!accessToken) return of(null);
-    return this._http
-      .post<UserAuth>(`${environment.apiUrl}/auth/check-token`, { accessToken })
-      .pipe(timeout(5000));
+    return this._http.post<UserAuth>(`${environment.apiUrl}/auth/check-token`, {
+      accessToken,
+    });
   }
 
   logout(): void {
@@ -64,6 +83,7 @@ export class AuthService {
   }
 
   private clearTokens(): void {
+    console.log('Clearing auth tokens');
     this._storage.remove('accessToken');
     this._storage.remove('refreshToken');
   }

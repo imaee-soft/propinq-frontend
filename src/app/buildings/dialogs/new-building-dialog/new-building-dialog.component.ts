@@ -212,7 +212,7 @@ export class NewBuildingDialogComponent {
       address,
       longitude: coordinate?.longitude || 0,
       latitude: coordinate?.latitude || 0,
-      userId: this._authService.user()?.id ?? '',
+      userId: this._authService.user()?.userId ?? '',
       images: images || [],
     });
   }

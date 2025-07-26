@@ -10,7 +10,7 @@ export const OWNER_NAVBAR_ITEMS = [
   },
   {
     name: 'Inmuebles',
-    url: '/',
+    url: '/buildings',
   },
   {
     name: 'Viviendas',
@@ -33,7 +33,7 @@ export const OWNER_SIDEBAR_CONFIG = {
     {
       label: 'Mis inmuebles',
       icon: 'domain',
-      route: '/home',
+      route: '/buildings',
     },
     {
       label: 'Mis viviendas',

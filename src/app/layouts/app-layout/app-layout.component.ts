@@ -29,10 +29,10 @@ export class LayoutComponent implements OnInit, OnDestroy {
     this.routerSub.unsubscribe();
   }
 
-  authLayout = computed(() => this.isSignup() || this.isLogin() || this.isVerifyEmail || this.isActivate())
+  authLayout = computed(() => this.isSignup() || this.isLogin() || this.isVerifyEmail() || this.isActivate())
 
   appLayout = computed(() => !this.isSignup() && !this.isLogin() && !this.isVerifyEmail() && !this.isActivate());
-  
+
   readonly SIGNUP_PATH = '/signup';
   readonly LOGIN_PATH = '/login';
   readonly VERIFY_EMAIL_PATH = '/auth/verify-email';

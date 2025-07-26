@@ -5,7 +5,7 @@ import { AuthStatus } from '../enums/auth-status.enum';
 import { Role } from '../enums/role.enum';
 import { AuthState } from '../interfaces/auth-state.interface';
 import { environment } from '../../../environments/environment.development';
-import { EMPTY, tap, Observable } from 'rxjs';
+import { EMPTY, Observable, finalize } from 'rxjs';
 
 const INITIAL_STATE: AuthState = {
   user: {
@@ -55,7 +55,7 @@ export class AuthService {
       cuit: signupRequest.cuit,
       birthDate: signupRequest.birthDate
     }, { responseType: 'text' as 'json' }).pipe(
-      tap({ finalize: () => this.isLoading.set(false) })
+      finalize(() => this.isLoading.set(false))
     );
   }
 }

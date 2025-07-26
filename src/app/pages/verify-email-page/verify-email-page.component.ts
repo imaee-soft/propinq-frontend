@@ -16,7 +16,6 @@ import { CustomSnackbarService } from '../../shared/services/snackbar.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class VerifyEmailPageComponent implements OnInit {
-  private snackBar = inject(MatSnackBar);
   private userService = inject(UserService);
   private route = inject(ActivatedRoute);
   private snackbarService = inject(CustomSnackbarService);

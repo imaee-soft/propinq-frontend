@@ -1,0 +1,86 @@
+.activation-bg {
+  min-height: 100vh;
+  min-width: 100vw;
+  background: linear-gradient(135deg, #232b36 0%, #1c2232 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.activation-card {
+  background: #fff;
+  padding: 2.8rem 2.2rem 2.2rem 2.2rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(16,32,40,0.12);
+  max-width: 440px;
+  width: 100%;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.activation-icon {
+  margin-bottom: 1.7rem;
+}
+
+.activation-icon svg {
+  display: block;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 2rem;
+  color: #232b36;
+  margin: 0 0 1rem 0;
+  font-weight: 700;
+}
+
+.activation-message {
+  color: #454545;
+  font-size: 1.10rem;
+  margin-bottom: 2.2rem;
+  line-height: 1.6;
+}
+
+.activation-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  width: 100%;
+}
+
+.activation-btn {
+  background: #232b36;
+  color: #fff;
+  border: none;
+  border-radius: 999px;
+  padding: 0.75rem 1.6rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.activation-btn:hover {
+  background: #22a06b;
+}
+
+.activation-btn.secondary {
+  background: #f4f4f4;
+  color: #232b36;
+  border: 1px solid #d8dbe2;
+}
+
+.activation-btn.secondary:hover {
+  background: #eafbf3;
+  color: #22a06b;
+}
+
+.material-icons {
+  font-size: 1.2em;
+  vertical-align: middle;
+}

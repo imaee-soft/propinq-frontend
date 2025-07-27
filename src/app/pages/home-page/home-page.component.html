@@ -1,5 +1,16 @@
 <mat-drawer-container class="home-page-container">
   <mat-drawer-content>
+    <!-- Botón Panel Administrador -->
+    <button 
+      mat-raised-button 
+      color="primary" 
+      class="admin-panel-button"
+      (click)="goToAdminPanel()"
+      aria-label="Panel Administrador">
+      <mat-icon>admin_panel_settings</mat-icon>
+      Panel Administrador
+    </button>
+
     <app-map [config]="getMapConfig()"
       (markerClick)="onMarkerClick($event)"
       (mapClick)="onMapClick()"

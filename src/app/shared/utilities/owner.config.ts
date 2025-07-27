@@ -41,6 +41,11 @@ export const OWNER_SIDEBAR_CONFIG = {
       route: '/home',
     },
     {
+      label: 'Tipos de Propiedad',
+      icon: 'business',
+      route: '/property-types',
+    },
+    {
       label: 'Mis contactos',
       icon: 'person',
       route: '/home',

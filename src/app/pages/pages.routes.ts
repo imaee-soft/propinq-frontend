@@ -9,6 +9,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'property-types',
+    loadComponent: () =>
+      import('../propertyType/components/property-type-crud.component').then(
+        (m) => m.PropertyTypeCrudComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: 'home-page',
   },

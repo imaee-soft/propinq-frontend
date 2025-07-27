@@ -1,0 +1,62 @@
+.dialog-container {
+  min-width: 400px;
+  max-width: 500px;
+  background: #2a3142;
+  color: #e2e8f0;
+}
+
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+mat-dialog-content {
+  padding: 20px 24px;
+  background: #2a3142;
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+  margin: 0;
+  background: #1c2230;
+  border-top: 1px solid #3d4553;
+}
+
+/* Estilos para el título del diálogo */
+h2[mat-dialog-title] {
+  background: linear-gradient(135deg, #0f111a 0%, #1c2230 100%);
+  color: white;
+  margin: 0;
+  padding: 20px 24px;
+  font-weight: 500;
+  border-bottom: 1px solid #3d4553;
+}
+
+/* Material form fields en tema oscuro */
+::ng-deep .mat-mdc-form-field {
+  --mdc-filled-text-field-container-color: #34495e;
+  --mdc-filled-text-field-label-text-color: #a0aec0;
+  --mdc-filled-text-field-input-text-color: #e2e8f0;
+}
+
+::ng-deep .mat-mdc-text-field-wrapper {
+  background-color: #34495e !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-floating-label {
+  color: #4a90e2 !important;
+}
+
+::ng-deep .mat-mdc-form-field.mat-focused .mat-mdc-notched-outline-notch {
+  border-color: #4a90e2 !important;
+}
+
+/* Botones del diálogo */
+::ng-deep .mat-mdc-dialog .mat-mdc-button {
+  color: #a0aec0;
+}
+
+::ng-deep .mat-mdc-dialog .mat-mdc-raised-button.mat-primary {
+  background: linear-gradient(45deg, #4a90e2, #357abd);
+  color: white;
+}

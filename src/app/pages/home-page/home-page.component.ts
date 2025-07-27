@@ -1,4 +1,5 @@
-import { Component, computed, Signal, signal } from '@angular/core';
+import { Component, computed, Signal, signal, inject } from '@angular/core';
+import { Router } from '@angular/router';
 import { MapComponent } from '../../maps/components/map/map.component';
 import { DEFAULT_CENTER, DEFAULT_MAP_CONFIG } from '../../maps/utils/constants';
 import { BuildingComponent } from '../../buildings/components/building.component';
@@ -17,8 +18,9 @@ import { MatButtonModule } from '@angular/material/button';
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {
+  private router = inject(Router);
 
-  buildingMarkers = signal<MapMarker[]>;
+  buildingMarkers = signal<MapMarker[]>([]);
 
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: DEFAULT_CENTER,
@@ -33,6 +35,15 @@ export class HomePageComponent {
 
   getMapConfig(): MapConfig {
     return this.mapConfig();
+  }
+
+  goToAdminPanel(): void {
+    console.log('Navegando a property-types...');
+    console.log('URL actual:', this.router.url);
+    this.router.navigateByUrl('/property-types').then(
+      (success) => console.log('Navegación exitosa:', success),
+      (error) => console.error('Error en navegación:', error)
+    );
   }
 
   onMarkerClick({ id, coordinate }: MapMarker): void {

@@ -52,29 +52,31 @@ import { PropertyTypeFormDialogComponent } from './property-type-form-dialog.com
             <ng-container matColumnDef="actions">
               <th mat-header-cell *matHeaderCellDef>Acciones</th>
               <td mat-cell *matCellDef="let propertyType">
-                <button mat-icon-button 
-                        color="primary"
-                        (click)="editPropertyType(propertyType)" 
-                        [disabled]="isLoading() || propertyType.deleted"
-                        title="Editar">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                @if (!propertyType.deleted) {
+                @if (propertyType.id) {
                   <button mat-icon-button 
-                          color="warn"
-                          (click)="deletePropertyType(propertyType.id)"
-                          [disabled]="isLoading()"
-                          title="Eliminar">
-                    <mat-icon>delete</mat-icon>
+                          color="primary"
+                          (click)="editPropertyType(propertyType)" 
+                          [disabled]="isLoading() || propertyType.deleted"
+                          title="Editar">
+                    <mat-icon>edit</mat-icon>
                   </button>
-                } @else {
-                  <button mat-icon-button 
-                          color="accent"
-                          (click)="restorePropertyType(propertyType.id)"
-                          [disabled]="isLoading()"
-                          title="Restaurar">
-                    <mat-icon>restore</mat-icon>
-                  </button>
+                  @if (!propertyType.deleted) {
+                    <button mat-icon-button 
+                            color="warn"
+                            (click)="deletePropertyType(propertyType.id)"
+                            [disabled]="isLoading()"
+                            title="Eliminar">
+                      <mat-icon>delete</mat-icon>
+                    </button>
+                  } @else {
+                    <button mat-icon-button 
+                            color="accent"
+                            (click)="restorePropertyType(propertyType.id)"
+                            [disabled]="isLoading()"
+                            title="Restaurar">
+                      <mat-icon>restore</mat-icon>
+                    </button>
+                  }
                 }
               </td>
             </ng-container>
@@ -82,7 +84,8 @@ import { PropertyTypeFormDialogComponent } from './property-type-form-dialog.com
             <!-- Definición de las filas -->
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;" 
-                [class.inactive-row]="row.deleted"></tr>
+                [class.inactive-row]="row.deleted"
+                [class.empty-row]="!row.id"></tr>
             
           </table>
           
@@ -121,8 +124,8 @@ export class PropertyTypeCrudComponent {
   
   // Paginación
   pageIndex = signal(0);
-  pageSize = signal(6);
-  pageSizeOptions = [6, 12, 24];
+  pageSize = signal(5);
+  pageSizeOptions = [5, 10, 20];
 
   // Columnas para mat-table
   displayedColumns: string[] = ['name', 'description', 'actions'];
@@ -157,7 +160,21 @@ export class PropertyTypeCrudComponent {
     const data = this.getPropertyTypes();
     const startIndex = this.pageIndex() * this.pageSize();
     const endIndex = startIndex + this.pageSize();
-    return data.slice(startIndex, endIndex);
+    const paginatedData = data.slice(startIndex, endIndex);
+    
+    // Rellenar con filas vacías hasta completar el pageSize
+    while (paginatedData.length < this.pageSize()) {
+      paginatedData.push({
+        id: '',
+        name: '',
+        description: '',
+        deleted: false,
+        createdAt: undefined,
+        updatedAt: undefined
+      });
+    }
+    
+    return paginatedData;
   }
 
   onPageChange(event: PageEvent): void {

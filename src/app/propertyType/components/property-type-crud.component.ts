@@ -5,6 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialogModule, MatDialog } from '@angular/material/dialog';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule, PageEvent, MatPaginatorIntl } from '@angular/material/paginator';
 import { PropertyTypeService } from '../services/property-type.service';
 import { PropertyTypeResponse, PropertyTypeRequest } from '../interfaces/property-type.interface';
 import { PropertyTypeFormDialogComponent } from './property-type-form-dialog.component';
@@ -12,7 +13,7 @@ import { PropertyTypeFormDialogComponent } from './property-type-form-dialog.com
 @Component({
   selector: 'app-property-type-crud',
   standalone: true,
-  imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogModule, MatTableModule],
+  imports: [CommonModule, MatButtonModule, MatIconModule, MatDialogModule, MatTableModule, MatPaginatorModule],
   template: `
     <div class="property-type-crud">
       <h2>Tipos de Viviendas</h2>
@@ -33,7 +34,7 @@ import { PropertyTypeFormDialogComponent } from './property-type-form-dialog.com
         
         @if (getPropertyTypes().length > 0) {
           <!-- Material Table -->
-          <table mat-table [dataSource]="getPropertyTypes()" class="mat-elevation-8">
+          <table mat-table [dataSource]="getPaginatedData()" class="mat-elevation-8">
             
             <!-- Columna Nombre -->
             <ng-container matColumnDef="name">
@@ -84,6 +85,17 @@ import { PropertyTypeFormDialogComponent } from './property-type-form-dialog.com
                 [class.inactive-row]="row.deleted"></tr>
             
           </table>
+          
+          <!-- Paginador -->
+          <mat-paginator 
+            [length]="getPropertyTypes().length"
+            [pageSize]="pageSize()"
+            [pageSizeOptions]="pageSizeOptions"
+            [pageIndex]="pageIndex()"
+            (page)="onPageChange($event)"
+            showFirstLastButtons
+            class="mat-elevation-8">
+          </mat-paginator>
         }
       </div>
       
@@ -103,11 +115,35 @@ import { PropertyTypeFormDialogComponent } from './property-type-form-dialog.com
 export class PropertyTypeCrudComponent {
   private _propertyTypeService = inject(PropertyTypeService);
   private dialog = inject(MatDialog);
+  private _intl = inject(MatPaginatorIntl);
 
   isLoading = signal(false);
+  
+  // Paginación
+  pageIndex = signal(0);
+  pageSize = signal(6);
+  pageSizeOptions = [6, 12, 24];
 
   // Columnas para mat-table
   displayedColumns: string[] = ['name', 'description', 'actions'];
+
+  constructor() {
+    // Personalizar las etiquetas del paginador
+    this._intl.itemsPerPageLabel = 'Elementos por página:';
+    this._intl.nextPageLabel = 'Página siguiente';
+    this._intl.previousPageLabel = 'Página anterior';
+    this._intl.firstPageLabel = 'Primera página';
+    this._intl.lastPageLabel = 'Última página';
+    this._intl.getRangeLabel = (page: number, pageSize: number, length: number) => {
+      if (length === 0 || pageSize === 0) {
+        return `0 de ${length}`;
+      }
+      length = Math.max(length, 0);
+      const startIndex = page * pageSize;
+      const endIndex = startIndex < length ? Math.min(startIndex + pageSize, length) : startIndex + pageSize;
+      return `${startIndex + 1} - ${endIndex} de ${length}`;
+    };
+  }
 
   propertyTypesResource = rxResource({
     loader: () => this._propertyTypeService.getPropertyTypes()
@@ -115,6 +151,18 @@ export class PropertyTypeCrudComponent {
 
   getPropertyTypes() {
     return this.propertyTypesResource.value() || [];
+  }
+
+  getPaginatedData() {
+    const data = this.getPropertyTypes();
+    const startIndex = this.pageIndex() * this.pageSize();
+    const endIndex = startIndex + this.pageSize();
+    return data.slice(startIndex, endIndex);
+  }
+
+  onPageChange(event: PageEvent): void {
+    this.pageIndex.set(event.pageIndex);
+    this.pageSize.set(event.pageSize);
   }
 
   openCreateDialog(): void {

@@ -1,0 +1,22 @@
+# syntax=docker/dockerfile:1
+
+ARG NODE_VERSION=20.17.0
+
+FROM node:${NODE_VERSION}-alpine
+
+WORKDIR /usr/src/app
+
+# Copia solo los archivos de dependencias primero para aprovechar el cache
+COPY package*.json ./
+
+# Instala TODAS las dependencias (incluyendo las de desarrollo)
+RUN npm install
+
+# Copia el resto del código fuente
+COPY . .
+
+# Expone el puerto de desarrollo de Angular
+EXPOSE 4200
+
+# Comando para desarrollo: ng serve, accesible desde fuera del contenedor
+CMD ["npx", "ng", "serve", "--host", "0.0.0.0"]

@@ -1,24 +1,24 @@
 export const TENANT_NAVBAR_ITEMS = [
   {
     name: 'Publicar',
-    url: '/',
+    url: '/publish',
     featured: true,
   },
   {
     name: 'Favoritos',
-    url: '/',
+    url: '/favorites',
   },
   {
     name: 'Intereses',
-    url: '/',
+    url: '/interests',
   },
   {
     name: 'Contactos',
-    url: '/',
+    url: '/my-contacts',
   },
   {
     name: 'Ayuda',
-    url: '/',
+    url: '/help',
   },
 ];
 
@@ -28,27 +28,27 @@ export const TENANT_SIDEBAR_CONFIG = {
     {
       label: 'Mi alquiler',
       icon: 'apartment',
-      route: '/home',
+      route: '/my-rentals',
     },
     {
       label: 'Mis solicitudes de contacto',
       icon: 'chat',
-      route: '/home',
+      route: '/my-contact-requests',
     },
     {
       label: 'Mis favoritos',
       icon: 'favorite',
-      route: '/home',
+      route: '/favorites',
     },
     {
       label: 'Mis puntos de interés',
       icon: 'bookmark',
-      route: '/home',
+      route: '/interests',
     },
     {
       label: 'Mis contactos',
       icon: 'person',
-      route: '/home',
+      route: '/my-contacts',
     },
   ],
 };

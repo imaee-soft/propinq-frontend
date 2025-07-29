@@ -1,12 +1,12 @@
 export const OWNER_NAVBAR_ITEMS = [
   {
     name: 'Publicar',
-    url: '/',
+    url: '/publish',
     featured: true,
   },
   {
     name: 'Alquileres',
-    url: '/',
+    url: '/my-rentals',
   },
   {
     name: 'Inmuebles',
@@ -14,11 +14,11 @@ export const OWNER_NAVBAR_ITEMS = [
   },
   {
     name: 'Viviendas',
-    url: '/',
+    url: '/properties',
   },
   {
     name: 'Ayuda',
-    url: '/',
+    url: '/help',
   },
 ];
 
@@ -28,7 +28,7 @@ export const OWNER_SIDEBAR_CONFIG = {
     {
       label: 'Mis alquileres',
       icon: 'apartment',
-      route: '/home',
+      route: '/my-rentals',
     },
     {
       label: 'Mis inmuebles',
@@ -38,22 +38,22 @@ export const OWNER_SIDEBAR_CONFIG = {
     {
       label: 'Mis viviendas',
       icon: 'home',
-      route: '/home',
+      route: '/properties',
     },
     {
       label: 'Mis contactos',
       icon: 'person',
-      route: '/home',
+      route: '/my-contacts',
     },
     {
       label: 'Mis documentos',
       icon: 'description',
-      route: '/home',
+      route: '/my-documents',
     },
     {
       label: 'Reportes y estadísticas',
       icon: 'monitoring',
-      route: '/home',
+      route: '/reports',
     },
   ],
 };

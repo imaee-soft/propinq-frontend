@@ -6,6 +6,7 @@ import { BuildingRequest } from './adapters/building-request';
 import { BuildingDetails } from './interfaces/building-details.interface';
 import { Building } from './interfaces/building.interface';
 import { UpdateBuildingRequest } from './adapters/update-building-request';
+import { BuildingDetailsPage } from './interfaces/buildings-details-page.interface';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
@@ -49,8 +50,8 @@ export class BuildingsService {
     );
   }
 
-  getBuildingsDetails(): Observable<BuildingDetails[]> {
-    return this._http.get<BuildingDetails[]>(`${environment.apiUrl}/api/v1/buildings/details`);
+  getBuildingsDetails(): Observable<BuildingDetailsPage> {
+    return this._http.get<BuildingDetailsPage>(`${environment.apiUrl}/api/v1/buildings/details`);
   }
 
   updateBuilding(buildingId:String, updateBuildingRequest: UpdateBuildingRequest): Observable<BuildingDetails> {

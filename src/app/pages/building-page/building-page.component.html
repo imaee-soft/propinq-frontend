@@ -1,14 +1,25 @@
-
+@if (update() || create()) {
+  <div class="custom-modal-overlay"></div>
+}
 @if (update()) {
-  <app-generic-dialog [dialogTitle]="updateDialogTitle()"></app-generic-dialog>
+  <app-generic-dialog [dialogTitle]="updateDialogTitle()" class="custom-modal-dialog"></app-generic-dialog>
 }
 @if (create()) {
-  <app-generic-dialog [dialogTitle]="createDialogTitle()"></app-generic-dialog>
+  <app-generic-dialog [dialogTitle]="createDialogTitle()" class="custom-modal-dialog"></app-generic-dialog>
 }
-<div class="building-page">
+<div class="building-page" [class.blur-background]="update() || create()">
       <h2>Inmuebles</h2>
-
+      <!--<pre>{{ buildings() | json }}</pre>-->
+      <!-- Botón flotante para agregar -->
+<button mat-fab
+        color="primary"
+        class="fab-add"
+        (click)="onCreate()"
+        title="Agregar nuevo tipo de vivienda">
+  <mat-icon>add</mat-icon>
+</button>
       <!-- Solo la tabla -->
+
       <div class="table-container">
         @if (buildingsDetailsResource.isLoading()) {
           <div class="loading">Cargando...</div>
@@ -17,73 +28,69 @@
         @if (buildingsDetailsResource.error()) {
           <div class="error">Error al cargar los inmuebles</div>
         }
-
-        @if (buildings.length === 0 && !buildingsDetailsResource.isLoading()) {
+        @if (buildings() != null) {
+          @if (buildings()!.length === 0 && !buildingsDetailsResource.isLoading()) {
           <div class="empty">No hay inmuebles registrados</div>
         }
 
-        @if (buildings.length > 0) {
-          <!-- Material Table -->
-          <table mat-table [dataSource]="buildings()" class="mat-elevation-8">
+        @if (buildings()!.length > 0) {
 
-            <!-- Columna Nombre -->
-            <ng-container matColumnDef="name">
-              <th mat-header-cell *matHeaderCellDef>Nombre</th>
-              <td mat-cell *matCellDef="let building">{{ building.name }}</td>
-            </ng-container>
+        <table mat-table [dataSource]="buildings()!" class="mat-elevation-8">
 
-            <!-- Columna Descripción -->
-            <ng-container matColumnDef="description">
-              <th mat-header-cell *matHeaderCellDef>Descripción</th>
-              <td mat-cell *matCellDef="let building">{{ building.description || '-' }}</td>
-            </ng-container>
+  <!-- Columna Nombre -->
+  <ng-container matColumnDef="name">
+    <th mat-header-cell *matHeaderCellDef>Nombre</th>
+    <td mat-cell *matCellDef="let building">{{ building.name }}</td>
+  </ng-container>
 
-            <!-- Columna Acciones -->
-            <ng-container matColumnDef="actions">
-              <th mat-header-cell *matHeaderCellDef>Acciones</th>
-              <td mat-cell *matCellDef="let building">
-                <button mat-icon-button
-                        color="primary"
-                        (click)="onUpdate(building)"
-                        [disabled]="buildingsDetailsResource.isLoading() || building.deleted"
-                        title="Editar">
-                  <mat-icon>edit</mat-icon>
-                </button>
-                @if (!building.deleted) {
-                  <button mat-icon-button
-                          color="warn"
-                          (click)="onDelete(building)"
-                          [disabled]="buildingsDetailsResource.isLoading()"
-                          title="Eliminar">
-                    <mat-icon>delete</mat-icon>
-                  </button>
-                } @else {
-                  <button mat-icon-button
-                          color="accent"
-                          (click)="onRestore(building.id)"
-                          [disabled]="buildingsDetailsResource.isLoading()"
-                          title="Restaurar">
-                    <mat-icon>restore</mat-icon>
-                  </button>
-                }
-              </td>
-            </ng-container>
+  <!-- Columna Descripción -->
+  <ng-container matColumnDef="description">
+    <th mat-header-cell *matHeaderCellDef>Descripción</th>
+    <td mat-cell *matCellDef="let building">{{ building.description || '-' }}</td>
+  </ng-container>
 
-            <!-- Definición de las filas -->
-            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row *matRowDef="let row; columns: displayedColumns;"
-                [class.inactive-row]="row.deleted"></tr>
-
-          </table>
-        }
-      </div>
-
-      <!-- Botón flotante para agregar -->
-      <button mat-fab
+  <!-- Columna Acciones -->
+  <ng-container matColumnDef="actions">
+    <th mat-header-cell *matHeaderCellDef>Acciones</th>
+    <td mat-cell *matCellDef="let building">
+      <button mat-icon-button
               color="primary"
-              class="fab-add"
-              (click)="onCreate()"
-              title="Agregar nuevo tipo de vivienda">
-        <mat-icon>add</mat-icon>
+              (click)="onUpdate(building)"
+              [disabled]="buildingsDetailsResource.isLoading() || building.deleted"
+              title="Editar">
+        <mat-icon>edit</mat-icon>
       </button>
-    </div>
+      @if (!building.deleted) {
+        <button mat-icon-button
+                color="warn"
+                (click)="onDelete(building)"
+                [disabled]="buildingsDetailsResource.isLoading()"
+                title="Eliminar">
+          <mat-icon>delete</mat-icon>
+        </button>
+      } @else {
+        <button mat-icon-button
+                color="accent"
+                (click)="onRestore(building.id)"
+                [disabled]="buildingsDetailsResource.isLoading()"
+                title="Restaurar">
+          <mat-icon>restore</mat-icon>
+        </button>
+      }
+    </td>
+  </ng-container>
+
+  <!-- Definición de las filas -->
+  <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+  @for (row of buildings(); track row.buildingId) {
+    <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.inactive-row]="row.deleted"></tr>
+  }
+
+</table>
+
+
+
+        }
+      }
+
+</div>

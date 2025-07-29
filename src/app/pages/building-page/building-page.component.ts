@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { GenericDialogComponent } from '../../shared/components/generic-dialog/generic-dialog/generic-dialog.component';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { of } from 'rxjs/internal/observable/of';
 @Component({
   selector: 'app-building-page',
   imports: [ MatTableModule, MatIconModule, MatButtonModule, GenericDialogComponent],
@@ -16,19 +17,18 @@ import { rxResource } from '@angular/core/rxjs-interop';
 })
 export class BuildingPageComponent {
   private _buildingsService = inject(BuildingsService);
+  hasToQuery = signal<Boolean>(true);
   buildingsDetailsResource = rxResource({
     loader: () => {
-      return this._buildingsService.getBuildingsDetails();
-    },
+      if (this.hasToQuery()) {
+        return this._buildingsService.getBuildingsDetails();
+      }
+      return of(null);
+    }
   });
-  buildings: WritableSignal<BuildingDetails[]> = signal<BuildingDetails[]>([]);
+  buildings = computed<BuildingDetails[] | null>( () => this.buildingsDetailsResource.value()?.content  ?? null);
 
-  constructor() {
-    effect(() => {
-      const buildings = this.buildingsDetailsResource.value() ?? [];
-      this.buildings.set(buildings);
-    });
-  }
+
   displayedColumns: string[] = ['name', 'description', 'actions'];
   update = signal<Boolean>(false);
   create = signal<Boolean>(false);
@@ -36,11 +36,7 @@ export class BuildingPageComponent {
   createDialogTitle = signal('Crear Inmueble');
 
   onDelete(building: BuildingDetails) {
-
-    this._buildingsService.deleteBuilding(building).subscribe(() => {
-      this.buildings.set(this.buildings().filter(b => b !== building));
-    });
-
+    this._buildingsService.deleteBuilding(building).subscribe()
   }
 
   onRestore(building: BuildingDetails){
@@ -63,11 +59,6 @@ export class BuildingPageComponent {
       type: building.buildingTypeName,
       imagesURL: building.imagesURL || [],
     };
-
-    this._buildingsService.updateBuilding(building.buildingId, updateRequest).subscribe((updatedBuilding) => {
-      const updatedBuildings = this.buildings().map(b => b.buildingId === updatedBuilding.buildingId ? updatedBuilding : b);
-      this.buildings.set(updatedBuildings);
-    });
   }
 
 }

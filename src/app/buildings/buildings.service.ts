@@ -5,6 +5,7 @@ import { environment } from '../../environments/environment.development';
 import { BuildingRequest } from './adapters/building-request';
 import { BuildingDetails } from './interfaces/building-details.interface';
 import { Building } from './interfaces/building.interface';
+import { UpdateBuildingRequest } from './adapters/update-building-request';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
@@ -47,4 +48,18 @@ export class BuildingsService {
       `${environment.apiUrl}/api/v1/buildings/${buildingQueried}`
     );
   }
+
+  getBuildingsDetails(): Observable<BuildingDetails[]> {
+    return this._http.get<BuildingDetails[]>(`${environment.apiUrl}/api/v1/buildings/details`);
+  }
+
+  updateBuilding(buildingId:String, updateBuildingRequest: UpdateBuildingRequest): Observable<BuildingDetails> {
+    return this._http.patch<BuildingDetails>(`${this._baseUrl}/${buildingId}`, updateBuildingRequest);
+  }
+
+  deleteBuilding(building: BuildingDetails): Observable<void> {
+    return this._http.delete<void>(`${this._baseUrl}/${building.buildingId}`);
+  }
+
+
 }

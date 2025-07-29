@@ -13,11 +13,11 @@ const INITIAL_STATE: AuthState = {
     firstName: 'John',
     lastName: 'Doe',
     email: '',
-    role: Role.ADMIN,
+    role: Role.OWNER,
     phoneNumber: '',
   },
 
-  status: AuthStatus.UNAUTHENTICATED,
+  status: AuthStatus.AUTHENTICATED,
 
 };
 

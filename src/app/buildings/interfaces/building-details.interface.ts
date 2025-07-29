@@ -1,4 +1,5 @@
 export interface BuildingDetails {
+  buildingId:       string;
   name:             string;
   description:      string;
   address:          string;

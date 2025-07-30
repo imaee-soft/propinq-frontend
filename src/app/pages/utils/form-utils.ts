@@ -10,6 +10,9 @@ export class FormUtils {
   static cuitPattern = '^[0-9]{2}-[0-9]{8}-[0-9]$';
   static dniPattern = '^[0-9]{1,9}$';
   static datePattern = '^\\d{4}-\\d{2}-\\d{2}$';
+  static usernamePattern = '^[a-zA-Z0-9_]{3,20}$';
+  static companyNamePattern = '^[a-zA-Z0-9áéíóúÁÉÍÓÚñÑüÜ.,&\\s]+$';
+  static legalNamePattern = '^[a-zA-ZáéíóúÁÉÍÓÚñÑüÜ\\s]+$';
 
 
   static isValidField(form: FormGroup, fieldName: string): boolean | null {
@@ -50,6 +53,12 @@ export class FormUtils {
           return 'El DNI no es válido';
         case FormUtils.datePattern:
           return 'La fecha de nacimiento no es válida';
+        case FormUtils.usernamePattern:
+          return 'El nombre de usuario debe tener entre 3-20 caracteres y solo contener letras, números y guiones bajos';
+        case FormUtils.companyNamePattern:
+          return 'El nombre de la empresa no es válido';
+        case FormUtils.legalNamePattern:
+          return 'El nombre legal no es válido';
         default:
           return 'Error de patrón contra expresión regular';
       }

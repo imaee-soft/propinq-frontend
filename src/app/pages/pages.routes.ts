@@ -16,6 +16,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'signup-real-estate',
+    loadComponent: () =>
+      import('./signupRealEstate-page/signupRealEstate-page').then(
+        (m) => m.SignupRealEstatePageComponent
+      ),
+  },
+  {
     path: 'auth/verify-email',
     loadComponent: () =>
       import('./verify-email-page/verify-email-page.component').then(

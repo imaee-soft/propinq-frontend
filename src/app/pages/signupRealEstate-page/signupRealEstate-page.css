@@ -47,6 +47,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
+  overflow-y: auto;
 }
 
 .signup-form-half::before {
@@ -66,7 +67,7 @@
   width: 100%;
   max-width: 650px;
   min-width: 400px;
-  margin: 0 auto;
+  margin: 40px auto;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1),
               0 0 0 1px rgba(255, 255, 255, 0.8);
   border-radius: 16px;
@@ -112,20 +113,6 @@ h1 {
 }
 
 .login-link:hover {
-  color: #2563eb;
-}
-
-.real-estate-link {
-  margin-top: 16px;
-  text-align: center;
-  color: #3b82f6;
-  text-decoration: none;
-  display: block;
-  font-weight: 500;
-  transition: color 0.2s ease;
-}
-
-.real-estate-link:hover {
   color: #2563eb;
 }
 
@@ -226,6 +213,7 @@ button[mat-icon-button][matSuffix] .mat-mdc-button-persistent-ripple {
   .signup-form {
     max-width: 90%;
     padding: 32px 24px;
+    margin: 20px auto;
   }
 
   .row-fields {

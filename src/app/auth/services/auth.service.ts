@@ -1,4 +1,5 @@
 import { SignupRequest } from './../interfaces/signupRequest.interface';
+import { RealEstateRequest } from './../interfaces/realEstateRequest.interface';
 import { HttpClient, HttpResponse } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthStatus } from '../enums/auth-status.enum';
@@ -54,6 +55,29 @@ export class AuthService {
       phoneNumber: signupRequest.phoneNumber,
       cuit: signupRequest.cuit,
       birthDate: signupRequest.birthDate
+    }, { responseType: 'text' as 'json' }).pipe(
+      finalize(() => this.isLoading.set(false))
+    );
+  }
+
+  signupRealEstate(realEstateRequest: RealEstateRequest): Observable<{ success: boolean; status: number }> {
+    if (this.isLoading()) {
+      return EMPTY;
+    }
+
+    this.isLoading.set(true);
+
+    return this.http.post<{ success: boolean; status: number }>(`${environment.apiUrl}/api/v1/real-estates/registerRealEstate`, {
+      username: realEstateRequest.username,
+      firstName: realEstateRequest.firstName,
+      lastName: realEstateRequest.lastName,
+      password: realEstateRequest.password,
+      email: realEstateRequest.email,
+      phoneNumber: realEstateRequest.phoneNumber,
+      address: realEstateRequest.address,
+      companyName: realEstateRequest.companyName,
+      cuit: realEstateRequest.cuit,
+      legalName: realEstateRequest.legalName
     }, { responseType: 'text' as 'json' }).pipe(
       finalize(() => this.isLoading.set(false))
     );

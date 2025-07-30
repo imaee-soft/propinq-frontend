@@ -4,8 +4,18 @@
   </div>
   <div class="signup-form-half">
     <form autocomplete="off" [formGroup]="myForm" (ngSubmit)="onSignup()" class="signup-form">
-    <h1>Tu Camino a Casa</h1>
+    <h1>Registro de Inmobiliaria</h1>
     <br>
+    <mat-form-field class="input-field" appearance="outline">
+      <mat-label>Nombre de usuario</mat-label>
+      <input matInput placeholder="Ej. inmobiliaria123" formControlName="username" required>
+      @if (formUtils.isValidField(myForm,'username')) {
+        <mat-error>{{
+          formUtils.getFieldError(myForm, "username", "nombre de usuario")
+        }}</mat-error>
+      }
+    </mat-form-field>
+
     <div class="row-fields">
       <mat-form-field class="input-field" appearance="outline">
         <mat-label>Nombre</mat-label>
@@ -27,15 +37,17 @@
         }
       </mat-form-field>
     </div>
-      <mat-form-field class="input-field" appearance="outline">
-        <mat-label>Correo electrónico</mat-label>
-        <input matInput type="email" formControlName="email" required>
-        @if (formUtils.isValidField(myForm,'email')) {
-          <mat-error>{{
-            formUtils.getFieldError(myForm, "email")
-          }}</mat-error>
-        }
-      </mat-form-field>
+
+    <mat-form-field class="input-field" appearance="outline">
+      <mat-label>Correo electrónico</mat-label>
+      <input matInput type="email" formControlName="email" required>
+      @if (formUtils.isValidField(myForm,'email')) {
+        <mat-error>{{
+          formUtils.getFieldError(myForm, "email")
+        }}</mat-error>
+      }
+    </mat-form-field>
+
     <div class="row-fields">
       <mat-form-field class="input-field" appearance="outline">
         <mat-label>Contraseña</mat-label>
@@ -49,6 +61,7 @@
           }}</mat-error>
         }
       </mat-form-field>
+      
       <mat-form-field class="input-field" appearance="outline">
         <mat-label>Confirmar contraseña</mat-label>
         <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" formControlName="confirmPassword" required>
@@ -60,9 +73,9 @@
           {{formUtils.getFieldError(myForm, "confirmPassword")}}
         }
         </mat-error>
-
       </mat-form-field>
     </div>
+
     <div class="row-fields">
       <mat-form-field class="input-field" appearance="outline">
         <mat-label>Dirección</mat-label>
@@ -73,6 +86,7 @@
           }}</mat-error>
         }
       </mat-form-field>
+      
       <mat-form-field class="input-field" appearance="outline">
         <mat-label>Teléfono</mat-label>
         <input matInput placeholder="Ej. 3535233546" formControlName="phoneNumber" required>
@@ -83,33 +97,38 @@
         }
       </mat-form-field>
     </div>
+
     <mat-form-field class="input-field" appearance="outline">
-      <mat-label>DNI</mat-label>
-      <input matInput placeholder="Ej. 12345678" formControlName="dni">
-      @if (formUtils.isValidField(myForm,'dni')) {
+      <mat-label>Nombre de la empresa</mat-label>
+      <input matInput placeholder="Ej. Inmobiliaria San José S.A." formControlName="companyName" required>
+      @if (formUtils.isValidField(myForm,'companyName')) {
         <mat-error>{{
-          formUtils.getFieldError(myForm, "dni")
+          formUtils.getFieldError(myForm, "companyName", "nombre de la empresa")
         }}</mat-error>
       }
     </mat-form-field>
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>Cuit</mat-label>
-      <input matInput placeholder="Ej. 20-12345678-9" formControlName="cuit">
-      @if (formUtils.isValidField(myForm,'cuit')) {
-        <mat-error>{{
-          formUtils.getFieldError(myForm, "cuit")
-        }}</mat-error>
-      }
-    </mat-form-field>
-     <mat-form-field class="input-field" appearance="outline">
-    <mat-label>Fecha de nacimiento</mat-label>
-    <input matInput type="date" formControlName="birthDate" required>
-    @if (formUtils.isValidField(myForm,'birthDate')) {
-      <mat-error>{{
-        formUtils.getFieldError(myForm, "birthDate")
-      }}</mat-error>
-    }
-  </mat-form-field>
+
+    <div class="row-fields">
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>CUIT</mat-label>
+        <input matInput placeholder="Ej. 20-12345678-9" formControlName="cuit" required>
+        @if (formUtils.isValidField(myForm,'cuit')) {
+          <mat-error>{{
+            formUtils.getFieldError(myForm, "cuit")
+          }}</mat-error>
+        }
+      </mat-form-field>
+
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Nombre legal</mat-label>
+        <input matInput placeholder="Ej. Juan Carlos Pérez" formControlName="legalName" required>
+        @if (formUtils.isValidField(myForm,'legalName')) {
+          <mat-error>{{
+            formUtils.getFieldError(myForm, "legalName", "nombre legal")
+          }}</mat-error>
+        }
+      </mat-form-field>
+    </div>
 
     @if (getIsLoading()) {
         <mat-progress-spinner
@@ -123,13 +142,10 @@
         class="submit-btn"
         (click)="onSignup()"
       >
-      Registrarse
+      Registrar Inmobiliaria
       </button>
     }
     <a routerLink="/login" class="login-link">¿Ya tienes una cuenta?</a>
-    <a routerLink="/signup-real-estate" class="real-estate-link">Soy inmobiliaria</a>
   </form>
   </div>
-
 </section>
-

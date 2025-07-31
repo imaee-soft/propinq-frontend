@@ -7,5 +7,6 @@ export interface BuildingDetails {
   userId:           string;
   userFullName:     string;
   buildingTypeName: string;
+  deleted:         boolean;
 }
 

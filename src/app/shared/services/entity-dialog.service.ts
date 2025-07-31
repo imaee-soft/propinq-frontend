@@ -23,4 +23,15 @@ export class EntityDialogService {
       })
     );
   }
+
+  openEditEntityDialog<T>(component: ComponentType<T>, config: DialogConfig & { id: string }) {
+    const { entity, id, ...rest } = config;
+    this.queryParamsService.pushQueryParams({ entity, action: 'edit', id });
+    const dialogRef = this.dialog.open(component, rest);
+    return dialogRef.afterClosed().pipe(
+      finalize(() => {
+        this.queryParamsService.removeQueryParams(['entity', 'action', 'id']);
+      })
+    );
+  }
 }

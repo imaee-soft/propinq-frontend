@@ -1,6 +1,4 @@
 export interface UpdateBuildingRequest {
-  name: string;
-  description: string;
-  type: string;
-  imagesURL: string[];
+  id: string;
+  payload: { name: string; description: string; type: string; existingImagesURLS?: string[]; imageFiles?: File[] };
 }

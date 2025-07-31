@@ -8,15 +8,22 @@ import { MatButtonModule } from '@angular/material/button';
 import { GenericDialogComponent } from '../../shared/components/generic-dialog/generic-dialog/generic-dialog.component';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs/internal/observable/of';
+import { BuildingDetailsPage } from '../../buildings/interfaces/buildings-details-page.interface';
+import { EntityDialogService } from '../../shared/services/entity-dialog.service';
+import { NewBuildingDialogComponent } from '../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
+import { EditBuildingDialogComponent } from '../../buildings/dialogs/edit-building-dialog/edit-building-dialog.component';
+
 @Component({
   selector: 'app-building-page',
-  imports: [ MatTableModule, MatIconModule, MatButtonModule, GenericDialogComponent],
+  imports: [ MatTableModule, MatIconModule, MatButtonModule],
   templateUrl: './building-page.component.html',
   styleUrls: ['./building-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BuildingPageComponent {
   private _buildingsService = inject(BuildingsService);
+  private _entityDialogService = inject(EntityDialogService); // Inyecta el servicio de diálogos
+
   hasToQuery = signal<Boolean>(true);
   buildingsDetailsResource = rxResource({
     loader: () => {
@@ -26,39 +33,45 @@ export class BuildingPageComponent {
       return of(null);
     }
   });
-  buildings = computed<BuildingDetails[] | null>( () => this.buildingsDetailsResource.value()?.content  ?? null);
+  buildings = computed<BuildingDetails[] | null>( () => this.buildingsDetailsResource.value()?.content || null );
 
 
   displayedColumns: string[] = ['name', 'description', 'actions'];
-  update = signal<Boolean>(false);
-  create = signal<Boolean>(false);
-  updateDialogTitle = signal('Actualizar Inmueble');
-  createDialogTitle = signal('Crear Inmueble');
 
-  onDelete(building: BuildingDetails) {
-    this._buildingsService.deleteBuilding(building).subscribe()
+
+  onCreate(): void {
+
+    this._entityDialogService.openNewEntityDialog(NewBuildingDialogComponent, {
+      panelClass: 'generic-dialog',
+      entity: 'building',
+      width: '900px',
+    }).subscribe(wasSuccessful => {
+      if (wasSuccessful) {
+        this.buildingsDetailsResource.reload();
+      }
+    });
   }
 
-  onRestore(building: BuildingDetails){
-
+  onUpdate(building: BuildingDetails): void {
+    this._entityDialogService.openEditEntityDialog(EditBuildingDialogComponent, {
+      panelClass: 'generic-dialog',
+      entity: 'building',
+      id: building.buildingId,
+      width: '900px',
+      data: { building }
+    }).subscribe(wasSuccessful => {
+      if (wasSuccessful) {
+        this.buildingsDetailsResource.reload();
+      }
+    });
   }
 
-
-  onUpdate(building: BuildingDetails) {
-    this.create.set(true);
-
-  }
-  onCreate() {
-    this.update.set(true);
+   onDelete(buildingId: string) {
+    this._buildingsService.deleteBuilding(buildingId).subscribe()
   }
 
-  updateBuilding(building: BuildingDetails){
-    const updateRequest: UpdateBuildingRequest = {
-      name: building.name,
-      description: building.description,
-      type: building.buildingTypeName,
-      imagesURL: building.imagesURL || [],
-    };
+  onRestore(buildingId: string) {
+    this._buildingsService.restoreBuilding(buildingId).subscribe()
   }
 
 }

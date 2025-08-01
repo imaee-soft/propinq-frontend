@@ -6,6 +6,14 @@
     <form autocomplete="off" [formGroup]="myForm" (ngSubmit)="onSignup()" class="signup-form">
     <h1>Registro de Inmobiliaria</h1>
     <br>
+    
+    @if (getErrorMessage()) {
+      <div class="error-message">
+        <mat-icon>error</mat-icon>
+        <span>{{ getErrorMessage() }}</span>
+      </div>
+    }
+    
     <mat-form-field class="input-field" appearance="outline">
       <mat-label>Nombre de usuario</mat-label>
       <input matInput placeholder="Ej. inmobiliaria123" formControlName="username" required>

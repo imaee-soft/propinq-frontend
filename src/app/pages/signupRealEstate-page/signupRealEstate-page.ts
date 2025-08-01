@@ -9,8 +9,9 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { RealEstateRequest } from '../../auth/interfaces/realEstateRequest.interface';
-import { of } from 'rxjs';
+import { of, catchError, EMPTY } from 'rxjs';
 import { MatButton } from '@angular/material/button';
+import { HttpErrorResponse } from '@angular/common/http';
 
 @Component({
   imports: [ReactiveFormsModule, MatFormFieldModule, MatInputModule, MatIconModule, RouterLink, MatProgressSpinnerModule, MatButton, MatProgressSpinnerModule],
@@ -23,6 +24,9 @@ export class SignupRealEstatePageComponent {
   private router = inject(Router);
   private formBuilder = inject(FormBuilder);
   formUtils = FormUtils;
+  
+  errorMessage = signal<string | null>(null);
+  
   myForm = this.formBuilder.group({
     username: ['', [Validators.required, Validators.pattern(FormUtils.usernamePattern), Validators.minLength(3), Validators.maxLength(20)]],
     firstName: ['', [Validators.required, Validators.pattern(FormUtils.firstNamePattern),Validators.minLength(3), Validators.maxLength(20)]],
@@ -48,13 +52,46 @@ export class SignupRealEstatePageComponent {
     request: () => this.executeSignup() !== null ? this.executeSignup() : null,
     loader: ({ request }) => {
       if (!request) return of(null);
-      return this.authService.signupRealEstate(request);
+      
+      // Limpiar mensaje de error previo
+      this.errorMessage.set(null);
+      
+      return this.authService.signupRealEstate(request).pipe(
+        catchError((error: any) => {
+          console.error('Error interceptado en componente:', error);
+          
+          // Verificar si es un error 409 procesado por nuestro interceptor
+          if (error instanceof Error) {
+            const errorMessage = error.message || '';
+            
+            // Verificar si tiene el status original preservado o el mensaje específico
+            if ((error as any).originalStatus === 409 || errorMessage.includes('CONFLICT_ERROR')) {
+              this.errorMessage.set('No se puede registrar la inmobiliaria porque ya se encuentra registrada con ese nombre de empresa o CUIT');
+            } else {
+              this.errorMessage.set('Error al registrar la inmobiliaria. Intente nuevamente.');
+            }
+          } else if (error instanceof HttpErrorResponse && error.status === 409) {
+            this.errorMessage.set('No se puede registrar la inmobiliaria porque ya se encuentra registrada con ese nombre de empresa o CUIT');
+          } else {
+            this.errorMessage.set('Error al registrar la inmobiliaria. Intente nuevamente.');
+          }
+          
+          // Resetear el signal para poder intentar de nuevo
+          this.executeSignup.set(null);
+          
+          // Retornar observable vacío para evitar que se propague el error
+          return EMPTY;
+        })
+      );
     }
   });
 
   onSignup(){
     this.myForm.markAllAsTouched();
     this.myForm.updateValueAndValidity();
+    
+    // Limpiar mensaje de error previo
+    this.errorMessage.set(null);
 
     if (this.myForm.valid) {
       const formValue = this.myForm.value;
@@ -78,7 +115,9 @@ export class SignupRealEstatePageComponent {
     effect(() => {
       const request = this.executeSignup();
       const result = this.signupResource.value();
-      if (request && result !== undefined) {
+      
+      // Solo navegar si el resultado es exitoso y no hay mensaje de error
+      if (request && result !== undefined && result !== null && !this.errorMessage()) {
         this.router.navigate(['/auth/verify-email'], { queryParams: { email: this.myForm.value.email } });
         this.executeSignup.set(null);
       }
@@ -87,5 +126,9 @@ export class SignupRealEstatePageComponent {
   
   getIsLoading() {
     return this.authService.isLoading();
+  }
+  
+  getErrorMessage() {
+    return this.errorMessage();
   }
 }

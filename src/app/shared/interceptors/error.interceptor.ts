@@ -19,6 +19,20 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
+        // Para errores 409 (CONFLICT), preservar información adicional
+        if (error.status === 409) {
+          const errorMessage = 'CONFLICT_ERROR: La inmobiliaria ya se encuentra registrada';
+          this._notificationService.error('No se puede registrar la inmobiliaria porque ya se encuentra registrada', 3000);
+          
+          // Crear un error que preserve el status original
+          const customError = new Error(errorMessage);
+          (customError as any).originalStatus = 409;
+          (customError as any).originalError = error;
+          
+          return throwError(() => customError);
+        }
+        
+        // Para otros errores, comportamiento normal
         const errorMessage =
           error.error?.message ||
           'Ocurrió un error inesperado. Contacte a un administrador.';

@@ -5,6 +5,7 @@ import { BuildingDetails } from '../../buildings/interfaces/building-details.int
 import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { GenericDialogComponent } from '../../shared/components/generic-dialog/generic-dialog/generic-dialog.component';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs/internal/observable/of';
@@ -15,20 +16,23 @@ import { EditBuildingDialogComponent } from '../../buildings/dialogs/edit-buildi
 
 @Component({
   selector: 'app-building-page',
-  imports: [ MatTableModule, MatIconModule, MatButtonModule],
+  imports: [ MatTableModule, MatIconModule, MatButtonModule, MatPaginatorModule],
   templateUrl: './building-page.component.html',
   styleUrls: ['./building-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class BuildingPageComponent {
   private _buildingsService = inject(BuildingsService);
-  private _entityDialogService = inject(EntityDialogService); // Inyecta el servicio de diálogos
+  private _entityDialogService = inject(EntityDialogService);
 
   hasToQuery = signal<Boolean>(true);
+  pageIndex = signal(0);
+  totalElements = computed<number>(() => this.buildingsDetailsResource.value()?.totalElements || 0);
+
   buildingsDetailsResource = rxResource({
     loader: () => {
       if (this.hasToQuery()) {
-        return this._buildingsService.getBuildingsDetails();
+        return this._buildingsService.getBuildingsDetails(this.pageIndex());
       }
       return of(null);
     }
@@ -38,7 +42,10 @@ export class BuildingPageComponent {
 
   displayedColumns: string[] = ['name', 'description', 'actions'];
 
-
+  onPageChange(event: PageEvent) {
+  this.pageIndex.set(event.pageIndex);
+  this.buildingsDetailsResource.reload();
+}
   onCreate(): void {
 
     this._entityDialogService.openNewEntityDialog(NewBuildingDialogComponent, {
@@ -67,11 +74,16 @@ export class BuildingPageComponent {
   }
 
    onDelete(buildingId: string) {
-    this._buildingsService.deleteBuilding(buildingId).subscribe()
+    this._buildingsService.deleteBuilding(buildingId).subscribe(() => {
+      this.buildingsDetailsResource.reload();
+    });
+
   }
 
   onRestore(buildingId: string) {
-    this._buildingsService.restoreBuilding(buildingId).subscribe()
+    this._buildingsService.restoreBuilding(buildingId).subscribe(() => {
+      this.buildingsDetailsResource.reload();
+    });
   }
 
 }

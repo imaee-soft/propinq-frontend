@@ -73,6 +73,12 @@
           <tr mat-row *matRowDef="let row; columns: displayedColumns"
               [class.inactive-row]="row.deleted"></tr>
         </table>
+          <mat-paginator
+    [length]="totalElements()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="15"
+    (page)="onPageChange($event)">
+  </mat-paginator>
       </div>
     }
   </main>

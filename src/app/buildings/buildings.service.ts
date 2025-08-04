@@ -50,8 +50,10 @@ export class BuildingsService {
     );
   }
 
-  getBuildingsDetails(): Observable<BuildingDetailsPage> {
-    return this._http.get<BuildingDetailsPage>(`${environment.apiUrl}/api/v1/buildings/details`).pipe(
+  getBuildingsDetails(page = 0, pageSize = 15): Observable<BuildingDetailsPage> {
+    return this._http.get<BuildingDetailsPage>(`${environment.apiUrl}/api/v1/buildings/details`, {
+      params: { page, size: pageSize }
+    }).pipe(
       map(response => {
         const content = response.content.map((building: any) => ({
           ...building,

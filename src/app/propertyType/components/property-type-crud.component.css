@@ -1,426 +1,159 @@
-/* Eliminar scroll global */
-:host {
-  display: block;
-  height: 100vh;
-  overflow: hidden;
-}
-
-/* Contenedor principal - centrado en la página */
-.property-type-crud {
-  max-width: 1000px;
-  margin: 0 auto;
-  padding: 15px;
-  height: 100vh;
-  max-height: 100vh;
-  overflow: hidden;
-  background: linear-gradient(135deg, #0f111a 0%, #1c2230 100%);
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-  padding-top: 40px;
-  box-sizing: border-box;
-}
-
-
-/* Título principal */
-.property-type-crud h2 {
-  text-align: center;
+/* Contenedor principal */
+.building-page {
+  padding: 2rem;
+  background: #1e1e1e;
+  min-height: 100vh;
   color: white;
-  font-size: 2.2rem;
-  font-weight: 300;
-  margin-bottom: 1.2rem;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-  flex-shrink: 0;
-}
-
-/* Contenedor de la tabla */
-.table-container {
-  background: transparent;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0,0,0,0.4);
-  overflow: hidden;
-  backdrop-filter: blur(10px);
-  position: relative;
-  border: 1px solid #3d4553;
-  flex: 1;
   display: flex;
   flex-direction: column;
-  max-height: calc(100vh - 200px);
+  align-items: center;
 }
 
-/* Botón flotante + arriba a la derecha */
-.fab-add {
+/* Título */
+.building-page h2 {
+  color: white;
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
+  font-weight: normal;
+}
+
+/* Wrapper para centrar la tabla */
+.table-wrapper {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  max-width: 800px;
+}
+
+/* Contenedor de tabla */
+.table-container {
+  background: #1e1e1e;
+  width: 100%;
+  position: relative;
+}
+
+/* Botón flotante posicionado sobre la tabla */
+.fab-add-table {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 1000;
-  background: linear-gradient(45deg, #4a90e2, #357abd);
+  top: -20px;
+  right: 10px;
+  background: #4a90e2;
   color: white;
   border: none;
-  width: 56px;
-  height: 56px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
-  box-shadow: 0 4px 20px rgba(74, 144, 226, 0.4);
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3);
 }
 
-.fab-add:hover {
-  transform: scale(1.1) rotate(90deg);
-  box-shadow: 0 8px 25px rgba(74, 144, 226, 0.6);
+.fab-add-table:hover {
+  background: #357abd;
+  transform: scale(1.1);
+  box-shadow: 0 4px 12px rgba(74, 144, 226, 0.5);
 }
 
-.fab-add mat-icon {
-  font-size: 24px;
-  font-weight: bold;
-  color: white !important;
-}
-
-/* Estilos adicionales para el botón flotante Material Design */
-::ng-deep .mat-mdc-fab.mat-primary {
-  background: linear-gradient(45deg, #4a90e2, #357abd) !important;
-}
-
-::ng-deep .mat-mdc-fab.mat-primary mat-icon {
-  color: white !important;
-}
-
-/* Tabla Material Design */
-.mat-mdc-table {
+/* Tabla más compacta */
+.property-table {
+  background: #1e1e1e !important;
   width: 100%;
-  background: #2a3142;
-  border-radius: 12px 12px 0 0;
-  overflow: hidden;
-  box-shadow: none;
-  flex: 1;
 }
 
-/* Paginador */
-::ng-deep .mat-mdc-paginator {
-  background: #2a3142 !important;
-  color: white !important;
-  border-radius: 0 0 12px 12px;
-  border-top: 1px solid #3d4553;
-  box-shadow: 0 8px 32px rgba(0,0,0,0.3);
-  flex-shrink: 0;
-  padding: 8px 16px !important;
-  min-height: 48px !important;
-}
-
-::ng-deep .mat-mdc-paginator .mat-mdc-paginator-range-label {
-  color: #e2e8f0 !important;
-  margin: 0 32px 0 24px !important;
-}
-
-::ng-deep .mat-mdc-paginator .mat-mdc-icon-button {
-  color: #e2e8f0 !important;
-}
-
-::ng-deep .mat-mdc-paginator .mat-mdc-icon-button:hover {
-  background: rgba(255, 255, 255, 0.1) !important;
-}
-
-::ng-deep .mat-mdc-paginator .mat-mdc-icon-button[disabled] {
-  color: #6b7280 !important;
-}
-
-::ng-deep .mat-mdc-paginator .mat-mdc-select {
-  color: #e2e8f0 !important;
-}
-
-::ng-deep .mat-mdc-paginator .mat-mdc-select-value {
-  color: #e2e8f0 !important;
-}
-
-::ng-deep .mat-mdc-paginator .mat-mdc-select-arrow {
-  color: #e2e8f0 !important;
-}
-
-::ng-deep .mat-mdc-paginator .mat-mdc-form-field-underline {
-  background-color: #3d4553 !important;
-}
-
-::ng-deep .mat-mdc-paginator .mat-mdc-form-field-ripple {
-  background-color: #4a90e2 !important;
-}
-
-/* Dropdown del paginador */
-::ng-deep .mat-mdc-select-panel {
-  background: #2a3142 !important;
-  border: 1px solid #3d4553 !important;
-}
-
-::ng-deep .mat-mdc-option {
-  color: #e2e8f0 !important;
-  background: #2a3142 !important;
-}
-
-::ng-deep .mat-mdc-option:hover {
-  background: #34495e !important;
-}
-
-::ng-deep .mat-mdc-option.mdc-list-item--selected {
-  background: #4a90e2 !important;
-  color: white !important;
-}
-
-/* Header de mat-table */
+/* Headers */
 .mat-mdc-header-row {
-  background: linear-gradient(135deg, #0f111a 0%, #1c2230 100%);
+  background: #1e1e1e !important;
 }
 
 .mat-mdc-header-cell {
-  color: white !important;
-  font-weight: 600 !important;
-  font-size: 1rem !important;
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-  padding: 16px 20px !important;
-  border-bottom: none !important;
+  color: #ccc !important;
+  font-size: 0.875rem !important;
+  font-weight: normal !important;
+  text-transform: uppercase !important;
+  padding: 1rem !important;
+  border-bottom: 1px solid #333 !important;
 }
 
-/* Filas de datos */
+/* Filas */
 .mat-mdc-row {
-  transition: all 0.3s ease;
-  border-bottom: 1px solid #3d4553 !important;
-  background: #2a3142 !important;
+  background: #1e1e1e !important;
+  border-bottom: 1px solid #333 !important;
 }
 
 .mat-mdc-row:hover {
-  background: linear-gradient(90deg, #34495e 0%, #3d4553 100%) !important;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  background: #2a2a2a !important;
 }
 
-/* Filas de elementos inactivos con opacidad reducida */
-.mat-mdc-row.inactive-row {
-  opacity: 0.6 !important;
-  background: #1e2936 !important;
-}
-
-.mat-mdc-row.inactive-row:hover {
-  background: linear-gradient(90deg, #2a3142 0%, #34495e 100%) !important;
-  opacity: 0.8 !important;
-}
-
-/* Filas vacías (sin datos) */
-.mat-mdc-row.empty-row {
-  opacity: 0.3 !important;
-  background: #1a202c !important;
-  pointer-events: none;
-}
-
-.mat-mdc-row.empty-row:hover {
-  background: #1a202c !important;
-  transform: none !important;
-  box-shadow: none !important;
-}
-
+/* Celdas */
 .mat-mdc-cell {
-  padding: 16px 20px !important;
-  color: #e2e8f0;
-  font-size: 0.95rem;
-  border-bottom: 1px solid #3d4553 !important;
+  color: white !important;
+  padding: 1rem !important;
+  border-bottom: 1px solid #333 !important;
 }
 
-/* Texto de elementos inactivos más tenue */
-.mat-mdc-row.inactive-row .mat-mdc-cell {
-  color: #a0aec0 !important;
-}
-
-/* Última fila sin borde */
-.mat-mdc-row:last-child .mat-mdc-cell {
-  border-bottom: none !important;
-}
-
-/* Columna de acciones */
-.actions {
-  display: flex;
-  gap: 12px;
-  align-items: center;
-  justify-content: flex-end;
-}
-
-/* Botones de acción Material Design */
+/* Botones de acción */
 ::ng-deep .mat-mdc-icon-button {
-  width: 40px !important;
-  height: 40px !important;
+  width: 32px !important;
+  height: 32px !important;
+  margin-right: 0.5rem !important;
 }
 
 ::ng-deep .mat-mdc-icon-button.mat-primary {
-  background: linear-gradient(45deg, #4a90e2, #357abd) !important;
-  border-radius: 50% !important;
-  box-shadow: 0 2px 8px rgba(74, 144, 226, 0.3) !important;
-}
-
-::ng-deep .mat-mdc-icon-button.mat-primary:hover {
-  transform: scale(1.1) !important;
-  box-shadow: 0 4px 15px rgba(74, 144, 226, 0.5) !important;
-}
-
-::ng-deep .mat-mdc-icon-button.mat-primary .mat-mdc-button-base {
-  color: white !important;
-}
-
-::ng-deep .mat-mdc-icon-button.mat-primary mat-icon {
-  color: white !important;
+  color: #4a90e2 !important;
 }
 
 ::ng-deep .mat-mdc-icon-button.mat-warn {
-  background: linear-gradient(45deg, #e74c3c, #c0392b) !important;
-  border-radius: 50% !important;
-  box-shadow: 0 2px 8px rgba(231, 76, 60, 0.3) !important;
+  color: #e74c3c !important;
 }
 
-::ng-deep .mat-mdc-icon-button.mat-warn:hover {
-  transform: scale(1.1) !important;
-  box-shadow: 0 4px 15px rgba(231, 76, 60, 0.5) !important;
-}
-
-::ng-deep .mat-mdc-icon-button.mat-warn .mat-mdc-button-base {
-  color: white !important;
-}
-
-::ng-deep .mat-mdc-icon-button.mat-warn mat-icon {
-  color: white !important;
-}
-
-/* Botón restaurar */
 ::ng-deep .mat-mdc-icon-button.mat-accent {
-  background: linear-gradient(45deg, #28a745, #20c997) !important;
-  border-radius: 50% !important;
-  box-shadow: 0 2px 8px rgba(40, 167, 69, 0.3) !important;
+  color: #28a745 !important;
 }
 
-::ng-deep .mat-mdc-icon-button.mat-accent:hover {
-  transform: scale(1.1) !important;
-  box-shadow: 0 4px 15px rgba(40, 167, 69, 0.5) !important;
-}
-
-::ng-deep .mat-mdc-icon-button.mat-accent .mat-mdc-button-base {
-  color: white !important;
-}
-
-::ng-deep .mat-mdc-icon-button.mat-accent mat-icon {
-  color: white !important;
-}
-
-/* Estados de carga y error */
+/* Estados */
 .loading, .error, .empty {
-  padding: 40px 20px;
+  padding: 2rem;
   text-align: center;
-  font-size: 1.1rem;
-  color: #a0aec0;
-  font-style: italic;
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  color: #ccc;
 }
 
 .error {
   color: #e74c3c;
-  font-weight: 500;
 }
 
-.empty {
-  background: linear-gradient(135deg, #2a3142 0%, #34495e 100%);
-  border-radius: 12px;
-  margin: 20px;
-  border: 1px solid #3d4553;
+/* Filas inactivas */
+.mat-mdc-row.inactive-row {
+  opacity: 0.5;
 }
 
-/* Animaciones */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+.mat-mdc-row.inactive-row .mat-mdc-cell {
+  color: #666 !important;
 }
 
-.table-container {
-  animation: fadeIn 0.6s ease-out;
+/* Paginador */
+.property-paginator {
+  background: #1e1e1e !important;
+  color: white !important;
+  border-top: 1px solid #333;
 }
 
-/* Responsive */
-@media (max-width: 768px) {
-  .property-type-crud {
-    padding: 20px 10px;
-  }
-  
-  .property-type-crud h2 {
-    font-size: 2rem;
-    margin-bottom: 1.5rem;
-  }
-  
-  .fab-add {
-    top: 15px;
-    right: 15px;
-    width: 48px;
-    height: 48px;
-  }
-  
-  .property-table th,
-  .property-table td {
-    padding: 16px 12px;
-    font-size: 0.9rem;
-  }
-  
-  .actions {
-    gap: 8px;
-  }
-  
-  .actions button {
-    width: 36px;
-    height: 36px;
-  }
-  
-  /* Paginador responsive */
-  ::ng-deep .mat-mdc-paginator {
-    padding: 8px 16px !important;
-  }
-  
-  ::ng-deep .mat-mdc-paginator .mat-mdc-paginator-range-label {
-    margin: 0 16px 0 8px !important;
-    font-size: 0.9rem !important;
-  }
+::ng-deep .mat-mdc-paginator {
+  background: #1e1e1e !important;
+  color: white !important;
 }
 
-@media (max-width: 480px) {
-  .property-type-crud {
-    padding: 15px 5px;
-  }
-  
-  .property-table th,
-  .property-table td {
-    padding: 12px 8px;
-    font-size: 0.85rem;
-  }
-  
-  .property-type-crud h2 {
-    font-size: 1.8rem;
-  }
-  
-  /* Paginador mobile */
-  ::ng-deep .mat-mdc-paginator {
-    padding: 8px 12px !important;
-  }
-  
-  ::ng-deep .mat-mdc-paginator .mat-mdc-paginator-range-label {
-    margin: 0 8px !important;
-    font-size: 0.8rem !important;
-  }
-  
-  ::ng-deep .mat-mdc-paginator .mat-mdc-icon-button {
-    width: 36px !important;
-    height: 36px !important;
-  }
+::ng-deep .mat-mdc-paginator .mat-mdc-icon-button {
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-paginator .mat-mdc-select-value {
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-paginator .mat-mdc-form-field {
+  color: white !important;
+}
+
+::ng-deep .mat-mdc-paginator .mat-mdc-paginator-range-label {
+  color: white !important;
 }

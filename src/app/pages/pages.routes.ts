@@ -23,6 +23,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'request-confirmation-real-estate',
+    loadComponent: () =>
+      import('./RequestConfirmationRealEstate/RequestConfirmationRealEstate.component').then(
+        (m) => m.RequestConfirmationRealEstateComponent
+      ),
+  },
+  {
     path: 'auth/verify-email',
     loadComponent: () =>
       import('./verify-email-page/verify-email-page.component').then(

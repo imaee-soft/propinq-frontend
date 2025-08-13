@@ -118,7 +118,7 @@ export class SignupRealEstatePageComponent {
       
       // Solo navegar si el resultado es exitoso y no hay mensaje de error
       if (request && result !== undefined && result !== null && !this.errorMessage()) {
-        this.router.navigate(['/auth/verify-email'], { queryParams: { email: this.myForm.value.email } });
+        this.router.navigate(['/request-confirmation-real-estate']);
         this.executeSignup.set(null);
       }
     });

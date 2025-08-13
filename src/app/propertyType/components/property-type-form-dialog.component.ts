@@ -25,32 +25,42 @@ export interface PropertyTypeDialogData {
   ],
   template: `
     <div class="dialog-container">
-      <h2 mat-dialog-title>{{ data.isEditing ? 'Editar' : 'Nuevo' }} Tipo de Vivienda</h2>
+      <h2 mat-dialog-title>{{ data.isEditing ? 'Editar Tipo de vivienda' : 'Nuevo Tipo de vivienda' }}</h2>
       
       <mat-dialog-content>
-        <form [formGroup]="propertyTypeForm">
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Nombre *</mat-label>
-            <input matInput formControlName="name" placeholder="Ej: Apartamento, Casa, Duplex">
-            @if (propertyTypeForm.get('name')?.invalid && propertyTypeForm.get('name')?.touched) {
-              <mat-error>El nombre es requerido</mat-error>
-            }
-          </mat-form-field>
-          
-          <mat-form-field appearance="outline" class="full-width">
-            <mat-label>Descripción</mat-label>
-            <textarea matInput formControlName="description" rows="3" placeholder="Descripción del tipo de vivienda"></textarea>
-          </mat-form-field>
+        <form [formGroup]="propertyTypeForm" class="form-container">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Nombre *</mat-label>
+              <input matInput formControlName="name" placeholder="Ej: Apartamento, Casa, Duplex">
+              @if (propertyTypeForm.get('name')?.invalid && propertyTypeForm.get('name')?.touched) {
+                <mat-error>El nombre es requerido</mat-error>
+              }
+            </mat-form-field>
+            
+            <mat-form-field appearance="outline" class="form-field">
+              <mat-label>Descripción *</mat-label>
+              <textarea matInput 
+                        formControlName="description" 
+                        rows="1" 
+                        placeholder="Descripción del tipo de vivienda">
+              </textarea>
+              @if (propertyTypeForm.get('description')?.invalid && propertyTypeForm.get('description')?.touched) {
+                <mat-error>La descripción es requerida</mat-error>
+              }
+            </mat-form-field>
+          </div>
         </form>
       </mat-dialog-content>
       
       <mat-dialog-actions align="end">
-        <button mat-button (click)="onCancel()">Cancelar</button>
+        <button mat-button (click)="onCancel()" class="cancel-btn">Cancelar</button>
         <button mat-raised-button 
                 color="primary" 
                 (click)="onSave()" 
-                [disabled]="propertyTypeForm.invalid">
-          {{ data.isEditing ? 'Actualizar' : 'Crear' }}
+                [disabled]="propertyTypeForm.invalid"
+                class="save-btn">
+          {{ data.isEditing ? 'Guardar' : 'Guardar' }}
         </button>
       </mat-dialog-actions>
     </div>
@@ -65,7 +75,7 @@ export class PropertyTypeFormDialogComponent {
   
   propertyTypeForm: FormGroup = this.fb.group({
     name: [this.data.propertyType?.name || '', [Validators.required, Validators.minLength(2)]],
-    description: [this.data.propertyType?.description || '']
+    description: [this.data.propertyType?.description || '', [Validators.required, Validators.minLength(5)]]
   });
 
   onSave(): void {

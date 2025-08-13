@@ -187,7 +187,11 @@ export class PropertyTypeCrudComponent implements OnInit, AfterViewInit {
 
   openCreateDialog(): void {
     const dialogRef = this.dialog.open(PropertyTypeFormDialogComponent, {
-      width: '500px',
+      width: '560px',
+      height: 'auto',
+      maxHeight: '90vh',
+      disableClose: false,
+      hasBackdrop: true,
       data: { isEditing: false }
     });
 
@@ -200,7 +204,11 @@ export class PropertyTypeCrudComponent implements OnInit, AfterViewInit {
 
   openEditDialog(propertyType: PropertyTypeResponse): void {
     const dialogRef = this.dialog.open(PropertyTypeFormDialogComponent, {
-      width: '500px',
+      width: '560px',
+      height: 'auto',
+      maxHeight: '90vh',
+      disableClose: false,
+      hasBackdrop: true,
       data: { propertyType, isEditing: true }
     });
 

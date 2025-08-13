@@ -35,7 +35,7 @@
 /* Botón flotante posicionado sobre la tabla */
 .fab-add-table {
   position: absolute;
-  top: -20px;
+  top: -45px;
   right: 10px;
   background: #4a90e2;
   color: white;
@@ -58,56 +58,117 @@
 .property-table {
   background: #1e1e1e !important;
   width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
 }
 
 /* Headers */
 .mat-mdc-header-row {
-  background: #1e1e1e !important;
+  background: #2a2a2a !important;
+  border-bottom: 2px solid #404040 !important;
 }
 
 .mat-mdc-header-cell {
-  color: #ccc !important;
-  font-size: 0.875rem !important;
-  font-weight: normal !important;
+  color: #888 !important;
+  font-size: 0.75rem !important;
+  font-weight: 500 !important;
   text-transform: uppercase !important;
-  padding: 1rem !important;
-  border-bottom: 1px solid #333 !important;
+  padding: 16px 24px !important;
+  border-bottom: none !important;
+  letter-spacing: 0.5px;
 }
 
 /* Filas */
 .mat-mdc-row {
   background: #1e1e1e !important;
-  border-bottom: 1px solid #333 !important;
+  border-bottom: 1px solid #2a2a2a !important;
+  transition: background-color 0.2s ease;
 }
 
 .mat-mdc-row:hover {
-  background: #2a2a2a !important;
+  background: #252525 !important;
+}
+
+.mat-mdc-row:last-child {
+  border-bottom: none !important;
 }
 
 /* Celdas */
 .mat-mdc-cell {
   color: white !important;
-  padding: 1rem !important;
-  border-bottom: 1px solid #333 !important;
+  padding: 20px 24px !important;
+  border-bottom: none !important;
+  font-size: 0.875rem;
+  vertical-align: middle;
 }
 
 /* Botones de acción */
 ::ng-deep .mat-mdc-icon-button {
-  width: 32px !important;
-  height: 32px !important;
-  margin-right: 0.5rem !important;
+  width: 36px !important;
+  height: 36px !important;
+  margin-right: 8px !important;
+  border-radius: 6px !important;
+  transition: all 0.2s ease !important;
+}
+
+::ng-deep .mat-mdc-icon-button:last-child {
+  margin-right: 0 !important;
 }
 
 ::ng-deep .mat-mdc-icon-button.mat-primary {
   color: #4a90e2 !important;
+  background: rgba(74, 144, 226, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-icon-button.mat-primary:hover {
+  background: rgba(74, 144, 226, 0.2) !important;
+  transform: scale(1.05);
 }
 
 ::ng-deep .mat-mdc-icon-button.mat-warn {
   color: #e74c3c !important;
+  background: rgba(231, 76, 60, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-icon-button.mat-warn:hover {
+  background: rgba(231, 76, 60, 0.2) !important;
+  transform: scale(1.05);
 }
 
 ::ng-deep .mat-mdc-icon-button.mat-accent {
   color: #28a745 !important;
+  background: rgba(40, 167, 69, 0.1) !important;
+}
+
+::ng-deep .mat-mdc-icon-button.mat-accent:hover {
+  background: rgba(40, 167, 69, 0.2) !important;
+  transform: scale(1.05);
+}
+
+/* Iconos */
+::ng-deep .mat-mdc-icon-button .mat-icon {
+  font-size: 18px !important;
+  width: 18px !important;
+  height: 18px !important;
+}
+
+/* Columna de acciones */
+.actions-header {
+  text-align: right !important;
+  width: 140px !important;
+}
+
+.actions-cell {
+  text-align: right !important;
+  width: 140px !important;
+}
+
+.actions-container {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 4px;
 }
 
 /* Estados */
@@ -134,20 +195,31 @@
 .property-paginator {
   background: #1e1e1e !important;
   color: white !important;
-  border-top: 1px solid #333;
+  border-top: 1px solid #2a2a2a;
+  margin-top: 0;
+  border-radius: 0 0 8px 8px;
 }
 
 ::ng-deep .mat-mdc-paginator {
   background: #1e1e1e !important;
   color: white !important;
+  padding: 16px 24px !important;
 }
 
 ::ng-deep .mat-mdc-paginator .mat-mdc-icon-button {
+  color: #888 !important;
+  background: transparent !important;
+  margin: 0 4px !important;
+}
+
+::ng-deep .mat-mdc-paginator .mat-mdc-icon-button:hover {
   color: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
 }
 
 ::ng-deep .mat-mdc-paginator .mat-mdc-select-value {
   color: white !important;
+  font-size: 0.875rem !important;
 }
 
 ::ng-deep .mat-mdc-paginator .mat-mdc-form-field {
@@ -155,5 +227,7 @@
 }
 
 ::ng-deep .mat-mdc-paginator .mat-mdc-paginator-range-label {
-  color: white !important;
+  color: #888 !important;
+  font-size: 0.875rem !important;
+  margin: 0 32px !important;
 }

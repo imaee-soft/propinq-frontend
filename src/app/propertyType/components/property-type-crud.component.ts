@@ -54,32 +54,34 @@ import { PropertyTypeFormDialogComponent } from './property-type-form-dialog.com
 
               <!-- Columna Acciones -->
               <ng-container matColumnDef="actions">
-                <th mat-header-cell *matHeaderCellDef>Acciones</th>
-                <td mat-cell *matCellDef="let propertyType">
-                  <button mat-icon-button
-                          color="primary"
-                          (click)="onUpdate(propertyType)"
-                          [disabled]="isLoading || propertyType.deleted"
-                          title="Editar">
-                    <mat-icon>edit</mat-icon>
-                  </button>
-                  @if (!propertyType.deleted) {
+                <th mat-header-cell *matHeaderCellDef class="actions-header">Acciones</th>
+                <td mat-cell *matCellDef="let propertyType" class="actions-cell">
+                  <div class="actions-container">
                     <button mat-icon-button
-                            color="warn"
-                            (click)="onDelete(propertyType)"
-                            [disabled]="isLoading"
-                            title="Eliminar">
-                      <mat-icon>delete</mat-icon>
+                            color="primary"
+                            (click)="onUpdate(propertyType)"
+                            [disabled]="isLoading || propertyType.deleted"
+                            title="Editar">
+                      <mat-icon>edit</mat-icon>
                     </button>
-                  } @else {
-                    <button mat-icon-button
-                            color="accent"
-                            (click)="onRestore(propertyType.id)"
-                            [disabled]="isLoading"
-                            title="Restaurar">
-                      <mat-icon>restore</mat-icon>
-                    </button>
-                  }
+                    @if (!propertyType.deleted) {
+                      <button mat-icon-button
+                              color="warn"
+                              (click)="onDelete(propertyType)"
+                              [disabled]="isLoading"
+                              title="Eliminar">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    } @else {
+                      <button mat-icon-button
+                              color="accent"
+                              (click)="onRestore(propertyType.id)"
+                              [disabled]="isLoading"
+                              title="Restaurar">
+                        <mat-icon>restore</mat-icon>
+                      </button>
+                    }
+                  </div>
                 </td>
               </ng-container>
 

@@ -37,6 +37,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'buildings',
+    loadComponent: () =>
+      import('./building-page/building-page.component').then(
+        (m) => m.BuildingPageComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

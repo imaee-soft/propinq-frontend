@@ -1,0 +1,85 @@
+<div class="page-container">
+
+  <!-- Cabecera de la Página -->
+  <header class="page-header">
+    <h2 class="page-title">Inmuebles</h2>
+    <button mat-fab
+      class="fab-add"
+      (click)="onCreate()"
+      aria-label="Agregar nuevo inmueble"
+      title="Agregar nuevo inmueble">
+      <mat-icon>add</mat-icon>
+    </button>
+  </header>
+
+  <!-- Contenedor del Contenido Principal -->
+  <main class="content-wrapper">
+    @if (buildingsDetailsResource.isLoading()) {
+      <div class="status-message loading">Cargando inmuebles...</div>
+    } @else if (buildingsDetailsResource.error()) {
+      <div class="status-message error">Error al cargar los inmuebles.</div>
+    } @else if (!buildings() || buildings()?.length === 0) {
+      <div class="status-message empty">No hay inmuebles registrados.</div>
+    } @else {
+      <div class="table-container mat-elevation-z8">
+        <table mat-table [dataSource]="buildings()!" class="building-table">
+
+          <!-- Columna Nombre -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef>Nombre</th>
+            <td mat-cell *matCellDef="let building">{{ building.name }}</td>
+          </ng-container>
+
+          <!-- Columna Descripción -->
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef>Descripción</th>
+            <td mat-cell *matCellDef="let building">{{ building.description || '-' }}</td>
+          </ng-container>
+
+          <!-- Columna Acciones -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef>Acciones</th>
+            <td mat-cell *matCellDef="let building" class="actions-cell">
+              <button mat-icon-button
+                (click)="onUpdate(building)"
+                [disabled]="buildingsDetailsResource.isLoading() || building.deleted"
+                color="primary"
+                title="Editar">
+                <mat-icon>edit</mat-icon>
+              </button>
+              @if (!building.deleted) {
+                <button mat-icon-button
+                  color="warn"
+                  (click)="onDelete(building.buildingId)"
+                  [disabled]="buildingsDetailsResource.isLoading()"
+                  title="Eliminar">
+                  <mat-icon>delete</mat-icon>
+                </button>
+              } @else {
+                <button mat-icon-button
+                  color="accent"
+                  (click)="onRestore(building.buildingId)"
+                  [disabled]="buildingsDetailsResource.isLoading()"
+                  title="Restaurar">
+                  <mat-icon>restore</mat-icon>
+                </button>
+              }
+
+            </td>
+          </ng-container>
+
+          <!-- Definición de las filas -->
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns"
+              [class.inactive-row]="row.deleted"></tr>
+        </table>
+          <mat-paginator
+    [length]="totalElements()"
+    [pageIndex]="pageIndex()"
+    [pageSize]="15"
+    (page)="onPageChange($event)">
+  </mat-paginator>
+      </div>
+    }
+  </main>
+</div>

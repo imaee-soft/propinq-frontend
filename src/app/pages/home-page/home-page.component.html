@@ -7,7 +7,7 @@
 
     <app-building-component (markersChange)="onMapMarkersChange($event)"
       [buildingMarkerQueried]="buildingMarkerQueried()"
-    (buildingsDetailsChange)="onBuildingsDetailsChange($event)"
+    (buildingDetailsChange)="onBuildingDetailsChange($event)"
     />
   </mat-drawer-content>
 
@@ -32,9 +32,7 @@
         </button>
       </mat-card-header>
       <mat-card-content>
-        <div class="content-row">
         @if(buildingDetails()!.imagesURL.length > 0) {
-
           <div class="carrousel-img-outer">
             <div
             class="carrousel-img-inner slide"
@@ -81,30 +79,30 @@
           <p><strong>Dirección: </strong> {{ buildingDetails()!.address }}</p>
           <p><strong>Dueño: </strong> {{ buildingDetails()!.userFullName}}</p>
         </div>
-
-        </div>
         <div class="content-divider"></div>
         <div class="properties-section">
           <h3>Propiedades</h3>
-          <div class="properties-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 8px;">
-            <div class="property-item">
-              <strong>Propiedad de ejemplo 1</strong>
-            </div>
-            <div class="property-item">
-              <strong>Propiedad de ejemplo 2</strong>
-            </div>
-            <div class="property-item">
-              <strong>Propiedad de ejemplo 3</strong>
-            </div>
-            <div class="property-item">
-              <strong>Propiedad de ejemplo 4</strong>
-            </div>
-            <div class="property-item">
-              <strong>Propiedad de ejemplo 5</strong>
-            </div>
-          </div>
+          <mat-grid-list cols="3" rowHeight="1:1" gutterSize="2px">
+            @for(property of properties(); track $index) {
+              <mat-grid-tile>
+                <div class="property-item">
+                  <img src="https://placehold.co/400x300?text=Propiedad" alt="Imagen propiedad" class="property-image" />
+                  <div class="property-overlay">
+                    <button mat-icon-button class="property-action">
+                      <mat-icon>star_border</mat-icon>
+                    </button>
+                    <button mat-icon-button class="property-action">
+                      <mat-icon>image</mat-icon>
+                    </button>
+                    <button mat-button class="property-action property-action-more">
+                      Ver Más
+                    </button>
+                  </div>
+                </div>
+              </mat-grid-tile>
+            }
+          </mat-grid-list>
         </div>
-
       </mat-card-content>
     </mat-card>
   </mat-drawer>

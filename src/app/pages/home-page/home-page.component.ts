@@ -3,6 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatIcon } from '@angular/material/icon';
+import { MatGridListModule } from '@angular/material/grid-list';
 import {
   MatDrawer,
   MatDrawerContainer,
@@ -26,6 +27,7 @@ import { DEFAULT_CENTER } from '../../maps/utils/constants';
     MatIcon,
     MatExpansionModule,
     MatButtonModule,
+    MatGridListModule,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -44,6 +46,15 @@ export class HomePageComponent {
   buildingMarkerQueried = signal<MapMarker | null>(null);
   buildingDetails = signal<BuildingDetails | null>(null);
 
+  properties = signal([
+    { nombre: "Propiedad de ejemplo 1" },
+    { nombre: "Propiedad de ejemplo 2" },
+    { nombre: "Propiedad de ejemplo 3" },
+    { nombre: "Propiedad de ejemplo 4" },
+    { nombre: "Propiedad de ejemplo 5" },
+    { nombre: "Propiedad de ejemplo 6" },
+  ]);
+
   getMapConfig(): MapConfig {
     return this.mapConfig();
   }
@@ -61,7 +72,7 @@ export class HomePageComponent {
     this.markers.set(markers || []);
   }
 
-  onBuildingsDetailsChange(buildingDetails: BuildingDetails | null): void {
+  onBuildingDetailsChange(buildingDetails: BuildingDetails | null): void {
     this.buildingDetails.set(buildingDetails);
   }
 

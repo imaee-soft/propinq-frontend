@@ -9,7 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { NewBuildingDialogComponent } from '../../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
 import { NavElement } from '../../interfaces/nav-element.interface';
 import { EntityDialogService } from '../../services/entity-dialog.service';
@@ -38,6 +38,7 @@ export class NavbarComponent {
   private _navbarService = inject(NavbarService);
   private _sidebarService = inject(SidebarService);
   private _entityDialogService = inject(EntityDialogService);
+  private _router = inject(Router);
 
   items = input<NavElement[]>(this._navbarService.config());
   userLogged = this._navbarService.userLogged;
@@ -48,12 +49,11 @@ export class NavbarComponent {
     this._sidebarService.toggle();
   }
 
-  // TODO: Implement login handling logic
   handleLogin() {
     this._navbarService.handleLogin();
   }
 
-  handleNavItemClick(item: NavElement, event: Event): void {
+  handleNavItemClick(item: NavElement, event: Event) {
     if (item.featured) {
       event.preventDefault();
       this._entityDialogService
@@ -63,5 +63,13 @@ export class NavbarComponent {
         })
         .subscribe();
     }
+  }
+
+  handleMyAccount() {
+    this._router.navigate(['/users/my-account']);
+  }
+
+  get username() {
+    return this._navbarService.username();
   }
 }

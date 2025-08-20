@@ -53,9 +53,23 @@
       matTooltip="Mi cuenta"
       matTooltipPosition="below"
       class="user-menu-trigger"
+      [matMenuTriggerFor]="userMenu"
     >
       <mat-icon>account_circle</mat-icon>
     </button>
+    <mat-menu #userMenu="matMenu">
+      <div class="user-menu-content">
+        <button mat-menu-item (click)="handleMyAccount()">
+          <mat-icon>account_circle</mat-icon>
+          <span>{{ username }}</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item>
+          <mat-icon>logout</mat-icon>
+          <span>Cerrar sesión</span>
+        </button>
+      </div>
+    </mat-menu>
     } @else {
     <a routerLink="/signup" class="nav-action-link">Creá tu cuenta</a>
     <a (click)="handleLogin()" routerLink="/login" class="nav-action-link"

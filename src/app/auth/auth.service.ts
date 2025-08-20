@@ -1,13 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { Observable, of, tap } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
-import { ClientStorageService } from '../../shared/services/client-storage.service.abstract';
-import { AuthStatus } from '../enums/auth-status.enum';
-import { AuthResponse } from '../interfaces/auth-response.interface';
-import { AuthState } from '../interfaces/auth-state.interface';
-import { LoginRequest } from '../interfaces/login-request.interface';
-import { UserAuth } from '../interfaces/user-auth.interface';
+import { environment } from '../../environments/environment.development';
+import { ClientStorageService } from '../shared/services/client-storage.service.abstract';
+import { AuthStatus } from './enums/auth-status.enum';
+import { AuthResponse } from './interfaces/auth-response.interface';
+import { AuthState } from './interfaces/auth-state.interface';
+import { LoginRequest } from './interfaces/login-request.interface';
+import { UserAuth } from './interfaces/user-auth.interface';
 
 const INITIAL_STATE: AuthState = {
   user: null,

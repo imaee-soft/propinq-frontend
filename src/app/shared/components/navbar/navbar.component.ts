@@ -53,7 +53,7 @@ export class NavbarComponent {
     this._navbarService.handleLogin();
   }
 
-  handleNavItemClick(item: NavElement, event: Event): void {
+  handleNavItemClick(item: NavElement, event: Event) {
     if (item.featured) {
       event.preventDefault();
       this._entityDialogService

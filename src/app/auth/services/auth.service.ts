@@ -10,7 +10,6 @@ import { AuthState } from '../interfaces/auth-state.interface';
 import { LoginRequest } from '../interfaces/login-request.interface';
 import { UserAuth } from '../interfaces/user-auth.interface';
 
-
 const INITIAL_STATE: AuthState = {
   user: null,
   status: AuthStatus.PENDING,

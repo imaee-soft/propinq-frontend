@@ -12,6 +12,11 @@ export const routes: Routes = [
           import('./pages/pages.routes').then((m) => m.routes),
       },
       {
+        path: 'users',
+        loadChildren: () =>
+          import('./users/users.routes').then((m) => m.routes),
+      },
+      {
         path: '**',
         redirectTo: '',
       },

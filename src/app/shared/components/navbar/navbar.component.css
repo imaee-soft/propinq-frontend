@@ -148,10 +148,11 @@
   display: flex;
   align-items: center;
   gap: 4px;
-  color: #e2e8f0;
   text-transform: none;
 }
 
-.user-menu-trigger:hover {
-  color: #90cdf4;
+.user-menu-content {
+  background: linear-gradient(to right, #1a1e2b, #232a3b);
+  padding: 2px 4px;
+  border-radius: 10px;
 }

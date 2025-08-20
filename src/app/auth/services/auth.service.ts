@@ -1,11 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { SignupRequest } from './../interfaces/signupRequest.interface';
 import { computed, inject, Injectable, signal } from '@angular/core';
-<<<<<<< HEAD
-import { Observable, of, timeout, finalize, EMPTY} from 'rxjs';
-=======
-import { Observable, of, tap } from 'rxjs';
->>>>>>> f975dbb (feat: (WIP) add authentication interfaces and implement login functionality in AuthService and NavbarService)
+import { Observable, of, timeout, finalize, EMPTY, tap} from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { ClientStorageService } from '../../shared/services/client-storage.service.abstract';
 import { AuthStatus } from '../enums/auth-status.enum';

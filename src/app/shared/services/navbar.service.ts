@@ -1,7 +1,7 @@
 import { computed, inject, Injectable } from '@angular/core';
+import { AuthService } from '../../auth/services/auth.service';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { Role } from '../../auth/enums/role.enum';
-import { AuthService } from '../../auth/services/auth.service';
 import { NavElement } from '../interfaces/nav-element.interface';
 import { OWNER_NAVBAR_ITEMS } from '../utilities/owner.config';
 import { TENANT_NAVBAR_ITEMS } from '../utilities/tenant.config';
@@ -35,6 +35,7 @@ export class NavbarService {
   userLogged = computed(
     () => this._authService.status() === AuthStatus.AUTHENTICATED
   );
+  username = computed(() => this._authService.user()?.username);
 
   handleLogin() {
     this._authService

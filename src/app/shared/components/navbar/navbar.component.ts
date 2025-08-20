@@ -49,16 +49,11 @@ export class NavbarComponent {
     this._sidebarService.toggle();
   }
 
-  // TODO: Implement login handling logic
   handleLogin() {
     this._navbarService.handleLogin();
   }
 
-  handleLogin() {
-    this._navbarService.handleLogin();
-  }
-
-  handleNavItemClick(item: NavElement, event: Event) {
+  handleNavItemClick(item: NavElement, event: Event): void {
     if (item.featured) {
       event.preventDefault();
       this._entityDialogService

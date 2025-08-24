@@ -226,7 +226,7 @@ export class PropertyTypeCrudComponent implements OnInit, AfterViewInit {
       },
       error: (error) => {
         console.error('Error al crear tipo de propiedad:', error);
-        alert('Error al crear el tipo de propiedad. Verifica que el backend esté corriendo.');
+        alert('Error al crear el tipo de propiedad. Solo pueden haber letras y números, no tiene que haber espacios dobles ni espacio al inicio ni al final, no puede haber caracteres especiales.');
       }
     });
   }
@@ -238,7 +238,7 @@ export class PropertyTypeCrudComponent implements OnInit, AfterViewInit {
       },
       error: (error) => {
         console.error('Error al actualizar tipo de propiedad:', error);
-        alert('Error al actualizar el tipo de propiedad. Verifica que el backend esté corriendo.');
+        alert('Error al actualizar el tipo de propiedad. Solo pueden haber letras y números, no tiene que haber espacios dobles ni espacio al inicio ni al final, no puede haber caracteres especiales.');
       }
     });
   }

@@ -1,4 +1,4 @@
-import { Component, computed, Signal, signal } from '@angular/core';
+import { Component, computed, inject, Signal, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -15,6 +15,9 @@ import { MapComponent } from '../../maps/components/map/map.component';
 import { MapConfig } from '../../maps/interfaces/map-config.interface';
 import { MapMarker } from '../../maps/interfaces/map-marker.interface';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
+import { PropertyComponent } from "../../properties/components/property.component";
+import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [
@@ -28,13 +31,13 @@ import { DEFAULT_CENTER } from '../../maps/utils/constants';
     MatExpansionModule,
     MatButtonModule,
     MatGridListModule,
-  ],
+    PropertyComponent
+],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {
-  buildingMarkers = signal<MapMarker[]>;
-
+  private router = inject(Router);
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: DEFAULT_CENTER,
     zoom: 14.5,
@@ -43,48 +46,80 @@ export class HomePageComponent {
     markers: this.markers(),
   }));
   markers = signal<MapMarker[]>([]);
+
   buildingMarkerQueried = signal<MapMarker | null>(null);
   buildingDetails = signal<BuildingDetails | null>(null);
 
-  properties = signal([
-    { nombre: "Propiedad de ejemplo 1" },
-    { nombre: "Propiedad de ejemplo 2" },
-    { nombre: "Propiedad de ejemplo 3" },
-    { nombre: "Propiedad de ejemplo 4" },
-    { nombre: "Propiedad de ejemplo 5" },
-    { nombre: "Propiedad de ejemplo 6" },
-  ]);
+  propertyMarkerQueried = signal<MapMarker | null>(null);
+  propertyDetails = signal<PropertyDetails | null>(null);
+
+  buildingProperties = signal<PropertyDetails[] | null>(null);
 
   getMapConfig(): MapConfig {
     return this.mapConfig();
   }
 
-  onMarkerClick({ id, coordinate }: MapMarker): void {
-    if (
-      !this.buildingMarkerQueried() ||
-      this.buildingMarkerQueried()!.id !== id
-    ) {
-      this.buildingMarkerQueried.set({ id, coordinate });
+  onMarkerClick(marker:MapMarker):void {
+    if (marker.type === 'building') {
+      this.onBuildingMarkerClick(marker);
+    } else if (marker.type === 'property') {
+      this.onPropertyMarkerClick(marker);
     }
   }
 
+  onBuildingMarkerClick(marker:MapMarker):void{
+     if ( marker.type === 'building' &&
+          !this.buildingMarkerQueried() ||
+          this.buildingMarkerQueried()!.id !== marker.id
+        ) {
+          this.buildingMarkerQueried.set({ id: marker.id, coordinate: marker.coordinate, type: marker.type });
+      }
+  }
+
+  onPropertyMarkerClick(marker: MapMarker): void {
+        if ( marker.type === 'property' &&
+          !this.propertyMarkerQueried() ||
+          this.propertyMarkerQueried()!.id !== marker.id
+        ) {
+
+          this.propertyMarkerQueried.set({ id: marker.id, coordinate: marker.coordinate, type: marker.type });
+        }
+  }
+
   onMapMarkersChange(markers: MapMarker[] | null): void {
-    this.markers.set(markers || []);
+    this.markers.set([...this.getMapConfig().markers ?? [], ...(markers ?? [])]);
   }
 
   onBuildingDetailsChange(buildingDetails: BuildingDetails | null): void {
     this.buildingDetails.set(buildingDetails);
   }
 
+  onPropertyDetailsChange(propertyDetails: PropertyDetails | null): void {
+    this.propertyDetails.set(propertyDetails);
+  }
+
+  onBuildingPropertiesChange(properties: PropertyDetails[] | null): void {
+    this.buildingProperties.set(properties);
+  }
+
   onMapClick(): void {
-    if (this.buildingDetails() !== null) {
+    if (this.buildingDetails() !== null || this.propertyDetails() !== null) {
       this.buildingMarkerQueried.set(null);
       this.buildingDetails.set(null);
+      this.propertyMarkerQueried.set(null);
+      this.propertyDetails.set(null);
     }
+
+
   }
   onCloseDetails(): void {
-    this.buildingMarkerQueried.set(null);
-    this.buildingDetails.set(null);
+    if (this.buildingDetails() !== null || this.propertyDetails() !== null) {
+      this.buildingMarkerQueried.set(null);
+      this.buildingDetails.set(null);
+      this.propertyMarkerQueried.set(null);
+      this.propertyDetails.set(null);
+    }
+
     this.currentImageIndex.set(0);
   }
 
@@ -102,5 +137,38 @@ export class HomePageComponent {
   nextImage() {
     if (this.currentImageIndex() < this.images.length - 1)
       this.currentImageIndex.set(this.currentImageIndex() + 1);
+  }
+
+  public propertyGalleryOpen = signal(false);
+  public propertyGalleryImages = signal<string[]>([]);
+  public propertyGalleryIndex = signal(0);
+
+  public openPropertyGallery(images: string[], startIndex = 0) {
+    console.log("HOLAAAAAAA:", images);
+    this.propertyGalleryOpen.set(true);
+    this.propertyGalleryImages.set(images ?? []);
+    this.propertyGalleryIndex.set(startIndex);
+
+  }
+
+  public closePropertyGallery() {
+    this.propertyGalleryOpen.set(false);
+    this.propertyGalleryImages.set([]);
+    this.propertyGalleryIndex.set(0);
+  }
+
+  public prevGalleryImage() {
+    if (this.propertyGalleryIndex() > 0)
+      this.propertyGalleryIndex.set(this.propertyGalleryIndex() - 1);
+  }
+
+  public nextGalleryImage() {
+    if (this.propertyGalleryIndex() < this.propertyGalleryImages().length - 1)
+      this.propertyGalleryIndex.set(this.propertyGalleryIndex() + 1);
+  }
+
+  goToProperty(propertyId: string){
+    if (!propertyId) return;
+    this.router.navigate(['/properties', propertyId]);
   }
 }

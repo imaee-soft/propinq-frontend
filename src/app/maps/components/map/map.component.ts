@@ -170,6 +170,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     coordinate,
     title,
     icon,
+    type
   }: MapMarker): Feature {
     const feature = new Feature({
       geometry: new Point(
@@ -177,7 +178,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       ),
       id,
       title,
-      marker: { id, coordinate, title },
+      marker: { id, coordinate, title, type },
     });
 
     if (icon)

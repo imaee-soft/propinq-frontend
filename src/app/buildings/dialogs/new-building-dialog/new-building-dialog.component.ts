@@ -177,6 +177,7 @@ export class NewBuildingDialogComponent {
       {
         coordinate,
         icon: { url: BUILDING_ICON_URL },
+        type: 'building',
       },
     ]);
     this.form.patchValue({ coordinate });

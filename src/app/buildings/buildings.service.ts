@@ -7,6 +7,7 @@ import { BuildingDetails } from './interfaces/building-details.interface';
 import { Building } from './interfaces/building.interface';
 import { UpdateBuildingRequest } from './adapters/update-building-request';
 import { BuildingDetailsPage } from './interfaces/buildings-details-page.interface';
+import { PropertyDetails } from '../properties/interfaces/property-details.interface';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
@@ -94,4 +95,7 @@ export class BuildingsService {
     return this._http.post<BuildingDetails>(`${this._baseUrl}/${buildingId}/restore`, {});
   }
 
+  getBuildingProperties(buildingId: string): Observable<PropertyDetails[]> {
+    return this._http.get<PropertyDetails[]>(`${this._baseUrl}/${buildingId}/properties`);
+  }
 }

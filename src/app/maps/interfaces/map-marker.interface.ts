@@ -6,4 +6,5 @@ export interface MapMarker {
   coordinate: MapCoordinate;
   title?: string;
   icon?: MarkerIcon;
+  type: string;
 }

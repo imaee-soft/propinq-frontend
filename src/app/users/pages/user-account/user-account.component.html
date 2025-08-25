@@ -1,1 +1,42 @@
-<mat-label>{{ user | json }}</mat-label>
+<div class="user-account-page">
+  @if (user; as u) {
+  <header class="user-header">
+    <mat-card class="header-content">
+      <mat-icon>account_circle</mat-icon>
+      <div class="user-name">
+        <h1>{{ u.fullName }}</h1>
+        <p class="subtitle">{{ u.email }}</p>
+      </div>
+    </mat-card>
+  </header>
+
+  <section class="user-info">
+    <mat-label class="user-info-title">Información de la cuenta</mat-label>
+    <mat-card class="user-info-card">
+      <div class="info-row">
+        <mat-label>Número de documento</mat-label>
+        @if (documentClicked()) {
+        <app-dynamic-input
+          [value]="u.dni"
+          (submittedValue)="onDniSubmitted($event)"
+        ></app-dynamic-input>
+        } @else {
+        <span (click)="onClickedNumeroDocumento()">{{ u.dni }}</span>
+        }
+      </div>
+      <div class="info-row">
+        <mat-label>Fecha de nacimiento</mat-label>
+        <span>{{ u.birthDate | date : "longDate" }}</span>
+      </div>
+      <div class="info-row">
+        <mat-label>Teléfono</mat-label>
+        <span>{{ u.phoneNumber | phone : "AR" }}</span>
+      </div>
+      <div class="info-row">
+        <mat-label>Dirección</mat-label>
+        <span>{{ u.address }}</span>
+      </div>
+    </mat-card>
+  </section>
+  }
+</div>

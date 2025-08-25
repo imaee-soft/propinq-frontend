@@ -1,0 +1,44 @@
+.dynamic-input-wrapper {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 6px;
+}
+
+.dynamic-input {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  padding: 0.6rem 0.9rem;
+  border-radius: 4px;
+  color: #f0f4ff;
+  font-size: 1rem;
+  width: fit-content;
+  margin-bottom: 0;
+}
+
+.dynamic-input:focus {
+  outline: none;
+  border: none;
+}
+
+.actions {
+  display: inline-flex;
+  align-items: end;
+  gap: 4px;
+}
+
+.actions button {
+  background: transparent !important;
+  color: #94a3b8 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 2px !important;
+  text-transform: none !important;
+  transition: all 0.2s ease !important;
+}
+
+.actions button:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #cbd5e1 !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}

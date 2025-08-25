@@ -1,16 +1,27 @@
-import { JsonPipe } from '@angular/common';
-import { Component, effect, inject } from '@angular/core';
+import { DatePipe } from '@angular/common';
+import { Component, effect, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { MatCardModule } from '@angular/material/card';
 import { MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { of } from 'rxjs';
 import { AuthService } from '../../../auth/auth.service';
+import { PhonePipe } from '../../../shared/pipes/phone-number.pipe';
+import { DynamicInputComponent } from '../../components/dynamic-input.component';
 import { UsersService } from '../../users.service';
 
 @Component({
   selector: 'app-user-account',
   templateUrl: './user-account.component.html',
   styleUrl: './user-account.component.css',
-  imports: [MatLabel, JsonPipe],
+  imports: [
+    MatLabel,
+    MatCardModule,
+    MatIcon,
+    DatePipe,
+    PhonePipe,
+    DynamicInputComponent,
+  ],
 })
 export class UserAccountComponent {
   private _usersService = inject(UsersService);
@@ -23,8 +34,21 @@ export class UserAccountComponent {
   });
 
   user = this._userResource.value();
+  documentClicked = signal(false);
+  birthDateClicked = signal(false);
+  phoneClicked = signal(false);
+  addressClicked = signal(false);
 
   constructor() {
     effect(() => (this.user = this._userResource.value()));
+  }
+
+  onClickedNumeroDocumento() {
+    this.documentClicked.set(true);
+  }
+
+  onDniSubmitted(newValue: string | null) {
+    console.log('Value received: ', newValue);
+    this.documentClicked.set(false);
   }
 }

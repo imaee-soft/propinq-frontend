@@ -1,0 +1,19 @@
+<div class="dynamic-input-wrapper">
+  <input
+    matInput
+    [value]="value()"
+    [maxLength]="50"
+    cdkFocusInitial
+    class="dynamic-input"
+    #inputElement
+  />
+
+  <div class="actions">
+    <button mat-icon-button (click)="onSubmit(value())">
+      <mat-icon>check</mat-icon>
+    </button>
+    <button mat-icon-button (click)="onClose()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+</div>

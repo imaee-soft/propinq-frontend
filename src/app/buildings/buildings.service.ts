@@ -47,4 +47,15 @@ export class BuildingsService {
       `${environment.apiUrl}/api/v1/buildings/${buildingQueried}`
     );
   }
+
+  deleteBuilding(buildingId: string): Observable<void> {
+    return this._http.delete<void>(`${this._baseUrl}/${buildingId}`);
+  }
+
+  restoreBuilding(buildingId: string): Observable<BuildingDetails> {
+    return this._http.post<BuildingDetails>(
+      `${this._baseUrl}/${buildingId}/restore`,
+      {}
+    );
+  }
 }

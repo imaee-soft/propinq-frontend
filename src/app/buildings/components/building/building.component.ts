@@ -14,6 +14,7 @@ import { MapMarker } from '../../../maps/interfaces/map-marker.interface';
 import { BuildingsService } from '../../buildings.service';
 import { BuildingDetails } from '../../interfaces/building-details.interface';
 
+
 @Component({
   selector: 'app-building-component',
   imports: [],
@@ -47,7 +48,7 @@ export class BuildingComponent {
 
   buildingMarkerQueried = input<MapMarker | null>(null);
 
-  buildingsDetailsResource = rxResource({
+  buildingDetailsResource = rxResource({
     request: this.buildingMarkerQueried,
     defaultValue: null,
     loader: () => {
@@ -57,16 +58,18 @@ export class BuildingComponent {
     },
   });
 
-  buildingDetails = computed(() => this.buildingsDetailsResource.value());
+  buildingDetails = computed(() => this.buildingDetailsResource.value());
 
-  buildingsDetailsChange = output<BuildingDetails | null>();
+  buildingDetailsChange = output<BuildingDetails | null>();
 
   constructor() {
     effect(() => {
       this.markersChange.emit(this.buildingMarkers() || null);
     });
     effect(() => {
-      this.buildingsDetailsChange.emit(this.buildingDetails() || null);
+      this.buildingDetailsChange.emit(this.buildingDetails() || null);
     });
+
   }
+
 }

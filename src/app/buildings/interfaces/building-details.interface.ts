@@ -1,4 +1,5 @@
 export interface BuildingDetails {
+  buildingId:       string;
   name:             string;
   description:      string;
   address:          string;
@@ -6,5 +7,6 @@ export interface BuildingDetails {
   userId:           string;
   userFullName:     string;
   buildingTypeName: string;
+  deleted:         boolean;
 }
 

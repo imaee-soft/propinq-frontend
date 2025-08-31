@@ -52,12 +52,14 @@ app-map {
   background: linear-gradient(to right, #1a1e2b, #232a3b);
   overflow: hidden;
   color: white;
+  padding-left: 10px;
+  padding-right: 0px;
+  padding-bottom: 0px;
 }
-
 
 mat-card-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
   padding: 16px;
   padding-right: 8px;
@@ -70,29 +72,36 @@ mat-card-header {
 mat-card-header mat-card-subtitle {
   font-size: 14px;
   color: #b0b0b0;
-
 }
 
 .content-divider {
-  width: 100%;
+  width: calc(100% - 16px);
+  min-width: 100px;
   height: 1px;
+  min-height: 1px;
   background: #5e5e5e;
-  margin: 20px 0;
+  flex-shrink: 0;
+  display: block;
+  margin-left: 0;
+  margin-right: 16px; /* separa del borde derecho */
+  box-sizing: border-box;
 }
-
 
 mat-card-content {
   padding-left: 1px;
   padding-right: 1px;
+  padding-bottom: 0px;
   flex: 1;
   overflow-y: scroll;
   overflow-x: hidden;
-
   min-height: 0;
   color: white;
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+.mat-mdc-card-content:last-child {
+  padding-bottom: 5px;
 }
 .content-row {
   display: flex;
@@ -103,8 +112,7 @@ mat-card-content {
 
 
 .building-details {
-  width: 50%;
-  padding: 0 8px;
+  padding: 0px;
   display: flex;
   flex-direction: column;
 }
@@ -116,7 +124,10 @@ mat-card-content p {
 
 
 .close-button {
-  margin-left: auto;
+  position: absolute;
+  top: 4px;      /* Ajusta este valor según lo alto que lo quieras */
+  right: 4px;    /* Ajusta si quieres separarlo del borde derecho */
+  margin-left: 0;
   background: transparent !important;
   box-shadow: none;
   border: none;
@@ -125,6 +136,7 @@ mat-card-content p {
   opacity: 1;
   padding: 4px;
   border-radius: 10px;
+  z-index: 20;
 }
 
 .close-button:hover,
@@ -145,9 +157,10 @@ mat-card-content p {
   flex-direction: column;
   align-items: center;
   margin-bottom: 16px;
-  width: 50%;
+  max-width: 100%;
+  width: 100%;
   flex-shrink: 0;
-  padding: 0 3px;
+  padding: 0;
 }
 
 .carrousel-img-inner {
@@ -156,17 +169,16 @@ mat-card-content p {
   align-items: center;
   justify-content: center;
   width: 100%;
-  min-width: 200px;
+  min-width: 0;
   min-height: 220px;
   max-width: 100%;
   margin: 0 auto;
-  transition: box-shadow 0.2s;
 }
 
 .carousel-image {
   width: 100%;
   max-width: 100%;
-  max-height: 220px;
+  max-height: 320px;
   aspect-ratio: 1.1/1;
   object-fit: cover;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0);
@@ -174,7 +186,8 @@ mat-card-content p {
   z-index: 1;
   transition: opacity 0.4s cubic-bezier(.55,0,.1,1);
   opacity: 1;
-  border-radius: 12px;
+  border-radius: 8px;
+  margin-right: 10px;
 }
 
 .fade {
@@ -230,13 +243,69 @@ mat-card-content p {
   pointer-events: auto;
 }
 
-
 .carousel-indicator {
   margin-top: 8px;
   color: #ffffff;
   font-size: 14px;
 }
 
+mat-grid-list{
+  margin-right: 10px;
+}
+.properties-section h3 {
+  margin-top: 0px;
+}
+.property-item {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 8px;
+}
+.property-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+
+.property-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 2;
+  border-radius: 0 0 8px 8px;
+}
+
+.property-action {
+  color: #fff !important;
+  margin: 0 2px;
+  border-radius: 16px;
+  background-color: transparent;
+  transition: background 0.2s;
+}
+.property-action:hover {
+  background: rgba(150,150,150,0.4) !important;
+  border-radius: 16px;
+}
+
+.property-action-more {
+  background-color: transparent;
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff !important;
+  font-weight: 500;
+  border-radius: 16px;
+  padding: 4px 12px;
+  min-width: unset;
+}
 
 @media (max-width: 800px) {
   .carousel-arrow {

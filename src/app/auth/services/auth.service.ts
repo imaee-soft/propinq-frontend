@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { SignupRequest } from './../interfaces/signupRequest.interface';
 import { computed, inject, Injectable, signal } from '@angular/core';
+<<<<<<< HEAD:src/app/auth/services/auth.service.ts
 import { Observable, of, timeout, finalize, EMPTY, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { ClientStorageService } from '../../shared/services/client-storage.service.abstract';
@@ -9,6 +10,17 @@ import { AuthResponse } from '../interfaces/auth-response.interface';
 import { AuthState } from '../interfaces/auth-state.interface';
 import { LoginRequest } from '../interfaces/login-request.interface';
 import { UserAuth } from '../interfaces/user-auth.interface';
+=======
+import { Observable, of, tap } from 'rxjs';
+import { throwError } from 'rxjs';
+import { environment } from '../../environments/environment.development';
+import { ClientStorageService } from '../shared/services/client-storage.service.abstract';
+import { AuthStatus } from './enums/auth-status.enum';
+import { AuthResponse } from './interfaces/auth-response.interface';
+import { AuthState } from './interfaces/auth-state.interface';
+import { LoginRequest } from './interfaces/login-request.interface';
+import { UserAuth } from './interfaces/user-auth.interface';
+>>>>>>> f054cd9 ((WIP): Iniciar sesion):src/app/auth/auth.service.ts
 
 const INITIAL_STATE: AuthState = {
   user: null,
@@ -87,7 +99,6 @@ export class AuthService {
   }
 
   private clearTokens(): void {
-    console.log('Clearing auth tokens');
     this._storage.remove('accessToken');
     this._storage.remove('refreshToken');
   }
@@ -97,6 +108,7 @@ export class AuthService {
     this._storage.set('refreshToken', refreshToken);
   }
 
+<<<<<<< HEAD:src/app/auth/services/auth.service.ts
   signup(signupRequest: SignupRequest): Observable<{ success: boolean; status: number }> {
     if (this.isLoading()) {
       return EMPTY;
@@ -121,6 +133,10 @@ export class AuthService {
 
   refreshTokenRequest(): Observable<AuthResponse> {
     const refreshToken = this._storage.get<string>('refreshToken');
+=======
+  refreshTokenRequest(): Observable<AuthResponse> {
+    const refreshToken = this.refreshToken();
+>>>>>>> f054cd9 ((WIP): Iniciar sesion):src/app/auth/auth.service.ts
     if (!refreshToken) {
       return throwError(() => new Error('No refresh token available'));
     }

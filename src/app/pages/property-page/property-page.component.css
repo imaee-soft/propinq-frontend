@@ -1,6 +1,9 @@
 :root {
+  --divider-color: rgba(255,255,255,0.16);
+  --divider-height: 1.5px;
+  --divider-radius: 1px;
   --bg: #0f111a;
-  --bg-2: #0b0f18;
+  --bg-2: #151d30;
   --text: #e6eef8;
   --muted-contrast: #bfcfe0;
   --accent-from: #ff6bdc;
@@ -11,13 +14,33 @@
   --radius: 14px;
 }
 
+
+.card-inner > * + * {
+  margin-top: 2.2rem;
+  position: relative;
+}
+.card-inner > * + *:before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: var(--divider-height);
+  background: var(--divider-color);
+  border-radius: var(--divider-radius);
+  position: absolute;
+  top: -1.1rem;
+  left: 0;
+}
+html, body {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
 /* Page root */
 :host, .page-container {
   min-height: 100vh;
   padding: 2.25rem;
   box-sizing: border-box;
-  display: flex;
-  justify-content: center;
+  /* Quitar display: flex y justify-content: center */
   background: radial-gradient(1200px 400px at 10% 10%, rgba(99,102,241,0.04), transparent 8%),
               radial-gradient(900px 300px at 90% 90%, rgba(139,92,246,0.03), transparent 6%),
               linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
@@ -25,8 +48,11 @@
   font-family: Inter, "Roboto", "Helvetica Neue", Arial, sans-serif;
 }
 
-/* content wrapper */
-.content-wrapper { width: 100%; max-width: 1100px; }
+.content-wrapper {
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+}
 
 /* mat-card: integrarlo al fondo */
 mat-card {
@@ -67,21 +93,37 @@ mat-card-subtitle { color: var(--muted-contrast); font-size:0.95rem; }
 /* Image (centrada dentro del area) */
 .image-wrap {
   width: 100%;
+  max-width: 640px;
+  height: 380px;        /* <--- AJUSTA este valor a tu gusto */
   display: flex;
   justify-content: center;
+  align-items: center;
+  border-radius: 12px;
+  overflow: hidden;
+  background: #181b29;
 }
 .main-image {
   width: 100%;
-  max-width: 640px;
-  height: auto;
+  height: 100%;
   object-fit: cover;
+  object-position: center;
   border-radius: 12px;
   box-shadow:
     0 30px 60px rgba(3,6,14,0.55),
     inset 0 -10px 30px rgba(0,0,0,0.35);
   border: 1px solid rgba(255,255,255,0.03);
-  transform: translateY(-6px);
-  transition: transform .25s ease, box-shadow .25s ease;
+  transition: transform .25s, box-shadow .25s;
+  display: block;
+}
+@media (max-width: 520px) {
+  .image-wrap {
+    height: 210px;
+    max-width: 98vw;
+    border-radius: 10px;
+  }
+  .main-image {
+    border-radius: 10px;
+  }
 }
 .main-image:hover { transform: translateY(-10px) scale(1.01); }
 
@@ -184,7 +226,7 @@ button.mat-button.primary-cta:hover { transform: translateY(-4px); box-shadow: 0
 }
 button.mat-button.primary-cta {
   /* Gradiente rosa -> morado -> azul (igual al pedido) */
-  background: linear-gradient(45deg, #ff6bdc 0%, #8b5cf6 50%, #6366f1 100%) !important;
+  background: linear-gradient(45 deg, #673ab7 0%, #6366f1 100%) !important;
   color: #ffffff !important;
   border-radius: 10px;
   padding: 8px 16px;
@@ -218,7 +260,7 @@ button.mat-button.primary-cta.ng-disabled {
 :host ::ng-deep .primary-cta.mat-button,
 :host ::ng-deep .primary-cta.mat-mdc-button {
   /* gradient background */
-  background-image: linear-gradient(45deg, #ff6bdc 0%, #8b5cf6 50%, #6366f1 100%) !important;
+  background-image: linear-gradient(45deg, #673ab7 50%, #6366f1 100%) !important;
   background-color: transparent !important; /* ensure no fallback color shows through */
   color: #ffffff !important;
   border: 1px solid rgba(255,255,255,0.06) !important;

@@ -61,13 +61,19 @@ export class HomePageComponent {
 
   onMarkerClick(marker:MapMarker):void {
     if (marker.type === 'building') {
+      this.propertyMarkerQueried.set(null);
+      this.propertyDetails.set(null);
+
+
       this.onBuildingMarkerClick(marker);
     } else if (marker.type === 'property') {
+      this.buildingMarkerQueried.set(null);
+      this.buildingDetails.set(null);
       this.onPropertyMarkerClick(marker);
     }
   }
 
-  onBuildingMarkerClick(marker:MapMarker):void{
+  onBuildingMarkerClick(marker: MapMarker):void{
      if ( marker.type === 'building' &&
           !this.buildingMarkerQueried() ||
           this.buildingMarkerQueried()!.id !== marker.id
@@ -144,7 +150,6 @@ export class HomePageComponent {
   public propertyGalleryIndex = signal(0);
 
   public openPropertyGallery(images: string[], startIndex = 0) {
-    console.log("HOLAAAAAAA:", images);
     this.propertyGalleryOpen.set(true);
     this.propertyGalleryImages.set(images ?? []);
     this.propertyGalleryIndex.set(startIndex);

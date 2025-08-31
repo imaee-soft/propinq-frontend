@@ -23,12 +23,10 @@
   font-weight: 300;
 }
 
-
 .fab-add {
   background: linear-gradient(45deg, #8b5cf6, #6366f1);
   color: white;
   transition: transform 0.3s ease;
-
   border-radius: 50%;
 }
 
@@ -54,8 +52,8 @@
   border-collapse: collapse;
 }
 
-
-.mat-mdc-header-cell, .mat-mdc-cell {
+.mat-mdc-header-cell,
+.mat-mdc-cell {
   padding: 1rem 1.5rem;
   border-bottom: 1px solid #374151;
 }
@@ -85,7 +83,6 @@
   border-bottom: none;
 }
 
-
 .inactive-row {
   opacity: 0.5;
 }
@@ -93,11 +90,9 @@
   opacity: 0.7;
 }
 
-
 .actions-cell {
   display: flex;
   flex-direction: row;
-  justify-content: flex-end;
   align-items: center;
   gap: 8px;
 }
@@ -125,7 +120,8 @@
     align-items: flex-start;
     gap: 1rem;
   }
-  .mat-mdc-header-cell, .mat-mdc-cell {
+  .mat-mdc-header-cell,
+  .mat-mdc-cell {
     padding: 0.75rem 1rem;
   }
 }

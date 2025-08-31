@@ -10,6 +10,7 @@ import { AuthState } from '../interfaces/auth-state.interface';
 import { LoginRequest } from '../interfaces/login-request.interface';
 import { UserAuth } from '../interfaces/user-auth.interface';
 
+
 const INITIAL_STATE: AuthState = {
   user: null,
   status: AuthStatus.PENDING,
@@ -87,7 +88,6 @@ export class AuthService {
   }
 
   private clearTokens(): void {
-    console.log('Clearing auth tokens');
     this._storage.remove('accessToken');
     this._storage.remove('refreshToken');
   }
@@ -122,7 +122,7 @@ export class AuthService {
   refreshTokenRequest(): Observable<AuthResponse> {
     const refreshToken = this._storage.get<string>('refreshToken');
     if (!refreshToken) {
-      return throwError(() => new Error('No refresh token available'));
+      return throwError(() => new Error('Refresh token no disponible'));
     }
     return this._http.post<AuthResponse>(
       `${environment.apiUrl}/auth/refresh-token`,

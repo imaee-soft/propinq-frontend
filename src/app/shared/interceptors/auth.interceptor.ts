@@ -9,6 +9,7 @@ import { Injectable, Injector } from '@angular/core';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 
+
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private readonly _EXCLUDED_BEARER_ROUTES = ['/auth'];

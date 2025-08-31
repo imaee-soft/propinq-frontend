@@ -3,10 +3,12 @@ import {
   HttpHandler,
   HttpInterceptor,
   HttpRequest,
+  HttpErrorResponse
 } from '@angular/common/http';
 import { Injectable, Injector } from '@angular/core';
-import { Observable } from 'rxjs';
-import { AuthService } from '../../auth/services/auth.service';
+import { Observable, throwError } from 'rxjs';
+import { catchError, switchMap } from 'rxjs/operators';
+import { AuthService } from '../../auth/auth.service';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
@@ -19,14 +21,34 @@ export class AuthInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     if (this.shouldExcludeBearerRoute(req.url)) return next.handle(req);
 
-    const accessToken = this.injector.get(AuthService).accessToken();
+    const authService = this.injector.get(AuthService);
+    const accessToken = authService.accessToken();
     if (!accessToken) return next.handle(req);
 
     const authReq = req.clone({
       setHeaders: { Authorization: `Bearer ${accessToken}` },
     });
 
-    return next.handle(authReq);
+    return next.handle(authReq).pipe(
+      catchError((error: HttpErrorResponse) => {
+        if (error.status === 401) {
+          return authService.refreshTokenRequest().pipe(
+            switchMap(() => {
+              const newAccessToken = authService.accessToken();
+              const retryReq = req.clone({
+                setHeaders: { Authorization: `Bearer ${newAccessToken}` },
+              });
+              return next.handle(retryReq);
+            }),
+            catchError((refreshError) => {
+              authService.logout();
+              return throwError(() => refreshError);
+            })
+          );
+        }
+        return throwError(() => error);
+      })
+    );
   }
 
   private shouldExcludeBearerRoute(url: string): boolean {

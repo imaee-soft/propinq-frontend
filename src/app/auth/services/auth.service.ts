@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { SignupRequest } from './../interfaces/signupRequest.interface';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Observable, of, timeout, finalize, EMPTY, tap} from 'rxjs';
+import { Observable, of, timeout, finalize, EMPTY, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { ClientStorageService } from '../../shared/services/client-storage.service.abstract';
 import { AuthStatus } from '../enums/auth-status.enum';
@@ -12,7 +12,7 @@ import { UserAuth } from '../interfaces/user-auth.interface';
 
 const INITIAL_STATE: AuthState = {
   user: null,
-  status: AuthStatus.AUTHENTICATED,
+  status: AuthStatus.PENDING,
   accessToken: null,
   refreshToken: null,
 };
@@ -87,7 +87,6 @@ export class AuthService {
   }
 
   private clearTokens(): void {
-    console.log('Clearing auth tokens');
     this._storage.remove('accessToken');
     this._storage.remove('refreshToken');
   }
@@ -116,6 +115,28 @@ export class AuthService {
       birthDate: signupRequest.birthDate
     }, { responseType: 'text' as 'json' }).pipe(
       finalize(() => this.isLoading.set(false))
+    );
+  }
+
+  refreshTokenRequest(): Observable<AuthResponse> {
+    const refreshToken = this._storage.get<string>('refreshToken');
+    if (!refreshToken) {
+      return throwError(() => new Error('No refresh token available'));
+    }
+    return this._http.post<AuthResponse>(
+      `${environment.apiUrl}/auth/refresh-token`,
+      { refreshToken }
+    ).pipe(
+      tap((response) => {
+        const { accessToken, refreshToken, user } = response;
+        this._authState.set({
+          accessToken,
+          refreshToken,
+          user,
+          status: AuthStatus.AUTHENTICATED,
+        });
+        this.setTokens(accessToken, refreshToken);
+      })
     );
   }
 }

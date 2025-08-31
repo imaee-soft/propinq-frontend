@@ -38,11 +38,8 @@ export class NavbarService {
   username = computed(() => this._authService.user()?.username);
 
   handleLogin() {
-    this._authService
-      .login({
-        email: 'esosa@gmail.com',
-        password: 'password',
-      })
-      .subscribe();
+    this._authService.logout();
   }
 }
+
+

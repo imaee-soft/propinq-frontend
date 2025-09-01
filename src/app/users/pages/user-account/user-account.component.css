@@ -1,0 +1,118 @@
+.user-account-page {
+  padding: 4rem 8rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3rem;
+  color: #212121;
+  background: linear-gradient(135deg, #0f111a 0%, #1c2230 100%);
+}
+
+.user-header {
+  display: flex;
+  text-align: left;
+  gap: 8px;
+}
+
+.header-content {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  background: transparent;
+  border-radius: 4px;
+  padding: 1rem 1rem;
+  min-width: 600px;
+}
+
+.header-content mat-icon {
+  font-size: 4.5rem;
+  height: 5.5rem;
+  width: 4.5rem;
+  color: #f0f4ff;
+}
+
+.header-content h1 {
+  margin: 0;
+  font-size: 2.5rem;
+  color: #f0f4ff;
+}
+
+.header-content .subtitle {
+  margin-top: 0.3rem;
+  font-size: 1.1rem;
+  color: #f0f4ff;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+  row-gap: 1.2rem;
+  font-size: 1.05rem;
+}
+
+.user-info-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #cbd5e1;
+  margin-bottom: 0.1rem;
+}
+
+.user-info-card {
+  display: flex;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 1rem 2rem;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  min-width: 600px;
+}
+
+.info-row {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 1rem 0;
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.info-row mat-label {
+  font-weight: 800;
+  color: #cbd5e1;
+  margin-bottom: 1.25rem;
+}
+
+.info-row span,
+.info-row app-dynamic-input {
+  display: inline-flex;
+  align-items: center;
+  height: 0.75rem;
+  line-height: 0.75rem;
+}
+
+.info-row span {
+  position: relative;
+  display: inline-block;
+  width: fit-content;
+  font-weight: 500;
+  color: #9cb9dd;
+  margin-left: 0.75rem;
+}
+
+.info-row span::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 4px;
+  background: transparent;
+  padding: 0.6rem 0.9rem;
+  margin: -0.6rem -0.9rem;
+  transition: background 0.2s ease;
+}
+
+.info-row span:hover::after {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.info-row:last-child {
+  border-bottom: none;
+}

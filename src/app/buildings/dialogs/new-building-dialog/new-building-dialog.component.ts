@@ -22,7 +22,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatSelect } from '@angular/material/select';
 import { MatTooltip } from '@angular/material/tooltip';
 import { of } from 'rxjs';
-import { AuthService } from '../../../auth/services/auth.service';
+import { AuthService } from '../../../auth/auth.service';
 import { MapComponent } from '../../../maps/components/map/map.component';
 import { MapClickEvent } from '../../../maps/interfaces/click-event.interface';
 import { MapConfig } from '../../../maps/interfaces/map-config.interface';
@@ -213,7 +213,7 @@ export class NewBuildingDialogComponent {
       address,
       longitude: coordinate?.longitude || 0,
       latitude: coordinate?.latitude || 0,
-      userId: this._authService.user()?.id ?? '',
+      userId: this._authService.user()?.userId ?? '',
       images: images || [],
     });
   }

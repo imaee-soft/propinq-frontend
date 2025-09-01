@@ -9,9 +9,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { RouterModule } from '@angular/router';
-import { AuthStatus } from '../../../auth/enums/auth-status.enum';
-import { AuthService } from '../../../auth/services/auth.service';
+import { Router, RouterModule } from '@angular/router';
 import { NewBuildingDialogComponent } from '../../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
 import { NavElement } from '../../interfaces/nav-element.interface';
 import { EntityDialogService } from '../../services/entity-dialog.service';
@@ -38,23 +36,24 @@ import { SidebarService } from '../../services/sidebar.service';
 })
 export class NavbarComponent {
   private _navbarService = inject(NavbarService);
-  private _authService = inject(AuthService);
   private _sidebarService = inject(SidebarService);
   private _entityDialogService = inject(EntityDialogService);
+  private _router = inject(Router);
 
   items = input<NavElement[]>(this._navbarService.config());
-
+  userLogged = this._navbarService.userLogged;
   sidebarOpened = this._sidebarService.isOpen;
   navbarDisabled = computed(() => this._navbarService.disabled());
-  userLogged = computed(
-    () => this._authService.status() === AuthStatus.AUTHENTICATED
-  );
 
   toggleSidebar() {
     this._sidebarService.toggle();
   }
 
-  handleNavItemClick(item: NavElement, event: Event): void {
+  handleLogin() {
+    this._navbarService.handleLogin();
+  }
+
+  handleNavItemClick(item: NavElement, event: Event) {
     if (item.featured) {
       event.preventDefault();
       this._entityDialogService
@@ -64,5 +63,13 @@ export class NavbarComponent {
         })
         .subscribe();
     }
+  }
+
+  handleMyAccount() {
+    this._router.navigate(['/users/my-account']);
+  }
+
+  get username() {
+    return this._navbarService.username();
   }
 }

@@ -54,3 +54,6 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
     opacity: 1;
   }
 }
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

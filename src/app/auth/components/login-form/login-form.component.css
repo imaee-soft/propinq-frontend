@@ -202,3 +202,20 @@ button[mat-icon-button][matSuffix] .mat-mdc-button-persistent-ripple {
     padding: 32px 24px;
   }
 }
+
+@media (max-width: 768px) {
+  .login-page-container {
+    flex-direction: column;
+  }
+
+  .login-bg-half,
+  .login-form-half {
+    width: 100vw;
+    height: 50vh;
+  }
+
+  .login-form {
+    max-width: 90%;
+    padding: 32px 24px;
+  }
+}

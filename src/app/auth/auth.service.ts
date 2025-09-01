@@ -1,12 +1,13 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Observable, of, tap } from 'rxjs';
+import { EMPTY, finalize, Observable, of, tap } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { ClientStorageService } from '../shared/services/client-storage.service.abstract';
 import { AuthStatus } from './enums/auth-status.enum';
 import { AuthResponse } from './interfaces/auth-response.interface';
 import { AuthState } from './interfaces/auth-state.interface';
 import { LoginRequest } from './interfaces/login-request.interface';
+import { SignupRequest } from './interfaces/signupRequest.interface';
 import { UserAuth } from './interfaces/user-auth.interface';
 
 const INITIAL_STATE: AuthState = {
@@ -26,6 +27,7 @@ export class AuthService {
   status = computed(() => this._authState().status);
   accessToken = computed(() => this._authState().accessToken);
   refreshToken = computed(() => this._authState().refreshToken);
+  isLoading = signal(false);
 
   constructor() {
     this.checkStatus().subscribe({
@@ -57,6 +59,34 @@ export class AuthService {
           this.setTokens(accessToken, refreshToken);
         })
       );
+  }
+
+  signup(
+    signupRequest: SignupRequest
+  ): Observable<{ success: boolean; status: number }> {
+    if (this.isLoading()) {
+      return EMPTY;
+    }
+
+    this.isLoading.set(true);
+
+    return this._http
+      .post<{ success: boolean; status: number }>(
+        `${environment.apiUrl}/auth/signup`,
+        {
+          dni: signupRequest.dni,
+          firstName: signupRequest.firstName,
+          lastName: signupRequest.lastName,
+          email: signupRequest.email,
+          password: signupRequest.password,
+          address: signupRequest.address,
+          phoneNumber: signupRequest.phoneNumber,
+          cuit: signupRequest.cuit,
+          birthDate: signupRequest.birthDate,
+        },
+        { responseType: 'text' as 'json' }
+      )
+      .pipe(finalize(() => this.isLoading.set(false)));
   }
 
   checkStatus(): Observable<UserAuth | null> {

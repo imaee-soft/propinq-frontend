@@ -30,6 +30,10 @@ export class UserAccountComponent {
       user ? this._usersService.getUserProfile(user.userId) : of(null),
   });
 
+  constructor() {
+    effect(() => (this.user = this._userResource.value()));
+  }
+
   user = this._userResource.value();
   userId = computed(() => this._authService.user()!.userId);
   firstNameClicked = signal(false);
@@ -37,10 +41,6 @@ export class UserAccountComponent {
   documentClicked = signal(false);
   phoneClicked = signal(false);
   addressClicked = signal(false);
-
-  constructor() {
-    effect(() => (this.user = this._userResource.value()));
-  }
 
   onFirstNameClicked() {
     this.disableEdit();

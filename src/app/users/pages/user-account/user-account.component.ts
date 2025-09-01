@@ -5,7 +5,6 @@ import { MatCardModule } from '@angular/material/card';
 import { MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { of } from 'rxjs';
-<<<<<<< HEAD
 import { AuthService } from '../../../auth/services/auth.service';
 import { PhonePipe } from '../../../shared/pipes/phone-number.pipe';
 import { DynamicInputComponent } from '../../components/dynamic-input.component';

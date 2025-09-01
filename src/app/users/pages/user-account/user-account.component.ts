@@ -49,7 +49,6 @@ export class UserAccountComponent {
   }
 
   onDniSubmitted(newValue: string | null) {
-    console.log('Value received: ', newValue);
     this.documentClicked.set(false);
   }
 }

@@ -41,7 +41,7 @@ export class AuthService {
         const { accessToken, refreshToken } = this.getTokens();
         this._authState.set({ accessToken, refreshToken, user, status });
       },
-      error: () => {
+      error: (err) => {
         this.logout();
       },
     });
@@ -66,6 +66,7 @@ export class AuthService {
 
   checkStatus(): Observable<UserAuth | null> {
     const accessToken = this._storage.get<string>('accessToken');
+    console.log("Access token from storage:", accessToken);
     if (!accessToken) return of(null);
     return this._http.post<UserAuth>(`${environment.apiUrl}/auth/check-token`, {
       accessToken,

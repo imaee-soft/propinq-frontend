@@ -1,12 +1,14 @@
-import { UserService } from './../../../users/services/user.service';
+
 import { ChangeDetectionStrategy, Component, effect, inject, OnInit, signal } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
-import { AuthService } from "../../auth/services/auth.service";
+
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { rxResource } from "@angular/core/rxjs-interop";
 import { EMPTY} from "rxjs";
-import { CustomSnackbarService } from '../../shared/services/snackbar.service';
+import { UserService } from "../../../../users/services/user.service";
+import { CustomSnackbarService } from "../../../shared/services/snackbar.service";
+
 
 @Component({
   selector: 'app-verify-email-page',

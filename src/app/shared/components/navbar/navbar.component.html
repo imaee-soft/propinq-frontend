@@ -64,15 +64,15 @@
           <span>{{ username }}</span>
         </button>
         <mat-divider></mat-divider>
-        <button mat-menu-item>
+        <button (click)="handleLogin()" mat-menu-item>
           <mat-icon>logout</mat-icon>
           <span>Cerrar sesión</span>
         </button>
       </div>
     </mat-menu>
     } @else {
-    <a routerLink="/signup" class="nav-action-link">Creá tu cuenta</a>
-    <a (click)="handleLogin()" routerLink="/login" class="nav-action-link"
+    <a routerLink="/auth/signup" class="nav-action-link">Creá tu cuenta</a>
+    <a routerLink="/auth/login" class="nav-action-link"
       >Ingresá</a
     >
     }

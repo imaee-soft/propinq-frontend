@@ -22,7 +22,7 @@ export class AuthInterceptor implements HttpInterceptor {
     if (this.shouldExcludeBearerRoute(req.url)) return next.handle(req);
 
     const authService = this.injector.get(AuthService);
-    const accessToken = authService.accessToken();
+    const { accessToken } = authService['getTokens']();
     if (!accessToken) return next.handle(req);
 
     const authReq = req.clone({
@@ -34,7 +34,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error.status === 401) {
           return authService.refreshTokenRequest().pipe(
             switchMap(() => {
-              const newAccessToken = authService.accessToken();
+              const { accessToken: newAccessToken } = authService['getTokens']();
               const retryReq = req.clone({
                 setHeaders: { Authorization: `Bearer ${newAccessToken}` },
               });

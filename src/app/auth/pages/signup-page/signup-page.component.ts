@@ -1,14 +1,14 @@
-import { AuthService } from './../../auth/services/auth.service';
+import { AuthService } from '../../services/auth.service';
 import { ChangeDetectionStrategy, Component, effect, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { FormUtils } from '../utils/form-utils';
+import { FormUtils } from '../../../pages/utils/form-utils';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { SignupRequest } from '../../auth/interfaces/signupRequest.interface';
+import { SignupRequest } from '../../interfaces/signupRequest.interface';
 import { of } from 'rxjs';
 import { MatButton } from '@angular/material/button';
 

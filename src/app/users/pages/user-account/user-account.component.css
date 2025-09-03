@@ -59,7 +59,6 @@
 
 .user-info-card {
   display: flex;
-  gap: 20px;
   background: rgba(255, 255, 255, 0.1);
   border-radius: 6px;
   padding: 1rem 2rem;
@@ -82,9 +81,12 @@
   margin-bottom: 1.25rem;
 }
 
+.info-row span,
 .info-row app-dynamic-input {
-  position: relative;
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  height: 0.75rem;
+  line-height: 0.75rem;
 }
 
 .info-row span {

@@ -9,21 +9,27 @@ import { Injectable, Injector } from '@angular/core';
 import { catchError, Observable, switchMap, throwError } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 
-
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
   private readonly _EXCLUDED_BEARER_ROUTES = ['/auth'];
+
   constructor(private injector: Injector) {}
 
   intercept(
     req: HttpRequest<any>,
     next: HttpHandler
   ): Observable<HttpEvent<any>> {
-    if (this.shouldExcludeBearerRoute(req.url)) return next.handle(req);
+    if (this.shouldExcludeBearerRoute(req.url)) {
+      return next.handle(req);
+    }
 
     const authService = this.injector.get(AuthService);
     const { accessToken } = authService['getTokens']();
-    if (!accessToken) return next.handle(req);
+
+    if (!accessToken) {
+      authService.logout();
+      return next.handle(req);
+    }
 
     const authReq = req.clone({
       setHeaders: { Authorization: `Bearer ${accessToken}` },
@@ -34,8 +40,7 @@ export class AuthInterceptor implements HttpInterceptor {
         if (error.status === 401) {
           return authService.refreshTokenRequest().pipe(
             switchMap(() => {
-              const { accessToken: newAccessToken } = authService['getTokens']();
-              const retryReq = req.clone({
+              const { accessToken: newAccessToken } = authService['getTokens']();              const retryReq = req.clone({
                 setHeaders: { Authorization: `Bearer ${newAccessToken}` },
               });
               return next.handle(retryReq);
@@ -54,13 +59,9 @@ export class AuthInterceptor implements HttpInterceptor {
   private shouldExcludeBearerRoute(url: string): boolean {
     try {
       const path = new URL(url, window.location.origin).pathname;
-      return this._EXCLUDED_BEARER_ROUTES.some((route) =>
-        path.startsWith(route)
-      );
+      return this._EXCLUDED_BEARER_ROUTES.some((route) => path.startsWith(route));
     } catch {
-      return this._EXCLUDED_BEARER_ROUTES.some((route) =>
-        url.startsWith(route)
-      );
+      return this._EXCLUDED_BEARER_ROUTES.some((route) => url.startsWith(route));
     }
   }
 }

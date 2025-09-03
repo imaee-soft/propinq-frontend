@@ -8,7 +8,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../auth/auth.service';
+import { AuthService } from '../../../auth/services/auth.service';
+import { AuthStatus } from '../../../auth/enums/auth-status.enum';
 import { SideConfig } from '../../interfaces/side-config.interface';
 import { SidebarService } from '../../services/sidebar.service';
 
@@ -36,7 +37,11 @@ export class SidebarComponent {
 
   config = input<SideConfig>(this._sidebarService.config());
 
-  isOpen = computed(() => this._sidebarService.isOpen());
+  isOpen = computed(
+    () =>
+      this._sidebarService.isOpen() &&
+      this._authService.status() === AuthStatus.AUTHENTICATED
+  );
   sidenavWidth = computed(() => (this._sidebarService.isOpen() ? 320 : 0));
 
   navigate(route: string) {

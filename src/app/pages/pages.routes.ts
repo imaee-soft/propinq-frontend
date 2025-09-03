@@ -16,6 +16,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'properties/:propertyId',
+    loadComponent: () =>
+      import('./property-page/property-page.component').then(
+        (m) => m.PropertyPageComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

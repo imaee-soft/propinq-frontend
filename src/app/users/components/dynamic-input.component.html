@@ -1,7 +1,8 @@
 <div class="dynamic-input-wrapper">
   <input
     matInput
-    [value]="value()"
+    [value]="initialValue()"
+    [formControl]="valueFormControl"
     [maxLength]="50"
     cdkFocusInitial
     class="dynamic-input"

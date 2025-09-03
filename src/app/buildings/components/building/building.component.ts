@@ -13,6 +13,7 @@ import { of } from 'rxjs';
 import { MapMarker } from '../../../maps/interfaces/map-marker.interface';
 import { BuildingsService } from '../../buildings.service';
 import { BuildingDetails } from '../../interfaces/building-details.interface';
+import { PropertyDetails } from '../../../properties/interfaces/property-details.interface';
 
 
 @Component({
@@ -41,6 +42,7 @@ export class BuildingComponent {
       icon: {
         url: '/building.png',
       },
+      type: 'building',
     }))
   );
 
@@ -58,9 +60,23 @@ export class BuildingComponent {
     },
   });
 
+  buildingPropertiesResource = rxResource({
+    request: this.buildingMarkerQueried,
+    defaultValue: [],
+    loader: () => {
+      const buildingQueried = this.buildingMarkerQueried();
+      if (buildingQueried == null || !buildingQueried.id) return of([]);
+      return this._buildingsService.getBuildingProperties(buildingQueried.id);
+    },
+  });
+
   buildingDetails = computed(() => this.buildingDetailsResource.value());
 
+  buildingProperties = computed(() => this.buildingPropertiesResource.value());
+
   buildingDetailsChange = output<BuildingDetails | null>();
+
+  buildingPropertiesChange = output<PropertyDetails[] | null>();
 
   constructor() {
     effect(() => {
@@ -69,7 +85,9 @@ export class BuildingComponent {
     effect(() => {
       this.buildingDetailsChange.emit(this.buildingDetails() || null);
     });
-
+    effect(() => {
+      this.buildingPropertiesChange.emit(this.buildingProperties() || null);
+    });
   }
 
 }

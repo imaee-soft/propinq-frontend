@@ -1,5 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../../auth/services/auth.service';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { Role } from '../../auth/enums/role.enum';
 import { SideConfig } from '../interfaces/side-config.interface';

@@ -9,6 +9,7 @@ import {
   provideZoneChangeDetection,
 } from '@angular/core';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { ReactiveFormsModule } from '@angular/forms';
 import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
@@ -23,7 +24,7 @@ export const appConfig: ApplicationConfig = {
     provideRouter(routes),
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
-    importProvidersFrom(MatSnackBarModule),
+  importProvidersFrom(MatSnackBarModule, ReactiveFormsModule),
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,

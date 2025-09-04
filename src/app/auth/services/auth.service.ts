@@ -1,18 +1,18 @@
 import { HttpClient } from '@angular/common/http';
+import { SignupRequest } from './../interfaces/signupRequest.interface';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { EMPTY, finalize, Observable, of, tap } from 'rxjs';
-import { environment } from '../../environments/environment.development';
-import { ClientStorageService } from '../shared/services/client-storage.service.abstract';
-import { AuthStatus } from './enums/auth-status.enum';
-import { AuthResponse } from './interfaces/auth-response.interface';
-import { AuthState } from './interfaces/auth-state.interface';
-import { LoginRequest } from './interfaces/login-request.interface';
-import { SignupRequest } from './interfaces/signupRequest.interface';
-import { UserAuth } from './interfaces/user-auth.interface';
+import { Observable, of, timeout, finalize, EMPTY, tap, throwError } from 'rxjs';
+import { environment } from '../../../environments/environment.development';
+import { ClientStorageService } from '../../shared/services/client-storage.service.abstract';
+import { AuthStatus } from '../enums/auth-status.enum';
+import { AuthResponse } from '../interfaces/auth-response.interface';
+import { AuthState } from '../interfaces/auth-state.interface';
+import { LoginRequest } from '../interfaces/login-request.interface';
+import { UserAuth } from '../interfaces/user-auth.interface';
 
 const INITIAL_STATE: AuthState = {
   user: null,
-  status: AuthStatus.AUTHENTICATED,
+  status: AuthStatus.PENDING,
   accessToken: null,
   refreshToken: null,
 };
@@ -22,12 +22,14 @@ export class AuthService {
   private readonly _storage = inject(ClientStorageService);
   private readonly _http = inject(HttpClient);
   private readonly _authState = signal(INITIAL_STATE);
+  private http = inject(HttpClient);
 
   user = computed(() => this._authState().user);
   status = computed(() => this._authState().status);
   accessToken = computed(() => this._authState().accessToken);
   refreshToken = computed(() => this._authState().refreshToken);
   isLoading = signal(false);
+
 
   constructor() {
     this.checkStatus().subscribe({
@@ -38,7 +40,7 @@ export class AuthService {
         const { accessToken, refreshToken } = this.getTokens();
         this._authState.set({ accessToken, refreshToken, user, status });
       },
-      error: () => {
+      error: (err) => {
         this.logout();
       },
     });
@@ -61,36 +63,9 @@ export class AuthService {
       );
   }
 
-  signup(
-    signupRequest: SignupRequest
-  ): Observable<{ success: boolean; status: number }> {
-    if (this.isLoading()) {
-      return EMPTY;
-    }
-
-    this.isLoading.set(true);
-
-    return this._http
-      .post<{ success: boolean; status: number }>(
-        `${environment.apiUrl}/auth/signup`,
-        {
-          dni: signupRequest.dni,
-          firstName: signupRequest.firstName,
-          lastName: signupRequest.lastName,
-          email: signupRequest.email,
-          password: signupRequest.password,
-          address: signupRequest.address,
-          phoneNumber: signupRequest.phoneNumber,
-          cuit: signupRequest.cuit,
-          birthDate: signupRequest.birthDate,
-        },
-        { responseType: 'text' as 'json' }
-      )
-      .pipe(finalize(() => this.isLoading.set(false)));
-  }
-
   checkStatus(): Observable<UserAuth | null> {
     const accessToken = this._storage.get<string>('accessToken');
+    console.log("Access token from storage:", accessToken);
     if (!accessToken) return of(null);
     return this._http.post<UserAuth>(`${environment.apiUrl}/auth/check-token`, {
       accessToken,
@@ -113,7 +88,6 @@ export class AuthService {
   }
 
   private clearTokens(): void {
-    console.log('Clearing auth tokens');
     this._storage.remove('accessToken');
     this._storage.remove('refreshToken');
   }
@@ -122,4 +96,50 @@ export class AuthService {
     this._storage.set('accessToken', accessToken);
     this._storage.set('refreshToken', refreshToken);
   }
+
+  signup(signupRequest: SignupRequest): Observable<{ success: boolean; status: number }> {
+    if (this.isLoading()) {
+      return EMPTY;
+    }
+
+    this.isLoading.set(true);
+
+    return this.http.post<{ success: boolean; status: number }>(`${environment.apiUrl}/auth/signup`, {
+      dni: signupRequest.dni,
+      firstName: signupRequest.firstName,
+      lastName: signupRequest.lastName,
+      email: signupRequest.email,
+      password: signupRequest.password,
+      address: signupRequest.address,
+      phoneNumber: signupRequest.phoneNumber,
+      cuit: signupRequest.cuit,
+      birthDate: signupRequest.birthDate
+    }, { responseType: 'text' as 'json' }).pipe(
+      finalize(() => this.isLoading.set(false))
+    );
+  }
+
+  refreshTokenRequest(): Observable<AuthResponse> {
+    const refreshToken = this._storage.get<string>('refreshToken');
+    if (!refreshToken) {
+      return throwError(() => new Error('Refresh token no disponible'));
+    }
+    return this._http.post<AuthResponse>(
+      `${environment.apiUrl}/auth/refresh-token`,
+      { refreshToken }
+    ).pipe(
+      tap((response) => {
+        const { accessToken, refreshToken, user } = response;
+        this._authState.set({
+          accessToken,
+          refreshToken,
+          user,
+          status: AuthStatus.AUTHENTICATED,
+        });
+        this.setTokens(accessToken, refreshToken);
+      })
+    );
+  }
 }
+
+

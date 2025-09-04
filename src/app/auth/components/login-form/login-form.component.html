@@ -1,0 +1,46 @@
+<section class="login-page-container">
+  <div class="login-bg-half">
+    <img src="PropInq.png" alt="Logo">
+  </div>
+  <div class="login-form-half">
+    <form autocomplete="off" [formGroup]="loginForm" (ngSubmit)="onLogin()" class="login-form">
+      <h1>Bienvenido</h1>
+      <br>
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput type="email" formControlName="email" required autocomplete="email">
+        @if(email?.invalid && email?.touched) {
+          <mat-error>
+            <span>El email es requerido</span>
+            <span>Ingrese un email válido</span>
+          </mat-error>
+        }
+      </mat-form-field>
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Contraseña</mat-label>
+        <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" required autocomplete="current-password">
+        <button mat-icon-button matSuffix type="button" (click)="hidePassword.set(!hidePassword())">
+          <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
+        </button>
+        @if(password?.invalid && password?.touched) {
+          <mat-error>
+            <span>La contraseña es requerida</span>
+          </mat-error>
+        }
+      </mat-form-field>
+      @if(errorMessage()) {
+        <div class="error-message">{{errorMessage()}}</div>
+      }
+      <div class="login-actions">
+        @if(isLoading()) {
+          <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+        } @else {
+          <button mat-raised-button color="primary" type="submit" class="login-button" [disabled]= "loginForm.invalid || isLoading()">
+            Iniciar Sesión
+          </button>
+        }
+      </div>
+      <a routerLink="/auth/signup" class="signup-link">¿No tienes cuenta? Registrate</a>
+    </form>
+  </div>
+</section>

@@ -6,17 +6,17 @@ import {
   signal,
 } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { AuthService } from '../../services/auth.service';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButton } from '@angular/material/button';
+import { FormUtils } from '../../../pages/utils/form-utils';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { of } from 'rxjs';
-import { AuthService } from '../../auth/auth.service';
-import { SignupRequest } from '../../auth/interfaces/signupRequest.interface';
-import { FormUtils } from '../utils/form-utils';
+import { SignupRequest } from '../../interfaces/signupRequest.interface';
 
 @Component({
   imports: [

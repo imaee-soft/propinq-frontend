@@ -10,8 +10,8 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { MatIcon } from '@angular/material/icon';
 import { ActivatedRoute, RouterLink } from '@angular/router';
 import { EMPTY } from 'rxjs';
-import { CustomSnackbarService } from '../../shared/services/snackbar.service';
-import { UserService } from './../../../users/services/user.service';
+import { CustomSnackbarService } from '../../../shared/services/snackbar.service';
+import { UserService } from '../../../../users/services/user.service';
 
 @Component({
   selector: 'app-verify-email-page',

@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, effect, inject, OnDestroy, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
-import { UserService } from '../../../users/services/user.service';
+import { UserService } from '../../../../users/services/user.service';
 import { Subscription } from 'rxjs';
-import { QueryParamsService } from '../../shared/services/query-params.service';
+import { QueryParamsService } from '../../../shared/services/query-params.service';
 
 @Component({
   selector: 'app-account-activation-page',

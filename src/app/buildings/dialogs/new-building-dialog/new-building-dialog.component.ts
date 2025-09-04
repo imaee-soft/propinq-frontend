@@ -22,7 +22,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatSelect } from '@angular/material/select';
 import { MatTooltip } from '@angular/material/tooltip';
 import { of } from 'rxjs';
-import { AuthService } from '../../../auth/auth.service';
+import { AuthService } from '../../../auth/services/auth.service';
 import { MapComponent } from '../../../maps/components/map/map.component';
 import { MapClickEvent } from '../../../maps/interfaces/click-event.interface';
 import { MapConfig } from '../../../maps/interfaces/map-config.interface';

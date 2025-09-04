@@ -4,7 +4,7 @@ import { MatCardModule } from '@angular/material/card';
 import { MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 import { of } from 'rxjs';
-import { AuthService } from '../../../auth/auth.service';
+import { AuthService } from '../../../auth/services/auth.service';
 import { PhonePipe } from '../../../shared/pipes/phone-number.pipe';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { DynamicInputComponent } from '../../components/dynamic-input.component';

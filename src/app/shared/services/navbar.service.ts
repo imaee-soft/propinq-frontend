@@ -1,5 +1,5 @@
 import { computed, inject, Injectable } from '@angular/core';
-import { AuthService } from '../../auth/auth.service';
+import { AuthService } from '../../auth/services/auth.service';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { Role } from '../../auth/enums/role.enum';
 import { NavElement } from '../interfaces/nav-element.interface';
@@ -38,11 +38,8 @@ export class NavbarService {
   username = computed(() => this._authService.user()?.username);
 
   handleLogin() {
-    this._authService
-      .login({
-        email: 'esosa@gmail.com',
-        password: 'password',
-      })
-      .subscribe();
+    this._authService.logout();
   }
 }
+
+

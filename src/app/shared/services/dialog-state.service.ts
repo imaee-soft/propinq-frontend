@@ -9,4 +9,9 @@ export class DialogStateService {
     const params = this._queryParamsService.queryParams();
     return !!(params?.['entity'] && params?.['action']);
   });
+
+  isGenericDialogOpen(dialogName: string): boolean {
+    const params = this._queryParamsService.queryParams();
+    return !!(params?.[dialogName]);
+  }
 }

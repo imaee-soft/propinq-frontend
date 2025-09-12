@@ -35,7 +35,7 @@ mat-card-content p { padding: 4px 8px; margin: 0; }
   position: absolute; top: 4px; right: 4px; background: transparent !important; box-shadow: none; border: none; outline: none; color: #222; opacity: 1;
   padding: 4px; border-radius: 10px; z-index: 20;
 }
-.close-button:hover, .close-button:focus { background: rgba(139,137,137,0.192) !important; }
+.close-button:hover, .close-button:focus { background: rgba(139, 137, 137, 0) !important; }
 .close-button mat-icon { color: #fff; font-size: 28px; opacity: 1; pointer-events: none; }
 .carrousel-img-outer {
   display: flex; flex-direction: column; align-items: center; margin-bottom: 16px; width: 100%; flex-shrink: 0; padding: 0;
@@ -72,7 +72,7 @@ mat-grid-list { margin-right: 10px; }
   width: 100%; aspect-ratio: 16/9; object-fit: cover; display: block;
 }
 .property-overlay {
-  position: absolute; left: 0; right: 0; bottom: 0; height: 48px; padding: 0 8px; display: flex; align-items: center; justify-content: space-between;
+  position: absolute; left: 0; right: 0; bottom: 0; height: 48px; padding: 0 8px; display: flex; align-items: center; justify-content: flex-end; gap: 8px;
   z-index: 2; border-radius: 0 0 8px 8px;
 }
 .property-action {
@@ -182,3 +182,136 @@ mat-grid-list { margin-right: 10px; }
   position: absolute; top: 16px; right: 16px; color: #fff !important; background: rgba(30,30,30,.9) !important; z-index: 10;
 }
 .gallery-carousel .carousel-image { max-height: 70vh; max-width: 80vw; }
+
+.comparative-fab {
+  position: fixed;
+  bottom: 32px;
+  right: 32px;
+  z-index: 2001;
+  box-shadow: 0 6px 18px rgba(30,40,90,.24);
+}
+
+.comparative-drawer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  min-height: 220px;
+  max-height: 60vh;
+  background: #23263b;
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -4px 24px rgba(30,40,90,.20);
+  z-index: 2100;
+  display: flex;
+  flex-direction: column;
+  animation: comparativeDrawerIn .23s cubic-bezier(.6,1.4,.7,1);
+}
+
+@keyframes comparativeDrawerIn {
+  from { transform: translateY(100%); opacity: 0.8; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+.comparative-header {
+  flex-shrink: 0;
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 24px 8px 24px; font-size: 1.2rem; color: #fff;
+  border-bottom: 1px solid #444d6b;
+}
+
+.comparative-list {
+  flex: 1 1 auto;
+  overflow-y: auto;
+  padding: 12px 18px 0 18px;
+  margin-bottom: 12px;
+}
+.comparative-item {
+  display: flex; align-items: center; gap: 14px; background: #2d3045; border-radius: 10px;
+  padding: 8px 10px; margin-bottom: 8px;
+}
+.comparative-item img {
+  width: 56px; height: 44px; border-radius: 6px; object-fit: cover; background: #ccc;
+}
+.comparative-empty {
+  color: #bbb; text-align: center; padding: 20px 0;
+}
+.comparative-actions {
+  flex-shrink: 0;
+  display: flex; justify-content: flex-end; gap: 12px; padding: 8px 24px 18px 24px;
+  border-top: 1px solid #444d6b;
+  background: #23263b;
+}
+
+.mat-grid-tile-content,
+.property-item {
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
+}
+
+.property-image {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  display: block;
+  border-radius: 8px;
+}
+
+.property-overlay {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 0 8px;
+  z-index: 2;
+  border-radius: 0 0 8px 8px;
+  pointer-events: none;
+}
+
+.property-overlay button {
+  pointer-events: auto;
+}
+
+.mat-grid-tile {
+  aspect-ratio: 16/9;
+  min-height: 0;
+  max-height: 220px;
+}
+
+.mat-grid-tile {
+  padding: 0 !important;
+  margin: 0 !important;
+}
+
+mat-grid-list.mat-grid-list {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box;
+}
+mat-grid-tile.mat-grid-tile {
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+mat-grid-tile[style*="padding-top"] {
+  padding-top: 0 !important;
+}
+
+mat-grid-list.mat-grid-list {
+  --mat-grid-list-gutter-size: 0px !important;
+}
+
+mat-grid-list.mat-grid-list,
+mat-grid-list.mat-grid-list > div {
+  height: 100% !important;
+  min-height: 0 !important;
+}

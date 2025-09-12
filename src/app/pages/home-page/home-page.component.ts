@@ -18,6 +18,11 @@ import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { PropertyComponent } from "../../properties/components/property.component";
 import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
 import { Router } from '@angular/router';
+import { ComparePropertiesDialogComponent } from '../../properties/dialogs/compare-properties-dialog.component';
+import { MatDialog } from '@angular/material/dialog';
+import { CustomSnackbarService } from '../../shared/services/snackbar.service';
+import { DialogStateService } from '../../shared/services/dialog-state.service';
+import { QueryParamsService } from '../../shared/services/query-params.service';
 
 @Component({
   imports: [
@@ -38,6 +43,8 @@ import { Router } from '@angular/router';
 })
 export class HomePageComponent {
   private router = inject(Router);
+  private snackbar = inject(CustomSnackbarService);
+
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: DEFAULT_CENTER,
     zoom: 14.5,
@@ -54,6 +61,8 @@ export class HomePageComponent {
   propertyDetails = signal<PropertyDetails | null>(null);
 
   buildingProperties = signal<PropertyDetails[] | null>(null);
+
+  private dialog = inject(MatDialog);
 
   getMapConfig(): MapConfig {
     return this.mapConfig();
@@ -78,6 +87,7 @@ export class HomePageComponent {
           !this.buildingMarkerQueried() ||
           this.buildingMarkerQueried()!.id !== marker.id
         ) {
+          this.comparativeDrawerOpen.set(false);
           this.buildingMarkerQueried.set({ id: marker.id, coordinate: marker.coordinate, type: marker.type });
       }
   }
@@ -87,6 +97,7 @@ export class HomePageComponent {
           !this.propertyMarkerQueried() ||
           this.propertyMarkerQueried()!.id !== marker.id
         ) {
+          this.comparativeDrawerOpen.set(false);
 
           this.propertyMarkerQueried.set({ id: marker.id, coordinate: marker.coordinate, type: marker.type });
         }
@@ -176,4 +187,56 @@ export class HomePageComponent {
     if (!propertyId) return;
     this.router.navigate(['/properties', propertyId]);
   }
+
+  comparativeList = signal<PropertyDetails[]>([])
+
+  addToComparativeList(property: PropertyDetails) {
+    if (!property) return;
+    this.comparativeList.set([...this.comparativeList(), property]);
+    this.snackbar.success('Vivienda Agregada a la Comparación');
+  }
+
+  public comparativeDrawerOpen = signal(false);
+
+  openComparativeDrawer() {
+  this.buildingMarkerQueried.set(null);
+  this.propertyMarkerQueried.set(null);
+  this.comparativeDrawerOpen.set(true);
+  }
+  closeComparativeDrawer() {
+  this.comparativeDrawerOpen.set(false);
+  }
+  removeFromComparative(index: number) {
+  const arr = [...this.comparativeList()];
+  arr.splice(index, 1);
+  this.comparativeList.set(arr);
+  }
+  clearComparativeList() {
+  this.comparativeList.set([]);
+  }
+
+  openComparisonDialog() {
+    if (this.comparativeList().length < 2) return;
+    this.closeComparativeDrawer();
+    const attrs = localStorage.getItem('compareAttributes');
+    const userCompareAttributes = attrs
+    ? JSON.parse(attrs)
+    : [
+        { label: 'Precio', key: 'price', enabled: true, priority: 1 },
+        { label: 'Superficie (m²)', key: 'area', enabled: true, priority: 2 },
+        { label: 'Ambientes', key: 'bedrooms', enabled: true, priority: 3 },
+        { label: 'Baños', key: 'bathrooms', enabled: false, priority: 4 },
+        { label: 'Mascotas', key: 'petsAllowed', enabled: false, priority: 5 }
+      ];
+    this.dialog.open(ComparePropertiesDialogComponent, {
+      data: {
+        properties: this.comparativeList(),
+        compareAttributes: userCompareAttributes
+      },
+      width: '90vw',
+      maxWidth: '99vw',
+      panelClass: 'compare-dialog-panel',
+    });
+  }
+
 }

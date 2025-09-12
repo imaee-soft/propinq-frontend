@@ -192,8 +192,12 @@ export class HomePageComponent {
 
   addToComparativeList(property: PropertyDetails) {
     if (!property) return;
+    if(this.comparativeList().find(p => p.propertyId === property.propertyId)) {
+      this.snackbar.error('La Vivienda ya está agregada a la Comparación', 1500);
+      return;
+    }
     this.comparativeList.set([...this.comparativeList(), property]);
-    this.snackbar.success('Vivienda Agregada a la Comparación');
+    this.snackbar.success('Vivienda Agregada a la Comparación', 1500);
   }
 
   public comparativeDrawerOpen = signal(false);
@@ -237,6 +241,7 @@ export class HomePageComponent {
       maxWidth: '99vw',
       panelClass: 'compare-dialog-panel',
     });
+    this.comparativeList.set([]);
   }
 
 }

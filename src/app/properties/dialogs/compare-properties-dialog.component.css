@@ -31,7 +31,6 @@
   box-shadow: none !important;
 }
 
-/* Para MDC, el ripple puede dejar fondo, así que anulalo: */
 .compare-header button.mat-mdc-icon-button .mat-mdc-button-persistent-ripple,
 .compare-header button.mat-mdc-icon-button .mat-mdc-button-ripple {
   background: transparent !important;
@@ -157,7 +156,6 @@
   box-shadow: none !important;
 }
 
-/* Para MDC, el ripple puede dejar fondo, así que anulalo: */
 .compare-header button.mat-mdc-icon-button .mat-mdc-button-persistent-ripple,
 .compare-header button.mat-mdc-icon-button .mat-mdc-button-ripple {
   background: transparent !important;
@@ -316,26 +314,25 @@ button[mat-icon-button] .mat-icon {
 }
 
 .compare-table tbody tr:last-child th.compare-attr {
-  background: #24273a;                /* mismo fondo del contenedor para “fundir” la fila */
-  border-bottom-left-radius: 14px;     /* esquina inferior izquierda de la tabla */
+  background: #24273a;
+  border-bottom-left-radius: 14px;
 }
 
 .compare-table tbody tr:last-child td:last-child {
-  border-bottom-right-radius: 14px;    /* esquina inferior derecha de la tabla */
+  border-bottom-right-radius: 14px;
 }
 
-/* Celda que contiene el botón */
+
 .compare-ver-mas {
   padding: 14px 8px !important;
   text-align: center !important;
-  background: #24273a;                 /* se integra con el contenedor */
-  border-top: 2px solid #30344a;       /* separador visual respecto de las filas de datos */
+  background: #24273a;
+  border-top: 2px solid #30344a;
 }
 
-/* Botón “Ver Más” (MDC + legacy) */
 .compare-ver-mas button[mat-stroked-button],
 .compare-ver-mas .mat-mdc-stroked-button {
-  --btn-accent: #5e35b1;               /* acento verde consistente con compare-best */
+  --btn-accent: #5e35b1;
   --btn-border: #5e35b1;
   --btn-bg: rgba(255,255,255,0.02);
   min-width: 108px;
@@ -345,14 +342,13 @@ button[mat-icon-button] .mat-icon {
   letter-spacing: 0.01em;
   text-transform: none;
 
-  color: var(--btn-accent) !important; /* el stroked usa currentColor también para el borde */
+  color: var(--btn-accent) !important;
   border: 1.6px solid var(--btn-border) !important;
   background: var(--btn-bg);
   box-shadow: 0 2px 10px rgba(62,207,142,0.12);
   transition: background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
 }
 
-/* Hover/Focus */
 .compare-ver-mas button[mat-stroked-button]:hover,
 .compare-ver-mas button[mat-stroked-button]:focus,
 .compare-ver-mas .mat-mdc-stroked-button:hover,
@@ -364,7 +360,6 @@ button[mat-icon-button] .mat-icon {
   outline: none;
 }
 
-/* Focus visible (accesibilidad) */
 .compare-ver-mas button[mat-stroked-button]:focus-visible,
 .compare-ver-mas .mat-mdc-stroked-button:focus-visible {
   box-shadow:
@@ -372,14 +367,12 @@ button[mat-icon-button] .mat-icon {
     0 0 0 4px rgba(103,58,183,0.75) !important;
 }
 
-/* Elimina ripple opaco sobre fondo oscuro */
 .compare-ver-mas .mat-mdc-button-ripple,
 .compare-ver-mas .mdc-button__ripple {
   background: transparent !important;
   opacity: 0 !important;
 }
 
-/* Opción: botón full-width en móvil/chico */
 @media (max-width: 980px) {
   .compare-ver-mas button[mat-stroked-button],
   .compare-ver-mas .mat-mdc-stroked-button {

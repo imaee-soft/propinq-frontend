@@ -79,4 +79,27 @@
     </mat-card>
   </section>
   }
+  <section class="user-preferences">
+  <mat-label class="user-preferences-title">Preferencias del usuario</mat-label>
+  <mat-card class="user-preferences-card">
+    <table class="preferences-table">
+      <thead>
+        <tr>
+          <th>Criterio</th>
+          <th>¿Usar para comparar?</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for(attribute of comparisonAttributes(); track $index) {
+          <tr>
+            <td>{{ attribute.label }}</td>
+            <td>
+              <mat-checkbox [(ngModel)]="attribute.enabled" (change)="onComparisonAttributesChanged()"></mat-checkbox>
+            </td>
+        </tr>
+      }
+      </tbody>
+    </table>
+  </mat-card>
+</section>
 </div>

@@ -108,6 +108,10 @@
                             (click)="goToProperty(property.propertyId)">
                       Ver Más
                     </button>
+                    <button mat-icon-button class="property-action"
+                      (click)="addToComparativeList(property)">
+                      <mat-icon>balance</mat-icon>
+                      </button>
                   </div>
                 </div>
               </mat-grid-tile>
@@ -146,13 +150,9 @@
               [alt]="propertyDetails()!.title || 'Imagen propiedad'"
               class="property-image"
             />
-            <div
-              class="property-title-overlay"
-            >
 
-            </div>
           </div>
-          <div class="property-actions">
+          <div class="property-overlay">
             <button mat-icon-button class="property-action">
               <mat-icon>star_border</mat-icon>
             </button>
@@ -165,7 +165,13 @@
               (click)="goToProperty(propertyDetails()!.propertyId)">
               Ver Más
             </button>
+            <button mat-icon-button class="property-action"
+              (click)="addToComparativeList(propertyDetails()!)">
+              <mat-icon>balance</mat-icon>
+            </button>
+
           </div>
+
         </mat-card-content>
       </mat-card>
     </mat-drawer>
@@ -198,6 +204,51 @@
           {{ propertyGalleryIndex() + 1 }} / {{ propertyGalleryImages().length }}
         </div>
       </div>
+    </div>
+  </div>
+}
+@if (buildingDetails() == null && comparativeDrawerOpen() == false) {
+  <button mat-fab color="primary"
+          class="comparative-fab"
+          aria-label="Comparar propiedades"
+          (click)="openComparativeDrawer()">
+    <mat-icon>balance</mat-icon>
+  </button>
+}
+@if (comparativeDrawerOpen()) {
+  <div class="comparative-drawer">
+    <div class="comparative-header">
+      <span>Propiedades a comparar</span>
+      <button mat-icon-button (click)="closeComparativeDrawer()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    <div class="comparative-list">
+      @if (comparativeList().length > 0) {
+        @for (property of comparativeList(); let i = $index; track i) {
+          <div class="comparative-item">
+            <img [src]="property.imagesURL[0] || 'https://placehold.co/100x80?text=Propiedad'" />
+            <span>{{ property.title || 'Propiedad' }}</span>
+            <button mat-icon-button color="warn" (click)="removeFromComparative(i)">
+              <mat-icon>close</mat-icon>
+            </button>
+          </div>
+        }
+      } @else {
+        <div class="comparative-empty">No hay propiedades para comparar</div>
+      }
+    </div>
+    <div class="comparative-actions">
+      <button mat-stroked-button color="accent"
+              [disabled]="comparativeList().length < 2"
+              (click)="openComparisonDialog()">
+        Comparar
+      </button>
+      <button mat-stroked-button color="warn"
+              (click)="clearComparativeList()"
+              [disabled]="comparativeList().length === 0">
+        Limpiar
+      </button>
     </div>
   </div>
 }

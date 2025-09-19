@@ -73,4 +73,7 @@ export class PropertyPageComponent {
     }
   }
 
+  setCurrentImage(index: number): void {
+    this.currentImageIndex.set(index);
+  }
 }

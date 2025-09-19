@@ -2,7 +2,7 @@
   <mat-drawer-content>
     <app-map [config]="getMapConfig()"
       (markerClick)="onMarkerClick($event)"
-      (mapClick)="onMapClick()"
+      (mapClick)="onMapClick($event)"
     />
 
     <app-building-component (markersChange)="onMapMarkersChange($event)"
@@ -207,11 +207,24 @@
     </div>
   </div>
 }
-@if (buildingDetails() == null && comparativeDrawerOpen() == false) {
+@if (buildingDetails() == null && propertyDetails() == null && !comparativeDrawerOpen()) {
+  <button mat-fab color="accent"
+          class="filters-fab"
+          [class.filters-fab-active]="filtersOpen()"
+          aria-label="Filtros de búsqueda"
+          (click)="toggleFilters()"
+          matTooltip="{{filtersOpen() ? 'Ocultar filtros' : 'Mostrar filtros'}}"
+          matTooltipPosition="above">
+    <mat-icon>{{filtersOpen() ? 'search_off' : 'search'}}</mat-icon>
+  </button>
+}
+@if (buildingDetails() == null && !comparativeDrawerOpen() ) {
   <button mat-fab color="primary"
           class="comparative-fab"
           aria-label="Comparar propiedades"
-          (click)="openComparativeDrawer()">
+          (click)="openComparativeDrawer()"
+          matTooltip="Comparar propiedades"
+          matTooltipPosition="above">
     <mat-icon>balance</mat-icon>
   </button>
 }

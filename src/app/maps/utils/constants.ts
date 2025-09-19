@@ -22,3 +22,31 @@ export const transformFromMap = (coordinate: Coordinate) => {
     latitude,
   };
 };
+
+export const ICON_BY_TYPE: Record<string, string> = {
+  AMENITY: '/amenity.png',
+  SHOP: '/shop.png',
+  TOURISM: '/tourism.png',
+  LEISURE: '/leisure.png',
+  HISTORIC: '/historic.png',
+  MAN_MADE: '/man-made.png',
+  NATURAL: '/natural.png',
+  SPORT: '/sport.png',
+  CRAFT: '/craft.png',
+  OFFICE: '/office.png',
+  EMERGENCY: '/emergency.png',
+  HEALTHCARE: '/healthcare.png',
+  PUBLIC_TRANSPORT: '/public-transport.png',
+  RAILWAY: '/railway.png',
+  AEROWAY: '/aeroway.png',
+  AERIALWAY: '/aerialway.png',
+  POWER: '/power.png',
+  WATERWAY: '/waterway.png',
+  HIGHWAY: '/highway.png',
+};
+
+export function getIconUrlForPoiType(type?: string | null): string {
+  return (type && ICON_BY_TYPE[type]) || '/property.png';
+}
+
+export const MIN_POI_ZOOM = 13;

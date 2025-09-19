@@ -1,0 +1,196 @@
+<div class="filters-navbar">
+  <div class="filters-container">
+    <div class="filters-row row-1">
+      <div class="filter-chip chip-location">
+        <span class="chip-label">Cercano a</span>
+        <div class="chip-content">
+          <button mat-stroked-button
+                  class="chip-btn selected"
+                  [ngClass]="{'selected': filterNearType() === 'MY_LOCATION'}"
+                  (click)="filterNearType.set('MY_LOCATION')">
+            Mi ubicación <mat-icon>location_on</mat-icon>
+          </button>
+          <button mat-stroked-button
+                  class="chip-btn"
+                  [ngClass]="{'selected': filterNearType() === 'SELECT_POINT'}"
+                  (click)="filterNearType.set('SELECT_POINT')">
+            Punto<mat-icon>location_on</mat-icon>
+          </button>
+          <button mat-stroked-button
+                  class="chip-btn"
+                  [ngClass]="{'selected': filterNearType() === 'SELECT_POINT_OF_INTEREST'}"
+                  (click)="filterNearType.set('SELECT_POINT_OF_INTEREST')">
+            Punto de interés <mat-icon>location_on</mat-icon>
+          </button>
+          <mat-form-field appearance="outline" class="chip-field dense small">
+            <mat-select placeholder="Tipo"
+                        [value]="filterNearType()"
+                        (selectionChange)="filterNearType.set($event.value)">
+              <mat-option value="AMENITY">SERVICIO</mat-option>
+              <mat-option value="SHOP">TIENDA</mat-option>
+              <mat-option value="TOURISM">TURISMO</mat-option>
+              <mat-option value="LEISURE">OCIO</mat-option>
+              <mat-option value="HISTORIC">HISTÓRICO</mat-option>
+              <mat-option value="MAN_MADE">HECHO POR EL HOMBRE</mat-option>
+              <mat-option value="NATURAL">NATURAL</mat-option>
+              <mat-option value="SPORT">DEPORTE</mat-option>
+              <mat-option value="CRAFT">ARTESANÍA</mat-option>
+              <mat-option value="OFFICE">OFICINA</mat-option>
+              <mat-option value="EMERGENCY">EMERGENCIA</mat-option>
+              <mat-option value="HEALTHCARE">SALUD</mat-option>
+              <mat-option value="PUBLIC_TRANSPORT">TRANSPORTE PÚBLICO</mat-option>
+              <mat-option value="RAILWAY">FERROCARRIL</mat-option>
+              <mat-option value="AEROWAY">AEROPORTUARIO</mat-option>
+              <mat-option value="AERIALWAY">TELEFÉRICO</mat-option>
+              <mat-option value="POWER">ENERGÍA</mat-option>
+              <mat-option value="WATERWAY">VÍA FLUVIAL</mat-option>
+              <mat-option value="HIGHWAY">AUTOPISTA</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <div class="chip-slider">
+            <span class="slider-label">Área</span>
+            <mat-slider min="1" max="10" step="1"
+                        [ngModel]="filterNearAreaKm()"
+                        (ngModelChange)="filterNearAreaKm.set($event)">
+              <input matSliderThumb
+                     [value]="filterNearAreaKm()"
+                     (change)="onSliderChange($event)">
+            </mat-slider>
+            <span class="slider-value">{{filterNearAreaKm()}} km</span>
+          </div>
+        </div>
+      </div>
+      <div class="filter-chip chip-address">
+        <span class="chip-label">Dirección</span>
+        <div class="chip-content">
+          <mat-form-field appearance="outline" class="chip-field dense medium">
+            <input matInput placeholder="Dirección"
+                   [value]="filterAddress()"
+                   (input)="filterAddress.set($any($event.target).value)">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="filter-chip chip-province">
+        <span class="chip-label">Provincia</span>
+        <div class="chip-content">
+          <mat-form-field appearance="outline" class="chip-field dense small">
+            <mat-select placeholder="Provincia"
+                        [value]="filterProvince()"
+                        (selectionChange)="filterProvince.set($event.value)">
+                <mat-option value="buenos_aires">Buenos Aires</mat-option>
+                <mat-option value="catamarca">Catamarca</mat-option>
+                <mat-option value="chaco">Chaco</mat-option>
+                <mat-option value="chubut">Chubut</mat-option>
+                <mat-option value="cordoba">Córdoba</mat-option>
+                <mat-option value="corrientes">Corrientes</mat-option>
+                <mat-option value="entre_rios">Entre Ríos</mat-option>
+                <mat-option value="formosa">Formosa</mat-option>
+                <mat-option value="jujuy">Jujuy</mat-option>
+                <mat-option value="la_pampa">La Pampa</mat-option>
+                <mat-option value="la_rioja">La Rioja</mat-option>
+                <mat-option value="mendoza">Mendoza</mat-option>
+                <mat-option value="misiones">Misiones</mat-option>
+                <mat-option value="neuquen">Neuquén</mat-option>
+                <mat-option value="rio_negro">Río Negro</mat-option>
+                <mat-option value="salta">Salta</mat-option>
+                <mat-option value="san_juan">San Juan</mat-option>
+                <mat-option value="san_luis">San Luis</mat-option>
+                <mat-option value="santa_cruz">Santa Cruz</mat-option>
+                <mat-option value="santa_fe">Santa Fe</mat-option>
+                <mat-option value="santiago_del_estero">Santiago del Estero</mat-option>
+                <mat-option value="tierra_del_fuego">Tierra del Fuego</mat-option>
+                <mat-option value="tucuman">Tucumán</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="filter-chip chip-locality">
+        <span class="chip-label">Localidad</span>
+        <div class="chip-content">
+          <mat-form-field appearance="outline" class="chip-field dense small">
+            <mat-select placeholder="Localidad"
+                        [value]="filterLocality()"
+                        (selectionChange)="filterLocality.set($event.value)">
+              <mat-option value="hernando">Hernando</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="filter-chip chip-price">
+        <span class="chip-label">Precio/mes</span>
+        <div class="chip-content">
+          <span class="price-prefix">Mínimo</span>
+          <mat-form-field appearance="outline" class="chip-field dense mini">
+            <input matInput type="number" placeholder="$"
+                   [value]="filterPriceMin()"
+                   (input)="filterPriceMin.set($any($event.target).value)">
+          </mat-form-field>
+          <span class="price-separator">Máximo</span>
+          <mat-form-field appearance="outline" class="chip-field dense mini">
+            <input matInput type="number" placeholder="$"
+                   [value]="filterPriceMax()"
+                   (input)="filterPriceMax.set($any($event.target).value)">
+          </mat-form-field>
+        </div>
+      </div>
+    </div>
+    <div class="filters-row row-2">
+      <div class="filter-chip chip-type">
+        <span class="chip-label">Tipo de vivienda</span>
+        <div class="chip-content">
+          <mat-checkbox class="chip-check"
+                        [checked]="filterTypeCasa()"
+                        (change)="filterTypeCasa.set($event.checked)">
+            Casa
+          </mat-checkbox>
+          <mat-checkbox class="chip-check"
+                        [checked]="filterTypeDepto()"
+                        (change)="filterTypeDepto.set($event.checked)">
+            Dpto.
+          </mat-checkbox>
+        </div>
+      </div>
+      <div class="filter-chip chip-features">
+        <span class="chip-label">Características</span>
+        <div class="chip-content">
+          Mascotas <mat-icon>pets</mat-icon>
+          <mat-checkbox class="chip-check"
+                        [checked]="filterAllowPets()"
+                        (change)="filterAllowPets.set($event.checked)">
+          </mat-checkbox>
+          Habitaciones
+          <mat-form-field appearance="outline" class="chip-field dense mini">
+            <input matInput type="number"
+                   [value]="filterRooms()"
+                   (input)="filterRooms.set($any($event.target).value)">
+          </mat-form-field>
+          Baños
+          <mat-form-field appearance="outline" class="chip-field dense mini">
+            <input matInput type="number"
+                   [value]="filterBathrooms()"
+                   (input)="filterBathrooms.set($any($event.target).value)">
+          </mat-form-field>
+          Area mínima
+          <mat-form-field appearance="outline" class="chip-field dense mini">
+            <input matInput type="number"
+                   [value]="filterAreaMin()"
+                   (input)="filterAreaMin.set($any($event.target).value)">
+          </mat-form-field>
+          Area máxima
+          <mat-form-field appearance="outline" class="chip-field dense mini">
+            <input matInput type="number"
+                   [value]="filterAreaMax()"
+                   (input)="filterAreaMax.set($any($event.target).value)">
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="filter-chip chip-actions">
+        <div class="chip-content">
+          <button mat-raised-button class="clear-btn" (click)="clearFilters()">
+            Limpiar filtros <mat-icon>delete</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

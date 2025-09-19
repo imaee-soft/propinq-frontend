@@ -9,12 +9,15 @@ import { MatInputModule } from '@angular/material/input';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router, RouterModule } from '@angular/router';
+import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { NewBuildingDialogComponent } from '../../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
 import { NavElement } from '../../interfaces/nav-element.interface';
 import { EntityDialogService } from '../../services/entity-dialog.service';
 import { NavbarService } from '../../services/navbar.service';
 import { SidebarService } from '../../services/sidebar.service';
+import { NavbarFiltersComponent } from "../navbar-filters/navbar-filters.component";
+import { filter, map, startWith } from 'rxjs';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   imports: [
@@ -29,7 +32,8 @@ import { SidebarService } from '../../services/sidebar.service';
     MatFormFieldModule,
     MatMenuModule,
     MatDivider,
-  ],
+    NavbarFiltersComponent
+],
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
@@ -44,7 +48,20 @@ export class NavbarComponent {
   userLogged = this._navbarService.userLogged;
   sidebarOpened = this._sidebarService.isOpen;
   navbarDisabled = computed(() => this._navbarService.disabled());
+  currentRoute = toSignal(
+    this._router.events.pipe(
+      filter(event => event instanceof NavigationEnd),
+      map(() => this._router.url),
+      startWith(this._router.url)
+    ),
+    { initialValue: this._router.url }
+  );
 
+  isHomePage = computed(() => {
+    const route = this.currentRoute();
+    console.log('Current route:', route);
+    return route === '/home' || route === '/';
+  });
   toggleSidebar() {
     this._sidebarService.toggle();
   }
@@ -71,5 +88,9 @@ export class NavbarComponent {
 
   get username() {
     return this._navbarService.username();
+  }
+
+  showFilters() {
+    return this._navbarService.showFilters();
   }
 }

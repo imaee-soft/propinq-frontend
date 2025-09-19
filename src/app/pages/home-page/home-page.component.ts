@@ -23,7 +23,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { CustomSnackbarService } from '../../shared/services/snackbar.service';
 import { DialogStateService } from '../../shared/services/dialog-state.service';
 import { QueryParamsService } from '../../shared/services/query-params.service';
-
+import { NavbarService } from '../../shared/services/navbar.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MapClickEvent } from '../../maps/interfaces/click-event.interface';
 @Component({
   imports: [
     MapComponent,
@@ -36,7 +38,8 @@ import { QueryParamsService } from '../../shared/services/query-params.service';
     MatExpansionModule,
     MatButtonModule,
     MatGridListModule,
-    PropertyComponent
+    PropertyComponent,
+    MatTooltipModule,
 ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -44,6 +47,8 @@ import { QueryParamsService } from '../../shared/services/query-params.service';
 export class HomePageComponent {
   private router = inject(Router);
   private snackbar = inject(CustomSnackbarService);
+  private dialog = inject(MatDialog);
+  private navbarService = inject(NavbarService);
 
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: DEFAULT_CENTER,
@@ -62,7 +67,7 @@ export class HomePageComponent {
 
   buildingProperties = signal<PropertyDetails[] | null>(null);
 
-  private dialog = inject(MatDialog);
+
 
   getMapConfig(): MapConfig {
     return this.mapConfig();
@@ -119,7 +124,7 @@ export class HomePageComponent {
     this.buildingProperties.set(properties);
   }
 
-  onMapClick(): void {
+  onMapClick({ coordinate }: MapClickEvent): void {
     if (this.buildingDetails() !== null || this.propertyDetails() !== null) {
       this.buildingMarkerQueried.set(null);
       this.buildingDetails.set(null);
@@ -127,6 +132,7 @@ export class HomePageComponent {
       this.propertyDetails.set(null);
     }
 
+    this.navbarService.setAddressMarker(coordinate);
 
   }
   onCloseDetails(): void {
@@ -242,6 +248,13 @@ export class HomePageComponent {
       panelClass: 'compare-dialog-panel',
     });
     this.comparativeList.set([]);
+  }
+
+
+  filtersOpen = this.navbarService.filtersOpen;
+
+  toggleFilters(): void {
+    this.navbarService.toggleFilters();
   }
 
 }

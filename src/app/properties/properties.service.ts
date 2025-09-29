@@ -22,4 +22,14 @@ export class PropertiesService {
       `${environment.apiUrl}/api/v1/properties/${propertyQueried}`);
   }
 
+   getPropertiesNear(latitude: number, longitude: number, radiusKm: number): Observable<Property[]> {
+    return this._http.get<Property[]>(`${environment.apiUrl}/api/v1/properties/nearby`, {
+      params: {
+        latitude: latitude,
+        longitude: longitude,
+        radiusKm: radiusKm
+      }
+    });
+  }
+
 }

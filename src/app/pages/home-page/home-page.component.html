@@ -3,6 +3,9 @@
     <app-map [config]="getMapConfig()"
       (markerClick)="onMarkerClick($event)"
       (mapClick)="onMapClick($event)"
+      (centerChanged)="onCenterChanged($event)"
+      [coordinateToGo]="navbarService.coordinateToGo()"
+
     />
 
     <app-building-component (markersChange)="onMapMarkersChange($event)"
@@ -207,7 +210,7 @@
     </div>
   </div>
 }
-@if (buildingDetails() == null && propertyDetails() == null && !comparativeDrawerOpen()) {
+@if (buildingDetails() == null && propertyDetails() == null && !comparativeDrawerOpen() && isAuthenticated()) {
   <button mat-fab color="accent"
           class="filters-fab"
           [class.filters-fab-active]="filtersOpen()"
@@ -218,7 +221,7 @@
     <mat-icon>{{filtersOpen() ? 'search_off' : 'search'}}</mat-icon>
   </button>
 }
-@if (buildingDetails() == null && !comparativeDrawerOpen() ) {
+@if (buildingDetails() == null && !comparativeDrawerOpen() && isAuthenticated()) {
   <button mat-fab color="primary"
           class="comparative-fab"
           aria-label="Comparar propiedades"

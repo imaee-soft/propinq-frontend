@@ -295,6 +295,7 @@ html, body {
   font-size: 2rem;
   color: var(--accent-mid);
   margin-bottom: 0.25rem;
+  width: 40px;
 }
 
 .feature-label {

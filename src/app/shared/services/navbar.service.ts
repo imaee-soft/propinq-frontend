@@ -1,4 +1,5 @@
-import { computed, effect, inject, Injectable, signal } from '@angular/core';
+import { Coordinate } from 'ol/coordinate';
+import { computed, effect, inject, Injectable, signal, Signal } from '@angular/core';
 import { AuthService } from '../../auth/services/auth.service';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { Role } from '../../auth/enums/role.enum';
@@ -7,12 +8,20 @@ import { OWNER_NAVBAR_ITEMS } from '../utilities/owner.config';
 import { TENANT_NAVBAR_ITEMS } from '../utilities/tenant.config';
 import { UNLOGGED_NAVBAR_ITEMS } from '../utilities/unlogged.config';
 import { DialogStateService } from './dialog-state.service';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { AddressService } from '../../maps/services/address.service';
 import { MapCoordinate } from '../../maps/interfaces/map-coordinate.interface';
-import { of } from 'rxjs';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { PropertiesService } from '../../properties/properties.service';
+import { ProvinceService } from '../../provinces/services/province.service';
+import { LocalityService } from '../../localities/services/locality.service';
+import { CustomSnackbarService } from './snackbar.service';
+import { rxResource } from '@angular/core/rxjs-interop';
+import { ProvinceResponse } from '../../provinces/interfaces/province.interface';
+import { LocalityResponse } from '../../localities/interfaces/locality.interface';
+import { BuildingDetails } from '../../buildings/interfaces/building-details.interface';
+import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
+import { Building } from '../../buildings/interfaces/building.interface';
+import { Property } from '../../properties/interfaces/property.interface';
+import { of } from 'rxjs';
 
 const NAVBAR_ITEMS: Record<string, NavElement[]> = {
   unlogged: UNLOGGED_NAVBAR_ITEMS,
@@ -23,10 +32,12 @@ const NAVBAR_ITEMS: Record<string, NavElement[]> = {
 @Injectable({ providedIn: 'root' })
 export class NavbarService {
   private _authService = inject(AuthService);
+  private _provinceService = inject(ProvinceService);
+  private _localityService = inject(LocalityService);
+  private _buildingsService = inject(BuildingsService);
+  private _propertiesService = inject(PropertiesService);
   private _dialogStateService = inject(DialogStateService);
   private _filtersOpen = signal(false);
-  private readonly _addressService = inject(AddressService);
-
 
   config = computed((): NavElement[] => {
     const status = this._authService.status();
@@ -45,7 +56,7 @@ export class NavbarService {
     () => this._authService.status() === AuthStatus.AUTHENTICATED
   );
   username = computed(() => this._authService.user()?.
-username);
+  username);
 
   handleLogin() {
     this._authService.logout();
@@ -69,83 +80,272 @@ username);
     this._filtersOpen.set(false);
   }
 
-
-  private _addressFromMap = signal<string>('');
-  public addressFromMap = computed(() => this._addressFromMap());
-
-  private _coordinate = signal<MapCoordinate | null>(null);
-
-  private _decodeAddressResource = rxResource({
-    request: () => this._coordinate(),
-    loader: ({ request: coordinate }) =>
-      coordinate ? this._addressService.decodeAddress(coordinate) : of(null),
+  private _coordinate = signal<MapCoordinate>({ latitude: 0, longitude: 0 });
+public readonly coordinateToGo = computed<MapCoordinate | null>(() => {
+  const locality = this.filterLocality();
+  return locality
+    ? { latitude: locality.latitude, longitude: locality.longitude }
+    : null;
+});
+  provincesResource = rxResource({
+    loader: () => {
+      return this._provinceService.getProvinces();
+    },
   });
+  localitiesResource = rxResource({
+    request: computed(() => this.provinces().find(province => province === this.filterProvince())),
+    loader: (request) => {
+      if (!request.request) {
+        return of(null);
+      }
+      return this._localityService.getLocalitiesByProvince(this.provinces().find(province => province === request.request)?.id!);
+    },
+  });
+  buildingsResource = rxResource({
+    request: computed(() => ({
+      latitude: this._coordinate().latitude,
+      longitude: this._coordinate().longitude,
+      radiusKm: this.radius()
+    })),
+    loader: (request) => {
+      if( this.filterNearMyLocation() === false && this.filterNearPoint() === false && this.filterNearPointOfInterest() === false){
+        return of([]);
+      }
+      return this._buildingsService.getBuildingsNear(request.request.latitude, request.request.longitude, request.request.radiusKm);
+    },
+  });
+  propertiesResource = rxResource({
+    request: computed(() => ({
+      latitude: this._coordinate().latitude,
+      longitude: this._coordinate().longitude,
+      radiusKm: this.radius()
+    })),
+    loader: (request) => {
+      if( this.filterNearMyLocation() === false && this.filterNearPoint() === false && this.filterNearPointOfInterest() === false){
+        return of([]);
+      }
+      return this._propertiesService.getPropertiesNear(request.request.latitude, request.request.longitude, request.request.radiusKm);
+    },
+  });
+
+  provinces = signal<ProvinceResponse[]>([]);
+  localities = signal<LocalityResponse[]>([]);
+  filteredBuildings = signal<Building[]>([]);
+  filteredProperties = signal<Property[]>([]);
 
   constructor() {
     effect(() => {
-      const address = this._decodeAddressResource.value();
-      if (address) this._addressFromMap.set(address);
+      const provincesData = this.provincesResource.value();
+      if (provincesData) {
+        this.provinces.set(provincesData);
+      }
+    });
+
+    effect(() => {
+      const localitiesData = this.localitiesResource.value();
+      if (localitiesData) {
+        console.log(localitiesData);
+        this.localities.set(localitiesData);
+      }
+    });
+
+    effect(() => {
+      const buildingsData = this.buildingsResource.value();
+      if (buildingsData) {
+        this.filteredBuildings.set(buildingsData);
+      }
+    });
+
+    effect(() => {
+      const propertiesData = this.propertiesResource.value();
+      if (propertiesData) {
+        this.filteredProperties.set(propertiesData);
+      }
     });
   }
 
-  setAddressMarker(coordinate: MapCoordinate) {
-    this._coordinate.set(coordinate);
+
+  filterNearMyLocation = signal<boolean>(false);
+
+  onSelectMyLocation() {
+    if (this.filterNearMyLocation() === false){
+      this.filterNearMyLocation.set(true);
+      this.filterNearPoint.set(false);
+      this.filterNearPointOfInterest.set(false);
+    }
+    else {
+      this.filterNearMyLocation.set(false);
+    }
   }
 
-  clearAddressFromMap() {
-    this._addressFromMap.set('');
-    this._coordinate.set(null);
+  setMyLocation(coordinate: MapCoordinate) {
+    if(this.filterNearMyLocation() === true){
+      this._coordinate.set(coordinate);
+    }
   }
 
 
-  filterNearType = signal<string>('MY_LOCATION');
-  filterNearAreaKm = signal<number>(20);
-  filterAddress = signal<string>('');
-  filterProvince = signal<string | null>(null);
-  filterLocality = signal<string | null>(null);
+
+
+  filterNearPoint = signal<boolean>(false);
+
+  isLocationPointSelected = computed(() => {
+    return this._coordinate().latitude !== 0 && this._coordinate().longitude !== 0 && this.filterNearPoint() === true;
+  });
+
+  onSelectPoint() {
+    if (this.filterNearPoint() === false){
+      this.filterNearPoint.set(true);
+      this.filterNearMyLocation.set(false);
+      this.filterNearPointOfInterest.set(false);
+    }
+    else {
+      this.filterNearPoint.set(false);
+    }
+  }
+  setSelectedLocationPoint(coordinate: MapCoordinate) {
+    if(this.filterNearPoint() === true){
+      this._coordinate.set(coordinate);
+    }
+  }
+
+
+
+
+
+  filterNearPointOfInterest = signal<boolean>(false);
+  selectedPointOfInterest = signal<string | null>(null);
+  onSelectPointOfInterestButton() {
+    if (this.filterNearPointOfInterest() === false){
+      this.filterNearPointOfInterest.set(true);
+      this.filterNearMyLocation.set(false);
+      this.filterNearPoint.set(false);
+    }
+    else {
+      this.filterNearPointOfInterest.set(false);
+    }
+  }
+
+  onSelectPointOfInterest(event: string) {
+    this.selectedPointOfInterest.set(event);
+  }
+
+  radius = signal<number>(10);
+
+  onSliderChange(event: Event) {
+    const target = event.target as HTMLInputElement;
+    const value = target.value;
+    if (value !== null && value !== undefined && value !== '') {
+      const numericValue = Number(value);
+      if (!isNaN(numericValue)) {
+        this.radius.set(numericValue);
+      }
+    }
+  }
+
+
+  filterProvince = signal<ProvinceResponse | null>(null);
+  filterLocality = signal<LocalityResponse | null>(null);
+
+  onSelectProvince(event: ProvinceResponse) {
+    this.filterProvince.set(event);
+    this.filterLocality.set(null);
+  }
+
+  onSelectLocality(event: LocalityResponse) {
+    this.filterLocality.set(event);
+  }
+
+
 
   filterPriceMin = signal<number | null>(null);
   filterPriceMax = signal<number | null>(null);
 
-  filterTypeCasa = signal<boolean>(false);
-  filterTypeDepto = signal<boolean>(false);
+
+  onSelectPriceMin(event: number) {
+    this.filterPriceMin.set(event);
+  }
+
+  onSelectPriceMax(event: number) {
+    this.filterPriceMax.set(event);
+  }
+
+
+  filterPropertyType = signal<boolean>(false);
+  filterDepartmentType = signal<boolean>(false);
+
+    onSelectPropertyType() {
+    const current = this.filterPropertyType();
+    if (current) {
+      this.filterPropertyType.set(false);
+    } else {
+      this.filterPropertyType.set(true);
+      this.filterDepartmentType.set(false);
+    }
+  }
+
+  onSelectDepartmentType() {
+    const current = this.filterDepartmentType();
+    if (current) {
+      this.filterDepartmentType.set(false);
+    } else {
+      this.filterDepartmentType.set(true);
+      this.filterPropertyType.set(false);
+    }
+  }
   filterAllowPets = signal<boolean>(false);
   filterRooms = signal<number | null>(null);
   filterBathrooms = signal<number | null>(null);
   filterAreaMin = signal<number | null>(null);
   filterAreaMax = signal<number | null>(null);
 
-  myLocationCoordinate = signal<MapCoordinate | null>(null);
+  onSelectAllowPets(event: boolean) {
+    this.filterAllowPets.set(event);
+  }
+
+  onSelectRooms(event: number) {
+    this.filterRooms.set(event);
+  }
+
+  onSelectBathrooms(event: number) {
+    this.filterBathrooms.set(event);
+  }
+
+  onSelectAreaMin(event: number) {
+    this.filterAreaMin.set(event);
+  }
+
+  onSelectAreaMax(event: number) {
+    this.filterAreaMax.set(event);
+  }
 
   buildingsService = inject(BuildingsService);
   propertiesService = inject(PropertiesService);
 
-  filteredBuildings = signal<any[]>([]);
-  filteredProperties = signal<any[]>([]);
+
+
 
   clearFilters() {
-    this.filterNearType.set('MY_LOCATION');
-    this.filterNearAreaKm.set(20);
-    this.filterAddress.set('');
+    this.filterNearMyLocation.set(false);
+    this.filterNearPoint.set(false);
+    this.filterNearPointOfInterest.set(false);
+    this.selectedPointOfInterest.set(null);
+    this.radius.set(10);
+
     this.filterProvince.set(null);
     this.filterLocality.set(null);
+
     this.filterPriceMin.set(null);
     this.filterPriceMax.set(null);
-    this.filterTypeCasa.set(false);
-    this.filterTypeDepto.set(false);
+
+    this.filterPropertyType.set(false);
+    this.filterDepartmentType.set(false);
     this.filterAllowPets.set(false);
     this.filterRooms.set(null);
     this.filterBathrooms.set(null);
     this.filterAreaMin.set(null);
     this.filterAreaMax.set(null);
-    this.applyFilters();
+
+    this._coordinate.set({ latitude: 0, longitude: 0 });
   }
-
-  setMyLocation(coordinate: MapCoordinate) {
-    this.myLocationCoordinate.set(coordinate);
-    this.filterNearType.set('MY_LOCATION');
-    this.applyFilters();
-  }
-
-
 }

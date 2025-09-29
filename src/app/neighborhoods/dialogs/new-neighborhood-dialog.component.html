@@ -1,0 +1,45 @@
+<div class="form-container">
+      <h2 mat-dialog-title>{{ data.isEditing ? 'Editar barrio' : 'Nuevo barrio' }}</h2>
+
+      <mat-dialog-content>
+        <form [formGroup]="neighborhoodForm" class="form-container">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="neighborhood-option-content">
+              <mat-label>Nombre</mat-label>
+              <input matInput
+              formControlName="name"
+              placeholder="Ej: San Juan Bautista, San Justo, Rivadavia">
+              @if (neighborhoodForm.get('name')?.invalid && neighborhoodForm.get('name')?.touched) {
+                <mat-error>El nombre es requerido</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Localidad</mat-label>
+              <mat-select
+                formControlName="localityId"
+                panelClass="locality-options"
+              >
+                <mat-option *ngFor="let locality of localitiesList | async" [value]="locality.id">
+                    <div class="neighborhood-option-content">
+                    {{ locality.name }}
+                    </div>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
+        </form>
+      </mat-dialog-content>
+
+      <mat-dialog-actions align="end">
+        <button mat-button (click)="onCancel()" class="cancel-btn">Cancelar</button>
+        <button mat-raised-button
+                color="primary"
+                (click)="onSave()"
+                [disabled]="neighborhoodForm.invalid"
+                class="save-btn">
+          {{ data.isEditing ? 'Guardar' : 'Guardar' }}
+        </button>
+      </mat-dialog-actions>
+    </div>

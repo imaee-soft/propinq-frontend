@@ -77,6 +77,7 @@ export class NavbarComponent {
         .openNewEntityDialog(NewBuildingDialogComponent, {
           panelClass: 'generic-dialog',
           entity: 'building',
+          
         })
         .subscribe();
     }

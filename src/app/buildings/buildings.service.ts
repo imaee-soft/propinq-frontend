@@ -114,4 +114,14 @@ export class BuildingsService {
   getBuildingProperties(buildingId: string): Observable<PropertyDetails[]> {
     return this._http.get<PropertyDetails[]>(`${this._baseUrl}/${buildingId}/properties`);
   }
+
+  getBuildingsNear(latitude: number, longitude: number, radiusKm: number): Observable<Building[]> {
+    return this._http.get<Building[]>(`${this._baseUrl}/nearby`, {
+      params: {
+        latitude: latitude,
+        longitude: longitude,
+        radiusKm: radiusKm
+      }
+    });
+  }
 }

@@ -1,4 +1,5 @@
-import { Component, computed, inject, Signal, signal } from '@angular/core';
+import { AuthService } from './../../auth/services/auth.service';
+import { Component, computed, effect, inject, Signal, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -26,6 +27,8 @@ import { QueryParamsService } from '../../shared/services/query-params.service';
 import { NavbarService } from '../../shared/services/navbar.service';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MapClickEvent } from '../../maps/interfaces/click-event.interface';
+import { AuthStatus} from '../../auth/enums/auth-status.enum';
+import { MapCoordinate } from '../../maps/interfaces/map-coordinate.interface';
 @Component({
   imports: [
     MapComponent,
@@ -48,7 +51,8 @@ export class HomePageComponent {
   private router = inject(Router);
   private snackbar = inject(CustomSnackbarService);
   private dialog = inject(MatDialog);
-  private navbarService = inject(NavbarService);
+  navbarService = inject(NavbarService);
+  private AuthService = inject(AuthService);
 
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: DEFAULT_CENTER,
@@ -67,8 +71,63 @@ export class HomePageComponent {
 
   buildingProperties = signal<PropertyDetails[] | null>(null);
 
+  constructor() {
+    effect(() => {
+      if (
+        this.navbarService.filterNearMyLocation() ||
+        this.navbarService.filterNearPoint() ||
+        this.navbarService.filterNearPointOfInterest()
+      ) {
+        const buildings = this.navbarService.filteredBuildings().map(b => ({
+          id: b.buildingId,
+          coordinate: { latitude: b.latitude, longitude: b.longitude },
+          icon: { url: '/building.png' },
+          type: 'building'
+        }));
 
+        const properties = this.navbarService.filteredProperties().map(p => ({
+          id: p.propertyId,
+          coordinate: { latitude: p.latitude, longitude: p.longitude },
+          icon: { url: '/property.png' },
+          type: 'property'
+        }));
 
+        this.markers.set([...buildings, ...properties]);
+      }
+    });
+
+    effect(() => {
+      if (
+        !this.navbarService.filterNearMyLocation() &&
+        !this.navbarService.filterNearPoint() &&
+        !this.navbarService.filterNearPointOfInterest()
+      ) {
+        this.resetMapMarkers();
+      }
+    });
+
+  }
+  resetMapMarkers() {
+    // Aquí puedes pedir todos los edificios/propiedades como lo hacías originalmente
+    // Si tienes un BuildingsService/PropertiesService, podrías hacer algo como:
+    this.navbarService.buildingsService.getBuildings().subscribe(buildings => {
+      const buildingMarkers = buildings.map(b => ({
+        id: b.buildingId,
+        coordinate: { latitude: b.latitude, longitude: b.longitude },
+        icon: { url: '/building.png' },
+        type: 'building'
+      }));
+      this.navbarService.propertiesService.getProperties().subscribe(properties => {
+        const propertyMarkers = properties.map(p => ({
+          id: p.propertyId,
+          coordinate: { latitude: p.latitude, longitude: p.longitude },
+          icon: { url: '/property.png' },
+          type: 'property'
+        }));
+        this.markers.set([...buildingMarkers, ...propertyMarkers]);
+      });
+    });
+  }
   getMapConfig(): MapConfig {
     return this.mapConfig();
   }
@@ -131,10 +190,13 @@ export class HomePageComponent {
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
     }
-
-    this.navbarService.setAddressMarker(coordinate);
-
+    this.navbarService.setSelectedLocationPoint(coordinate);
   }
+
+  onCenterChanged(coordinate: MapCoordinate): void {
+    this.navbarService.setMyLocation(coordinate) ;
+  }
+
   onCloseDetails(): void {
     if (this.buildingDetails() !== null || this.propertyDetails() !== null) {
       this.buildingMarkerQueried.set(null);
@@ -257,4 +319,5 @@ export class HomePageComponent {
     this.navbarService.toggleFilters();
   }
 
+  isAuthenticated = computed(() => this.AuthService.status() === AuthStatus.AUTHENTICATED);
 }

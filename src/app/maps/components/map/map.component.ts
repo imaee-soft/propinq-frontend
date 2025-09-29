@@ -54,6 +54,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   mapReady = output<OlMap>();
   mapClick = output<MapClickEvent>();
   markerClick = output<MapMarker>();
+  centerChanged = output<MapCoordinate>();
+  coordinateToGo = input<MapCoordinate | null>(null);
 
   private _mapInstance = signal<OlMap | null>(null);
   private _isMapInitialized = signal<boolean>(false);
@@ -110,6 +112,13 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this._isMapInitialized() &&
         this.goToCoordinate(this._center())
     );
+    
+    effect(() => {
+    const coord = this.coordinateToGo();
+    if (coord && this._isMapInitialized()) {
+      this.goToCoordinate(coord);
+    }
+  });
   }
 
   private initializeMap(): void {
@@ -166,10 +175,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           coordinate: lonLat,
         });
       }
+
+      const center = map.getView().getCenter();
+    if (center) {
+      const lonLat = transformFromMap(center);
+      this.centerChanged.emit(lonLat);
+    }
     });
     map.on('moveend', () => {
       this._viewport$.next();
     });
+
   }
 
   private initializeViewportListener(): void {

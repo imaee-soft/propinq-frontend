@@ -1,0 +1,86 @@
+<form [formGroup]="form" (ngSubmit)="handleSubmit()">
+  <app-generic-dialog
+    dialogTitle="Nueva propiedad"
+    [activeSaveButton]="form.valid"
+    [isLoading]="isLoading()"
+  >
+    <ng-template #content>
+      <div class="form-container">
+        <div class="form-column-display">
+          <mat-form-field appearance="outline">
+            <mat-label>Edificio</mat-label>
+            <input matInput disabled #buildingNameField />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Número</mat-label>
+            <input matInput formControlName="number" cdkFocusInitial />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Precio de alquiler (por mes)</mat-label>
+            <input matInput formControlName="price" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Piso</mat-label>
+            <input matInput formControlName="floor" cdkFocusInitial />
+          </mat-form-field>
+        </div>
+        <div class="form-column-display almost-extended">
+          <mat-form-field appearance="outline">
+            <mat-label>Habitaciones</mat-label>
+            <input matInput formControlName="bedrooms" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Baños</mat-label>
+            <input matInput formControlName="bathrooms" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Área (en metros cuadrados)</mat-label>
+            <input matInput formControlName="area" />
+          </mat-form-field>
+          <div class="pets-container">
+            <mat-label>¿Acepta mascotas?</mat-label>
+            <mat-slide-toggle formControlName="petsAllowed"></mat-slide-toggle>
+          </div>
+        </div>
+        <mat-form-field appearance="outline">
+          <mat-label>Descripción</mat-label>
+          <textarea
+            matInput
+            formControlName="description"
+            [maxLength]="400"
+            rows="3"
+            placeholder="Describí brevemente la propiedad..."
+          ></textarea>
+        </mat-form-field>
+
+        <div class="image-section">
+          <image-loader
+            [title]="'Subí las imágenes de la propiedad'"
+            [images]="imagesControl?.value ?? null"
+            (imageUploaded)="handleImageUploaded($event)"
+            (imageRemoved)="handleImageRemoved($event)"
+          ></image-loader>
+
+          <div class="image-error-wrapper">
+            @if (imagesControl?.errors?.['required'] && imagesControl?.touched)
+            {
+            <mat-error class="image-error"
+              >Al menos una imagen es requerida</mat-error
+            >
+            } @if (imagesControl?.errors?.['maxSize'] && imagesControl?.touched)
+            {
+            <mat-error class="image-error"
+              >Las imágenes deben pesar como máximo 3MB</mat-error
+            >
+            } @if (imagesControl?.errors?.['allowedTypes'] &&
+            imagesControl?.touched) {
+            <mat-error class="image-error">
+              Las imágenes deben ser de tipo JPG, JPEG, PNG o WEBP
+            </mat-error>
+            }
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </app-generic-dialog>
+</form>

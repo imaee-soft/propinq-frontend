@@ -1,10 +1,10 @@
-import { Component, computed, inject, Inject, input, Input, Signal, signal } from '@angular/core';
-import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
-import { MatIcon } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { UserComparisonAttribute } from '../../users/interfaces/user-comparison-attribute';
+import { Component, inject, Signal, signal } from '@angular/core';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
+import { MatIcon } from '@angular/material/icon';
 import { Router } from '@angular/router';
+import { UserComparisonAttribute } from '../../../users/interfaces/user-comparison-attribute';
+import { PropertyDetails } from '../../interfaces/property-details.interface';
 
 interface ComparePropertyAttribute {
   label: string;
@@ -17,17 +17,17 @@ interface ComparePropertyAttribute {
   imports: [MatIcon, CommonModule],
   selector: 'compare-properties-dialog',
   templateUrl: './compare-properties-dialog.component.html',
-  styleUrl: './compare-properties-dialog.component.css'
+  styleUrl: './compare-properties-dialog.component.css',
 })
 export class ComparePropertiesDialogComponent {
   router = inject(Router);
   public data = inject(MAT_DIALOG_DATA) as {
-    properties: PropertyDetails[],
-    compareAttributes: UserComparisonAttribute[]
+    properties: PropertyDetails[];
+    compareAttributes: UserComparisonAttribute[];
   };
-  public properties: Signal<PropertyDetails[]> = signal(this.data.properties ?? []);
-
-
+  public properties: Signal<PropertyDetails[]> = signal(
+    this.data.properties ?? []
+  );
 
   private readonly typeMap: Record<string, 'boolean' | 'number' | 'string'> = {
     address: 'string',
@@ -38,7 +38,7 @@ export class ComparePropertiesDialogComponent {
     bathrooms: 'number',
     floor: 'number',
     apartmentNumber: 'string',
-    petsAllowed: 'boolean'
+    petsAllowed: 'boolean',
   };
 
   private readonly higherMap: Record<string, boolean | undefined> = {
@@ -46,23 +46,42 @@ export class ComparePropertiesDialogComponent {
     area: true,
     bedrooms: true,
     bathrooms: true,
-    petsAllowed: true
+    petsAllowed: true,
   };
 
-    public attributes: Signal<ComparePropertyAttribute[]> = signal([
+  public attributes: Signal<ComparePropertyAttribute[]> = signal([
     { label: 'Dirección', key: 'address', type: 'string' },
     { label: 'Título', key: 'title', type: 'string' },
     { label: 'Precio', key: 'price', type: 'number', higherIsBetter: false },
-    { label: 'Superficie (m²)', key: 'area', type: 'number', higherIsBetter: true },
-    { label: 'Ambientes', key: 'bedrooms', type: 'number', higherIsBetter: true },
+    {
+      label: 'Superficie (m²)',
+      key: 'area',
+      type: 'number',
+      higherIsBetter: true,
+    },
+    {
+      label: 'Ambientes',
+      key: 'bedrooms',
+      type: 'number',
+      higherIsBetter: true,
+    },
     { label: 'Baños', key: 'bathrooms', type: 'number', higherIsBetter: true },
     { label: 'Piso', key: 'floor', type: 'number' },
     { label: 'N° Departamento', key: 'apartmentNumber', type: 'string' },
-    { label: 'Mascotas', key: 'petsAllowed', type: 'boolean', higherIsBetter: true },
+    {
+      label: 'Mascotas',
+      key: 'petsAllowed',
+      type: 'boolean',
+      higherIsBetter: true,
+    },
   ]);
 
   public comparedKeys: Signal<Set<string>> = signal(
-    new Set((this.data.compareAttributes ?? []).filter(a => a.enabled).map(a => a.key))
+    new Set(
+      (this.data.compareAttributes ?? [])
+        .filter((a) => a.enabled)
+        .map((a) => a.key)
+    )
   );
   private dialogRef = inject(MatDialogRef<ComparePropertiesDialogComponent>);
 
@@ -80,28 +99,38 @@ export class ComparePropertiesDialogComponent {
     this.dialogRef.close();
   }
 
-  getCellClass(attr: ComparePropertyAttribute, property: PropertyDetails): string {
+  getCellClass(
+    attr: ComparePropertyAttribute,
+    property: PropertyDetails
+  ): string {
     if (!this.comparedKeys().has(attr.key)) return '';
 
     if (attr.type !== 'number' && attr.type !== 'boolean') return '';
 
-    const vals = this.properties().map(p => Number(p[attr.key]));
+    const vals = this.properties().map((p) => Number(p[attr.key]));
     if (vals.length < 2) return '';
 
-    let targetValue = attr.higherIsBetter ? Math.max(...vals) : Math.min(...vals);
+    let targetValue = attr.higherIsBetter
+      ? Math.max(...vals)
+      : Math.min(...vals);
 
     if (attr.type === 'boolean') {
       targetValue = attr.higherIsBetter !== false ? 1 : 0;
     }
 
-    const currentValue = attr.type === 'boolean' ? (property[attr.key] ? 1 : 0) : Number(property[attr.key]);
+    const currentValue =
+      attr.type === 'boolean'
+        ? property[attr.key]
+          ? 1
+          : 0
+        : Number(property[attr.key]);
     if (currentValue === targetValue) {
       return 'compare-best';
     }
     return '';
   }
 
-  goToProperty(propertyId: string){
+  goToProperty(propertyId: string) {
     if (!propertyId) return;
     this.dialogRef.close();
     this.router.navigate(['/properties', propertyId]);

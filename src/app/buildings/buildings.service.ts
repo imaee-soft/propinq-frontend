@@ -2,12 +2,12 @@ import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment.development';
+import { PropertyDetails } from '../properties/interfaces/property-details.interface';
 import { BuildingRequest } from './adapters/building-request';
 import { UpdateBuildingRequest } from './adapters/update-building-request';
 import { BuildingDetails } from './interfaces/building-details.interface';
 import { Building } from './interfaces/building.interface';
 import { BuildingDetailsPage } from './interfaces/buildings-details-page.interface';
-import { PropertyDetails } from '../properties/interfaces/property-details.interface';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
@@ -112,6 +112,18 @@ export class BuildingsService {
   }
 
   getBuildingProperties(buildingId: string): Observable<PropertyDetails[]> {
-    return this._http.get<PropertyDetails[]>(`${this._baseUrl}/${buildingId}/properties`);
+    return this._http.get<PropertyDetails[]>(
+      `${this._baseUrl}/${buildingId}/properties`
+    );
+  }
+
+  hasApartment(buildingId: string, number: string): Observable<boolean> {
+    const params = { number };
+    return this._http.get<boolean>(
+      `${this._baseUrl}/${buildingId}/has-apartment`,
+      {
+        params,
+      }
+    );
   }
 }

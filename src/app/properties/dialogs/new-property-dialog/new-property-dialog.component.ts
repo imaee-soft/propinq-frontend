@@ -12,11 +12,13 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
 import { MatInput } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { BuildingsService } from '../../../buildings/buildings.service';
 import { GenericDialogComponent } from '../../../shared/components/generic-dialog/generic-dialog/generic-dialog.component';
 import { ImageLoaderComponent } from '../../../shared/components/image-loader/image-loader.component';
 import { ImageValidator } from '../../../shared/pipes/image.validator';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { PropertiesService } from '../../properties.service';
+import { numberValidator } from '../../validators/number.validator';
 
 interface PropertyFormData {
   number: string;
@@ -51,45 +53,57 @@ const PROPERTY_CREATED = 'La propiedad fue creada con éxito!';
 export class NewPropertyDialogComponent implements AfterViewInit {
   private readonly _formBuilder = inject(FormBuilder);
   private readonly _propertiesService = inject(PropertiesService);
+  private readonly _buildingsService = inject(BuildingsService);
   private readonly _notificationService = inject(NotificationService);
   private readonly _matDialogRef = inject(MatDialogRef);
 
   private buildingNameField = viewChild<ElementRef>('buildingNameField');
 
+  form: ReturnType<FormBuilder['group']>;
+
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { buildingId: string; buildingName: string }
-  ) {}
-
-  form = this._formBuilder.group({
-    number: this._formBuilder.control<string>('', [Validators.required]),
-    floor: this._formBuilder.control<number>(0, [Validators.min(0)]),
-    price: this._formBuilder.control<number>(0, [
-      Validators.required,
-      Validators.min(0),
-    ]),
-    bedrooms: this._formBuilder.control<number>(0, [
-      Validators.required,
-      Validators.min(1),
-    ]),
-    bathrooms: this._formBuilder.control<number>(0, [
-      Validators.required,
-      Validators.min(1),
-    ]),
-    area: this._formBuilder.control<number>(0, [Validators.min(0)]),
-    petsAllowed: this._formBuilder.control<boolean>(true, [
-      Validators.required,
-    ]),
-    description: this._formBuilder.control<string>(''),
-    images: this._formBuilder.control<File[] | null>(
-      [],
-      [
+  ) {
+    this.form = this._formBuilder.group({
+      number: this._formBuilder.control<string>('', {
+        validators: [Validators.required],
+        asyncValidators: [
+          numberValidator(this.data.buildingId, this._buildingsService),
+        ],
+        updateOn: 'blur',
+      }),
+      floor: this._formBuilder.control<number>(0, [
         Validators.required,
-        ImageValidator.maxSize(3 * 1024 * 1024),
-        ImageValidator.allowedTypes(['jpg', 'jpeg', 'png', 'webp']),
-      ]
-    ),
-  });
+        Validators.min(0),
+      ]),
+      price: this._formBuilder.control<number>(0, [
+        Validators.required,
+        Validators.min(0),
+      ]),
+      bedrooms: this._formBuilder.control<number>(1, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      bathrooms: this._formBuilder.control<number>(1, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      area: this._formBuilder.control<number>(0, [Validators.min(0)]),
+      petsAllowed: this._formBuilder.control<boolean>(true, [
+        Validators.required,
+      ]),
+      description: this._formBuilder.control<string>(''),
+      images: this._formBuilder.control<File[] | null>(
+        [],
+        [
+          Validators.required,
+          ImageValidator.maxSize(3 * 1024 * 1024),
+          ImageValidator.allowedTypes(['jpg', 'jpeg', 'png', 'webp']),
+        ]
+      ),
+    });
+  }
 
   isLoading = signal(false);
 
@@ -156,6 +170,7 @@ export class NewPropertyDialogComponent implements AfterViewInit {
           this._notificationService.success(PROPERTY_CREATED, 3000);
           this._matDialogRef.close();
         },
+        error: () => this.isLoading.set(false),
       });
   }
 

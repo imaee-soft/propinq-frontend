@@ -210,7 +210,7 @@
     </div>
   </div>
 }
-@if (buildingDetails() == null && propertyDetails() == null && !comparativeDrawerOpen() && isAuthenticated()) {
+@if (buildingDetails() == null && !comparativeDrawerOpen() && isAuthenticated()) {
   <button mat-fab color="accent"
           class="filters-fab"
           [class.filters-fab-active]="filtersOpen()"

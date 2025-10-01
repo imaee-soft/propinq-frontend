@@ -15,7 +15,6 @@
                   [ngClass]="{'selected': filterNearPoint() === true}"
                   (click)="onSelectPoint()">
             Punto<mat-icon>location_on</mat-icon>
-
           </button>
           @if(filterNearPoint() === true && isLocationPointSelected() === false) {
             <span class="chip-helper-text">
@@ -67,8 +66,6 @@
          [value]="radius()"
          (change)="onSliderChange($event)">
             </mat-slider>
-
-
             <span class="slider-value">{{radius()}} km</span>
           </div>
         </div>
@@ -80,10 +77,9 @@
             <mat-select placeholder="Provincia"
                         [value]="filterProvince()"
                         (selectionChange)="onSelectProvince($event.value)">
-                        @for (province of provinces(); track province) {
-                          <mat-option [value]="province">{{province.name}}</mat-option>
-                        }
-
+              @for (province of provinces(); track province) {
+                <mat-option [value]="province">{{province.name}}</mat-option>
+              }
             </mat-select>
           </mat-form-field>
         </div>

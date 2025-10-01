@@ -108,8 +108,6 @@ export class HomePageComponent {
 
   }
   resetMapMarkers() {
-    // Aquí puedes pedir todos los edificios/propiedades como lo hacías originalmente
-    // Si tienes un BuildingsService/PropertiesService, podrías hacer algo como:
     this.navbarService.buildingsService.getBuildings().subscribe(buildings => {
       const buildingMarkers = buildings.map(b => ({
         id: b.buildingId,
@@ -153,7 +151,11 @@ export class HomePageComponent {
         ) {
           this.comparativeDrawerOpen.set(false);
           this.buildingMarkerQueried.set({ id: marker.id, coordinate: marker.coordinate, type: marker.type });
+          this.navbarService.propertyDetailsOpened.set(false);
+          this.navbarService.buildingDetailsOpened.set(true);
       }
+
+
   }
 
   onPropertyMarkerClick(marker: MapMarker): void {
@@ -162,8 +164,9 @@ export class HomePageComponent {
           this.propertyMarkerQueried()!.id !== marker.id
         ) {
           this.comparativeDrawerOpen.set(false);
-
           this.propertyMarkerQueried.set({ id: marker.id, coordinate: marker.coordinate, type: marker.type });
+          this.navbarService.buildingDetailsOpened.set(false);
+          this.navbarService.propertyDetailsOpened.set(true);
         }
   }
 
@@ -189,6 +192,8 @@ export class HomePageComponent {
       this.buildingDetails.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
+      this.navbarService.buildingDetailsOpened.set(false);
+      this.navbarService.propertyDetailsOpened.set(false);
     }
     this.navbarService.setSelectedLocationPoint(coordinate);
   }
@@ -203,6 +208,8 @@ export class HomePageComponent {
       this.buildingDetails.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
+      this.navbarService.buildingDetailsOpened.set(false);
+      this.navbarService.propertyDetailsOpened.set(false);
     }
 
     this.currentImageIndex.set(0);

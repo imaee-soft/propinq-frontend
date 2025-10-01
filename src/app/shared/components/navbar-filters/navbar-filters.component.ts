@@ -11,11 +11,12 @@ import { NavbarService } from '../../services/navbar.service';
 import { ProvinceResponse } from '../../../provinces/interfaces/province.interface';
 import { LocalityResponse } from '../../../localities/interfaces/locality.interface';
 
+
 @Component({
   selector: 'app-navbar-filters',
   templateUrl: './navbar-filters.component.html',
   styleUrls: ['./navbar-filters.component.css'],
-  imports: [MatInputModule, MatSelectModule, MatOptionModule, MatCheckbox, MatSliderModule, MatIconModule, FormsModule, CommonModule],
+  imports: [MatInputModule, MatSelectModule, MatOptionModule, MatSliderModule, MatIconModule, FormsModule, CommonModule, MatCheckbox],
 })
 export class NavbarFiltersComponent {
   private _navbarService = inject(NavbarService);
@@ -91,6 +92,8 @@ export class NavbarFiltersComponent {
     this._navbarService.onSelectDepartmentType();
   }
 
+
+
   onSelectAllowPets(event: boolean) {
     this._navbarService.onSelectAllowPets(event);
   }
@@ -110,5 +113,8 @@ export class NavbarFiltersComponent {
   onSelectAreaMax(event: number) {
     this._navbarService.onSelectAreaMax(event);
   }
+
+
+
 
 }

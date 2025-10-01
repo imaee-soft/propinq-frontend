@@ -216,6 +216,30 @@
   flex-shrink: 0;
 }
 
+.chip-helper-text {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  margin-left: 2px;
+  font-size: 11px;
+  color: #f06292;
+  font-weight: 600;
+  letter-spacing: 0.15px;
+  line-height: 1.2;
+  position: relative;
+  z-index: 2;
+}
+.chip-content {
+  flex-direction: row;
+  flex-wrap: wrap;
+  align-items: flex-start;
+}
+
+.chip-content .chip-helper-text {
+  flex-basis: 100%;
+  order: 10;
+}
+
 .chip-btn {
   background: rgba(255,255,255,0.15);
   border: 1px solid rgba(255,255,255,0.25);
@@ -593,4 +617,23 @@
 .filter-chip:focus-within {
   border-color: var(--filters-accent);
   box-shadow: 0 0 0 1px rgba(103,58,183,0.25);
+}
+
+.chip-input.mini {
+  height: 18px !important;
+  min-height: 18px !important;
+  max-height: 18px !important;
+  font-size: 11px !important;
+  padding: 1px 6px !important;
+  border-radius: 5px !important;
+  border: 1px solid #bdbdbd !important;
+  background: rgba(255,255,255,0.08) !important;
+  color: var(--filters-label-color) !important;
+  font-weight: 500 !important;
+  box-sizing: border-box !important;
+  margin-right: 4px !important;
+  width: 60px !important;
+  max-width: 60px !important;
+  min-width: 40px !important;
+  line-height: 16px !important;
 }

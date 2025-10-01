@@ -80,7 +80,7 @@
 </mat-toolbar>
 
 
-@if(showFilters() && isHomePage() && !sidebarOpened()) {
+@if(showFilters() && isHomePage() && !sidebarOpened() && !propertyDetailsOpened() && !buildingDetailsOpened()) {
   <div class="navbar-filters">
     <app-navbar-filters></app-navbar-filters>
   </div>

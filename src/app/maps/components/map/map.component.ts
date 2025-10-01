@@ -38,6 +38,7 @@ import { PoiService } from '../../services/poi.service';
 import { PoiViewportResponse } from '../../interfaces/poi-viewport-response.interface';
 import { CustomSnackbarService } from '../../../shared/services/snackbar.service';
 import { FeatureLike } from 'ol/Feature';
+import { NavbarService } from '../../../shared/services/navbar.service';
 
 @Component({
   selector: 'app-map',
@@ -45,6 +46,7 @@ import { FeatureLike } from 'ol/Feature';
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   private snackbarService = inject(CustomSnackbarService);
+  private navbarService = inject(NavbarService);
   mapElement = viewChild<ElementRef>('mapElement');
 
   config = input<MapConfig>({});
@@ -112,7 +114,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         this._isMapInitialized() &&
         this.goToCoordinate(this._center())
     );
-    
+
     effect(() => {
     const coord = this.coordinateToGo();
     if (coord && this._isMapInitialized()) {
@@ -175,17 +177,17 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           coordinate: lonLat,
         });
       }
-
-      const center = map.getView().getCenter();
-    if (center) {
-      const lonLat = transformFromMap(center);
-      this.centerChanged.emit(lonLat);
-    }
     });
     map.on('moveend', () => {
       this._viewport$.next();
-    });
+      const center = map.getView().getCenter();
+      if (center) {
+        const lonLat = transformFromMap(center);
+        this.centerChanged.emit(lonLat);
+      }
+      this.navbarService.setViewportFromMap(map);
 
+    });
   }
 
   private initializeViewportListener(): void {
@@ -291,9 +293,9 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
      private getPoiStyle(type?: string | null): Style {
-    const key = String(type ?? 'property');
-    const cached = this._poiStyleCache.get(key);
-    if (cached) return cached;
+      const key = String(type ?? 'property');
+      const cached = this._poiStyleCache.get(key);
+      if (cached) return cached;
 
     const style = new Style({
       image: new Icon({

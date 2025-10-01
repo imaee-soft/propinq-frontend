@@ -13,15 +13,15 @@ import { BuildingsService } from '../../buildings/buildings.service';
 import { PropertiesService } from '../../properties/properties.service';
 import { ProvinceService } from '../../provinces/services/province.service';
 import { LocalityService } from '../../localities/services/locality.service';
-import { CustomSnackbarService } from './snackbar.service';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ProvinceResponse } from '../../provinces/interfaces/province.interface';
 import { LocalityResponse } from '../../localities/interfaces/locality.interface';
-import { BuildingDetails } from '../../buildings/interfaces/building-details.interface';
-import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
 import { Building } from '../../buildings/interfaces/building.interface';
 import { Property } from '../../properties/interfaces/property.interface';
 import { of } from 'rxjs';
+import { transformExtent } from 'ol/proj';
+import Map from 'ol/Map';
+
 
 const NAVBAR_ITEMS: Record<string, NavElement[]> = {
   unlogged: UNLOGGED_NAVBAR_ITEMS,
@@ -81,12 +81,12 @@ export class NavbarService {
   }
 
   private _coordinate = signal<MapCoordinate>({ latitude: 0, longitude: 0 });
-public readonly coordinateToGo = computed<MapCoordinate | null>(() => {
+  public readonly coordinateToGo = computed<MapCoordinate | null>(() => {
   const locality = this.filterLocality();
   return locality
     ? { latitude: locality.latitude, longitude: locality.longitude }
     : null;
-});
+  });
   provincesResource = rxResource({
     loader: () => {
       return this._provinceService.getProvinces();
@@ -128,10 +128,111 @@ public readonly coordinateToGo = computed<MapCoordinate | null>(() => {
     },
   });
 
+  buildingsNearPoiResource = rxResource({
+  request: computed(() => {
+
+    if (
+      this.filterNearPointOfInterest() &&
+      this.viewport() &&
+      this.selectedPointOfInterest()
+    ) {
+      return {
+        poiType: this.selectedPointOfInterest(),
+        radiusKm: this.radius(),
+        ...this.viewport(),
+        limit: 100,
+      };
+    }
+    return null;
+  }),
+  loader: (request: any) => {
+    if (
+      this.filterNearMyLocation() === false &&
+      this.filterNearPoint() === false &&
+      this.filterNearPointOfInterest() === false
+    ) {
+      return of([]);
+    }
+    if (!request.request || typeof request.request.poiType !== 'string') {
+      return of([]);
+    }
+    return this._buildingsService.getBuildingsNearPoi(
+      request.request.poiType,
+      request.request.radiusKm,
+      {
+        north: request.request.north ?? 0,
+        south: request.request.south ?? 0,
+        east: request.request.east ?? 0,
+        west: request.request.west ?? 0,
+      },
+      request.request.limit
+    );
+  }
+});
+
+propertiesNearPoiResource = rxResource({
+  request: computed(() => {
+    if (
+      this.filterNearPointOfInterest() &&
+      this.viewport() &&
+      this.selectedPointOfInterest()
+    ) {
+      return {
+        poiType: this.selectedPointOfInterest(),
+        radiusKm: this.radius(),
+        ...this.viewport(),
+        limit: 100,
+      };
+    }
+    return null;
+  }),
+  loader: (request) => {
+    if (
+      this.filterNearMyLocation() === false &&
+      this.filterNearPoint() === false &&
+      this.filterNearPointOfInterest() === false
+    ) {
+      return of([]);
+    }
+    if (!request.request || typeof request.request.poiType !== 'string') {
+      return of([]);
+    }
+    return this._propertiesService.getPropertiesNearPoi(
+      request.request.poiType,
+      request.request.radiusKm,
+      {
+        north: request.request.north ?? 0,
+        south: request.request.south ?? 0,
+        east: request.request.east ?? 0,
+        west: request.request.west ?? 0,
+      },
+      request.request.limit
+    );
+  }
+});
+
   provinces = signal<ProvinceResponse[]>([]);
   localities = signal<LocalityResponse[]>([]);
   filteredBuildings = signal<Building[]>([]);
   filteredProperties = signal<Property[]>([]);
+
+  viewport = signal<{ north: number; south: number; east: number; west: number } | null>(null);
+  setViewportFromMap(map: Map) {
+    const view = map.getView();
+    const size = map.getSize();
+    if (!size) throw new Error('Map size is not available');
+    const extent3857 = view.calculateExtent(size);
+    const [minX, minY, maxX, maxY] = transformExtent(extent3857, 'EPSG:3857', 'EPSG:4326');
+    this.viewport.set({
+      west: minX,
+      south: minY,
+      east: maxX,
+      north: maxY
+    });
+  }
+
+
+
 
   constructor() {
     effect(() => {
@@ -158,6 +259,20 @@ public readonly coordinateToGo = computed<MapCoordinate | null>(() => {
 
     effect(() => {
       const propertiesData = this.propertiesResource.value();
+      if (propertiesData) {
+        this.filteredProperties.set(propertiesData);
+      }
+    });
+
+    effect(() => {
+      const buildingsData = this.buildingsNearPoiResource.value();
+      if (buildingsData) {
+        this.filteredBuildings.set(buildingsData);
+      }
+    });
+
+    effect(() => {
+      const propertiesData = this.propertiesNearPoiResource.value();
       if (propertiesData) {
         this.filteredProperties.set(propertiesData);
       }
@@ -347,5 +462,9 @@ public readonly coordinateToGo = computed<MapCoordinate | null>(() => {
     this.filterAreaMax.set(null);
 
     this._coordinate.set({ latitude: 0, longitude: 0 });
+    this.viewport.set(null);
   }
+
+  buildingDetailsOpened = signal<boolean>(false);
+  propertyDetailsOpened = signal<boolean>(false);
 }

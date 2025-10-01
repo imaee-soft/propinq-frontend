@@ -64,8 +64,7 @@ interface BuildingFormData {
     MatHint,
     MatProgressSpinner,
     MapComponent,
-    ImageLoaderComponent,
-    UppercaseDirective,
+    ImageLoaderComponent
   ],
   templateUrl: './new-building-dialog.component.html',
   styleUrl: './new-building-dialog.component.css',

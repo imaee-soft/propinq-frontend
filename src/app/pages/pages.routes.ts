@@ -23,6 +23,27 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'localities',
+    loadComponent: () =>
+      import('../localities/components/locality.component').then(
+        (m) => m.LocalityComponent
+      ),
+  },
+  {
+    path: 'neighborhoods',
+    loadComponent: () =>
+      import('../neighborhoods/components/neighborhood.component').then(
+        (m) => m.NeighborhoodComponent
+      ),
+  },
+  {
+    path: 'property-types',
+    loadComponent: () =>
+      import('../property-types/components/property-type.component').then(
+        (m) => m.PropertyTypeComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

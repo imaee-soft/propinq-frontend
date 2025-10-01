@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment.development';
@@ -113,5 +113,33 @@ export class BuildingsService {
 
   getBuildingProperties(buildingId: string): Observable<PropertyDetails[]> {
     return this._http.get<PropertyDetails[]>(`${this._baseUrl}/${buildingId}/properties`);
+  }
+
+  getBuildingsNear(latitude: number, longitude: number, radiusKm: number): Observable<Building[]> {
+    return this._http.get<Building[]>(`${this._baseUrl}/nearby`, {
+      params: {
+        latitude: latitude,
+        longitude: longitude,
+        radiusKm: radiusKm
+      }
+    });
+  }
+
+
+  getBuildingsNearPoi(poiType: string, radiusKm: number,
+    viewport: { north: number; south: number; east: number; west: number },
+    limit?: number
+  ) {
+    let params = new HttpParams()
+      .set('poiType', poiType)
+      .set('radiusKm', radiusKm)
+      .set('north', viewport.north)
+      .set('south', viewport.south)
+      .set('east', viewport.east)
+      .set('west', viewport.west);
+
+   if (limit != null) params = params.set('limit', limit);
+
+    return this._http.get<Building[]>(`${this._baseUrl}/nearby/poi`, { params });
   }
 }

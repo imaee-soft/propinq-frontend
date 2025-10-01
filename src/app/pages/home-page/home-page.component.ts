@@ -1,4 +1,5 @@
-import { Component, computed, inject, Signal, signal } from '@angular/core';
+import { AuthService } from './../../auth/services/auth.service';
+import { Component, computed, effect, inject, Signal, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatExpansionModule } from '@angular/material/expansion';
@@ -23,7 +24,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { CustomSnackbarService } from '../../shared/services/snackbar.service';
 import { DialogStateService } from '../../shared/services/dialog-state.service';
 import { QueryParamsService } from '../../shared/services/query-params.service';
-
+import { NavbarService } from '../../shared/services/navbar.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { MapClickEvent } from '../../maps/interfaces/click-event.interface';
+import { AuthStatus} from '../../auth/enums/auth-status.enum';
+import { MapCoordinate } from '../../maps/interfaces/map-coordinate.interface';
 @Component({
   imports: [
     MapComponent,
@@ -36,7 +41,8 @@ import { QueryParamsService } from '../../shared/services/query-params.service';
     MatExpansionModule,
     MatButtonModule,
     MatGridListModule,
-    PropertyComponent
+    PropertyComponent,
+    MatTooltipModule,
 ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -44,6 +50,9 @@ import { QueryParamsService } from '../../shared/services/query-params.service';
 export class HomePageComponent {
   private router = inject(Router);
   private snackbar = inject(CustomSnackbarService);
+  private dialog = inject(MatDialog);
+  navbarService = inject(NavbarService);
+  private AuthService = inject(AuthService);
 
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: DEFAULT_CENTER,
@@ -62,8 +71,61 @@ export class HomePageComponent {
 
   buildingProperties = signal<PropertyDetails[] | null>(null);
 
-  private dialog = inject(MatDialog);
+  constructor() {
+    effect(() => {
+      if (
+        this.navbarService.filterNearMyLocation() ||
+        this.navbarService.filterNearPoint() ||
+        this.navbarService.filterNearPointOfInterest()
+      ) {
+        const buildings = this.navbarService.filteredBuildings().map(b => ({
+          id: b.buildingId,
+          coordinate: { latitude: b.latitude, longitude: b.longitude },
+          icon: { url: '/building.png' },
+          type: 'building'
+        }));
 
+        const properties = this.navbarService.filteredProperties().map(p => ({
+          id: p.propertyId,
+          coordinate: { latitude: p.latitude, longitude: p.longitude },
+          icon: { url: '/property.png' },
+          type: 'property'
+        }));
+
+        this.markers.set([...buildings, ...properties]);
+      }
+    });
+
+    effect(() => {
+      if (
+        !this.navbarService.filterNearMyLocation() &&
+        !this.navbarService.filterNearPoint() &&
+        !this.navbarService.filterNearPointOfInterest()
+      ) {
+        this.resetMapMarkers();
+      }
+    });
+
+  }
+  resetMapMarkers() {
+    this.navbarService.buildingsService.getBuildings().subscribe(buildings => {
+      const buildingMarkers = buildings.map(b => ({
+        id: b.buildingId,
+        coordinate: { latitude: b.latitude, longitude: b.longitude },
+        icon: { url: '/building.png' },
+        type: 'building'
+      }));
+      this.navbarService.propertiesService.getProperties().subscribe(properties => {
+        const propertyMarkers = properties.map(p => ({
+          id: p.propertyId,
+          coordinate: { latitude: p.latitude, longitude: p.longitude },
+          icon: { url: '/property.png' },
+          type: 'property'
+        }));
+        this.markers.set([...buildingMarkers, ...propertyMarkers]);
+      });
+    });
+  }
   getMapConfig(): MapConfig {
     return this.mapConfig();
   }
@@ -89,7 +151,11 @@ export class HomePageComponent {
         ) {
           this.comparativeDrawerOpen.set(false);
           this.buildingMarkerQueried.set({ id: marker.id, coordinate: marker.coordinate, type: marker.type });
+          this.navbarService.propertyDetailsOpened.set(false);
+          this.navbarService.buildingDetailsOpened.set(true);
       }
+
+
   }
 
   onPropertyMarkerClick(marker: MapMarker): void {
@@ -98,8 +164,9 @@ export class HomePageComponent {
           this.propertyMarkerQueried()!.id !== marker.id
         ) {
           this.comparativeDrawerOpen.set(false);
-
           this.propertyMarkerQueried.set({ id: marker.id, coordinate: marker.coordinate, type: marker.type });
+          this.navbarService.buildingDetailsOpened.set(false);
+          this.navbarService.propertyDetailsOpened.set(true);
         }
   }
 
@@ -119,22 +186,30 @@ export class HomePageComponent {
     this.buildingProperties.set(properties);
   }
 
-  onMapClick(): void {
+  onMapClick({ coordinate }: MapClickEvent): void {
     if (this.buildingDetails() !== null || this.propertyDetails() !== null) {
       this.buildingMarkerQueried.set(null);
       this.buildingDetails.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
+      this.navbarService.buildingDetailsOpened.set(false);
+      this.navbarService.propertyDetailsOpened.set(false);
     }
-
-
+    this.navbarService.setSelectedLocationPoint(coordinate);
   }
+
+  onCenterChanged(coordinate: MapCoordinate): void {
+    this.navbarService.setMyLocation(coordinate) ;
+  }
+
   onCloseDetails(): void {
     if (this.buildingDetails() !== null || this.propertyDetails() !== null) {
       this.buildingMarkerQueried.set(null);
       this.buildingDetails.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
+      this.navbarService.buildingDetailsOpened.set(false);
+      this.navbarService.propertyDetailsOpened.set(false);
     }
 
     this.currentImageIndex.set(0);
@@ -244,4 +319,12 @@ export class HomePageComponent {
     this.comparativeList.set([]);
   }
 
+
+  filtersOpen = this.navbarService.filtersOpen;
+
+  toggleFilters(): void {
+    this.navbarService.toggleFilters();
+  }
+
+  isAuthenticated = computed(() => this.AuthService.status() === AuthStatus.AUTHENTICATED);
 }

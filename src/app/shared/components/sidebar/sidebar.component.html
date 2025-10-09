@@ -3,7 +3,7 @@
     class="sidenav"
     fixedInViewport
     [mode]="'over'"
-    [opened]="this.isOpen() && config().enabled"
+    [opened]="this.isOpen() && this.config().enabled"
     [style.width.px]="sidenavWidth()"
   >
     <mat-nav-list class="nav-list">
@@ -13,6 +13,7 @@
           class="side-item"
           [class.collapsed]="!this.isOpen()"
           (click)="navigate(item.route)"
+          (click)="onSidebarButtonClickCloseSidebar()"
         >
           <span>{{ item.label }}</span>
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
@@ -20,7 +21,6 @@
       </div>
       }
     </mat-nav-list>
-
     <div class="sidenav-footer">
       <mat-nav-list class="footer-nav-list">
         <mat-list-item class="side-item">
@@ -34,4 +34,5 @@
       </mat-nav-list>
     </div>
   </mat-sidenav>
-</mat-sidenav-container>
+  </mat-sidenav-container>
+  <ng-template #loading></ng-template>

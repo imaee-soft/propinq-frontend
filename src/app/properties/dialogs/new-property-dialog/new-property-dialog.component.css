@@ -1,7 +1,7 @@
 .form-container {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 0.95rem;
   padding: 1rem 1.25rem;
   box-sizing: border-box;
 }
@@ -10,10 +10,6 @@
   display: flex;
   flex-direction: row;
   gap: 2rem;
-}
-
-.almost-extended {
-  width: 95%;
 }
 
 .header-fields {

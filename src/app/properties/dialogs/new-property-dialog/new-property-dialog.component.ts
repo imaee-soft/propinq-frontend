@@ -1,12 +1,4 @@
-import {
-  AfterViewInit,
-  Component,
-  ElementRef,
-  Inject,
-  inject,
-  signal,
-  viewChild,
-} from '@angular/core';
+import { Component, Inject, inject, signal } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
@@ -26,8 +18,9 @@ interface PropertyFormData {
   price: number;
   bedrooms: number;
   bathrooms: number;
-  area: number;
   petsAllowed: boolean;
+  hasFurniture: boolean;
+  paysExpenses: boolean;
   description: string;
   images: File[] | null;
 }
@@ -50,21 +43,22 @@ const PROPERTY_CREATED = 'La propiedad fue creada con éxito!';
   templateUrl: './new-property-dialog.component.html',
   styleUrl: './new-property-dialog.component.css',
 })
-export class NewPropertyDialogComponent implements AfterViewInit {
+export class NewPropertyDialogComponent {
   private readonly _formBuilder = inject(FormBuilder);
   private readonly _propertiesService = inject(PropertiesService);
   private readonly _buildingsService = inject(BuildingsService);
   private readonly _notificationService = inject(NotificationService);
   private readonly _matDialogRef = inject(MatDialogRef);
 
-  private buildingNameField = viewChild<ElementRef>('buildingNameField');
-
+  buildingName = signal('');
+  isLoading = signal(false);
   form: ReturnType<FormBuilder['group']>;
 
   constructor(
     @Inject(MAT_DIALOG_DATA)
     public data: { buildingId: string; buildingName: string }
   ) {
+    this.buildingName.set(this.data.buildingName);
     this.form = this._formBuilder.group({
       number: this._formBuilder.control<string>('', {
         validators: [Validators.required],
@@ -89,8 +83,13 @@ export class NewPropertyDialogComponent implements AfterViewInit {
         Validators.required,
         Validators.min(1),
       ]),
-      area: this._formBuilder.control<number>(0, [Validators.min(0)]),
       petsAllowed: this._formBuilder.control<boolean>(true, [
+        Validators.required,
+      ]),
+      hasFurniture: this._formBuilder.control<boolean>(true, [
+        Validators.required,
+      ]),
+      paysExpenses: this._formBuilder.control<boolean>(true, [
         Validators.required,
       ]),
       description: this._formBuilder.control<string>(''),
@@ -103,18 +102,6 @@ export class NewPropertyDialogComponent implements AfterViewInit {
         ]
       ),
     });
-  }
-
-  isLoading = signal(false);
-
-  ngAfterViewInit() {
-    if (this.buildingNameField()) {
-      const input = this.buildingNameField()?.nativeElement;
-      if (input) {
-        input.value = this.data.buildingName;
-        input.focus();
-      }
-    }
   }
 
   handleImageUploaded(files: File[]) {
@@ -146,7 +133,8 @@ export class NewPropertyDialogComponent implements AfterViewInit {
       price,
       bedrooms,
       bathrooms,
-      area,
+      hasFurniture,
+      paysExpenses,
       petsAllowed,
       description,
     } = this.form.value as PropertyFormData;
@@ -158,8 +146,9 @@ export class NewPropertyDialogComponent implements AfterViewInit {
         price,
         bedrooms,
         bathrooms,
-        area: area || undefined,
         petsAllowed: petsAllowed || false,
+        hasFurniture: hasFurniture || false,
+        paysExpenses: paysExpenses || false,
         description: description || '',
         type: APARTAMENTO_TYPE,
         buildingId: this.data.buildingId,

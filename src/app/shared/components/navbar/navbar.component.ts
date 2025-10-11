@@ -49,24 +49,28 @@ export class NavbarComponent {
     this._sidebarService.toggle();
   }
 
-  handleLogin() {
-    this._navbarService.handleLogin();
+  handlePublish() {
+    if (!this.userLogged()) {
+      this._router.navigate(['/auth/login']);
+      return;
+    }
   }
 
-  handleNavItemClick(item: NavElement, event: Event) {
-    if (item.featured) {
-      event.preventDefault();
-      this._entityDialogService
-        .openNewEntityDialog(NewBuildingDialogComponent, {
-          panelClass: 'generic-dialog',
-          entity: 'building',
-        })
-        .subscribe();
-    }
+  publishBuilding() {
+    this._entityDialogService
+      .openNewEntityDialog(NewBuildingDialogComponent, {
+        panelClass: 'generic-dialog',
+        entity: 'building',
+      })
+      .subscribe();
   }
 
   handleMyAccount() {
     this._router.navigate(['/users/my-account']);
+  }
+
+  handleLogout() {
+    this._navbarService.handleLogout();
   }
 
   get username() {

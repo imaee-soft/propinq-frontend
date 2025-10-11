@@ -5,8 +5,9 @@ export interface CreatePropertyRequest {
   bathrooms: number;
   floor: number;
   petsAllowed: boolean;
+  hasFurniture: boolean;
+  paysExpenses: boolean;
   type: 'APARTAMENTO' | 'CASA';
-  area?: number;
   number?: string;
   address?: string;
   buildingId?: string;

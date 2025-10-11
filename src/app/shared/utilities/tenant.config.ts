@@ -1,10 +1,5 @@
 export const TENANT_NAVBAR_ITEMS = [
   {
-    name: 'Publicar',
-    url: '/publish',
-    featured: true,
-  },
-  {
     name: 'Favoritos',
     url: '/favorites',
   },

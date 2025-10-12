@@ -1,4 +1,11 @@
-import { Component, computed, inject, Signal, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  Signal,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,20 +19,21 @@ import {
 } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
-import { AuthService } from '../../auth/services/auth.service';
+import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { BuildingComponent } from '../../buildings/components/building/building.component';
 import { BuildingDetails } from '../../buildings/interfaces/building-details.interface';
 import { MapComponent } from '../../maps/components/map/map.component';
+import { MapClickEvent } from '../../maps/interfaces/click-event.interface';
 import { MapConfig } from '../../maps/interfaces/map-config.interface';
+import { MapCoordinate } from '../../maps/interfaces/map-coordinate.interface';
 import { MapMarker } from '../../maps/interfaces/map-marker.interface';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { PropertyComponent } from '../../properties/components/property.component';
 import { ComparePropertiesDialogComponent } from '../../properties/dialogs/compare-properties-dialog/compare-properties-dialog.component';
-import { NewPropertyDialogComponent } from '../../properties/dialogs/new-property-dialog/new-property-dialog.component';
 import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
-import { EntityDialogService } from '../../shared/services/entity-dialog.service';
+import { NavbarService } from '../../shared/services/navbar.service';
 import { CustomSnackbarService } from '../../shared/services/snackbar.service';
-
+import { AuthService } from './../../auth/services/auth.service';
 @Component({
   imports: [
     MapComponent,
@@ -38,8 +46,8 @@ import { CustomSnackbarService } from '../../shared/services/snackbar.service';
     MatExpansionModule,
     MatButtonModule,
     MatGridListModule,
-    MatTooltipModule,
     PropertyComponent,
+    MatTooltipModule,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -47,8 +55,9 @@ import { CustomSnackbarService } from '../../shared/services/snackbar.service';
 export class HomePageComponent {
   private router = inject(Router);
   private snackbar = inject(CustomSnackbarService);
-  private authService = inject(AuthService);
-  private _entityDialogService = inject(EntityDialogService);
+  private dialog = inject(MatDialog);
+  navbarService = inject(NavbarService);
+  private AuthService = inject(AuthService);
 
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: DEFAULT_CENTER,
@@ -61,18 +70,68 @@ export class HomePageComponent {
 
   buildingMarkerQueried = signal<MapMarker | null>(null);
   buildingDetails = signal<BuildingDetails | null>(null);
-
   propertyMarkerQueried = signal<MapMarker | null>(null);
   propertyDetails = signal<PropertyDetails | null>(null);
-
   buildingProperties = signal<PropertyDetails[] | null>(null);
 
-  isOwner = computed(
-    () => this.buildingDetails()?.userId === this.authService.user()?.userId
-  );
+  constructor() {
+    effect(() => {
+      if (
+        this.navbarService.filterNearMyLocation() ||
+        this.navbarService.filterNearPoint() ||
+        this.navbarService.filterNearPointOfInterest()
+      ) {
+        const buildings = this.navbarService.filteredBuildings().map((b) => ({
+          id: b.buildingId,
+          coordinate: { latitude: b.latitude, longitude: b.longitude },
+          icon: { url: '/building.png' },
+          type: 'building',
+        }));
 
-  private dialog = inject(MatDialog);
+        const properties = this.navbarService.filteredProperties().map((p) => ({
+          id: p.propertyId,
+          coordinate: { latitude: p.latitude, longitude: p.longitude },
+          icon: { url: '/property.png' },
+          type: 'property',
+        }));
 
+        this.markers.set([...buildings, ...properties]);
+      }
+    });
+
+    effect(() => {
+      if (
+        !this.navbarService.filterNearMyLocation() &&
+        !this.navbarService.filterNearPoint() &&
+        !this.navbarService.filterNearPointOfInterest()
+      ) {
+        this.resetMapMarkers();
+      }
+    });
+  }
+  resetMapMarkers() {
+    this.navbarService.buildingsService
+      .getBuildings()
+      .subscribe((buildings) => {
+        const buildingMarkers = buildings.map((b) => ({
+          id: b.buildingId,
+          coordinate: { latitude: b.latitude, longitude: b.longitude },
+          icon: { url: '/building.png' },
+          type: 'building',
+        }));
+        this.navbarService.propertiesService
+          .getProperties()
+          .subscribe((properties) => {
+            const propertyMarkers = properties.map((p) => ({
+              id: p.propertyId,
+              coordinate: { latitude: p.latitude, longitude: p.longitude },
+              icon: { url: '/property.png' },
+              type: 'property',
+            }));
+            this.markers.set([...buildingMarkers, ...propertyMarkers]);
+          });
+      });
+  }
   getMapConfig(): MapConfig {
     return this.mapConfig();
   }
@@ -100,6 +159,8 @@ export class HomePageComponent {
         coordinate: marker.coordinate,
         type: marker.type,
       });
+      this.navbarService.propertyDetailsOpened.set(false);
+      this.navbarService.buildingDetailsOpened.set(true);
     }
   }
 
@@ -109,12 +170,13 @@ export class HomePageComponent {
       this.propertyMarkerQueried()!.id !== marker.id
     ) {
       this.comparativeDrawerOpen.set(false);
-
       this.propertyMarkerQueried.set({
         id: marker.id,
         coordinate: marker.coordinate,
         type: marker.type,
       });
+      this.navbarService.buildingDetailsOpened.set(false);
+      this.navbarService.propertyDetailsOpened.set(true);
     }
   }
 
@@ -137,20 +199,30 @@ export class HomePageComponent {
     this.buildingProperties.set(properties);
   }
 
-  onMapClick(): void {
+  onMapClick({ coordinate }: MapClickEvent): void {
     if (this.buildingDetails() !== null || this.propertyDetails() !== null) {
       this.buildingMarkerQueried.set(null);
       this.buildingDetails.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
+      this.navbarService.buildingDetailsOpened.set(false);
+      this.navbarService.propertyDetailsOpened.set(false);
     }
+    this.navbarService.setSelectedLocationPoint(coordinate);
   }
+
+  onCenterChanged(coordinate: MapCoordinate): void {
+    this.navbarService.setMyLocation(coordinate);
+  }
+
   onCloseDetails(): void {
     if (this.buildingDetails() !== null || this.propertyDetails() !== null) {
       this.buildingMarkerQueried.set(null);
       this.buildingDetails.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
+      this.navbarService.buildingDetailsOpened.set(false);
+      this.navbarService.propertyDetailsOpened.set(false);
     }
 
     this.currentImageIndex.set(0);
@@ -269,16 +341,13 @@ export class HomePageComponent {
     this.comparativeList.set([]);
   }
 
-  openNewPropertyDialog() {
-    this._entityDialogService
-      .openNewEntityDialog(NewPropertyDialogComponent, {
-        panelClass: 'generic-dialog',
-        entity: 'property',
-        data: {
-          buildingId: this.buildingDetails()?.buildingId ?? '',
-          buildingName: this.buildingDetails()?.name ?? '',
-        },
-      })
-      .subscribe();
+  filtersOpen = this.navbarService.filtersOpen;
+
+  toggleFilters(): void {
+    this.navbarService.toggleFilters();
   }
+
+  isAuthenticated = computed(
+    () => this.AuthService.status() === AuthStatus.AUTHENTICATED
+  );
 }

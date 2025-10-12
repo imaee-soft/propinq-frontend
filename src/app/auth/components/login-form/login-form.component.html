@@ -11,8 +11,8 @@
         <input matInput type="email" formControlName="email" required autocomplete="email">
         @if(email?.invalid && email?.touched) {
           <mat-error>
-            <span>El email es requerido</span>
-            <span>Ingrese un email válido</span>
+            <span>El email es requerido, </span>
+            <span>ingrese un email válido</span>
           </mat-error>
         }
       </mat-form-field>

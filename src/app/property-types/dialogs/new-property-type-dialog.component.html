@@ -1,0 +1,41 @@
+<div class="form-container">
+      <h2 mat-dialog-title>{{ data.isEditing ? 'Editar tipo de vivienda' : 'Nuevo tipo de vivienda' }}</h2>
+
+      <mat-dialog-content>
+        <form [formGroup]="propertyTypeForm" class="form-container">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="property-type-option-content">
+              <mat-label>Nombre</mat-label>
+              <input matInput
+              formControlName="name"
+              placeholder="Ej: Simplex, Duplex, Familiar">
+              @if (propertyTypeForm.get('name')?.invalid && propertyTypeForm.get('name')?.touched) {
+                <mat-error>El nombre es requerido</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="property-type-option-content">
+              <mat-label>Descripción</mat-label>
+              <input matInput
+              formControlName="description"
+              placeholder="Descripción del tipo de vivienda">
+              @if (propertyTypeForm.get('description')?.invalid && propertyTypeForm.get('description')?.touched) {
+                <mat-error>La descripción es requerida</mat-error>
+              }
+            </mat-form-field>
+
+          </div>
+        </form>
+      </mat-dialog-content>
+
+      <mat-dialog-actions align="end">
+        <button mat-button (click)="onCancel()" class="cancel-btn">Cancelar</button>
+        <button mat-raised-button
+                color="primary"
+                (click)="onSave()"
+                [disabled]="propertyTypeForm.invalid"
+                class="save-btn">
+          {{ data.isEditing ? 'Guardar' : 'Guardar' }}
+        </button>
+      </mat-dialog-actions>
+    </div>

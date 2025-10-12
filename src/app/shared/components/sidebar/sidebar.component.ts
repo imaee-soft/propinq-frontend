@@ -35,7 +35,7 @@ export class SidebarComponent {
   private _sidebarService = inject(SidebarService);
   private _authService = inject(AuthService);
 
-  config = input<SideConfig>(this._sidebarService.config());
+  config = computed(() => this._sidebarService.config());
 
   isOpen = computed(
     () =>
@@ -43,6 +43,7 @@ export class SidebarComponent {
       this._authService.status() === AuthStatus.AUTHENTICATED
   );
   sidenavWidth = computed(() => (this._sidebarService.isOpen() ? 320 : 0));
+  isDashboardPage = computed(() => this._sidebarService.isDashboardPage());
 
   navigate(route: string) {
     this._router.navigateByUrl(route);
@@ -51,4 +52,9 @@ export class SidebarComponent {
   logout() {
     this._authService.logout();
   }
+
+  onSidebarButtonClickCloseSidebar() {
+    this._sidebarService.toggle();
+  }
+
 }

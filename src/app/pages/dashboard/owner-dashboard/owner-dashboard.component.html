@@ -1,0 +1,58 @@
+<section class="dashboard-root">
+  <main class="dashboard-main">
+    <section class="dashboard-content">
+      <div class="dashboard-cards">
+        <mat-card class="dashboard-card" appearance="outlined" routerLink="/properties">
+          <div class="card-image">
+            <img src="dashboard/properties.svg" alt="Mis propiedades" />
+          </div>
+          <div class="card-title">Mis viviendas</div>
+        </mat-card>
+        <mat-card class="dashboard-card" appearance="outlined" routerLink="/buildings">
+          <div class="card-image">
+            <img src="dashboard/buildings.svg" alt="Mis inmuebles" />
+          </div>
+          <div class="card-title">Mis inmuebles</div>
+        </mat-card>
+        <mat-card class="dashboard-card" appearance="outlined" routerLink="/rentals">
+          <div class="card-image">
+            <img src="dashboard/rented.svg" alt="Mis alquileres" />
+          </div>
+          <div class="card-title">Mis alquileres</div>
+        </mat-card>
+        <mat-card class="dashboard-card" appearance="outlined" routerLink="/contact-requests">
+          <div class="card-image">
+            <img src="dashboard/contact-requests.svg" alt="Solicitudes de contacto" />
+          </div>
+          <div class="card-title">Solicitudes de contacto</div>
+        </mat-card>
+        <mat-card class="dashboard-card" appearance="outlined" routerLink="/contacts">
+          <div class="card-image">
+            <img src="dashboard/contact.svg" alt="Mis contactos" />
+          </div>
+          <div class="card-title">Mis contactos</div>
+        </mat-card>
+        <mat-card class="dashboard-card" appearance="outlined" routerLink="/documentation">
+          <div class="card-image">
+            <img src="dashboard/documentation.svg" alt="Mis documentos" />
+          </div>
+          <div class="card-title">Mis documentos</div>
+        </mat-card>
+      </div>
+      <aside class="dashboard-metrics mat-elevation-z2">
+        <h3>Reportes y estadísticas</h3>
+        <div class="charts">
+          <div class="circle-placeholder"></div>
+          <div class="bars-placeholder">
+            <div class="bar bar1"></div>
+            <div class="bar bar2"></div>
+            <div class="bar bar3"></div>
+            <div class="bar bar4"></div>
+          </div>
+        </div>
+        <p><strong>+115 visualizaciones</strong> en tus propiedades!</p>
+        <a routerLink="/reports" class="reports-link">Ver más ➜</a>
+      </aside>
+    </section>
+  </main>
+</section>

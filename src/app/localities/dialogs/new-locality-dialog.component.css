@@ -1,0 +1,78 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  padding: 1rem 1.25rem;
+  box-sizing: border-box;
+}
+
+.form-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.form-row {
+  flex: 1 1 4%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.header-fields {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: center;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+input.mat-input-element,
+textarea.mat-input-element {
+  font-size: 0.95rem;
+  padding: 0.3rem 0.5rem;
+  color: #e2e8f0;
+}
+
+mat-label {
+  font-weight: 400;
+  font-size: 1rem;
+  color: #cbd5e1;
+}
+
+::ng-deep .province-options {
+  background: #1c2230 !important;
+  border: 1px solid #4b5563 !important;
+  border-radius: 8px !important;
+  box-shadow: 0 8px 24px rgba(15, 17, 26, 0.4) !important;
+  margin-top: 10px !important;
+}
+
+::ng-deep .province-options .mat-option:hover {
+  background: #374151 !important;
+  color: #f9fafb !important;
+}
+
+.locality-option-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes fadeInError {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

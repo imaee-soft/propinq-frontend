@@ -3,7 +3,9 @@
     <app-map
       [config]="getMapConfig()"
       (markerClick)="onMarkerClick($event)"
-      (mapClick)="onMapClick()"
+      (mapClick)="onMapClick($event)"
+      (centerChanged)="onCenterChanged($event)"
+      [coordinateToGo]="coordinateToGo()"
     />
 
     <app-building-component
@@ -269,60 +271,62 @@
       </div>
     </div>
   </div>
-</div>
-} @if (buildingDetails() == null && comparativeDrawerOpen() == false) {
-<button
-  mat-fab
-  color="primary"
-  class="comparative-fab"
-  aria-label="Comparar propiedades"
-  (click)="openComparativeDrawer()"
->
-  <mat-icon>balance</mat-icon>
-</button>
-} @if (comparativeDrawerOpen()) {
-<div class="comparative-drawer">
-  <div class="comparative-header">
-    <span>Propiedades a comparar</span>
-    <button mat-icon-button (click)="closeComparativeDrawer()">
-      <mat-icon>close</mat-icon>
-    </button>
-  </div>
-  <div class="comparative-list">
-    @if (comparativeList().length > 0) { @for (property of comparativeList();
-    let i = $index; track i) {
-    <div class="comparative-item">
-      <img
-        [src]="
-          property.imagesURL[0] || 'https://placehold.co/100x80?text=Propiedad'
-        "
-      />
-      <span>{{ property.title || "Propiedad" }}</span>
-      <button mat-icon-button color="warn" (click)="removeFromComparative(i)">
+  @if (buildingDetails() == null && !comparativeDrawerOpen() &&
+  isAuthenticated()) {
+  <button
+    mat-fab
+    color="accent"
+    class="filters-fab"
+    [class.filters-fab-active]="filtersOpen()"
+    aria-label="Filtros de búsqueda"
+    (click)="toggleFilters()"
+    matTooltip="{{ filtersOpen() ? 'Ocultar filtros' : 'Mostrar filtros' }}"
+    matTooltipPosition="above"
+  >
+    <mat-icon>{{ filtersOpen() ? "search_off" : "search" }}</mat-icon>
+  </button>
+  } @if (buildingDetails() == null && !comparativeDrawerOpen() &&
+  isAuthenticated()) {
+  <button
+    mat-fab
+    color="primary"
+    class="comparative-fab"
+    aria-label="Comparar propiedades"
+    (click)="openComparativeDrawer()"
+    matTooltip="Comparar propiedades"
+    matTooltipPosition="above"
+  >
+    <mat-icon>balance</mat-icon>
+  </button>
+  }@if (comparativeDrawerOpen()) {
+  <div class="comparative-drawer">
+    <div class="comparative-header">
+      <span>Propiedades a comparar</span>
+      <button mat-icon-button (click)="closeComparativeDrawer()">
         <mat-icon>close</mat-icon>
       </button>
     </div>
-    } } @else {
-    <div class="comparative-empty">No hay propiedades para comparar</div>
-    }
   </div>
-  <div class="comparative-actions">
-    <button
-      mat-stroked-button
-      color="accent"
-      [disabled]="comparativeList().length < 2"
-      (click)="openComparisonDialog()"
-    >
-      Comparar
-    </button>
-    <button
-      mat-stroked-button
-      color="warn"
-      (click)="clearComparativeList()"
-      [disabled]="comparativeList().length === 0"
-    >
-      Limpiar
-    </button>
-  </div>
+  } @else {
+  <div class="comparative-empty">No hay propiedades para comparar</div>
+  }
+</div>
+<div class="comparative-actions">
+  <button
+    mat-stroked-button
+    color="accent"
+    [disabled]="comparativeList().length < 2"
+    (click)="openComparisonDialog()"
+  >
+    Comparar
+  </button>
+  <button
+    mat-stroked-button
+    color="warn"
+    (click)="clearComparativeList()"
+    [disabled]="comparativeList().length === 0"
+  >
+    Limpiar
+  </button>
 </div>
 }

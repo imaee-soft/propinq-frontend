@@ -12,6 +12,10 @@ body {
   min-height: 100vh;
 }
 
+mat-menu {
+  border: none;
+}
+
 .cdk-overlay-connected-position-bounding-box {
   z-index: 2103 !important;
 }
@@ -22,7 +26,6 @@ body {
 .cdk-overlay-pane {
   z-index: 2101 !important;
 }
-
 
 mat-dialog-content {
   scrollbar-width: thin;
@@ -67,18 +70,12 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   }
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
-
-
-
-
 .mat-mdc-select-panel {
   z-index: 2102 !important;
   background: #1a1e2b !important;
-  border: 1px solid rgba(0,0,0,0.15) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
   border-radius: 6px !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
   min-width: 120px !important;
   max-height: 300px !important;
   overflow-y: auto !important;
@@ -94,13 +91,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .mat-mdc-option:hover {
-  background: rgba(103,58,183,0.1) !important;
+  background: rgba(103, 58, 183, 0.1) !important;
 }
 
 .mat-mdc-option.mdc-list-item--selected {
-  background: rgba(103,58,183,0.15) !important;
+  background: rgba(103, 58, 183, 0.15) !important;
   color: #673ab7 !important;
   font-weight: 600 !important;
 }
-
-

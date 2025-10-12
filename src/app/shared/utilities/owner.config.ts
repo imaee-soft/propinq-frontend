@@ -1,10 +1,5 @@
 export const OWNER_NAVBAR_ITEMS = [
   {
-    name: 'Publicar',
-    url: '/publish',
-    featured: true,
-  },
-  {
     name: 'Alquileres',
     url: '/my-rentals',
   },

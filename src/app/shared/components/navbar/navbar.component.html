@@ -21,9 +21,27 @@
 
   <div class="nav-center">
     <div class="nav-actions">
+      <a
+        class="nav-action-link nav-action-featured"
+        (click)="handlePublish()"
+        [matMenuTriggerFor]="publishMenu"
+      >
+        Publicar
+      </a>
+      <mat-menu #publishMenu="matMenu">
+        <div class="menu-content">
+          <button mat-menu-item (click)="publishBuilding()">
+            <mat-icon>apartment</mat-icon>
+            <span>Nuevo inmueble</span>
+          </button>
+          <button mat-menu-item>
+            <mat-icon>home</mat-icon>
+            <span>Nueva vivienda</span>
+          </button>
+        </div>
+      </mat-menu>
       @for (item of items(); track $index) {
       <a
-        (click)="handleNavItemClick(item, $event)"
         [routerLink]="item.url"
         class="nav-action-link"
         [ngClass]="{ 'nav-action-featured': item.featured }"
@@ -52,19 +70,18 @@
       mat-icon-button
       matTooltip="Mi cuenta"
       matTooltipPosition="below"
-      class="user-menu-trigger"
+      class="menu-trigger"
       [matMenuTriggerFor]="userMenu"
     >
       <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #userMenu="matMenu">
-      <div class="user-menu-content">
+      <div class="menu-content">
         <button mat-menu-item (click)="handleMyAccount()">
           <mat-icon>account_circle</mat-icon>
           <span>{{ username }}</span>
         </button>
-        <mat-divider></mat-divider>
-        <button (click)="handleLogin()" mat-menu-item>
+        <button mat-menu-item (click)="handleLogout()">
           <mat-icon>logout</mat-icon>
           <span>Cerrar sesión</span>
         </button>
@@ -72,17 +89,7 @@
     </mat-menu>
     } @else {
     <a routerLink="/auth/signup" class="nav-action-link">Creá tu cuenta</a>
-    <a routerLink="/auth/login" class="nav-action-link"
-      >Ingresá</a
-    >
+    <a routerLink="/auth/login" class="nav-action-link">Ingresá</a>
     }
   </div>
 </mat-toolbar>
-
-
-@if(showFilters() && isHomePage() && !sidebarOpened() && !propertyDetailsOpened() && !buildingDetailsOpened()) {
-  <div class="navbar-filters">
-    <app-navbar-filters></app-navbar-filters>
-  </div>
-}
-

@@ -1,12 +1,18 @@
-import { Component, OnDestroy, OnInit, Signal, computed, signal } from '@angular/core';
+import { Component, computed, OnDestroy, OnInit, signal } from '@angular/core';
+import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
+import { filter, Subscription } from 'rxjs';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
-import { Router, NavigationEnd, RouterOutlet } from '@angular/router';
-import { filter, Subscription } from 'rxjs';
+import { QueryParamsService } from '../../shared/services/query-params.service';
+
+const SIGNUP_PATH = '/signup';
+const LOGIN_PATH = '/login';
+const VERIFY_EMAIL_PATH = '/auth/verify-email';
+const ACTIVATE_PATH_PREFIX = '/auth/activate';
 
 @Component({
   selector: 'app-layout',
-  imports: [ NavbarComponent, SidebarComponent, RouterOutlet],
+  imports: [NavbarComponent, SidebarComponent, RouterOutlet],
   templateUrl: 'app-layout.component.html',
   styleUrl: 'app-layout.component.css',
 })
@@ -14,24 +20,39 @@ export class LayoutComponent implements OnInit, OnDestroy {
   actualPath = signal('');
   private routerSub!: Subscription;
 
-  constructor(private router: Router) {}
+  constructor(
+    private router: Router,
+    private queryParamsService: QueryParamsService
+  ) {}
 
   ngOnInit() {
     this.routerSub = this.router.events
-      .pipe(filter(event => event instanceof NavigationEnd))
+      .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event: any) => {
         this.actualPath.set(event.urlAfterRedirects);
       });
     this.actualPath.set(this.router.url);
+    this.queryParamsService.clearQueryParams();
   }
 
   ngOnDestroy() {
     this.routerSub.unsubscribe();
   }
 
-  authLayout = computed(() => this.isSignup() || this.isLogin() || this.isVerifyEmail() || this.isActivate())
-
-  appLayout = computed(() => !this.isSignup() && !this.isLogin() && !this.isVerifyEmail() && !this.isActivate());
+  authLayout = computed(
+    () =>
+      this.isSignup() ||
+      this.isLogin() ||
+      this.isVerifyEmail() ||
+      this.isActivate()
+  );
+  appLayout = computed(
+    () =>
+      !this.isSignup() &&
+      !this.isLogin() &&
+      !this.isVerifyEmail() &&
+      !this.isActivate()
+  );
 
   readonly SIGNUP_PATH = '/signup';
   readonly LOGIN_PATH = '/login';
@@ -39,18 +60,18 @@ export class LayoutComponent implements OnInit, OnDestroy {
   readonly ACTIVATE_PATH_PREFIX = '/auth/activate';
 
   isSignup(): boolean {
-    return this.actualPath() === this.SIGNUP_PATH;
+    return this.actualPath() === SIGNUP_PATH;
   }
 
   isLogin(): boolean {
-    return this.actualPath() === this.LOGIN_PATH;
+    return this.actualPath() === LOGIN_PATH;
   }
 
   isVerifyEmail(): boolean {
-    return this.actualPath() === this.VERIFY_EMAIL_PATH;
+    return this.actualPath() === VERIFY_EMAIL_PATH;
   }
 
   isActivate(): boolean {
-    return this.actualPath().startsWith(this.ACTIVATE_PATH_PREFIX);
+    return this.actualPath().startsWith(ACTIVATE_PATH_PREFIX);
   }
 }

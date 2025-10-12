@@ -4,9 +4,9 @@
   --filters-label-color: #000000;
   --filters-accent: #673ab7;
   --filters-accent-hover: #5e35b1;
-  --filters-outline: rgba(255,255,255,0.22);
-  --filters-outline-hover: rgba(255,255,255,0.38);
-  --filters-divider-color: rgba(255,255,255,0.28);
+  --filters-outline: rgba(255, 255, 255, 0.22);
+  --filters-outline-hover: rgba(255, 255, 255, 0.38);
+  --filters-divider-color: rgba(255, 255, 255, 0.28);
   --filters-bg-gradient: linear-gradient(to right, #1a1e2b, #232a3b);
 
   --chip-border: rgba(160, 160, 160, 0.783);
@@ -24,9 +24,9 @@
 .mat-mdc-select-panel {
   z-index: 2002 !important;
   background: #ffffff !important;
-  border: 1px solid rgba(0,0,0,0.15) !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
   border-radius: 6px !important;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2) !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2) !important;
   min-width: 120px !important;
   max-height: 300px !important;
   overflow-y: auto !important;
@@ -42,17 +42,17 @@
 }
 
 .mat-mdc-option:hover {
-  background: rgba(103,58,183,0.1) !important;
+  background: rgba(103, 58, 183, 0.1) !important;
 }
 
 .mat-mdc-option.mdc-list-item--selected {
-  background: rgba(103,58,183,0.15) !important;
+  background: rgba(103, 58, 183, 0.15) !important;
   color: var(--filters-accent) !important;
   font-weight: 600 !important;
 }
 
 .cdk-overlay-backdrop {
-  background: rgba(0,0,0,0.1) !important;
+  background: rgba(0, 0, 0, 0.1) !important;
 }
 
 .filters-navbar {
@@ -62,7 +62,7 @@
   right: 0;
   z-index: 1090;
   background: linear-gradient(to right, #1a1e2b, #232a3b);
-  border-bottom: 1px solid rgba(255,255,255,0.15);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
   display: flex;
   justify-content: center;
   font-family: "Montserrat", sans-serif;
@@ -211,7 +211,7 @@
 .slider-label,
 .slider-value {
   font-size: 10px;
-  color: rgba(255,255,255,0.9);
+  color: rgba(255, 255, 255, 0.9);
   font-weight: 600;
   flex-shrink: 0;
 }
@@ -241,8 +241,8 @@
 }
 
 .chip-btn {
-  background: rgba(255,255,255,0.15);
-  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.15);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   color: var(--filters-label-color);
   height: 30px;
   padding: 0 10px;
@@ -252,7 +252,7 @@
   gap: 3px;
   border-radius: 4px;
   line-height: 1;
-  letter-spacing: .1px;
+  letter-spacing: 0.1px;
   box-shadow: none;
   cursor: pointer;
   min-width: 0;
@@ -263,16 +263,16 @@
 }
 
 .chip-btn:hover {
-  background: rgba(255,255,255,0.22);
-  border-color: rgba(255,255,255,0.4);
+  background: rgba(255, 255, 255, 0.22);
+  border-color: rgba(255, 255, 255, 0.4);
   transform: translateY(-1px);
 }
 
 .chip-btn.selected {
-  background: rgba(103,58,183,0.25);
+  background: rgba(103, 58, 183, 0.25);
   border-color: var(--filters-accent);
   color: #ffd5ec;
-  box-shadow: 0 0 0 2px rgba(103,58,183,0.4);
+  box-shadow: 0 0 0 2px rgba(103, 58, 183, 0.4);
 }
 
 .chip-slider {
@@ -289,7 +289,7 @@
   padding: 0;
   --mdc-slider-handle-color: var(--filters-accent);
   --mdc-slider-active-track-color: var(--filters-accent);
-  --mdc-slider-inactive-track-color: rgba(103,58,183,0.4);
+  --mdc-slider-inactive-track-color: rgba(103, 58, 183, 0.4);
   --mdc-slider-hover-handle-color: var(--filters-accent-hover);
   --mdc-slider-focus-handle-color: var(--filters-accent-hover);
   --mdc-slider-handle-width: 16px;
@@ -300,7 +300,7 @@
   --mdc-checkbox-selected-icon-color: var(--filters-accent);
   --mdc-checkbox-selected-hover-icon-color: var(--filters-accent-hover);
   --mdc-checkbox-selected-focus-icon-color: var(--filters-accent-hover);
-  --mdc-checkbox-unselected-icon-color: rgba(255,255,255,0.75);
+  --mdc-checkbox-unselected-icon-color: rgba(255, 255, 255, 0.75);
   font-size: 11px;
   line-height: 1;
   display: inline-flex;
@@ -358,7 +358,7 @@
   padding: 0 8px !important;
   display: flex !important;
   align-items: center !important;
-  background: rgba(255,255,255,0.08) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
   border-radius: 5px !important;
   box-sizing: border-box !important;
   overflow: visible !important;
@@ -398,7 +398,7 @@
 .filter-chip .dense .mdc-notched-outline__leading,
 .filter-chip .dense .mdc-notched-outline__notch,
 .filter-chip .dense .mdc-notched-outline__trailing {
-  border-color: rgba(255,255,255,0.25) !important;
+  border-color: rgba(255, 255, 255, 0.25) !important;
   box-sizing: border-box !important;
   height: 32px !important;
   line-height: 32px !important;
@@ -407,12 +407,18 @@
 .filter-chip .dense.mat-mdc-form-field:hover .mdc-notched-outline__leading,
 .filter-chip .dense.mat-mdc-form-field:hover .mdc-notched-outline__notch,
 .filter-chip .dense.mat-mdc-form-field:hover .mdc-notched-outline__trailing {
-  border-color: rgba(255,255,255,0.4) !important;
+  border-color: rgba(255, 255, 255, 0.4) !important;
 }
 
-.filter-chip .dense.mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__leading,
-.filter-chip .dense.mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__notch,
-.filter-chip .dense.mat-mdc-form-field.mdc-text-field--focused .mdc-notched-outline__trailing {
+.filter-chip
+  .dense.mat-mdc-form-field.mdc-text-field--focused
+  .mdc-notched-outline__leading,
+.filter-chip
+  .dense.mat-mdc-form-field.mdc-text-field--focused
+  .mdc-notched-outline__notch,
+.filter-chip
+  .dense.mat-mdc-form-field.mdc-text-field--focused
+  .mdc-notched-outline__trailing {
   border-color: var(--filters-accent) !important;
   border-width: 2px !important;
 }
@@ -502,7 +508,6 @@
   flex-shrink: 0 !important;
 }
 
-
 .clear-btn {
   background: var(--filters-accent);
   color: #fff;
@@ -510,9 +515,9 @@
   font-size: 12px;
   font-weight: 700;
   border-radius: 6px;
-  letter-spacing: .25px;
+  letter-spacing: 0.25px;
   padding: 0 14px;
-  box-shadow: 0 0 0 1px rgba(103,58,183,0.3);
+  box-shadow: 0 0 0 1px rgba(103, 58, 183, 0.3);
   display: inline-flex;
   align-items: center;
   gap: 5px;
@@ -525,18 +530,23 @@
 
 .clear-btn:hover {
   background: var(--filters-accent-hover);
-  box-shadow: 0 0 0 2px rgba(103,58,183,0.4);
+  box-shadow: 0 0 0 2px rgba(103, 58, 183, 0.4);
   transform: translateY(-1px);
 }
 
-
 @media (max-width: 1400px) {
-  .chip-location { min-width: 330px; }
-  .chip-features { min-width: 470px; }
+  .chip-location {
+    min-width: 330px;
+  }
+  .chip-features {
+    min-width: 470px;
+  }
 }
 
 @media (max-width: 1200px) {
-  .chip-location { min-width: 300px; }
+  .chip-location {
+    min-width: 300px;
+  }
   .chip-features {
     min-width: 420px;
   }
@@ -597,13 +607,17 @@
 }
 
 .filter-chip::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, rgba(255,255,255,0.08) 0%, transparent 60%);
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.08) 0%,
+    transparent 60%
+  );
   border-radius: 8px;
   pointer-events: none;
   opacity: 0;
@@ -616,7 +630,7 @@
 
 .filter-chip:focus-within {
   border-color: var(--filters-accent);
-  box-shadow: 0 0 0 1px rgba(103,58,183,0.25);
+  box-shadow: 0 0 0 1px rgba(103, 58, 183, 0.25);
 }
 
 .chip-input.mini {
@@ -627,7 +641,7 @@
   padding: 1px 6px !important;
   border-radius: 5px !important;
   border: 1px solid #bdbdbd !important;
-  background: rgba(255,255,255,0.08) !important;
+  background: rgba(255, 255, 255, 0.08) !important;
   color: var(--filters-label-color) !important;
   font-weight: 500 !important;
   box-sizing: border-box !important;

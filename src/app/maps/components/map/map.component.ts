@@ -13,6 +13,7 @@ import {
   viewChild,
 } from '@angular/core';
 import { Feature } from 'ol';
+import { FeatureLike } from 'ol/Feature';
 import OlMap from 'ol/Map';
 import View from 'ol/View';
 import { Point } from 'ol/geom';
@@ -22,10 +23,15 @@ import { fromLonLat } from 'ol/proj';
 import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { Icon, Style } from 'ol/style';
+import { debounceTime, EMPTY, Subject, switchMap, takeUntil } from 'rxjs';
+import { FiltersService } from '../../../shared/services/filters.service';
+import { CustomSnackbarService } from '../../../shared/services/snackbar.service';
 import { MapClickEvent } from '../../interfaces/click-event.interface';
 import { MapConfig } from '../../interfaces/map-config.interface';
 import { MapCoordinate } from '../../interfaces/map-coordinate.interface';
 import { MapMarker } from '../../interfaces/map-marker.interface';
+import { PoiViewportResponse } from '../../interfaces/poi-viewport-response.interface';
+import { PoiService } from '../../services/poi.service';
 import {
   DEFAULT_CENTER,
   DEFAULT_MAP_CONFIG,
@@ -33,20 +39,12 @@ import {
   MIN_POI_ZOOM,
   transformFromMap,
 } from '../../utils/constants';
-import { debounceTime, EMPTY, Subject, switchMap, takeUntil } from 'rxjs';
-import { PoiService } from '../../services/poi.service';
-import { PoiViewportResponse } from '../../interfaces/poi-viewport-response.interface';
-import { CustomSnackbarService } from '../../../shared/services/snackbar.service';
-import { FeatureLike } from 'ol/Feature';
-import { NavbarService } from '../../../shared/services/navbar.service';
 
 @Component({
   selector: 'app-map',
   templateUrl: 'map.component.html',
 })
 export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
-  private snackbarService = inject(CustomSnackbarService);
-  private navbarService = inject(NavbarService);
   mapElement = viewChild<ElementRef>('mapElement');
 
   config = input<MapConfig>({});
@@ -59,6 +57,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   centerChanged = output<MapCoordinate>();
   coordinateToGo = input<MapCoordinate | null>(null);
 
+  private _snackbarService = inject(CustomSnackbarService);
+  private _filtersService = inject(FiltersService);
   private _mapInstance = signal<OlMap | null>(null);
   private _isMapInitialized = signal<boolean>(false);
   private _mapConfig = computed(() => {
@@ -80,7 +80,6 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     source: this._poiSource,
   });
   private _poiStyleCache = new Map<string, Style>();
-
 
   private poiService = inject(PoiService);
 
@@ -116,11 +115,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     effect(() => {
-    const coord = this.coordinateToGo();
-    if (coord && this._isMapInitialized()) {
-      this.goToCoordinate(coord);
-    }
-  });
+      const coord = this.coordinateToGo();
+      if (coord && this._isMapInitialized()) {
+        this.goToCoordinate(coord);
+      }
+    });
   }
 
   private initializeMap(): void {
@@ -185,8 +184,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
         const lonLat = transformFromMap(center);
         this.centerChanged.emit(lonLat);
       }
-      this.navbarService.setViewportFromMap(map);
-
+      this._filtersService.setViewportFromMap(map);
     });
   }
 
@@ -210,10 +208,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
           });
         }),
         takeUntil(this._destroy$)
-     )
+      )
       .subscribe({
         next: (result) => this.renderPoiMarkers(result.items),
-        error: () => this.snackbarService.error('Error cargando POIs'),
+        error: () => this._snackbarService.error('Error cargando POIs'),
       });
   }
 
@@ -268,7 +266,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     coordinate,
     title,
     icon,
-    type
+    type,
   }: MapMarker): Feature {
     const feature = new Feature({
       geometry: new Point(
@@ -292,10 +290,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
     return feature;
   }
 
-     private getPoiStyle(type?: string | null): Style {
-      const key = String(type ?? 'property');
-      const cached = this._poiStyleCache.get(key);
-      if (cached) return cached;
+  private getPoiStyle(type?: string | null): Style {
+    const key = String(type ?? 'property');
+    const cached = this._poiStyleCache.get(key);
+    if (cached) return cached;
 
     const style = new Style({
       image: new Icon({
@@ -313,7 +311,8 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
 
   private poiStyleForFeature = (feature: FeatureLike): Style => {
     const marker = feature.get('marker');
-    const type: string | null | undefined = marker?.type ?? feature.get('poiType');
+    const type: string | null | undefined =
+      marker?.type ?? feature.get('poiType');
     return this.getPoiStyle(type ?? null);
   };
 }

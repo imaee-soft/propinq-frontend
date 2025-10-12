@@ -76,7 +76,6 @@ export class FiltersService {
     loader: (request) => {
       if (
         this.filterNearMyLocation() === false &&
-        this.filterNearPoint() === false &&
         this.filterNearPointOfInterest() === false
       ) {
         return of([]);
@@ -218,14 +217,6 @@ export class FiltersService {
     });
   }
 
-  isLocationPointSelected = computed(() => {
-    return (
-      this._coordinate().latitude !== 0 &&
-      this._coordinate().longitude !== 0 &&
-      this.filterNearPoint() === true
-    );
-  });
-
   constructor() {
     effect(() => {
       const provincesData = this.provincesResource.value();
@@ -283,21 +274,6 @@ export class FiltersService {
 
   setMyLocation(coordinate: MapCoordinate) {
     if (this.filterNearMyLocation() === true) {
-      this._coordinate.set(coordinate);
-    }
-  }
-
-  onSelectPoint() {
-    if (this.filterNearPoint() === false) {
-      this.filterNearPoint.set(true);
-      this.filterNearMyLocation.set(false);
-      this.filterNearPointOfInterest.set(false);
-    } else {
-      this.filterNearPoint.set(false);
-    }
-  }
-  setSelectedLocationPoint(coordinate: MapCoordinate) {
-    if (this.filterNearPoint() === true) {
       this._coordinate.set(coordinate);
     }
   }

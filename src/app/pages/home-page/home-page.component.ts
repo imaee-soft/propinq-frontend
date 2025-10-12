@@ -181,8 +181,6 @@ export class HomePageComponent {
         coordinate: marker.coordinate,
         type: marker.type,
       });
-      // this.navbarService.propertyDetailsOpened.set(false);
-      // this.navbarService.buildingDetailsOpened.set(true);
     }
   }
 
@@ -197,8 +195,6 @@ export class HomePageComponent {
         coordinate: marker.coordinate,
         type: marker.type,
       });
-      // this.navbarService.buildingDetailsOpened.set(false);
-      // this.navbarService.propertyDetailsOpened.set(true);
     }
   }
 
@@ -227,14 +223,11 @@ export class HomePageComponent {
       this.buildingDetails.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
-      // this.navbarService.buildingDetailsOpened.set(false);
-      // this.navbarService.propertyDetailsOpened.set(false);
     }
-    // this.navbarService.setSelectedLocationPoint(coordinate);
   }
 
   onCenterChanged(coordinate: MapCoordinate): void {
-    // this.navbarService.setMyLocation(coordinate);
+    this._filtersService.setMyLocation(coordinate);
   }
 
   onCloseDetails(): void {
@@ -243,8 +236,6 @@ export class HomePageComponent {
       this.buildingDetails.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
-      // this.navbarService.buildingDetailsOpened.set(false);
-      // this.navbarService.propertyDetailsOpened.set(false);
     }
 
     this.currentImageIndex.set(0);
@@ -321,14 +312,17 @@ export class HomePageComponent {
     this.propertyMarkerQueried.set(null);
     this.comparativeDrawerOpen.set(true);
   }
+
   closeComparativeDrawer() {
     this.comparativeDrawerOpen.set(false);
   }
+
   removeFromComparative(index: number) {
     const arr = [...this.comparativeList()];
     arr.splice(index, 1);
     this.comparativeList.set(arr);
   }
+
   clearComparativeList() {
     this.comparativeList.set([]);
   }
@@ -376,5 +370,7 @@ export class HomePageComponent {
     this.comparativeList.set([]);
   }
 
-  toggleFilters(): void {}
+  toggleFilters(): void {
+    this.showFilters.set(!this.showFilters());
+  }
 }

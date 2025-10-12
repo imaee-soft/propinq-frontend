@@ -1,12 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  input,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, input, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -79,16 +72,6 @@ export class NavbarComponent {
     ),
     { initialValue: this._router.url }
   );
-
-  constructor() {
-    effect(() => {
-      console.log('Show filters:', this.showFilters());
-      console.log('Is home page:', this.isHomePage());
-      console.log('Sidebar opened:', this.sidebarOpened());
-      console.log('Property details opened:', this.propertyDetailsOpened());
-      console.log('Building details opened:', this.buildingDetailsOpened());
-    });
-  }
 
   toggleSidebar() {
     this._sidebarService.toggle();

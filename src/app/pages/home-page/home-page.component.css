@@ -1,7 +1,6 @@
 .filters-floating-panel {
   position: fixed;
-  top: calc(50% + 25px);
-  transform: translateY(-50%);
+  top: 70px;
   left: 20px;
   width: 420px;
   background: transparent;
@@ -61,20 +60,19 @@ app-map {
 }
 
 .building-card {
-  width: 98%;
+  width: 90%;
   height: calc(100vh - 130px);
   max-height: calc(100vh - 40px);
-  margin: 20px auto;
+  margin: 0 auto;
   display: flex;
   flex-direction: column;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
-  border-radius: 16px;
+  border-radius: 8px;
   background: linear-gradient(to right, #1a1e2b, #232a3b);
-  overflow: hidden;
   color: white;
   padding-left: 10px;
-  padding-right: 0;
-  padding-bottom: 0;
+  padding-right: 2px;
+  padding-bottom: 8px;
 }
 
 mat-card-header {
@@ -107,6 +105,7 @@ mat-card-header mat-card-subtitle {
 
 mat-card-content {
   padding-inline: 1px;
+  padding-right: 10px;
   padding-bottom: 0;
   flex: 1;
   overflow-y: scroll;
@@ -116,6 +115,28 @@ mat-card-content {
   display: flex;
   flex-direction: column;
   gap: 16px;
+}
+
+.scrolled {
+  &::-webkit-scrollbar {
+    width: 8px;
+    margin: 2px 2px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.25);
+    border-radius: 8px;
+    transition: background 0.3s ease;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.4);
+  }
 }
 
 .content-row {
@@ -138,8 +159,8 @@ mat-card-content p {
 
 .close-button {
   position: absolute;
-  top: 4px;
-  right: 4px;
+  top: 8px;
+  right: 8px;
   background: transparent !important;
   box-shadow: none;
   border: none;
@@ -257,6 +278,13 @@ mat-card-content p {
 
 mat-grid-list {
   margin-right: 10px;
+  gap: 8px !important;
+}
+
+.property-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
 }
 
 .properties-header {
@@ -568,9 +596,11 @@ mat-grid-list {
   position: fixed;
   bottom: 32px;
   right: 100px;
-  z-index: 2001;
+  z-index: 1000;
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 8px;
+  background: #23263b;
 }
 
 .filters-fab:hover {
@@ -579,7 +609,7 @@ mat-grid-list {
 }
 
 .filters-fab-active {
-  background-color: #673ab7 !important;
+  background: #5f67a0;
   box-shadow: 0 6px 16px rgba(103, 58, 183, 0.3);
 }
 
@@ -587,8 +617,10 @@ mat-grid-list {
   position: fixed;
   bottom: 32px;
   right: 32px;
-  z-index: 2001;
+  z-index: 1000;
   box-shadow: 0 6px 18px rgba(30, 40, 90, 0.24);
+  border-radius: 8px;
+  background: #23263b;
   transition: all 0.3s ease;
 }
 
@@ -755,4 +787,19 @@ mat-grid-list.mat-grid-list > div {
 
 .mat-drawer-backdrop {
   display: none !important;
+}
+
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.fade-in-up {
+  animation: fadeInUp 0.35s ease forwards;
 }

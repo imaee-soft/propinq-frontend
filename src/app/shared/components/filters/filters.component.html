@@ -1,9 +1,6 @@
 <div class="filters-container">
   <div class="filters-container-header">
     <h2>Filtros de búsqueda</h2>
-    <button mat-fab class="action-fab" matTooltip="Filtrar">
-      <mat-icon>refresh</mat-icon>
-    </button>
     <button
       mat-fab
       class="action-fab"
@@ -32,12 +29,24 @@
       <div class="price-inputs">
         <div class="wrapper">
           <span>$</span>
-          <input matInput type="number" value="100000" placeholder="Mínimo" />
+          <input
+            matInput
+            type="number"
+            value="100000"
+            placeholder="Mínimo"
+            (input)="setMinPrice($any($event.target).value)"
+          />
         </div>
         <span class="price-separator">–</span>
         <div class="wrapper">
           <span>$</span>
-          <input matInput type="number" value="800000" placeholder="Máximo" />
+          <input
+            matInput
+            type="number"
+            value="800000"
+            placeholder="Máximo"
+            (input)="setMaxPrice($any($event.target).value)"
+          />
         </div>
       </div>
     </div>
@@ -45,7 +54,9 @@
       <mat-label class="section-title">Características</mat-label>
       <div class="features-list">
         @for (feature of checkFeatures(); track feature) {
-        <mat-checkbox>{{ feature.label }}</mat-checkbox>
+        <mat-checkbox (change)="checkFeature(feature.value, $event.checked)">{{
+          feature.label
+        }}</mat-checkbox>
         }
       </div>
     </div>
@@ -59,7 +70,11 @@
           </span>
           <mat-select class="space-select" matNativeControl required>
             @for (room of roomOptions(); track room) {
-            <mat-option [value]="room">{{ room }}</mat-option>
+            <mat-option
+              [value]="room"
+              (onSelectionChange)="selectRooms(room)"
+              >{{ room }}</mat-option
+            >
             }
           </mat-select>
         </div>
@@ -70,7 +85,11 @@
           </span>
           <mat-select class="space-select" matNativeControl required>
             @for (bath of bathOptions(); track bath) {
-            <mat-option [value]="bath">{{ bath }}</mat-option>
+            <mat-option
+              [value]="bath"
+              (onSelectionChange)="selectBaths(bath)"
+              >{{ bath }}</mat-option
+            >
             }
           </mat-select>
         </div>
@@ -91,7 +110,7 @@
             (selectionChange)="selectProvince($event.value)"
           >
             @for (province of provinces(); track province) {
-            <mat-option [value]="province">{{ province }}</mat-option>
+            <mat-option [value]="province">{{ province.name }}</mat-option>
             }
           </mat-select>
         </div>
@@ -100,9 +119,14 @@
             <mat-icon>location_city</mat-icon>
             <mat-label>Localidad</mat-label>
           </span>
-          <mat-select class="space-select geo-select" matNativeControl required>
+          <mat-select
+            class="space-select geo-select"
+            matNativeControl
+            required
+            (selectionChange)="selectLocality($event.value)"
+          >
             @for (locality of localities(); track locality) {
-            <mat-option [value]="locality">{{ locality }}</mat-option>
+            <mat-option [value]="locality">{{ locality.name }}</mat-option>
             }
           </mat-select>
         </div>
@@ -130,7 +154,7 @@
           class="space-select geo-select"
           matNativeControl
           required
-          (selectionChange)="selectProvince($event.value)"
+          (selectionChange)="selectPointOfInterestType($event.value)"
         >
           @for (poiType of poiTypes(); track poiType) {
           <mat-option [value]="poiType.value">{{ poiType.label }}</mat-option>

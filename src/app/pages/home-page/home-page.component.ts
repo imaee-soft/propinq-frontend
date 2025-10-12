@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
@@ -20,6 +21,8 @@ import {
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
+import { Role } from '../../auth/enums/role.enum';
+import { BuildingsService } from '../../buildings/buildings.service';
 import { BuildingComponent } from '../../buildings/components/building/building.component';
 import { BuildingDetails } from '../../buildings/interfaces/building-details.interface';
 import { MapComponent } from '../../maps/components/map/map.component';
@@ -30,8 +33,13 @@ import { MapMarker } from '../../maps/interfaces/map-marker.interface';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { PropertyComponent } from '../../properties/components/property.component';
 import { ComparePropertiesDialogComponent } from '../../properties/dialogs/compare-properties-dialog/compare-properties-dialog.component';
+import { NewPropertyDialogComponent } from '../../properties/dialogs/new-property-dialog/new-property-dialog.component';
 import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
-import { NavbarService } from '../../shared/services/navbar.service';
+import { PropertiesService } from '../../properties/properties.service';
+import { FiltersComponent } from '../../shared/components/filters/filters.component';
+import { EntityDialogService } from '../../shared/services/entity-dialog.service';
+import { FiltersService } from '../../shared/services/filters.service';
+import { SidebarService } from '../../shared/services/sidebar.service';
 import { CustomSnackbarService } from '../../shared/services/snackbar.service';
 import { AuthService } from './../../auth/services/auth.service';
 @Component({
@@ -48,16 +56,22 @@ import { AuthService } from './../../auth/services/auth.service';
     MatGridListModule,
     PropertyComponent,
     MatTooltipModule,
+    FiltersComponent,
+    CommonModule,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {
-  private router = inject(Router);
-  private snackbar = inject(CustomSnackbarService);
-  private dialog = inject(MatDialog);
-  navbarService = inject(NavbarService);
-  private AuthService = inject(AuthService);
+  private _router = inject(Router);
+  private _dialog = inject(MatDialog);
+  private _authService = inject(AuthService);
+  private _snackbarService = inject(CustomSnackbarService);
+  private _entityDialogService = inject(EntityDialogService);
+  private _propertiesService = inject(PropertiesService);
+  private _buildingsService = inject(BuildingsService);
+  private _filtersService = inject(FiltersService);
+  private _sidebarService = inject(SidebarService);
 
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: DEFAULT_CENTER,
@@ -66,34 +80,44 @@ export class HomePageComponent {
     enableControls: false,
     markers: this.markers(),
   }));
-  markers = signal<MapMarker[]>([]);
 
+  markers = signal<MapMarker[]>([]);
   buildingMarkerQueried = signal<MapMarker | null>(null);
   buildingDetails = signal<BuildingDetails | null>(null);
   propertyMarkerQueried = signal<MapMarker | null>(null);
   propertyDetails = signal<PropertyDetails | null>(null);
   buildingProperties = signal<PropertyDetails[] | null>(null);
+  showFilters = signal(true);
+
+  isOwner = computed(() => this._authService.user()?.role === Role.OWNER);
+  coordinateToGo = computed(() => this._filtersService.coordinateToGo());
+  isAuthenticated = computed(
+    () => this._authService.status() === AuthStatus.AUTHENTICATED
+  );
+  sidebarOpened = computed(() => this._sidebarService.isOpen());
 
   constructor() {
     effect(() => {
       if (
-        this.navbarService.filterNearMyLocation() ||
-        this.navbarService.filterNearPoint() ||
-        this.navbarService.filterNearPointOfInterest()
+        this._filtersService.filterNearMyLocation() ||
+        this._filtersService.filterNearPoint() ||
+        this._filtersService.filterNearPointOfInterest()
       ) {
-        const buildings = this.navbarService.filteredBuildings().map((b) => ({
+        const buildings = this._filtersService.filteredBuildings().map((b) => ({
           id: b.buildingId,
           coordinate: { latitude: b.latitude, longitude: b.longitude },
           icon: { url: '/building.png' },
           type: 'building',
         }));
 
-        const properties = this.navbarService.filteredProperties().map((p) => ({
-          id: p.propertyId,
-          coordinate: { latitude: p.latitude, longitude: p.longitude },
-          icon: { url: '/property.png' },
-          type: 'property',
-        }));
+        const properties = this._filtersService
+          .filteredProperties()
+          .map((p) => ({
+            id: p.propertyId,
+            coordinate: { latitude: p.latitude, longitude: p.longitude },
+            icon: { url: '/property.png' },
+            type: 'property',
+          }));
 
         this.markers.set([...buildings, ...properties]);
       }
@@ -101,37 +125,35 @@ export class HomePageComponent {
 
     effect(() => {
       if (
-        !this.navbarService.filterNearMyLocation() &&
-        !this.navbarService.filterNearPoint() &&
-        !this.navbarService.filterNearPointOfInterest()
+        !this._filtersService.filterNearMyLocation() &&
+        !this._filtersService.filterNearPoint() &&
+        !this._filtersService.filterNearPointOfInterest()
       ) {
         this.resetMapMarkers();
       }
     });
   }
+
   resetMapMarkers() {
-    this.navbarService.buildingsService
-      .getBuildings()
-      .subscribe((buildings) => {
-        const buildingMarkers = buildings.map((b) => ({
-          id: b.buildingId,
-          coordinate: { latitude: b.latitude, longitude: b.longitude },
-          icon: { url: '/building.png' },
-          type: 'building',
+    this._buildingsService.getBuildings().subscribe((buildings) => {
+      const buildingMarkers = buildings.map((b) => ({
+        id: b.buildingId,
+        coordinate: { latitude: b.latitude, longitude: b.longitude },
+        icon: { url: '/building.png' },
+        type: 'building',
+      }));
+      this._propertiesService.getProperties().subscribe((properties) => {
+        const propertyMarkers = properties.map((p) => ({
+          id: p.propertyId,
+          coordinate: { latitude: p.latitude, longitude: p.longitude },
+          icon: { url: '/property.png' },
+          type: 'property',
         }));
-        this.navbarService.propertiesService
-          .getProperties()
-          .subscribe((properties) => {
-            const propertyMarkers = properties.map((p) => ({
-              id: p.propertyId,
-              coordinate: { latitude: p.latitude, longitude: p.longitude },
-              icon: { url: '/property.png' },
-              type: 'property',
-            }));
-            this.markers.set([...buildingMarkers, ...propertyMarkers]);
-          });
+        this.markers.set([...buildingMarkers, ...propertyMarkers]);
       });
+    });
   }
+
   getMapConfig(): MapConfig {
     return this.mapConfig();
   }
@@ -159,8 +181,8 @@ export class HomePageComponent {
         coordinate: marker.coordinate,
         type: marker.type,
       });
-      this.navbarService.propertyDetailsOpened.set(false);
-      this.navbarService.buildingDetailsOpened.set(true);
+      // this.navbarService.propertyDetailsOpened.set(false);
+      // this.navbarService.buildingDetailsOpened.set(true);
     }
   }
 
@@ -175,8 +197,8 @@ export class HomePageComponent {
         coordinate: marker.coordinate,
         type: marker.type,
       });
-      this.navbarService.buildingDetailsOpened.set(false);
-      this.navbarService.propertyDetailsOpened.set(true);
+      // this.navbarService.buildingDetailsOpened.set(false);
+      // this.navbarService.propertyDetailsOpened.set(true);
     }
   }
 
@@ -205,14 +227,14 @@ export class HomePageComponent {
       this.buildingDetails.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
-      this.navbarService.buildingDetailsOpened.set(false);
-      this.navbarService.propertyDetailsOpened.set(false);
+      // this.navbarService.buildingDetailsOpened.set(false);
+      // this.navbarService.propertyDetailsOpened.set(false);
     }
-    this.navbarService.setSelectedLocationPoint(coordinate);
+    // this.navbarService.setSelectedLocationPoint(coordinate);
   }
 
   onCenterChanged(coordinate: MapCoordinate): void {
-    this.navbarService.setMyLocation(coordinate);
+    // this.navbarService.setMyLocation(coordinate);
   }
 
   onCloseDetails(): void {
@@ -221,8 +243,8 @@ export class HomePageComponent {
       this.buildingDetails.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
-      this.navbarService.buildingDetailsOpened.set(false);
-      this.navbarService.propertyDetailsOpened.set(false);
+      // this.navbarService.buildingDetailsOpened.set(false);
+      // this.navbarService.propertyDetailsOpened.set(false);
     }
 
     this.currentImageIndex.set(0);
@@ -272,7 +294,7 @@ export class HomePageComponent {
 
   goToProperty(propertyId: string) {
     if (!propertyId) return;
-    this.router.navigate(['/properties', propertyId]);
+    this._router.navigate(['/properties', propertyId]);
   }
 
   comparativeList = signal<PropertyDetails[]>([]);
@@ -282,14 +304,14 @@ export class HomePageComponent {
     if (
       this.comparativeList().find((p) => p.propertyId === property.propertyId)
     ) {
-      this.snackbar.error(
+      this._snackbarService.error(
         'La Vivienda ya está agregada a la Comparación',
         1500
       );
       return;
     }
     this.comparativeList.set([...this.comparativeList(), property]);
-    this.snackbar.success('Vivienda Agregada a la Comparación', 1500);
+    this._snackbarService.success('Vivienda Agregada a la Comparación', 1500);
   }
 
   public comparativeDrawerOpen = signal(false);
@@ -311,6 +333,19 @@ export class HomePageComponent {
     this.comparativeList.set([]);
   }
 
+  openNewPropertyDialog() {
+    this._entityDialogService
+      .openNewEntityDialog(NewPropertyDialogComponent, {
+        panelClass: 'generic-dialog',
+        entity: 'property',
+        data: {
+          buildingId: this.buildingDetails()?.buildingId ?? '',
+          buildingName: this.buildingDetails()?.name ?? '',
+        },
+      })
+      .subscribe();
+  }
+
   openComparisonDialog() {
     if (this.comparativeList().length < 2) return;
     this.closeComparativeDrawer();
@@ -329,7 +364,7 @@ export class HomePageComponent {
             priority: 5,
           },
         ];
-    this.dialog.open(ComparePropertiesDialogComponent, {
+    this._dialog.open(ComparePropertiesDialogComponent, {
       data: {
         properties: this.comparativeList(),
         compareAttributes: userCompareAttributes,
@@ -341,13 +376,5 @@ export class HomePageComponent {
     this.comparativeList.set([]);
   }
 
-  filtersOpen = this.navbarService.filtersOpen;
-
-  toggleFilters(): void {
-    this.navbarService.toggleFilters();
-  }
-
-  isAuthenticated = computed(
-    () => this.AuthService.status() === AuthStatus.AUTHENTICATED
-  );
+  toggleFilters(): void {}
 }

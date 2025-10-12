@@ -1,3 +1,8 @@
+@if (showFilters() && !comparativeDrawerOpen()) {
+<div class="filters-floating-panel" [ngClass]="{ shifted: sidebarOpened() }">
+  <app-filters />
+</div>
+}
 <mat-drawer-container class="home-page-container">
   <mat-drawer-content>
     <app-map
@@ -98,7 +103,7 @@
         <div class="properties-section">
           <div class="properties-header">
             <h3>Propiedades</h3>
-            @if (isOwner()) {
+            @if (isAuthenticated()) {
             <button
               mat-icon-button
               color="primary"
@@ -271,22 +276,19 @@
       </div>
     </div>
   </div>
-  @if (buildingDetails() == null && !comparativeDrawerOpen() &&
-  isAuthenticated()) {
+  @if (!comparativeDrawerOpen()) {
   <button
     mat-fab
     color="accent"
     class="filters-fab"
-    [class.filters-fab-active]="filtersOpen()"
+    [class.filters-fab-active]="showFilters()"
     aria-label="Filtros de búsqueda"
     (click)="toggleFilters()"
-    matTooltip="{{ filtersOpen() ? 'Ocultar filtros' : 'Mostrar filtros' }}"
+    matTooltip="{{ showFilters() ? 'Ocultar filtros' : 'Mostrar filtros' }}"
     matTooltipPosition="above"
   >
-    <mat-icon>{{ filtersOpen() ? "search_off" : "search" }}</mat-icon>
+    <mat-icon>{{ showFilters() ? "search_off" : "search" }}</mat-icon>
   </button>
-  } @if (buildingDetails() == null && !comparativeDrawerOpen() &&
-  isAuthenticated()) {
   <button
     mat-fab
     color="primary"
@@ -298,7 +300,7 @@
   >
     <mat-icon>balance</mat-icon>
   </button>
-  }@if (comparativeDrawerOpen()) {
+  } @else {
   <div class="comparative-drawer">
     <div class="comparative-header">
       <span>Propiedades a comparar</span>
@@ -307,8 +309,6 @@
       </button>
     </div>
   </div>
-  } @else {
-  <div class="comparative-empty">No hay propiedades para comparar</div>
   }
 </div>
 <div class="comparative-actions">

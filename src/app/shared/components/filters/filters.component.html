@@ -1,0 +1,160 @@
+<div class="filters-container">
+  <div class="filters-container-header">
+    <h2>Filtros de búsqueda</h2>
+    <button mat-fab class="action-fab" matTooltip="Filtrar">
+      <mat-icon>refresh</mat-icon>
+    </button>
+    <button
+      mat-fab
+      class="action-fab"
+      (click)="clearFilters()"
+      matTooltip="Limpiar filtros"
+    >
+      <mat-icon>delete</mat-icon>
+    </button>
+  </div>
+  <div class="section-container">
+    <div class="section">
+      <mat-label class="section-title">Tipos</mat-label>
+      <mat-chip-set>
+        @for (propertyType of propertyTypes(); track propertyType) {
+        <mat-chip selected (click)="selectPropertyType(propertyType)">
+          @if (propertyType === selectedPropertyType()) {
+          <mat-icon class="check-icon">check</mat-icon>
+          }
+          {{ propertyType }}</mat-chip
+        >
+        }
+      </mat-chip-set>
+    </div>
+    <div class="section">
+      <mat-label class="section-title">Precio por mes</mat-label>
+      <div class="price-inputs">
+        <div class="wrapper">
+          <span>$</span>
+          <input matInput type="number" value="100000" placeholder="Mínimo" />
+        </div>
+        <span class="price-separator">–</span>
+        <div class="wrapper">
+          <span>$</span>
+          <input matInput type="number" value="800000" placeholder="Máximo" />
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <mat-label class="section-title">Características</mat-label>
+      <div class="features-list">
+        @for (feature of checkFeatures(); track feature) {
+        <mat-checkbox>{{ feature.label }}</mat-checkbox>
+        }
+      </div>
+    </div>
+    <div class="section">
+      <mat-label class="section-title">Espacios</mat-label>
+      <div class="ubication-selects">
+        <div class="wrapper">
+          <span class="icon">
+            <mat-icon>hotel</mat-icon>
+            <mat-label>Habitaciones</mat-label>
+          </span>
+          <mat-select class="space-select" matNativeControl required>
+            @for (room of roomOptions(); track room) {
+            <mat-option [value]="room">{{ room }}</mat-option>
+            }
+          </mat-select>
+        </div>
+        <div class="wrapper">
+          <span class="icon">
+            <mat-icon>bathtub</mat-icon>
+            <mat-label>Baños</mat-label>
+          </span>
+          <mat-select class="space-select" matNativeControl required>
+            @for (bath of bathOptions(); track bath) {
+            <mat-option [value]="bath">{{ bath }}</mat-option>
+            }
+          </mat-select>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <mat-label class="section-title">Ubicación</mat-label>
+      <div class="ubication-selects">
+        <div class="wrapper">
+          <span class="icon">
+            <mat-icon>location_city</mat-icon>
+            <mat-label>Provincia</mat-label>
+          </span>
+          <mat-select
+            class="space-select geo-select"
+            matNativeControl
+            required
+            (selectionChange)="selectProvince($event.value)"
+          >
+            @for (province of provinces(); track province) {
+            <mat-option [value]="province">{{ province }}</mat-option>
+            }
+          </mat-select>
+        </div>
+        <div class="wrapper">
+          <span class="icon">
+            <mat-icon>location_city</mat-icon>
+            <mat-label>Localidad</mat-label>
+          </span>
+          <mat-select class="space-select geo-select" matNativeControl required>
+            @for (locality of localities(); track locality) {
+            <mat-option [value]="locality">{{ locality }}</mat-option>
+            }
+          </mat-select>
+        </div>
+      </div>
+    </div>
+    <div class="section">
+      <mat-label class="section-title">Cercano a</mat-label>
+      <mat-chip-set>
+        @for (nearToOption of nearTo(); track nearToOption) {
+        <mat-chip (click)="selectNearToOption(nearToOption)">
+          @if (nearToOption === selectedNearToOption()) {
+          <mat-icon class="check-icon">check</mat-icon>
+          }
+          {{ nearToOption }}
+        </mat-chip>
+        }
+      </mat-chip-set>
+      @if (selectedNearToOption() === 'Punto de interés') {
+      <div class="wrapper margin-wrapper">
+        <span class="icon">
+          <mat-icon>location_on</mat-icon>
+          <mat-label>Punto de interés</mat-label>
+        </span>
+        <mat-select
+          class="space-select geo-select"
+          matNativeControl
+          required
+          (selectionChange)="selectProvince($event.value)"
+        >
+          @for (poiType of poiTypes(); track poiType) {
+          <mat-option [value]="poiType.value">{{ poiType.label }}</mat-option>
+          }
+        </mat-select>
+      </div>
+      }
+      <div class="chip-slider">
+        <span class="slider-label">Distancia</span>
+        <mat-slider
+          min="1"
+          max="20"
+          step="1"
+          [attr.value]="radius()"
+          (change)="changeRadius($event)"
+        >
+          <input
+            matSliderThumb
+            [value]="radius()"
+            (change)="changeRadius($event)"
+          />
+        </mat-slider>
+        <span class="slider-value">{{ radius() }} km</span>
+      </div>
+    </div>
+  </div>
+</div>

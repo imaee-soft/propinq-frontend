@@ -1,7 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;800&display=swap');
-
 .dashboard-root {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   min-height: 100vh;
   min-width: 100vw;
   background: linear-gradient(135deg, #181f2b 0%, #151925 100%);
@@ -18,7 +15,6 @@
 }
 
 .dashboard-content {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   display: flex;
   align-items: flex-start;
   justify-content: center;
@@ -30,7 +26,6 @@
 }
 
 .dashboard-cards {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-template-rows: repeat(3, 1fr);
@@ -47,11 +42,10 @@
 }
 
 .dashboard-card {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   background: #232a3b !important;
   color: #fff;
   border-radius: 22px !important;
-  box-shadow: 0 2px 18px 2px rgba(0,0,0,0.14);
+  box-shadow: 0 2px 18px 2px rgba(0, 0, 0, 0.14);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -72,7 +66,6 @@
 }
 
 .card-title {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   text-align: center;
   width: 100%;
   font-size: 1.18em;
@@ -82,7 +75,6 @@
 }
 
 .dashboard-metrics {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   background: #21273a;
   border-radius: 26px;
   color: #e2e6ef;
@@ -98,7 +90,6 @@
   align-self: flex-start;
 }
 .dashboard-metrics h3 {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   margin-bottom: 32px;
   font-size: 1.45rem;
   font-weight: 700;
@@ -132,19 +123,25 @@
   border-radius: 9px 9px 0 0;
   opacity: 0.95;
 }
-.bar1 { height: 92px; }
-.bar2 { height: 145px; }
-.bar3 { height: 184px; }
-.bar4 { height: 128px; }
+.bar1 {
+  height: 92px;
+}
+.bar2 {
+  height: 145px;
+}
+.bar3 {
+  height: 184px;
+}
+.bar4 {
+  height: 128px;
+}
 
 .dashboard-metrics p {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   margin: 28px 0 0 0;
   font-size: 1.28rem;
 }
 
 .reports-link {
-  font-family: 'Montserrat', Arial, Helvetica, sans-serif;
   margin-top: 22px;
   color: #7d8fff;
   text-decoration: none;
@@ -160,7 +157,7 @@
   background: #232a3b !important;
   color: #fff;
   border-radius: 22px !important;
-  box-shadow: 0 2px 18px 2px rgba(0,0,0,0.14);
+  box-shadow: 0 2px 18px 2px rgba(0, 0, 0, 0.14);
   display: flex;
   flex-direction: column;
   align-items: center;

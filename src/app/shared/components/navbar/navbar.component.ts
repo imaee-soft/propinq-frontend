@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  input,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +23,6 @@ import { NewBuildingDialogComponent } from '../../../buildings/dialogs/new-build
 import { NavElement } from '../../interfaces/nav-element.interface';
 import { EntityDialogService } from '../../services/entity-dialog.service';
 import { SidebarService } from '../../services/sidebar.service';
-import { NavbarFiltersComponent } from '../navbar-filters/navbar-filters.component';
 import { NavbarService } from './../../services/navbar.service';
 
 @Component({
@@ -32,7 +38,6 @@ import { NavbarService } from './../../services/navbar.service';
     MatFormFieldModule,
     MatMenuModule,
     MatDivider,
-    NavbarFiltersComponent,
   ],
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -47,7 +52,25 @@ export class NavbarComponent {
   items = input<NavElement[]>(this._navbarService.config());
   userLogged = this._navbarService.userLogged;
   sidebarOpened = this._sidebarService.isOpen;
+  filtersOpened = computed(() => this._navbarService.filtersOpen());
   navbarDisabled = computed(() => this._navbarService.disabled());
+  propertyDetailsOpened = signal(false);
+  buildingDetailsOpened = signal(false);
+
+  isHomePage = computed(() => {
+    const route = this.currentRoute();
+    return route === '/home' || route === '/';
+  });
+
+  showFilters = computed(
+    () =>
+      this.filtersOpened() &&
+      this.isHomePage() &&
+      !this.sidebarOpened() &&
+      !this.propertyDetailsOpened() &&
+      !this.buildingDetailsOpened()
+  );
+
   currentRoute = toSignal(
     this._router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
@@ -57,11 +80,16 @@ export class NavbarComponent {
     { initialValue: this._router.url }
   );
 
-  isHomePage = computed(() => {
-    const route = this.currentRoute();
-    console.log('Current route:', route);
-    return route === '/home' || route === '/';
-  });
+  constructor() {
+    effect(() => {
+      console.log('Show filters:', this.showFilters());
+      console.log('Is home page:', this.isHomePage());
+      console.log('Sidebar opened:', this.sidebarOpened());
+      console.log('Property details opened:', this.propertyDetailsOpened());
+      console.log('Building details opened:', this.buildingDetailsOpened());
+    });
+  }
+
   toggleSidebar() {
     this._sidebarService.toggle();
   }
@@ -93,15 +121,4 @@ export class NavbarComponent {
   get username() {
     return this._navbarService.username();
   }
-
-  showFilters() {
-    return this._navbarService.showFilters();
-  }
-
-  propertyDetailsOpened = computed(() =>
-    this._navbarService.propertyDetailsOpened()
-  );
-  buildingDetailsOpened = computed(() =>
-    this._navbarService.buildingDetailsOpened()
-  );
 }

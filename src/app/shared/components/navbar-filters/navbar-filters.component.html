@@ -4,38 +4,48 @@
       <div class="filter-chip chip-location">
         <span class="chip-label">Cercano a</span>
         <div class="chip-content">
-          <button mat-stroked-button
-                  class="chip-btn selected"
-                  [ngClass]="{'selected': filterNearMyLocation() === true}"
-                  (click)="onSelectMyLocation()">
+          <button
+            mat-stroked-button
+            class="chip-btn selected"
+            [ngClass]="{ selected: filterNearMyLocation() === true }"
+            (click)="onSelectMyLocation()"
+          >
             Mi ubicación <mat-icon>location_on</mat-icon>
           </button>
-          <button mat-stroked-button
-                  class="chip-btn"
-                  [ngClass]="{'selected': filterNearPoint() === true}"
-                  (click)="onSelectPoint()">
+          <button
+            mat-stroked-button
+            class="chip-btn"
+            [ngClass]="{ selected: filterNearPoint() === true }"
+            (click)="onSelectPoint()"
+          >
             Punto<mat-icon>location_on</mat-icon>
           </button>
-          @if(filterNearPoint() === true && isLocationPointSelected() === false) {
-            <span class="chip-helper-text">
-              Por favor seleccione un punto en el mapa
-            </span>
+          @if(filterNearPoint() === true && isLocationPointSelected() === false)
+          {
+          <span class="chip-helper-text">
+            Por favor seleccione un punto en el mapa
+          </span>
           }
-          <button mat-stroked-button
-                  class="chip-btn"
-                  [ngClass]="{'selected': filterNearPointOfInterest() === true}"
-                  (click)="onSelectPointOfInterestButton()">
+          <button
+            mat-stroked-button
+            class="chip-btn"
+            [ngClass]="{ selected: filterNearPointOfInterest() === true }"
+            (click)="onSelectPointOfInterestButton()"
+          >
             Punto de interés <mat-icon>location_on</mat-icon>
           </button>
-          @if(filterNearPointOfInterest() === true && selectedPointOfInterest() === null) {
-            <span class="chip-helper-text">
-              Por favor seleccione un punto de interés
-            </span>
+          @if(filterNearPointOfInterest() === true && selectedPointOfInterest()
+          === null) {
+          <span class="chip-helper-text">
+            Por favor seleccione un punto de interés
+          </span>
           }
           <mat-form-field appearance="outline" class="chip-field dense small">
-            <mat-select placeholder="Tipo"
-                        [value]="selectedPointOfInterest()"
-                        (selectionChange)="onSelectPointOfInterest($event.value)">
+            <mat-select
+              placeholder="Tipo"
+              [value]="selectedPointOfInterest()"
+              (selectionChange)="onSelectPointOfInterest($event.value)"
+            >
               <mat-option value="AMENITY">SERVICIO</mat-option>
               <mat-option value="SHOP">TIENDA</mat-option>
               <mat-option value="TOURISM">TURISMO</mat-option>
@@ -48,7 +58,9 @@
               <mat-option value="OFFICE">OFICINA</mat-option>
               <mat-option value="EMERGENCY">EMERGENCIA</mat-option>
               <mat-option value="HEALTHCARE">SALUD</mat-option>
-              <mat-option value="PUBLIC_TRANSPORT">TRANSPORTE PÚBLICO</mat-option>
+              <mat-option value="PUBLIC_TRANSPORT"
+                >TRANSPORTE PÚBLICO</mat-option
+              >
               <mat-option value="RAILWAY">FERROCARRIL</mat-option>
               <mat-option value="AEROWAY">AEROPORTUARIO</mat-option>
               <mat-option value="AERIALWAY">TELEFÉRICO</mat-option>
@@ -59,14 +71,20 @@
           </mat-form-field>
           <div class="chip-slider">
             <span class="slider-label">Área</span>
-            <mat-slider min="1" max="10" step="1"
-            [attr.value]="radius()"
-            (change)="onSliderChange($event)">
-            <input matSliderThumb
-         [value]="radius()"
-         (change)="onSliderChange($event)">
+            <mat-slider
+              min="1"
+              max="10"
+              step="1"
+              [attr.value]="radius()"
+              (change)="onSliderChange($event)"
+            >
+              <input
+                matSliderThumb
+                [value]="radius()"
+                (change)="onSliderChange($event)"
+              />
             </mat-slider>
-            <span class="slider-value">{{radius()}} km</span>
+            <span class="slider-value">{{ radius() }} km</span>
           </div>
         </div>
       </div>
@@ -74,11 +92,13 @@
         <span class="chip-label">Provincia</span>
         <div class="chip-content">
           <mat-form-field appearance="outline" class="chip-field dense small">
-            <mat-select placeholder="Provincia"
-                        [value]="filterProvince()"
-                        (selectionChange)="onSelectProvince($event.value)">
+            <mat-select
+              placeholder="Provincia"
+              [value]="filterProvince()"
+              (selectionChange)="onSelectProvince($event.value)"
+            >
               @for (province of provinces(); track province) {
-                <mat-option [value]="province">{{province.name}}</mat-option>
+              <mat-option [value]="province">{{ province.name }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -88,11 +108,13 @@
         <span class="chip-label">Localidad</span>
         <div class="chip-content">
           <mat-form-field appearance="outline" class="chip-field dense small">
-            <mat-select placeholder="Localidad"
-                        [value]="filterLocality()"
-                        (selectionChange)="onSelectLocality($event.value)">
+            <mat-select
+              placeholder="Localidad"
+              [value]="filterLocality()"
+              (selectionChange)="onSelectLocality($event.value)"
+            >
               @for(locality of localities(); track locality) {
-                <mat-option [value]="locality">{{locality.name}}</mat-option>
+              <mat-option [value]="locality">{{ locality.name }}</mat-option>
               }
             </mat-select>
           </mat-form-field>
@@ -103,15 +125,23 @@
         <div class="chip-content">
           <span class="price-prefix">Mínimo</span>
           <mat-form-field appearance="outline" class="chip-field dense mini">
-            <input matInput type="number" placeholder="$"
-                   [value]="filterPriceMin()"
-                   (input)="onSelectPriceMin($any($event.target).value)">
+            <input
+              matInput
+              type="number"
+              placeholder="$"
+              [value]="filterPriceMin()"
+              (input)="onSelectPriceMin($any($event.target).value)"
+            />
           </mat-form-field>
           <span class="price-separator">Máximo</span>
           <mat-form-field appearance="outline" class="chip-field dense mini">
-            <input matInput type="number" placeholder="$"
-                   [value]="filterPriceMax()"
-                   (input)="onSelectPriceMax($any($event.target).value)">
+            <input
+              matInput
+              type="number"
+              placeholder="$"
+              [value]="filterPriceMax()"
+              (input)="onSelectPriceMax($any($event.target).value)"
+            />
           </mat-form-field>
         </div>
       </div>
@@ -120,14 +150,18 @@
       <div class="filter-chip chip-type">
         <span class="chip-label">Tipo de vivienda</span>
         <div class="chip-content">
-          <mat-checkbox class="chip-check"
-                        [checked]="filterPropertyType()"
-                        (change)="onSelectPropertyType()">
+          <mat-checkbox
+            class="chip-check"
+            [checked]="filterPropertyType()"
+            (change)="onSelectPropertyType()"
+          >
             Casa
           </mat-checkbox>
-          <mat-checkbox class="chip-check"
-                        [checked]="filterDepartmentType()"
-                        (change)="onSelectDepartmentType()">
+          <mat-checkbox
+            class="chip-check"
+            [checked]="filterDepartmentType()"
+            (change)="onSelectDepartmentType()"
+          >
             Dpto.
           </mat-checkbox>
         </div>
@@ -136,33 +170,47 @@
         <span class="chip-label">Características</span>
         <div class="chip-content">
           Mascotas <mat-icon>pets</mat-icon>
-          <mat-checkbox class="chip-check"
-                        [checked]="filterAllowPets()"
-                        (change)="onSelectAllowPets($event.checked)">
+          <mat-checkbox
+            class="chip-check"
+            [checked]="filterAllowPets()"
+            (change)="onSelectAllowPets($event.checked)"
+          >
           </mat-checkbox>
           Habitaciones
           <mat-form-field appearance="outline" class="chip-field dense mini">
-            <input matInput type="number"
-                   [value]="filterRooms()"
-                   (input)="onSelectRooms($any($event.target).value)">
+            <input
+              matInput
+              type="number"
+              [value]="filterRooms()"
+              (input)="onSelectRooms($any($event.target).value)"
+            />
           </mat-form-field>
           Baños
           <mat-form-field appearance="outline" class="chip-field dense mini">
-            <input matInput type="number"
-                   [value]="filterBathrooms()"
-                   (input)="onSelectBathrooms($any($event.target).value)">
+            <input
+              matInput
+              type="number"
+              [value]="filterBathrooms()"
+              (input)="onSelectBathrooms($any($event.target).value)"
+            />
           </mat-form-field>
           Area mínima
           <mat-form-field appearance="outline" class="chip-field dense mini">
-            <input matInput type="number"
-                   [value]="filterAreaMin()"
-                   (input)="onSelectAreaMin($any($event.target).value)">
+            <input
+              matInput
+              type="number"
+              [value]="filterAreaMin()"
+              (input)="onSelectAreaMin($any($event.target).value)"
+            />
           </mat-form-field>
           Area máxima
           <mat-form-field appearance="outline" class="chip-field dense mini">
-            <input matInput type="number"
-                   [value]="filterAreaMax()"
-                   (input)="onSelectAreaMax($any($event.target).value)">
+            <input
+              matInput
+              type="number"
+              [value]="filterAreaMax()"
+              (input)="onSelectAreaMax($any($event.target).value)"
+            />
           </mat-form-field>
         </div>
       </div>
@@ -174,4 +222,5 @@
         </div>
       </div>
     </div>
+  </div>
 </div>

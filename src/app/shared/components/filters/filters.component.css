@@ -1,0 +1,155 @@
+.filters-container {
+  display: flex;
+  flex-direction: column;
+  width: fit-content;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35), 0 2px 8px rgba(0, 0, 0, 0.18);
+  border-radius: 20px;
+  background: linear-gradient(to right, #1a1e2b, #232a3b);
+  color: white;
+  padding-left: 20px;
+  padding-bottom: 20px;
+  gap: 10px;
+}
+
+.filters-container-header {
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  gap: 10px;
+}
+
+.action-fab {
+  width: 35px;
+  height: 35px;
+  min-width: 35px;
+  background-color: #2c3346;
+  color: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.section-container {
+  display: flex;
+  flex-direction: column;
+  gap: 35px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.section mat-chip .check-icon {
+  font-size: 11px;
+  height: 11px;
+  width: 11px;
+  line-height: 11px;
+}
+
+.section-title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.section input {
+  text-align: center;
+  width: 70%;
+  height: 30px;
+  border-radius: 14px;
+  border: none;
+  padding: 0 8px;
+  background-color: #2c3346;
+  color: white;
+  font-size: 16px;
+}
+
+.price-inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-separator {
+  min-width: 20px;
+  font-weight: 500;
+  font-size: 1.25rem;
+}
+
+.currency {
+  font-weight: 500;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.column-wrapper {
+  flex-direction: column;
+  align-items: start;
+}
+
+.margin-wrapper {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+.wrapper span {
+  display: flex;
+  align-items: center;
+  font-size: 16.5px;
+  font-weight: 450;
+  gap: 10px;
+}
+
+.features-list {
+  display: flex;
+  gap: 20px;
+}
+
+.spaces-inputs {
+  display: flex;
+  justify-content: start;
+  gap: 20px;
+  width: 100%;
+}
+
+.space-select {
+  width: 4rem;
+  margin-left: 10px;
+  border-radius: 10px;
+  border: none;
+  padding: 6px 6px;
+  background-color: #2c3346;
+  color: white;
+  cursor: pointer;
+  outline: none;
+  font-size: 15px;
+  text-align: center;
+}
+
+.ubication-selects {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.geo-select {
+  width: calc(100% - 60%);
+}
+
+.chip-slider {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  height: 30px;
+  flex-shrink: 1;
+}
+
+.slider-label,
+.slider-value {
+  font-size: 14.5px;
+  color: rgba(255, 255, 255, 0.9);
+  flex-shrink: 0;
+}

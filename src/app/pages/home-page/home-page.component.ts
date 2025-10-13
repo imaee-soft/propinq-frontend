@@ -17,7 +17,11 @@ import { MapMarker } from '../../maps/interfaces/map-marker.interface';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { PropertyComponent } from "../../properties/components/property.component";
 import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
+import { FavoriteService } from '../../buildings/services/favorite.service';
+import { FavoriteResponse } from '../../buildings/interfaces/favorite.interface';
+import { AuthService } from '../../auth/services/auth.service';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 @Component({
   imports: [
@@ -31,13 +35,40 @@ import { Router } from '@angular/router';
     MatExpansionModule,
     MatButtonModule,
     MatGridListModule,
-    PropertyComponent
+    PropertyComponent,
+    MatTooltipModule
 ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {
   private router = inject(Router);
+  private route = inject(ActivatedRoute);
+  constructor() {
+    // Detecta si hay un query param 'building' y abre el detalle automáticamente
+    this.route.queryParams.subscribe(params => {
+      const buildingId = params['building'];
+      if (buildingId) {
+        // Simula un click en el marcador del mapa para abrir el panel
+        this.openBuildingDetailsFromFavorite(buildingId);
+      }
+    });
+  }
+
+  private openBuildingDetailsFromFavorite(buildingId: string) {
+    // Busca el marcador correspondiente y abre el panel
+    // Si los marcadores aún no están cargados, espera un poco
+    const tryOpen = () => {
+      const marker = this.markers().find(m => m.id === buildingId && m.type === 'building');
+      if (marker) {
+        this.onBuildingMarkerClick(marker);
+      } else {
+        // Intenta de nuevo después de un pequeño delay (por si los marcadores aún no están)
+        setTimeout(tryOpen, 300);
+      }
+    };
+    tryOpen();
+  }
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: DEFAULT_CENTER,
     zoom: 14.5,
@@ -54,6 +85,12 @@ export class HomePageComponent {
   propertyDetails = signal<PropertyDetails | null>(null);
 
   buildingProperties = signal<PropertyDetails[] | null>(null);
+
+  isFavorite = signal(false);
+  favoriteId = signal<string | null>(null);
+
+  private favoriteService = inject(FavoriteService);
+  private authService = inject(AuthService);
 
   getMapConfig(): MapConfig {
     return this.mapConfig();
@@ -98,6 +135,9 @@ export class HomePageComponent {
 
   onBuildingDetailsChange(buildingDetails: BuildingDetails | null): void {
     this.buildingDetails.set(buildingDetails);
+    if (buildingDetails) {
+      this.checkIfFavorite();
+    }
   }
 
   onPropertyDetailsChange(propertyDetails: PropertyDetails | null): void {
@@ -175,5 +215,34 @@ export class HomePageComponent {
   goToProperty(propertyId: string){
     if (!propertyId) return;
     this.router.navigate(['/properties', propertyId]);
+  }
+
+  // Llama esto cada vez que cambie el buildingDetails
+  checkIfFavorite() {
+    const userId = this.authService.user()?.userId;
+    const buildingId = this.buildingDetails()?.buildingId;
+    if (!userId || !buildingId) return;
+    this.favoriteService.getFavoritesByUserAndBuilding(userId).subscribe(favs => {
+      const fav = favs.find(f => f.buildingID === buildingId);
+      this.isFavorite.set(!!fav);
+      this.favoriteId.set(fav ? fav.favoriteID : null);
+    });
+  }
+
+  toggleFavorite() {
+    const userId = this.authService.user()?.userId;
+    const buildingId = this.buildingDetails()?.buildingId;
+    if (!userId || !buildingId) return;
+    if (this.isFavorite() && this.favoriteId()) {
+      this.favoriteService.removeFavorite(this.favoriteId()!).subscribe(() => {
+        this.isFavorite.set(false);
+        this.favoriteId.set(null);
+      });
+    } else {
+      this.favoriteService.addFavorite({ userID: userId, buildingID: buildingId }).subscribe(res => {
+        this.isFavorite.set(true);
+        this.favoriteId.set(res.favoriteID);
+      });
+    }
   }
 }

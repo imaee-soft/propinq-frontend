@@ -1,6 +1,11 @@
+
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
+  {
+    path: 'favorites',
+    loadComponent: () => import('./favorite-page/favorite-page.component').then(m => m.FavoritePageComponent),
+  },
   {
     path: '',
     loadComponent: () =>
@@ -8,18 +13,39 @@ export const routes: Routes = [
         (m) => m.HomePageComponent
       ),
   },
+ {
+    path: 'signup',
+    loadComponent: () =>
+      import('../auth/pages/signup-page/signup-page.component').then(
+        (m) => m.SignupPageComponent
+      ),
+  },
+  {
+    path: 'auth/verify-email',
+    loadComponent: () =>
+      import('../auth/pages/verify-email-page/verify-email-page.component').then(
+        (m) => m.VerifyEmailPageComponent
+      ),
+  },
+  {
+    path: 'auth/activate',
+    loadComponent: () =>
+      import('../auth/pages/account-activation-page/account-activation-page.component').then(
+        (m) => m.AccountActivationPageComponent
+      ),
+  },
+  {
+    path: 'login',
+    loadComponent: () =>
+      import('../auth/pages/login-page/login-page.component').then(
+        (m) => m.LoginPageComponent
+      ),
+  },
   {
     path: 'buildings',
     loadComponent: () =>
       import('./building-page/building-page.component').then(
         (m) => m.BuildingPageComponent
-      ),
-  },
-  {
-    path: 'properties/:propertyId',
-    loadComponent: () =>
-      import('./property-page/property-page.component').then(
-        (m) => m.PropertyPageComponent
       ),
   },
   {

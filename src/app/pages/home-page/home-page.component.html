@@ -28,7 +28,14 @@
     <mat-card class="building-card">
       <mat-card-header>
 
-        <mat-card-title>{{ buildingDetails()!.name }}</mat-card-title>
+        <mat-card-title>
+          {{ buildingDetails()!.name }}
+          <button mat-icon-button (click)="toggleFavorite()" [color]="isFavorite() ? 'warn' : ''" aria-label="Favorito"
+          [attr.aria-label]="isFavorite() ? 'Quitar favorito' : 'Agregar favorito'"
+          [matTooltip]="isFavorite() ? 'Quitar favorito' : 'Agregar favorito'">
+            <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+        </mat-card-title>
         <mat-card-subtitle>{{ buildingDetails()!.buildingTypeName }}</mat-card-subtitle>
         <button
         mat-icon-button

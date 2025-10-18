@@ -55,7 +55,7 @@ export class BuildingsService {
   getBuildingsDetails(
     page = 0,
     pageSize = 15,
-    
+
   ): Observable<BuildingDetailsPage> {
     return this._http
       .get<BuildingDetailsPage>(
@@ -107,7 +107,7 @@ export class BuildingsService {
   }
 
   restoreBuilding(buildingId: string): Observable<BuildingDetails> {
-    return this._http.post<BuildingDetails>(
+    return this._http.patch<BuildingDetails>(
       `${this._baseUrl}/${buildingId}/restore`,
       {}
     );

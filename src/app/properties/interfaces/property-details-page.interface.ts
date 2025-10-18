@@ -1,9 +1,9 @@
 import { Pageable } from "../../shared/interfaces/pageable.interface";
 import { Sort } from "../../shared/interfaces/sort.interface";
-import { BuildingDetails } from "./building-details.interface";
+import { PropertyDetails } from "./property-details.interface";
 
-export interface BuildingDetailsPage {
-  content: BuildingDetails[];
+export interface PropertyDetailsPage {
+  content: PropertyDetails[];
   pageable: Pageable;
   totalElements: number;
   totalPages: number;
@@ -15,5 +15,3 @@ export interface BuildingDetailsPage {
   numberOfElements: number;
   empty: boolean;
 }
-
-

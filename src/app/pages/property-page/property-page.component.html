@@ -1,204 +1,92 @@
+<div class="page-container">
+  <header class="page-header">
+    <h2 class="page-title">Viviendas</h2>
+    <button
+      mat-fab
+      class="fab-add"
+      (click)="onCreate()"
+      aria-label="Agregar nueva vivienda"
+      title="Agregar nueva vivienda"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </header>
 
-@if (resourceStatus() === 2) {
-  <div class="loader-container">
-    <mat-spinner></mat-spinner>
-    <span>Cargando información de la propiedad...</span>
-  </div>
-} @else if (resourceStatus() === 1) {
-  <div class="error-container">
-    <mat-icon color="warn">error</mat-icon>
-    <span>Error al cargar la propiedad.</span>
-    <button mat-raised-button color="primary" (click)="propertyDetailsResource.reload()">Reintentar</button>
-  </div>
-} @else if (resourceStatus() === 4 && propertyDetailsResource.value()) {
-  <div class="property-layout">
-    <div class="main-content">
+  <main class="content-wrapper">
+    @if (propertiesDetailsResource.isLoading()) {
+    <div class="status-message loading">Cargando viviendas...</div>
+    } @else if (!properties() || properties()?.length === 0) {
+    <div class="status-message empty">No hay viviendas registradas.</div>
+    } @else if (propertiesDetailsResource.error()) {
+    <div class="status-message error">Error al cargar las viviendas.</div>
+    } @else {
+    <div class="table-container mat-elevation-z8">
+      <table mat-table [dataSource]="properties()!" class="property-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let property">{{ property.title }}</td>
+        </ng-container>
 
-      @if (images.length > 0) {
-        <div class="gallery-section">
-          <div class="main-image-container">
-            <img [src]="images[currentImageIndex()]" alt="Imagen propiedad" class="main-image" />
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Descripción</th>
+          <td mat-cell *matCellDef="let property">
+            {{ property.description || "-" }}
+          </td>
+        </ng-container>
 
-            <div class="image-navigation-overlay">
-              <button mat-icon-button class="nav-btn nav-prev" (click)="prevImage()" [disabled]="currentImageIndex() === 0">
-                <mat-icon>chevron_left</mat-icon>
-              </button>
-              <button mat-icon-button class="nav-btn nav-next" (click)="nextImage()" [disabled]="currentImageIndex() === images.length - 1">
-                <mat-icon>chevron_right</mat-icon>
-              </button>
-            </div>
-
-            <div class="image-counter">
-              {{ currentImageIndex() + 1 }} / {{ images.length }}
-            </div>
-          </div>
-
-          @if (images.length > 1) {
-            <div class="thumbnails-container">
-              @for (image of images; track $index) {
-                <button
-                  class="thumbnail-btn"
-                  [class.active]="currentImageIndex() === $index"
-                  (click)="setCurrentImage($index)">
-                  <img [src]="image" [alt]="'Thumbnail ' + ($index + 1)" class="thumbnail-image" />
-                </button>
-              }
-            </div>
-          }
-        </div>
-      } @else {
-        <div class="no-images">
-          <mat-icon>image_not_supported</mat-icon>
-          <span>No hay imágenes disponibles</span>
-        </div>
-      }
-
-      <div class="property-info-section">
-        <div class="property-header">
-          <div class="breadcrumb">
-            <span class="breadcrumb-item">Inmuebles</span>
-            <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
-            <span class="breadcrumb-item">Departamentos</span>
-            <mat-icon class="breadcrumb-separator">chevron_right</mat-icon>
-            <span class="breadcrumb-item current">{{ propertyDetailsResource.value()!.title }}</span>
-          </div>
-
-          <h1 class="property-title">{{ propertyDetailsResource.value()!.title }}</h1>
-
-          <div class="property-location">
-            <mat-icon class="location-icon">place</mat-icon>
-            <span class="address">{{ propertyDetailsResource.value()!.address }}</span>
-            @if(propertyDetailsResource.value()!.apartmentNumber) {
-              <span class="apartment-info">• Depto: {{ propertyDetailsResource.value()!.apartmentNumber }}</span>
-            }
-            @if(propertyDetailsResource.value()!.floor != null) {
-              <span class="floor-info">• Piso: {{ propertyDetailsResource.value()!.floor }}</span>
-            }
-          </div>
-
-          <div class="property-status">
-            @if(propertyDetailsResource.value()!.deleted) {
-              <mat-chip class="status-chip deleted">
-                <mat-icon>block</mat-icon>
-                No disponible
-              </mat-chip>
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let property" class="actions-cell">
+            <button
+              mat-icon-button
+              (click)="onUpdate(property)"
+              [disabled]="
+                propertiesDetailsResource.isLoading() || property.deleted
+              "
+              color="primary"
+              title="Editar"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            @if (!property.deleted) {
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="onDelete(property.propertyId)"
+              [disabled]="propertiesDetailsResource.isLoading()"
+              title="Eliminar"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
             } @else {
-              <mat-chip class="status-chip available">
-                <mat-icon>check_circle</mat-icon>
-                Disponible
-              </mat-chip>
+            <button
+              mat-icon-button
+              color="accent"
+              (click)="onRestore(property.propertyId)"
+              [disabled]="propertiesDetailsResource.isLoading()"
+              title="Restaurar"
+            >
+              <mat-icon>restore</mat-icon>
+            </button>
             }
-          </div>
-        </div>
+          </td>
+        </ng-container>
 
-        <div class="main-features">
-          <div class="feature-item">
-            <mat-icon class="feature-icon">hotel</mat-icon>
-            <span class="feature-label">{{ propertyDetailsResource.value()!.bedrooms }}</span>
-            <span class="feature-text">dormitorios</span>
-          </div>
-          <div class="feature-item">
-            <mat-icon class="feature-icon">bathtub</mat-icon>
-            <span class="feature-label">{{ propertyDetailsResource.value()!.bathrooms }}</span>
-            <span class="feature-text">baños</span>
-          </div>
-          <div class="feature-item">
-            <mat-icon class="feature-icon">straighten</mat-icon>
-            <span class="feature-label">{{ propertyDetailsResource.value()!.area }}</span>
-            <span class="feature-text">m²</span>
-          </div>
-          <div class="feature-item pets" [class.allowed]="propertyDetailsResource.value()!.petsAllowed">
-            <mat-icon class="feature-icon">{{ propertyDetailsResource.value()!.petsAllowed ? 'pets' : 'block' }}</mat-icon>
-            <span class="feature-text">{{ propertyDetailsResource.value()!.petsAllowed ? 'Mascotas permitidas' : 'Sin mascotas' }}</span>
-          </div>
-        </div>
-
-        <div class="description-section">
-          <h2 class="section-title">Descripción</h2>
-          <p class="description-text">{{ propertyDetailsResource.value()!.description }}</p>
-        </div>
-      </div>
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [class.inactive-row]="row.deleted"
+        ></tr>
+      </table>
+      <mat-paginator
+        [length]="totalElements()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="15"
+        (page)="onPageChange($event)"
+      >
+      </mat-paginator>
     </div>
-
-    <div class="sidebar">
-      <div class="price-card">
-        <div class="price-section">
-          <div class="price-container">
-            <span class="currency">$</span>
-            <span class="price-amount">{{ propertyDetailsResource.value()!.price | number:'1.0-0' }}</span>
-          </div>
-          <div class="price-details">
-            <span class="price-label">Precio de alquiler mensual</span>
-          </div>
-        </div>
-
-        <div class="contact-section">
-          <div class="contact-info">
-            <div class="seller-badge">
-              <mat-icon class="verified-icon">verified</mat-icon>
-              <span>Propietario verificado</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="actions-section">
-          <button mat-raised-button class="primary-action" routerLink="/contact">
-            <mat-icon>message</mat-icon>
-            Contactar propietario
-          </button>
-
-          <button mat-stroked-button class="secondary-action">
-            <mat-icon>favorite_border</mat-icon>
-            Guardar en favoritos
-          </button>
-
-          <button mat-stroked-button class="secondary-action">
-            <mat-icon>share</mat-icon>
-            Compartir
-          </button>
-        </div>
-
-        <div class="additional-info">
-          <div class="info-item">
-            <mat-icon class="info-icon">schedule</mat-icon>
-            <span class="info-text">Disponible inmediatamente</span>
-          </div>
-          <div class="info-item">
-            <mat-icon class="info-icon">security</mat-icon>
-            <span class="info-text">Transacción protegida</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="features-card">
-        <h3 class="card-title">Características del inmueble</h3>
-        <div class="features-grid">
-          <div class="feature-row">
-            <span class="feature-name">Superficie</span>
-            <span class="feature-value">{{ propertyDetailsResource.value()!.area }} m²</span>
-          </div>
-          <div class="feature-row">
-            <span class="feature-name">Dormitorios</span>
-            <span class="feature-value">{{ propertyDetailsResource.value()!.bedrooms }}</span>
-          </div>
-          <div class="feature-row">
-            <span class="feature-name">Baños</span>
-            <span class="feature-value">{{ propertyDetailsResource.value()!.bathrooms }}</span>
-          </div>
-          @if(propertyDetailsResource.value()!.floor != null) {
-            <div class="feature-row">
-              <span class="feature-name">Piso</span>
-              <span class="feature-value">{{ propertyDetailsResource.value()!.floor }}°</span>
-            </div>
-          }
-          <div class="feature-row">
-            <span class="feature-name">Mascotas</span>
-            <span class="feature-value" [class.allowed]="propertyDetailsResource.value()!.petsAllowed">
-              {{ propertyDetailsResource.value()!.petsAllowed ? 'Permitidas' : 'No permitidas' }}
-            </span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-}
+    }
+  </main>
+</div>

@@ -30,7 +30,12 @@ mat-drawer-content {
   flex-direction: column;
   background: transparent !important;
 }
-
+.mat-drawer-container {
+  overflow: hidden;
+}
+.mat-drawer-container .home-page-container .mat-drawer-transition {
+  overflow: hidden;
+}
 app-map {
   flex: 2 1 0;
   min-width: 400px;

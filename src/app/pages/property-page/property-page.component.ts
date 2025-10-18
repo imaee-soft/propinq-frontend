@@ -1,79 +1,72 @@
-import { rxResource, toSignal } from '@angular/core/rxjs-interop';
-import { Component, computed, inject, ResourceStatus, signal } from "@angular/core";
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { PropertiesService } from '../../properties/properties.service';
-import { CommonModule } from '@angular/common';
-import { MatCardModule } from '@angular/material/card';
-import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-import { MatIconModule } from '@angular/material/icon';
-import { MatButtonModule } from '@angular/material/button';
-import { MatChipsModule } from '@angular/material/chips';
-import { map, Observable, of, Subscription } from 'rxjs';
-
+import { Component, computed, inject, signal } from "@angular/core";
+import { PropertiesService } from "../../properties/properties.service";
+import { EntityDialogService } from "../../shared/services/entity-dialog.service";
+import { rxResource } from "@angular/core/rxjs-interop";
+import { PropertyDetails } from "../../properties/interfaces/property-details.interface";
+import { MatPaginatorModule, PageEvent } from "@angular/material/paginator";
+import { of } from "rxjs";
+import { MatTableModule } from "@angular/material/table";
+import { MatIconModule } from "@angular/material/icon";
+import { MatButtonModule } from "@angular/material/button";
 
 @Component({
   standalone: true,
-  imports: [CommonModule,
-    RouterLink,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatIconModule,
-    MatButtonModule,
-    MatChipsModule],
+  imports: [MatTableModule, MatIconModule, MatButtonModule, MatPaginatorModule],
   templateUrl: './property-page.component.html',
   styleUrl: './property-page.component.css',
 })
 export class PropertyPageComponent {
-  private route = inject(ActivatedRoute);
-  private propertiesService = inject(PropertiesService);
+  private _propertiesService = inject(PropertiesService);
+  private _entityDialogService = inject(EntityDialogService);
 
-  public currentImageIndex = signal(0);
-  propertyId = toSignal(
-  this.route.paramMap.pipe(map(params => params.get('propertyId'))));
-  resourceStatus = computed(() => {
-    if (this.propertyDetailsResource.status() === ResourceStatus.Error) {
-      return 1;
-    }
-    if (this.propertyDetailsResource.status() === ResourceStatus.Loading) {
-      return 2;
-    }
-    if (this.propertyDetailsResource.status() === ResourceStatus.Resolved) {
-      return 4;
-    }
-    return 0;
-  });
+  hasToQuery = signal<Boolean>(true);
+  pageIndex = signal(0);
+  totalElements = computed<number>(
+    () => this.propertiesDetailsResource.value()?.totalElements || 0
+  );
 
-  propertyDetailsResource = rxResource({
-    request: this.propertyId,
-    defaultValue: null,
+  propertiesDetailsResource = rxResource({
     loader: () => {
-      const propertyQueried = this.propertyId();
-      if(propertyQueried == null) return of(null);
-      return this.propertiesService.getPropertyDetails(propertyQueried);
+      if (this.hasToQuery()) {
+        return this._propertiesService.getPropertiesDetails(this.pageIndex());
+      }
+      return of(null);
     },
   });
 
-  get images(): string[] {
-    const resource = this.propertyDetailsResource;
-    if (resource.status() === ResourceStatus.Resolved && resource.value) {
-      return resource.value()?.imagesURL ?? [];
+
+  displayedColumns: string[] = ['name', 'description', 'actions'];
+
+
+  properties = computed<PropertyDetails[] | null>(
+    () => {
+      const content = this.propertiesDetailsResource.value()?.content || null;
+      return content;
     }
-    return [];
+  );
+
+  onPageChange(event: PageEvent) {
+    this.pageIndex.set(event.pageIndex);
+    this.propertiesDetailsResource.reload();
   }
 
-  prevImage(): void {
-    if (this.currentImageIndex() > 0) {
-      this.currentImageIndex.update(i => i - 1);
-    }
+  onCreate() {
+    // TODO: implement
   }
 
-  nextImage(): void {
-    if (this.currentImageIndex() < this.images.length - 1) {
-      this.currentImageIndex.update(i => i + 1);
-    }
+  onUpdate(property: PropertyDetails) {
+    // TODO: implement
   }
 
-  setCurrentImage(index: number): void {
-    this.currentImageIndex.set(index);
+  onDelete(propertyId: string) {
+    this._propertiesService.deleteProperty(propertyId).subscribe(() => {
+      this.propertiesDetailsResource.reload();
+    });
+  }
+
+  onRestore(propertyId: string) {
+    this._propertiesService.restoreProperty(propertyId).subscribe(() => {
+      this.propertiesDetailsResource.reload();
+    });
   }
 }

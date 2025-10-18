@@ -8,12 +8,13 @@ import { UpdateBuildingRequest } from './adapters/update-building-request';
 import { BuildingDetails } from './interfaces/building-details.interface';
 import { Building } from './interfaces/building.interface';
 import { BuildingDetailsPage } from './interfaces/buildings-details-page.interface';
+import { UsersService } from '../users/users.service';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/buildings`;
-
+  private _userService = inject(UsersService);
   createBuilding(buildingRequest: BuildingRequest) {
     const formData = new FormData();
     const { images, ...buildingData } = buildingRequest;
@@ -53,7 +54,8 @@ export class BuildingsService {
 
   getBuildingsDetails(
     page = 0,
-    pageSize = 15
+    pageSize = 15,
+    
   ): Observable<BuildingDetailsPage> {
     return this._http
       .get<BuildingDetailsPage>(

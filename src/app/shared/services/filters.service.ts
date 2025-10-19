@@ -228,7 +228,6 @@ export class FiltersService {
     effect(() => {
       const localitiesData = this.localitiesResource.value();
       if (localitiesData) {
-        console.log(localitiesData);
         this.localities.set(localitiesData);
       }
     });

@@ -4,6 +4,7 @@ import { filter, Subscription } from 'rxjs';
 import { NavbarComponent } from '../../shared/components/navbar/navbar.component';
 import { SidebarComponent } from '../../shared/components/sidebar/sidebar.component';
 import { QueryParamsService } from '../../shared/services/query-params.service';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
 
 const SIGNUP_PATH = '/signup';
 const LOGIN_PATH = '/login';
@@ -12,9 +13,9 @@ const ACTIVATE_PATH_PREFIX = '/auth/activate';
 
 @Component({
   selector: 'app-layout',
-  imports: [NavbarComponent, SidebarComponent, RouterOutlet],
+  imports: [NavbarComponent, FooterComponent, SidebarComponent, RouterOutlet],
   templateUrl: 'app-layout.component.html',
-  styleUrl: 'app-layout.component.css',
+  styleUrls: ['app-layout.component.css'],
 })
 export class LayoutComponent implements OnInit, OnDestroy {
   actualPath = signal('');

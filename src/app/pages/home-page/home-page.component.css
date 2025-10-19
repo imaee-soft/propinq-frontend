@@ -1,6 +1,7 @@
 .filters-floating-panel {
   position: fixed;
-  top: 70px;
+  top: calc(50px + (100vh - 50px - 30px) / 2);
+  transform: translateY(-50%);
   left: 20px;
   width: 420px;
   background: transparent;
@@ -8,8 +9,9 @@
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
   z-index: 1000;
   overflow: auto;
-  transition: left 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.25s ease,
-    transform 0.25s ease;
+  opacity: 0;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  animation: fadeInPanel 0.4s ease forwards;
 }
 
 .filters-floating-panel.shifted {
@@ -597,11 +599,17 @@ mat-grid-list {
   max-width: 80vw;
 }
 
-.filters-fab {
+.fab-container {
   position: fixed;
-  bottom: 32px;
-  right: 100px;
+  top: 70px;
+  right: 32px;
+  display: flex;
+  flex-direction: row;
+  gap: 16px;
   z-index: 1000;
+}
+
+.filters-fab {
   transition: all 0.3s ease;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   border-radius: 8px;
@@ -619,10 +627,6 @@ mat-grid-list {
 }
 
 .comparative-fab {
-  position: fixed;
-  bottom: 32px;
-  right: 32px;
-  z-index: 1000;
   box-shadow: 0 6px 18px rgba(30, 40, 90, 0.24);
   border-radius: 8px;
   background: #23263b;
@@ -807,4 +811,13 @@ mat-grid-list.mat-grid-list > div {
 
 .fade-in-up {
   animation: fadeInUp 0.35s ease forwards;
+}
+
+@keyframes fadeInPanel {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }

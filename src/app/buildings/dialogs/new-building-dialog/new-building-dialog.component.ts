@@ -32,7 +32,6 @@ import { AddressService } from '../../../maps/services/address.service';
 import { DEFAULT_CENTER } from '../../../maps/utils/constants';
 import { GenericDialogComponent } from '../../../shared/components/generic-dialog/generic-dialog/generic-dialog.component';
 import { ImageLoaderComponent } from '../../../shared/components/image-loader/image-loader.component';
-import { UppercaseDirective } from '../../../shared/directives/uppercase.directive';
 import { ImageValidator } from '../../../shared/pipes/image.validator';
 import { NotificationService } from '../../../shared/services/notification.service';
 import { BuildingRequest } from '../../adapters/building-request';
@@ -64,7 +63,7 @@ interface BuildingFormData {
     MatHint,
     MatProgressSpinner,
     MapComponent,
-    ImageLoaderComponent
+    ImageLoaderComponent,
   ],
   templateUrl: './new-building-dialog.component.html',
   styleUrl: './new-building-dialog.component.css',

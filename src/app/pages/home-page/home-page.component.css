@@ -10,7 +10,8 @@
   z-index: 1000;
   overflow: auto;
   opacity: 0;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1),
+    left 0.4s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
   animation: fadeInPanel 0.4s ease forwards;
 }
 
@@ -357,7 +358,7 @@ mat-grid-list {
   min-width: 220px;
   max-width: 96vw;
   margin: 32px auto 20px auto;
-  border-radius: 22px;
+  border-radius: 8px;
   background: linear-gradient(
     120deg,
     rgba(28, 30, 40, 0.92) 65%,
@@ -375,6 +376,22 @@ mat-grid-list {
   border: 1px solid rgba(90, 110, 180, 0.13);
   box-sizing: border-box;
 }
+
+/* .building-card {
+  width: 90%;
+  height: calc(100vh - 130px);
+  max-height: calc(100vh - 40px);
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  background: linear-gradient(to right, #1a1e2b, #232a3b);
+  color: white;
+  padding-left: 10px;
+  padding-right: 2px;
+  padding-bottom: 8px;
+} */
 
 .property-card:hover {
   box-shadow: 0 12px 40px 0 rgba(30, 40, 60, 0.34),

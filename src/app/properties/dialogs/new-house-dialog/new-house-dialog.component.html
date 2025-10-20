@@ -1,66 +1,132 @@
 <form [formGroup]="form" (ngSubmit)="handleSubmit()">
   <app-generic-dialog
-    dialogTitle="Nueva casa"
+    dialogTitle="Nueva vivienda"
     [activeSaveButton]="form.valid"
     [isLoading]="isLoading()"
   >
     <ng-template #content>
       <div class="form-container">
-        <div class="form-column-display">
-          <mat-form-field appearance="outline">
-            <mat-label>Precio total de alquiler (por mes)</mat-label>
-            <input matInput formControlName="price" />
-            @if (priceControl?.invalid && priceControl?.touched &&
-            priceControl?.errors?.['required']) {
-            <mat-error>El precio es requerido</mat-error>
-            } @if (priceControl?.invalid && priceControl?.touched &&
-            priceControl?.errors?.['min']) {
-            <mat-error>El precio no puede ser negativo</mat-error>
-            }
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Habitaciones</mat-label>
-            <input matInput type="number" formControlName="bedrooms" />
-            @if (bedroomsControl?.invalid && bedroomsControl?.touched &&
-            bedroomsControl?.errors?.['min']) {
-            <mat-error
-              >El número de habitaciones no puede ser menor a 1</mat-error
-            >
-            }
-          </mat-form-field>
-          <mat-form-field appearance="outline">
-            <mat-label>Baños</mat-label>
-            <input matInput formControlName="bathrooms" />
-            @if (bathroomsControl?.invalid && bathroomsControl?.touched &&
-            bathroomsControl?.errors?.['min']) {
-            <mat-error>El número de baños no puede ser menor a 1</mat-error>
-            }
-          </mat-form-field>
+        <div class="form-layout">
+          <div class="form-left">
+            <div class="form-column-display">
+              <mat-form-field appearance="outline">
+                <mat-label>Precio total de alquiler (por mes)</mat-label>
+                <input matInput type="number" formControlName="price" />
+                @if (priceControl?.invalid && priceControl?.touched &&
+                priceControl?.errors?.['required']) {
+                <mat-error>El precio es requerido</mat-error>
+                } @if (priceControl?.invalid && priceControl?.touched &&
+                priceControl?.errors?.['min']) {
+                <mat-error>El precio no puede ser negativo</mat-error>
+                }
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Habitaciones</mat-label>
+                <input matInput type="number" formControlName="bedrooms" />
+                @if (bedroomsControl?.invalid && bedroomsControl?.touched &&
+                bedroomsControl?.errors?.['min']) {
+                <mat-error
+                  >El número de habitaciones no puede ser menor a 1</mat-error
+                >
+                }
+              </mat-form-field>
+              <mat-form-field appearance="outline">
+                <mat-label>Baños</mat-label>
+                <input type="number" matInput formControlName="bathrooms" />
+                @if (bathroomsControl?.invalid && bathroomsControl?.touched &&
+                bathroomsControl?.errors?.['min']) {
+                <mat-error>El número de baños no puede ser menor a 1</mat-error>
+                }
+              </mat-form-field>
+            </div>
+            <div class="form-column-display">
+              <div class="pets-container">
+                <mat-label>¿Acepta mascotas?</mat-label>
+                <mat-slide-toggle
+                  formControlName="petsAllowed"
+                ></mat-slide-toggle>
+              </div>
+              <div class="pets-container">
+                <mat-label>¿Está amueblada?</mat-label>
+                <mat-slide-toggle
+                  formControlName="hasFurniture"
+                ></mat-slide-toggle>
+              </div>
+              <div class="pets-container">
+                <mat-label>¿Se cobran expensas?</mat-label>
+                <mat-slide-toggle
+                  formControlName="paysExpenses"
+                ></mat-slide-toggle>
+              </div>
+            </div>
+            <mat-form-field class="description-area" appearance="outline">
+              <mat-label>Descripción</mat-label>
+              <textarea
+                matInput
+                formControlName="description"
+                [maxLength]="300"
+                rows="2"
+                placeholder="Describí brevemente la propiedad..."
+              ></textarea>
+            </mat-form-field>
+            <div class="address-container">
+              <mat-form-field
+                appearance="outline"
+                class="compact-field address-field"
+              >
+                <mat-label>Dirección</mat-label>
+                <input
+                  matInput
+                  formControlName="address"
+                  [maxLength]="100"
+                  placeholder="Ingresá la dirección del inmueble..."
+                />
+                @if (addressControl?.invalid && addressControl?.touched &&
+                addressControl?.errors?.['required']) {
+                <mat-error>La dirección es requerida</mat-error>
+                } @if (addressControl?.invalid && addressControl?.touched &&
+                addressControl?.errors?.['minlength']) {
+                <mat-error
+                  >La dirección debe tener al menos 5 caracteres</mat-error
+                >
+                } @if (!addressControl?.dirty && !addressControl?.value) {
+                <mat-hint
+                  >Formato: Calle, Número, Ciudad, Provincia. Ejemplo: Alberdi,
+                  493, Villa María, Córdoba</mat-hint
+                >
+                }
+              </mat-form-field>
+
+              <div class="address-actions">
+                @if (searchingAddress()) {
+                <mat-progress-spinner
+                  mode="indeterminate"
+                  diameter="30"
+                ></mat-progress-spinner>
+                } @else {
+                <button
+                  mat-icon-button
+                  matTooltip="Buscar dirección"
+                  (click)="handleSearchAddress()"
+                >
+                  <mat-icon>search</mat-icon>
+                </button>
+                }
+              </div>
+            </div>
+          </div>
+          <div class="form-right">
+            <div class="map-container">
+              <mat-label>O marcá la dirección en el mapa</mat-label>
+              <div class="map-wrapper">
+                <app-map
+                  [config]="mapConfig()"
+                  (mapClick)="handleMapClick($event)"
+                ></app-map>
+              </div>
+            </div>
+          </div>
         </div>
-        <div class="form-column-display">
-          <div class="pets-container">
-            <mat-label>¿Acepta mascotas?</mat-label>
-            <mat-slide-toggle formControlName="petsAllowed"></mat-slide-toggle>
-          </div>
-          <div class="pets-container">
-            <mat-label>¿Está amueblado?</mat-label>
-            <mat-slide-toggle formControlName="hasFurniture"></mat-slide-toggle>
-          </div>
-          <div class="pets-container">
-            <mat-label>¿Cobra expensas?</mat-label>
-            <mat-slide-toggle formControlName="paysExpenses"></mat-slide-toggle>
-          </div>
-        </div>
-        <mat-form-field appearance="outline">
-          <mat-label>Descripción</mat-label>
-          <textarea
-            matInput
-            formControlName="description"
-            [maxLength]="300"
-            rows="3"
-            placeholder="Describí brevemente la propiedad..."
-          ></textarea>
-        </mat-form-field>
 
         <div class="image-section">
           <image-loader

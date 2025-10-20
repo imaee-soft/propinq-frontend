@@ -12,6 +12,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 import { MapMarker } from '../../../maps/interfaces/map-marker.interface';
 import { BuildingsService } from '../../buildings.service';
+import { FiltersService } from '../../../shared/services/filters.service';
 import { BuildingDetails } from '../../interfaces/building-details.interface';
 import { PropertyDetails } from '../../../properties/interfaces/property-details.interface';
 
@@ -25,6 +26,7 @@ import { PropertyDetails } from '../../../properties/interfaces/property-details
 })
 export class BuildingComponent {
   private _buildingsService = inject(BuildingsService);
+  private _filtersService = inject(FiltersService);
 
   buildingsResource = rxResource({
     loader: () => {
@@ -66,7 +68,14 @@ export class BuildingComponent {
     loader: () => {
       const buildingQueried = this.buildingMarkerQueried();
       if (buildingQueried == null || !buildingQueried.id) return of([]);
-      return this._buildingsService.getBuildingProperties(buildingQueried.id);
+      const attrs = {
+        priceMin: this._filtersService.filterPriceMin() ?? undefined,
+        priceMax: this._filtersService.filterPriceMax() ?? undefined,
+        bedrooms: this._filtersService.filterRooms() ?? undefined,
+        bathrooms: this._filtersService.filterBathrooms() ?? undefined,
+        petsAllowed: this._filtersService.filterAllowPets() ?? undefined,
+      };
+      return this._buildingsService.getBuildingProperties(buildingQueried.id, attrs);
     },
   });
 

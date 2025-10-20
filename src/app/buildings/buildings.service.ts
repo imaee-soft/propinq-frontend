@@ -7,7 +7,9 @@ import { BuildingRequest } from './adapters/building-request';
 import { UpdateBuildingRequest } from './adapters/update-building-request';
 import { BuildingDetails } from './interfaces/building-details.interface';
 import { Building } from './interfaces/building.interface';
+import { PropertyFilterRequest } from '../properties/interfaces/property-filter.request';
 import { BuildingDetailsPage } from './interfaces/buildings-details-page.interface';
+import { buildFilterHttpParams } from '../shared/utilities/http-params.builder';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
@@ -36,8 +38,9 @@ export class BuildingsService {
     });
   }
 
-  getBuildings(): Observable<Building[]> {
-    return this._http.get<Building[]>(`${environment.apiUrl}/api/v1/buildings`);
+  getBuildings(filter?: PropertyFilterRequest): Observable<Building[]> {
+    const params = buildFilterHttpParams(filter);
+    return this._http.get<Building[]>(`${this._baseUrl}`, { params });
   }
 
   getBuildingDetails(
@@ -111,10 +114,23 @@ export class BuildingsService {
     );
   }
 
-  getBuildingProperties(buildingId: string): Observable<PropertyDetails[]> {
-    return this._http.get<PropertyDetails[]>(
-      `${this._baseUrl}/${buildingId}/properties`
-    );
+  getBuildingProperties(buildingId: string, attributes?: PropertyFilterRequest['attributes']): Observable<PropertyDetails[]> {
+    let params = new HttpParams();
+    if (attributes) {
+      const a = attributes;
+      const add = (k: string, v: any) => {
+        if (v !== undefined && v !== null && v !== '') params = params.set(k, String(v));
+      };
+      add('attributes.buildingType', a.buildingType);
+      add('attributes.priceMin', a.priceMin);
+      add('attributes.priceMax', a.priceMax);
+      add('attributes.bedrooms', a.bedrooms);
+      add('attributes.bathrooms', a.bathrooms);
+      add('attributes.petsAllowed', a.petsAllowed);
+      add('attributes.areaMin', a.areaMin);
+      add('attributes.areaMax', a.areaMax);
+    }
+    return this._http.get<PropertyDetails[]>(`${this._baseUrl}/${buildingId}/properties`, { params });
   }
 
   hasApartment(buildingId: string, number: string): Observable<boolean> {
@@ -127,31 +143,4 @@ export class BuildingsService {
     );
   }
 
-  getBuildingsNear(latitude: number, longitude: number, radiusKm: number): Observable<Building[]> {
-    return this._http.get<Building[]>(`${this._baseUrl}/nearby`, {
-      params: {
-        latitude: latitude,
-        longitude: longitude,
-        radiusKm: radiusKm
-      }
-    });
-  }
-
-
-  getBuildingsNearPoi(poiType: string, radiusKm: number,
-    viewport: { north: number; south: number; east: number; west: number },
-    limit?: number
-  ) {
-    let params = new HttpParams()
-      .set('poiType', poiType)
-      .set('radiusKm', radiusKm)
-      .set('north', viewport.north)
-      .set('south', viewport.south)
-      .set('east', viewport.east)
-      .set('west', viewport.west);
-
-   if (limit != null) params = params.set('limit', limit);
-
-    return this._http.get<Building[]>(`${this._baseUrl}/nearby/poi`, { params });
-  }
 }

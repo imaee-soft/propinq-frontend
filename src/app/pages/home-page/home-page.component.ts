@@ -96,61 +96,15 @@ export class HomePageComponent {
   );
   sidebarOpened = computed(() => this._sidebarService.isOpen());
 
+  // Public flags for template conditions (centralizadas en FiltersService)
+  isFiltersModeActive = computed(() => this._filtersService.isFiltersModeActive());
+  hasNoResults = computed(() => this._filtersService.hasNoResults());
+  hasAnyFilterApplied = computed(() => this._filtersService.hasAnyFilterApplied());
+
   constructor() {
+    // Un único effect que consume los marcadores actuales del servicio
     effect(() => {
-      if (
-        this._filtersService.filterNearMyLocation() ||
-        this._filtersService.filterNearPoint() ||
-        this._filtersService.filterNearPointOfInterest()
-      ) {
-        const buildings = this._filtersService.filteredBuildings().map((b) => ({
-          id: b.buildingId,
-          coordinate: { latitude: b.latitude, longitude: b.longitude },
-          icon: { url: '/building.png' },
-          type: 'building',
-        }));
-
-        const properties = this._filtersService
-          .filteredProperties()
-          .map((p) => ({
-            id: p.propertyId,
-            coordinate: { latitude: p.latitude, longitude: p.longitude },
-            icon: { url: '/property.png' },
-            type: 'property',
-          }));
-
-        this.markers.set([...buildings, ...properties]);
-      }
-    });
-
-    effect(() => {
-      if (
-        !this._filtersService.filterNearMyLocation() &&
-        !this._filtersService.filterNearPoint() &&
-        !this._filtersService.filterNearPointOfInterest()
-      ) {
-        this.resetMapMarkers();
-      }
-    });
-  }
-
-  resetMapMarkers() {
-    this._buildingsService.getBuildings().subscribe((buildings) => {
-      const buildingMarkers = buildings.map((b) => ({
-        id: b.buildingId,
-        coordinate: { latitude: b.latitude, longitude: b.longitude },
-        icon: { url: '/building.png' },
-        type: 'building',
-      }));
-      this._propertiesService.getProperties().subscribe((properties) => {
-        const propertyMarkers = properties.map((p) => ({
-          id: p.propertyId,
-          coordinate: { latitude: p.latitude, longitude: p.longitude },
-          icon: { url: '/property.png' },
-          type: 'property',
-        }));
-        this.markers.set([...buildingMarkers, ...propertyMarkers]);
-      });
+      this.markers.set(this._filtersService.currentMarkers());
     });
   }
 
@@ -199,10 +153,9 @@ export class HomePageComponent {
   }
 
   onMapMarkersChange(markers: MapMarker[] | null): void {
-    this.markers.set([
-      ...(this.getMapConfig().markers ?? []),
-      ...(markers ?? []),
-    ]);
+    // Si hay filtros activos, ignoramos emisiones de hijos para no mezclar resultados
+    if (this.hasAnyFilterApplied()) return;
+    this.markers.set(markers ?? []);
   }
 
   onBuildingDetailsChange(buildingDetails: BuildingDetails | null): void {

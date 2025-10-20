@@ -1,18 +1,21 @@
-import { HttpClient, HttpParams } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { CreatePropertyRequest } from './interfaces/create-property.request';
 import { PropertyDetails } from './interfaces/property-details.interface';
 import { Property } from './interfaces/property.interface';
+import { PropertyFilterRequest } from './interfaces/property-filter.request';
+import { buildFilterHttpParams } from '../shared/utilities/http-params.builder';
 
 @Injectable({ providedIn: 'root' })
 export class PropertiesService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/properties`;
 
-  getProperties(): Observable<Property[]> {
-    return this._http.get<Property[]>(`${this._baseUrl}`);
+  getProperties(filter?: PropertyFilterRequest): Observable<Property[]> {
+    const params = buildFilterHttpParams(filter);
+    return this._http.get<Property[]>(`${this._baseUrl}`, { params });
   }
 
   getPropertyDetails(
@@ -49,42 +52,4 @@ export class PropertiesService {
     });
   }
 
-  getPropertiesNear(
-    latitude: number,
-    longitude: number,
-    radiusKm: number
-  ): Observable<Property[]> {
-    return this._http.get<Property[]>(
-      `${environment.apiUrl}/api/v1/properties/nearby`,
-      {
-        params: {
-          latitude: latitude,
-          longitude: longitude,
-          radiusKm: radiusKm,
-        },
-      }
-    );
-  }
-
-  getPropertiesNearPoi(
-    poiType: string,
-    radiusKm: number,
-    viewport: { north: number; south: number; east: number; west: number },
-    limit?: number
-  ) {
-    let params = new HttpParams()
-      .set('poiType', poiType)
-      .set('radiusKm', radiusKm)
-      .set('north', viewport.north)
-      .set('south', viewport.south)
-      .set('east', viewport.east)
-      .set('west', viewport.west);
-
-    if (limit != null) params = params.set('limit', limit);
-
-    return this._http.get<Property[]>(
-      `${environment.apiUrl}/api/v1/properties/nearby/poi`,
-      { params }
-    );
-  }
 }

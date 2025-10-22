@@ -17,4 +17,14 @@ export class FavoriteService {
 	getFavoritesByUserAndProperty(userId: string): Observable<FavoriteResponse[]> {
 		return this.http.get<FavoriteResponse[]>(`${this.apiUrl}/user/${userId}/property`);
 	}
+
+	// Nuevo: crear favorito (building o property según payload)
+	addFavorite(payload: { userID: string; propertyID?: string; buildingID?: string }): Observable<FavoriteResponse> {
+		return this.http.post<FavoriteResponse>(this.apiUrl, payload);
+	}
+
+	// Nuevo: eliminar favorito por favoriteID
+	removeFavorite(favoriteId: string): Observable<void> {
+		return this.http.delete<void>(`${this.apiUrl}/${favoriteId}`);
+	}
 }

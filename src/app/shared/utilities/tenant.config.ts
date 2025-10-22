@@ -1,10 +1,5 @@
 export const TENANT_NAVBAR_ITEMS = [
   {
-    name: 'Publicar',
-    url: '/publish',
-    featured: true,
-  },
-  {
     name: 'Favoritos',
     url: '/favorites',
   },
@@ -25,16 +20,16 @@ export const TENANT_NAVBAR_ITEMS = [
 export const TENANT_SIDEBAR_CONFIG = {
   enabled: true,
   items: [
-    {
-      label: 'Mi alquiler',
-      icon: 'apartment',
-      route: '/my-rentals',
-    },
-    {
-      label: 'Mis solicitudes de contacto',
-      icon: 'chat',
-      route: '/my-contact-requests',
-    },
+    // {
+    //   label: 'Mi alquiler',
+    //   icon: 'apartment',
+    //   route: '/my-rentals',
+    // },
+    // {
+    //   label: 'Mis solicitudes de contacto',
+    //   icon: 'chat',
+    //   route: '/my-contact-requests',
+    // },
     {
       label: 'Mis favoritos',
       icon: 'favorite',
@@ -45,10 +40,10 @@ export const TENANT_SIDEBAR_CONFIG = {
       icon: 'bookmark',
       route: '/interests',
     },
-    {
-      label: 'Mis contactos',
-      icon: 'person',
-      route: '/my-contacts',
-    },
+    // {
+    //   label: 'Mis contactos',
+    //   icon: 'person',
+    //   route: '/my-contacts',
+    // },
   ],
 };

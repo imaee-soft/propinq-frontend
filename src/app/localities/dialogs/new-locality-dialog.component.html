@@ -1,0 +1,45 @@
+<div class="form-container">
+      <h2 mat-dialog-title>{{ data.isEditing ? 'Editar localidad' : 'Nueva localidad' }}</h2>
+
+      <mat-dialog-content>
+        <form [formGroup]="localityForm" class="form-container">
+          <div class="form-row">
+            <mat-form-field appearance="outline" class="locality-option-content">
+              <mat-label>Nombre</mat-label>
+              <input matInput
+              formControlName="name"
+              placeholder="Ej: Villa María, Noetinger, Córdoba">
+              @if (localityForm.get('name')?.invalid && localityForm.get('name')?.touched) {
+                <mat-error>El nombre es requerido</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field>
+              <mat-label>Provincia</mat-label>
+              <mat-select
+                formControlName="provinceId"
+                panelClass="province-options"
+              >
+                <mat-option *ngFor="let province of provincesList | async" [value]="province.id">
+                    <div class="locality-option-content">
+                    {{ province.name }}
+                    </div>
+                </mat-option>
+              </mat-select>
+            </mat-form-field>
+
+          </div>
+        </form>
+      </mat-dialog-content>
+
+      <mat-dialog-actions align="end">
+        <button mat-button (click)="onCancel()" class="cancel-btn">Cancelar</button>
+        <button mat-raised-button
+                color="primary"
+                (click)="onSave()"
+                [disabled]="localityForm.invalid"
+                class="save-btn">
+          {{ data.isEditing ? 'Guardar' : 'Guardar' }}
+        </button>
+      </mat-dialog-actions>
+    </div>

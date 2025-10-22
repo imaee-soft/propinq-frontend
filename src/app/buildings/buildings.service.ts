@@ -1,19 +1,20 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment.development';
+import { PropertyDetails } from '../properties/interfaces/property-details.interface';
 import { BuildingRequest } from './adapters/building-request';
 import { UpdateBuildingRequest } from './adapters/update-building-request';
 import { BuildingDetails } from './interfaces/building-details.interface';
 import { Building } from './interfaces/building.interface';
 import { BuildingDetailsPage } from './interfaces/buildings-details-page.interface';
-import { PropertyDetails } from '../properties/interfaces/property-details.interface';
+import { UsersService } from '../users/users.service';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/buildings`;
-
+  private _userService = inject(UsersService);
   createBuilding(buildingRequest: BuildingRequest) {
     const formData = new FormData();
     const { images, ...buildingData } = buildingRequest;
@@ -53,7 +54,8 @@ export class BuildingsService {
 
   getBuildingsDetails(
     page = 0,
-    pageSize = 15
+    pageSize = 15,
+
   ): Observable<BuildingDetailsPage> {
     return this._http
       .get<BuildingDetailsPage>(
@@ -105,13 +107,53 @@ export class BuildingsService {
   }
 
   restoreBuilding(buildingId: string): Observable<BuildingDetails> {
-    return this._http.post<BuildingDetails>(
+    return this._http.patch<BuildingDetails>(
       `${this._baseUrl}/${buildingId}/restore`,
       {}
     );
   }
 
   getBuildingProperties(buildingId: string): Observable<PropertyDetails[]> {
-    return this._http.get<PropertyDetails[]>(`${this._baseUrl}/${buildingId}/properties`);
+    return this._http.get<PropertyDetails[]>(
+      `${this._baseUrl}/${buildingId}/properties`
+    );
+  }
+
+  hasApartment(buildingId: string, number: string): Observable<boolean> {
+    const params = { number };
+    return this._http.get<boolean>(
+      `${this._baseUrl}/${buildingId}/has-apartment`,
+      {
+        params,
+      }
+    );
+  }
+
+  getBuildingsNear(latitude: number, longitude: number, radiusKm: number): Observable<Building[]> {
+    return this._http.get<Building[]>(`${this._baseUrl}/nearby`, {
+      params: {
+        latitude: latitude,
+        longitude: longitude,
+        radiusKm: radiusKm
+      }
+    });
+  }
+
+
+  getBuildingsNearPoi(poiType: string, radiusKm: number,
+    viewport: { north: number; south: number; east: number; west: number },
+    limit?: number
+  ) {
+    let params = new HttpParams()
+      .set('poiType', poiType)
+      .set('radiusKm', radiusKm)
+      .set('north', viewport.north)
+      .set('south', viewport.south)
+      .set('east', viewport.east)
+      .set('west', viewport.west);
+
+   if (limit != null) params = params.set('limit', limit);
+
+    return this._http.get<Building[]>(`${this._baseUrl}/nearby/poi`, { params });
   }
 }

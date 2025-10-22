@@ -144,15 +144,27 @@
   color: #63b3ed;
 }
 
-.user-menu-trigger {
+.menu-trigger {
   display: flex;
   align-items: center;
   gap: 4px;
   text-transform: none;
 }
 
-.user-menu-content {
-  background: linear-gradient(to right, #1a1e2b, #232a3b);
-  padding: 2px 4px;
+.menu-content {
+  display: flex;
+  flex-direction: column;
+  padding: 2px 8px;
+  gap: 6px;
+  /* background: linear-gradient(to right, #1a1e2b, #232a3b); */
+  border-radius: 10px;
+  width: 200px;
+}
+
+.menu-content button {
+  color: #e2e8f0;
+  font-weight: 500;
   border-radius: 10px;
 }
+
+

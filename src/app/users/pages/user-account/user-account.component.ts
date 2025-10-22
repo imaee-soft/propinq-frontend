@@ -12,17 +12,32 @@ import { UpdateUserRequest } from '../../interfaces/update-user-request';
 import { UserResponse } from '../../interfaces/user-response';
 import { UPDATED_USER } from '../../users.constants';
 import { UsersService } from '../../users.service';
+import { UserComparisonAttribute } from '../../interfaces/user-comparison-attribute';
+import { FormsModule } from '@angular/forms';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-user-account',
   templateUrl: './user-account.component.html',
   styleUrl: './user-account.component.css',
-  imports: [MatLabel, MatCardModule, MatIcon, DynamicInputComponent, PhonePipe],
+  imports: [MatLabel, MatCardModule, MatIcon, DynamicInputComponent, PhonePipe, MatCheckboxModule, FormsModule],
 })
 export class UserAccountComponent {
   private _usersService = inject(UsersService);
   private _authService = inject(AuthService);
   private _notificationService = inject(NotificationService);
+  public comparisonAttributes = signal<UserComparisonAttribute[]>([
+    { label: 'Precio', key: 'price', enabled: true},
+    { label: 'Superficie (m²)', key: 'area', enabled: true},
+    { label: 'Ambientes', key: 'bedrooms', enabled: true},
+    { label: 'Baños', key: 'bathrooms', enabled: false},
+    { label: 'Mascotas', key: 'petsAllowed', enabled: false},
+    { label: 'Piso', key: 'floor', enabled: false},
+    { label: 'Expensas', key: 'expenses', enabled: false},
+    { label: 'Amoblado', key: 'furnishing', enabled: false},
+
+  ]);
+
 
   private readonly _userResource = rxResource({
     request: () => this._authService.user(),
@@ -41,6 +56,20 @@ export class UserAccountComponent {
   documentClicked = signal(false);
   phoneClicked = signal(false);
   addressClicked = signal(false);
+
+    ngOnInit() {
+    const saved = localStorage.getItem('compareAttributes');
+    if (saved) {
+      try {
+        this.comparisonAttributes.set(JSON.parse(saved));
+      } catch {
+      }
+    }
+  }
+
+  onComparisonAttributesChanged() {
+    localStorage.setItem('compareAttributes', JSON.stringify(this.comparisonAttributes()));
+  }
 
   onFirstNameClicked() {
     this.disableEdit();

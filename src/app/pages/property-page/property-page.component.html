@@ -1,85 +1,92 @@
-@if (resourceStatus() === 2) {
-  <div class="loader-container">
-    <mat-spinner></mat-spinner>
-    <span>Cargando información de la propiedad...</span>
-  </div>
-} @else if (resourceStatus() === 1) {
-  <div class="error-container">
-    <mat-icon color="warn">error</mat-icon>
-    <span>Error al cargar la propiedad.</span>
-    <button mat-raised-button color="primary" (click)="propertyDetailsResource.reload()">Reintentar</button>
-  </div>
-} @else if (resourceStatus() === 4 && propertyDetailsResource.value()) {
-  @if (propertyDetailsResource.value()) {
-    <mat-card>
-      <div class="card-inner">
-        <mat-card-header>
-          <mat-card-title>{{ propertyDetailsResource.value()!.title }}</mat-card-title>
-          <mat-card-subtitle>
-            {{ propertyDetailsResource.value()!.address }}
-            @if(propertyDetailsResource.value()!.apartmentNumber) {
-              , Depto: {{ propertyDetailsResource.value()!.apartmentNumber }}
+<div class="page-container">
+  <header class="page-header">
+    <h2 class="page-title">Viviendas</h2>
+    <button
+      mat-fab
+      class="fab-add"
+      (click)="onCreate()"
+      aria-label="Agregar nueva vivienda"
+      title="Agregar nueva vivienda"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </header>
+
+  <main class="content-wrapper">
+    @if (propertiesDetailsResource.isLoading()) {
+    <div class="status-message loading">Cargando viviendas...</div>
+    } @else if (!properties() || properties()?.length === 0) {
+    <div class="status-message empty">No hay viviendas registradas.</div>
+    } @else if (propertiesDetailsResource.error()) {
+    <div class="status-message error">Error al cargar las viviendas.</div>
+    } @else {
+    <div class="table-container mat-elevation-z8">
+      <table mat-table [dataSource]="properties()!" class="property-table">
+        <ng-container matColumnDef="name">
+          <th mat-header-cell *matHeaderCellDef>Nombre</th>
+          <td mat-cell *matCellDef="let property">{{ property.title }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="description">
+          <th mat-header-cell *matHeaderCellDef>Descripción</th>
+          <td mat-cell *matCellDef="let property">
+            {{ property.description || "-" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>Acciones</th>
+          <td mat-cell *matCellDef="let property" class="actions-cell">
+            <button
+              mat-icon-button
+              (click)="onUpdate(property)"
+              [disabled]="
+                propertiesDetailsResource.isLoading() || property.deleted
+              "
+              color="primary"
+              title="Editar"
+            >
+              <mat-icon>edit</mat-icon>
+            </button>
+            @if (!property.deleted) {
+            <button
+              mat-icon-button
+              color="warn"
+              (click)="onDelete(property.propertyId)"
+              [disabled]="propertiesDetailsResource.isLoading()"
+              title="Eliminar"
+            >
+              <mat-icon>delete</mat-icon>
+            </button>
+            } @else {
+            <button
+              mat-icon-button
+              color="accent"
+              (click)="onRestore(property.propertyId)"
+              [disabled]="propertiesDetailsResource.isLoading()"
+              title="Restaurar"
+            >
+              <mat-icon>restore</mat-icon>
+            </button>
             }
-            @if(propertyDetailsResource.value()!.floor != null) {
-              , Piso: {{ propertyDetailsResource.value()!.floor }}
-            }
-          </mat-card-subtitle>
-        </mat-card-header>
+          </td>
+        </ng-container>
 
-        <mat-card-content>
-          @if (images.length > 0) {
-            <div class="media-area">
-              <div class="image-wrap">
-                <img [src]="images[currentImageIndex()]" alt="Imagen propiedad" class="main-image" />
-              </div>
-
-              <div class="image-controls">
-                <button mat-icon-button (click)="prevImage()" [disabled]="currentImageIndex() === 0" aria-label="Anterior">
-                  <mat-icon>chevron_left</mat-icon>
-                </button>
-
-                <div class="indicator">{{ currentImageIndex() + 1 }} / {{ images.length }}</div>
-
-                <button mat-icon-button (click)="nextImage()" [disabled]="currentImageIndex() === images.length - 1" aria-label="Siguiente">
-                  <mat-icon>chevron_right</mat-icon>
-                </button>
-              </div>
-            </div>
-          } @else {
-            <span>No hay imágenes disponibles.</span>
-          }
-          <h3>Descripción</h3>
-          <p>{{ propertyDetailsResource.value()!.description }}</p>
-
-          <h3>Características</h3>
-          <div class="property-features">
-            <mat-chip color="primary" selected>
-              <mat-icon>attach_money</mat-icon>
-              {{ propertyDetailsResource.value()!.price | number:'1.0-0' }}
-            </mat-chip>
-            <mat-chip>
-              <mat-icon>hotel</mat-icon> Dormitorios: {{ propertyDetailsResource.value()!.bedrooms }}
-            </mat-chip>
-            <mat-chip>
-              <mat-icon>bathtub</mat-icon> Baños: {{ propertyDetailsResource.value()!.bathrooms }}
-            </mat-chip>
-            <mat-chip>
-              <mat-icon>straighten</mat-icon> Área: {{ propertyDetailsResource.value()!.area }} m²
-            </mat-chip>
-            <mat-chip [ngClass]="propertyDetailsResource.value()!.petsAllowed ? 'pets-yes' : 'pets-no'">
-              <mat-icon>{{ propertyDetailsResource.value()!.petsAllowed ? 'pets' : 'block' }}</mat-icon>
-              {{ propertyDetailsResource.value()!.petsAllowed ? 'Se permiten mascotas' : 'No se permiten mascotas' }}
-            </mat-chip>
-            @if(propertyDetailsResource.value()!.deleted) {
-              <mat-chip color="warn"><mat-icon>delete</mat-icon> Eliminada</mat-chip>
-            }
-          </div>
-        </mat-card-content>
-        <div class="divider"></div>
-        <mat-card-actions>
-          <button mat-button color="primary" class="primary-cta" routerLink="/contact">Contactar</button>
-        </mat-card-actions>
-      </div>
-    </mat-card>
-  }
-}
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr
+          mat-row
+          *matRowDef="let row; columns: displayedColumns"
+          [class.inactive-row]="row.deleted"
+        ></tr>
+      </table>
+      <mat-paginator
+        [length]="totalElements()"
+        [pageIndex]="pageIndex()"
+        [pageSize]="15"
+        (page)="onPageChange($event)"
+      >
+      </mat-paginator>
+    </div>
+    }
+  </main>
+</div>

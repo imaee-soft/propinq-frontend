@@ -1,0 +1,90 @@
+<div class="page-container">
+
+  <header class="page-header">
+    <h2 class="page-title">Barrios</h2>
+    <button
+      mat-fab
+      class="fab-add"
+      (click)="onCreate()"
+      aria-label="Agregar nuevo barrio"
+      title="Agregar nuevo barrio"
+    >
+      <mat-icon>add</mat-icon>
+    </button>
+  </header>
+
+      <div class="content-wrapper">
+
+          @if (isLoading) {
+            <div class="status-message loading">Cargando...</div>
+          } @else if (errorMessage) {
+            <div class="status-message error">{{ errorMessage }}</div>
+          } @else if (dataSource.data.length === 0) {
+            <div class="status-message empty">No hay barrios registrados</div>
+          } @else {
+          <div class="table-container mat-elevation-z8">
+          @if (dataSource.data.length > 0) {
+            <table mat-table [dataSource]="dataSource" class="neighborhood-table">
+
+              <ng-container matColumnDef="name">
+                <th mat-header-cell *matHeaderCellDef>Nombre</th>
+                <td mat-cell *matCellDef="let neighborhood">{{ neighborhood.name }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="localityId">
+                <th mat-header-cell *matHeaderCellDef>Localidad</th>
+                <td mat-cell *matCellDef="let neighborhood">{{ getLocalityName(neighborhood.localityId) || '-' }}</td>
+              </ng-container>
+
+              <ng-container matColumnDef="actions">
+                <th mat-header-cell *matHeaderCellDef class="actions-header">Acciones</th>
+                <td mat-cell *matCellDef="let neighborhood" class="actions-cell">
+                  <div class="actions-container">
+                    <button mat-icon-button
+                            color="primary"
+                            (click)="onUpdate(neighborhood)"
+                            [disabled]="isLoading || neighborhood.deleted"
+                            title="Editar">
+                      <mat-icon>edit</mat-icon>
+                    </button>
+                    @if (!neighborhood.deleted) {
+                      <button mat-icon-button
+                              color="warn"
+                              (click)="onDelete(neighborhood)"
+                              [disabled]="isLoading"
+                              title="Eliminar">
+                        <mat-icon>delete</mat-icon>
+                      </button>
+                    } @else {
+                      <button mat-icon-button
+                              color="accent"
+                              (click)="onRestore(neighborhood.id)"
+                              [disabled]="isLoading"
+                              title="Restaurar">
+                        <mat-icon>restore</mat-icon>
+                      </button>
+                    }
+                  </div>
+                </td>
+              </ng-container>
+
+              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+              <tr mat-row *matRowDef="let row; columns: displayedColumns" [class.inactive-row]="row.deleted"></tr>
+
+            </table>
+          }
+
+          @if (dataSource.data.length > 0) {
+            <mat-paginator #paginator
+                          [pageSize]="6"
+                          [pageSizeOptions]="[6, 12, 24]"
+                          [showFirstLastButtons]="true"
+                          [hidePageSize]="false"
+                          aria-label="Seleccionar página de barrios"
+                          class="neighborhood-paginator">
+            </mat-paginator>
+          }
+        </div>
+      }
+      </div>
+    </div>

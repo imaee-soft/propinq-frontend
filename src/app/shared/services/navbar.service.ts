@@ -1,7 +1,7 @@
-import { computed, inject, Injectable } from '@angular/core';
-import { AuthService } from '../../auth/services/auth.service';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { Role } from '../../auth/enums/role.enum';
+import { AuthService } from '../../auth/services/auth.service';
 import { NavElement } from '../interfaces/nav-element.interface';
 import { OWNER_NAVBAR_ITEMS } from '../utilities/owner.config';
 import { TENANT_NAVBAR_ITEMS } from '../utilities/tenant.config';
@@ -19,6 +19,7 @@ export class NavbarService {
   private _authService = inject(AuthService);
   private _dialogStateService = inject(DialogStateService);
 
+  filtersOpen = signal(true);
   config = computed((): NavElement[] => {
     const status = this._authService.status();
     const user = this._authService.user();
@@ -37,9 +38,19 @@ export class NavbarService {
   );
   username = computed(() => this._authService.user()?.username);
 
-  handleLogin() {
+  handleLogout() {
     this._authService.logout();
   }
+
+  toggleFilters(): void {
+    this.filtersOpen.set(!this.filtersOpen());
+  }
+
+  openFilters(): void {
+    this.filtersOpen.set(true);
+  }
+
+  closeFilters(): void {
+    this.filtersOpen.set(false);
+  }
 }
-
-

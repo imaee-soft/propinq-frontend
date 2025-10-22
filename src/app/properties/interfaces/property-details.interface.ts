@@ -10,7 +10,8 @@ export interface PropertyDetails {
   bedrooms:      number;
   bathrooms:     number;
   petsAllowed:   boolean;
-  area:         number;
+  expenses:      boolean;
+  furnishing:    boolean;
   apartmentNumber: string;
   deleted:      boolean;
 }

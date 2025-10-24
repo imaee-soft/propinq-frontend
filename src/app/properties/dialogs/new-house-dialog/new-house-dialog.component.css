@@ -1,0 +1,159 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  box-sizing: border-box;
+}
+
+.form-layout {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  align-items: stretch;
+}
+
+.form-left,
+.form-right {
+  flex: 1 1 4%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.form-column-display {
+  display: flex;
+  flex-direction: row;
+  gap: 2rem;
+}
+
+.header-fields {
+  display: flex;
+  flex-direction: row;
+  gap: 1rem;
+  align-items: start;
+  justify-content: start;
+  margin-bottom: auto;
+}
+
+.pets-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  width: fit-content;
+  gap: 0.5rem;
+}
+
+.pets-container mat-label {
+  font-size: 0.95rem;
+  white-space: nowrap;
+}
+
+.description-area {
+  margin-top: 10px;
+}
+
+mat-form-field {
+  width: 100%;
+}
+
+input.mat-input-element,
+textarea.mat-input-element {
+  font-size: 0.95rem;
+  padding: 0.3rem 0.5rem;
+  color: #e2e8f0;
+}
+
+mat-label {
+  font-weight: 400;
+  font-size: 1rem;
+  color: #cbd5e1;
+}
+
+.address-container {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 1rem;
+}
+
+.address-actions {
+  display: flex;
+  flex-direction: row;
+  gap: 0.5rem;
+}
+
+.address-field {
+  width: 90%;
+}
+
+.address-actions mat-button {
+  color: #cbd5e1;
+}
+
+.address-actions mat-button:hover {
+  color: #f1f5f9;
+  cursor: pointer;
+}
+
+.address-actions mat-icon {
+  font-size: 30px;
+  width: 30px;
+  height: 30px;
+}
+
+.address-actions mat-progress-spinner {
+  color: #cbd5e1;
+}
+
+.address-actions mat-progress-spinner ::ng-deep circle {
+  stroke: #cbd5e1;
+}
+
+.map-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.map-container mat-label {
+  color: #cbd5e1;
+  font-weight: 500;
+  font-size: 0.875rem;
+  margin-bottom: 5px;
+}
+
+.map-wrapper {
+  flex: 1;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.image-section {
+  display: block;
+  flex-direction: column;
+}
+
+.image-error-wrapper {
+  min-height: 1.5rem;
+}
+
+.image-error {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  animation: fadeInError 0.25s ease-out;
+}
+
+@keyframes fadeInError {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

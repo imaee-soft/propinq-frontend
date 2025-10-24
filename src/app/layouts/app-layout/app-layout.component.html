@@ -1,10 +1,13 @@
 @if(appLayout()) {
- <app-navbar></app-navbar>
+<app-navbar></app-navbar>
 <div class="main-layout">
   <app-sidebar></app-sidebar>
   <div class="content-area">
     <router-outlet></router-outlet>
   </div>
+</div>
+<div class="footer-area">
+  <app-footer></app-footer>
 </div>
 }
 @if(authLayout()) {

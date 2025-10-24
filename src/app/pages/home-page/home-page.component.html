@@ -324,34 +324,44 @@
   </div>
 </div>
 } @else { @if (buildingDetails() == null && propertyDetails() == null) {
-<button
-  mat-fab
-  color="accent"
-  class="filters-fab fade-in-up"
-  [class.filters-fab-active]="showFilters()"
-  aria-label="Filtros de búsqueda"
-  (click)="toggleFilters()"
-  matTooltip="{{ showFilters() ? 'Ocultar filtros' : 'Mostrar filtros' }}"
-  matTooltipPosition="above"
->
-  <mat-icon>{{ showFilters() ? "search_off" : "search" }}</mat-icon>
-</button>
-<button
-  mat-fab
-  color="primary"
-  class="comparative-fab fade-in-up"
-  aria-label="Comparar propiedades"
-  (click)="openComparativeDrawer()"
-  matTooltip="Comparar propiedades"
-  matTooltipPosition="above"
->
-  <mat-icon>balance</mat-icon>
-</button>
+<div class="fab-container">
+  <button
+    mat-fab
+    color="accent"
+    class="filters-fab fade-in-up"
+    [class.filters-fab-active]="showFilters()"
+    aria-label="Filtros de búsqueda"
+    (click)="toggleFilters()"
+    matTooltip="{{ showFilters() ? 'Ocultar filtros' : 'Mostrar filtros' }}"
+    matTooltipPosition="below"
+  >
+    <mat-icon>{{ showFilters() ? "search_off" : "search" }}</mat-icon>
+  </button>
+  <button
+    mat-fab
+    color="primary"
+    class="comparative-fab fade-in-up"
+    aria-label="Comparar propiedades"
+    (click)="openComparativeDrawer()"
+    matTooltip="Comparar propiedades"
+    matTooltipPosition="below"
+  >
+    <mat-icon>balance</mat-icon>
+  </button>
+  <button
+    mat-fab
+    color="primary"
+    class="comparative-fab fade-in-up"
+    aria-label="Ir a mi ubicación"
+    (click)="goToMyLocation()"
+    matTooltip="Ir a mi ubicación"
+    matTooltipPosition="below"
+  >
+    <mat-icon>location_on</mat-icon>
+  </button>
+</div>
 } @if (showFilters()) {
-<div
-  class="filters-floating-panel fade-in-up"
-  [class.shifted]="sidebarOpened()"
->
+<div class="filters-floating-panel" [class.shifted]="sidebarOpened()">
   <app-filters />
 </div>
 } }

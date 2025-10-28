@@ -33,7 +33,9 @@ export class UserAccountComponent {
     { label: 'Baños', key: 'bathrooms', enabled: false},
     { label: 'Mascotas', key: 'petsAllowed', enabled: false},
     { label: 'Piso', key: 'floor', enabled: false},
-    
+    { label: 'Expensas', key: 'expenses', enabled: false},
+    { label: 'Amoblado', key: 'furnishing', enabled: false},
+
   ]);
 
 

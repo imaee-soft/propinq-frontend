@@ -126,5 +126,7 @@ export class FiltersComponent {
 
   clearFilters() {
     this._filtersService.clearFilters();
+    this.selectedPropertyType.set('Todos');
+    this.selectedNearToOption.set(null);
   }
 }

@@ -10,12 +10,13 @@ import { Building } from './interfaces/building.interface';
 import { PropertyFilterRequest } from '../properties/interfaces/property-filter.request';
 import { BuildingDetailsPage } from './interfaces/buildings-details-page.interface';
 import { buildFilterHttpParams } from '../shared/utilities/http-params.builder';
+import { UsersService } from '../users/users.service';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/buildings`;
-
+  private _userService = inject(UsersService);
   createBuilding(buildingRequest: BuildingRequest) {
     const formData = new FormData();
     const { images, ...buildingData } = buildingRequest;
@@ -56,7 +57,8 @@ export class BuildingsService {
 
   getBuildingsDetails(
     page = 0,
-    pageSize = 15
+    pageSize = 15,
+
   ): Observable<BuildingDetailsPage> {
     return this._http
       .get<BuildingDetailsPage>(
@@ -108,7 +110,7 @@ export class BuildingsService {
   }
 
   restoreBuilding(buildingId: string): Observable<BuildingDetails> {
-    return this._http.post<BuildingDetails>(
+    return this._http.patch<BuildingDetails>(
       `${this._baseUrl}/${buildingId}/restore`,
       {}
     );

@@ -13,7 +13,7 @@ mat-dialog-content {
 }
 
 mat-dialog-actions {
-  margin: 1rem 2rem;
+  margin-right: 1.15rem;
 }
 
 h1[mat-dialog-title] {

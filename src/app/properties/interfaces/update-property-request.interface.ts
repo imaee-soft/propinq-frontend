@@ -1,3 +1,9 @@
+export interface UpdatePropertyRequest {
+  id: string;
+  payload: {title: string; description: string; type: string; existingImagesURLS?: string[]; imageFiles?: File[] };
+}
+
+
 export interface PropertyDetails {
   propertyId:       string;
   address:          string;
@@ -10,9 +16,7 @@ export interface PropertyDetails {
   bedrooms:      number;
   bathrooms:     number;
   petsAllowed:   boolean;
-  expenses:      boolean;
-  furnishing:    boolean;
+  area:         number;
   apartmentNumber: string;
   deleted:      boolean;
 }
-

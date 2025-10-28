@@ -33,7 +33,8 @@ export class ComparePropertiesDialogComponent {
     address: 'string',
     title: 'string',
     price: 'number',
-    area: 'number',
+    expenses: 'boolean',
+    furnishing: 'boolean',
     bedrooms: 'number',
     bathrooms: 'number',
     floor: 'number',
@@ -54,12 +55,6 @@ export class ComparePropertiesDialogComponent {
     { label: 'Título', key: 'title', type: 'string' },
     { label: 'Precio', key: 'price', type: 'number', higherIsBetter: false },
     {
-      label: 'Superficie (m²)',
-      key: 'area',
-      type: 'number',
-      higherIsBetter: true,
-    },
-    {
       label: 'Ambientes',
       key: 'bedrooms',
       type: 'number',
@@ -74,6 +69,8 @@ export class ComparePropertiesDialogComponent {
       type: 'boolean',
       higherIsBetter: true,
     },
+    { label: 'Expensas', key: 'expenses', type: 'boolean', higherIsBetter: false },
+    { label: 'Amoblado', key: 'furnishing', type: 'boolean', higherIsBetter: true },
   ]);
 
   public comparedKeys: Signal<Set<string>> = signal(

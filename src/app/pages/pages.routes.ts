@@ -18,8 +18,8 @@ export const routes: Routes = [
   {
     path: 'properties/:propertyId',
     loadComponent: () =>
-      import('./property-page/property-page.component').then(
-        (m) => m.PropertyPageComponent
+      import('./property-details-page/property-details-page.component').then(
+        (m) => m.PropertyDetailsPageComponent
       ),
   },
   {
@@ -49,6 +49,13 @@ export const routes: Routes = [
       import('./dashboard/dashboard-router.component').then(
         (m) => m.DashboardRouterComponent
     ),
+  },
+  {
+    path: 'properties',
+    loadComponent: () =>
+      import('./property-page/property-page.component').then(
+        (m) => m.PropertyPageComponent
+      ),
   },
   {
     path: '**',

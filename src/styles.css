@@ -54,8 +54,8 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
 .generic-dialog {
   padding: 4px;
   border-radius: 6px;
-  max-width: 90vw !important;
-  width: 90vw !important;
+  max-width: 92vw !important;
+  width: 92vw !important;
   background: #1a1e2b;
 }
 

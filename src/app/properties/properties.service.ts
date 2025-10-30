@@ -15,9 +15,15 @@ export class PropertiesService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/properties`;
 
-  getProperties(filter?: PropertyFilterRequest): Observable<Property[]> {
-    const params = buildFilterHttpParams(filter);
-    return this._http.get<Property[]>(`${this._baseUrl}`, { params });
+  getProperties(filter?: PropertyFilterRequest | null): Observable<Property[]> {
+    if (filter === null) {
+      return throwError(() => new Error('Invalid filter: null'));
+    }
+    const params = buildFilterHttpParams(filter ?? undefined);
+    return this._http.get<Property[]>(
+      `${environment.apiUrl}/api/v1/properties`,
+      { params }
+    );
   }
 
   getPropertyDetails(

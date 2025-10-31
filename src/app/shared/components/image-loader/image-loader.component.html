@@ -1,0 +1,39 @@
+<div class="image-upload">
+  <mat-label>{{ title() }}</mat-label>
+
+  <div class="file-input-wrapper">
+    <button
+      mat-raised-button
+      class="custom-upload-button"
+      (click)="fileInput.click()"
+      type="button"
+    >
+      Seleccionar imágenes
+    </button>
+    <input
+      #fileInput
+      type="file"
+      id="imageInput"
+      multiple
+      (change)="onImagesSelected($event)"
+      accept="image/*"
+      hidden
+    />
+  </div>
+</div>
+
+<div class="image-preview-container">
+  @if (previewUrls().length > 0) { @for (image of previewUrls(); track $index) {
+  <div class="image-preview">
+    <img [src]="image" alt="Vista previa de imagen" />
+    <button
+      class="delete-button"
+      (click)="removeImage($index)"
+      type="button"
+      aria-label="Eliminar imagen"
+    >
+      𝗫
+    </button>
+  </div>
+  } }
+</div>

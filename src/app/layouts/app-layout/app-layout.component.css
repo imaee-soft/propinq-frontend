@@ -1,0 +1,16 @@
+.main-layout {
+  display: flex;
+  flex-direction: row;
+  margin-top: 50px;
+  min-height: calc(100vh - 50px);
+  width: 100%;
+}
+
+.content-area {
+  width: 100%;
+  overflow-y: hidden;
+}
+
+app-sidebar {
+  flex-shrink: 0;
+}

@@ -1,0 +1,241 @@
+.dashboard-root {
+  min-height: 100vh;
+  min-width: 100vw;
+  background: linear-gradient(135deg, #181f2b 0%, #151925 100%);
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-main {
+  flex: 1;
+  display: flex;
+  align-items: flex-start; /* Arriba */
+  justify-content: center;
+  width: 100vw;
+}
+
+.dashboard-content {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  gap: 64px; /* MÁS SEPARACIÓN horizontal entre cards y métricas */
+  width: 100vw;
+  max-width: 1900px;
+  padding: 48px 32px 32px 32px; /* MÁS padding arriba */
+  box-sizing: border-box;
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: repeat(3, 1fr);
+  gap: 40px; /* MÁS espacio entre cards */
+  min-width: 700px;
+  max-width: 1400px;
+  width: 880px;
+  max-height: 900px;
+  height: 800px;
+  overflow-y: auto;
+  align-items: stretch;
+  background: transparent;
+  padding: 6px;
+}
+
+.dashboard-card {
+  background: #232a3b !important;
+  color: #fff;
+  border-radius: 22px !important;
+  box-shadow: 0 2px 18px 2px rgba(0, 0, 0, 0.14);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem; /* MÁS GRANDE */
+  font-weight: 700;
+  transition: transform 0.2s;
+  cursor: pointer;
+  border: 2px solid #313955;
+  min-height: 180px;
+  max-height: 260px;
+  height: 100%;
+  letter-spacing: 0.5px;
+}
+.dashboard-card:hover {
+  transform: scale(1.03);
+  background: #28304a !important;
+  border-color: #4e59a6;
+}
+
+.card-title {
+  text-align: center;
+  width: 100%;
+  font-size: 1.18em;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+  margin-top: 22px;
+}
+
+.dashboard-metrics {
+  background: #21273a;
+  border-radius: 26px;
+  color: #e2e6ef;
+  padding: 56px 60px 36px 60px; /* MÁS padding */
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 480px;
+  max-width: 520px;
+  height: 800px;
+  box-sizing: border-box;
+  box-shadow: 0 2px 22px 3px #181f2b44;
+  align-self: flex-start;
+}
+.dashboard-metrics h3 {
+  margin-bottom: 32px;
+  font-size: 1.45rem;
+  font-weight: 700;
+  color: #d1d8ee;
+  letter-spacing: 0.4px;
+}
+.charts {
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 48px;
+  gap: 28px;
+  width: 100%;
+}
+.circle-placeholder {
+  width: 120px;
+  height: 120px;
+  background: #232a3b;
+  border-radius: 50%;
+  border: 2.5px solid #4e59a6;
+  box-shadow: 0 0 8px #37409955;
+}
+.bars-placeholder {
+  display: flex;
+  gap: 16px;
+  align-items: flex-end;
+  margin-left: 38px;
+}
+.bar {
+  width: 38px;
+  background: linear-gradient(135deg, #4e59a6 0%, #7d8fff 100%);
+  border-radius: 9px 9px 0 0;
+  opacity: 0.95;
+}
+.bar1 {
+  height: 92px;
+}
+.bar2 {
+  height: 145px;
+}
+.bar3 {
+  height: 184px;
+}
+.bar4 {
+  height: 128px;
+}
+
+.dashboard-metrics p {
+  margin: 28px 0 0 0;
+  font-size: 1.28rem;
+}
+
+.reports-link {
+  margin-top: 22px;
+  color: #7d8fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1.19rem;
+  transition: color 0.2s;
+}
+.reports-link:hover {
+  color: #b0b7ff;
+}
+
+.dashboard-card {
+  background: #232a3b !important;
+  color: #fff;
+  border-radius: 22px !important;
+  box-shadow: 0 2px 18px 2px rgba(0, 0, 0, 0.14);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: 1.7rem;
+  font-weight: 700;
+  transition: transform 0.2s;
+  cursor: pointer;
+  border: 2px solid #313955;
+  min-height: 180px;
+  max-height: 260px;
+  height: 100%;
+  letter-spacing: 0.5px;
+  padding: 0 0 18px 0; /* padding arriba lo maneja la imagen */
+}
+
+.card-image {
+  width: 100%;
+  height: 54%;
+  min-height: 80px;
+  max-height: 140px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  background: #fae1e7; /* fondo pastel */
+}
+
+.card-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain; /* Cambia a contain si tus SVG son icónicos */
+  background: #fae1e7;
+}
+
+/* Responsive */
+@media (max-width: 1400px) {
+  .dashboard-content {
+    gap: 40px;
+    max-width: 1200px;
+    padding: 18px 4vw 8px 4vw;
+  }
+  .dashboard-cards {
+    max-width: 800px;
+    width: 90vw;
+    height: 500px;
+    max-height: 500px;
+    gap: 24px;
+  }
+  .dashboard-metrics {
+    min-width: 320px;
+    max-width: 400px;
+    height: 500px;
+    padding: 24px 12px 12px 12px;
+  }
+}
+@media (max-width: 900px) {
+  .dashboard-content {
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    padding: 8px 0 0 0;
+  }
+  .dashboard-cards {
+    grid-template-columns: 1fr;
+    min-width: unset;
+    max-width: 100vw;
+    width: 95vw;
+    height: auto;
+    max-height: none;
+  }
+  .dashboard-metrics {
+    min-width: unset;
+    max-width: 100vw;
+    width: 100vw;
+    padding: 18px 4vw 8px 4vw;
+    height: auto;
+  }
+}

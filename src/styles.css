@@ -1,1 +1,101 @@
-/* You can add global styles to this file, and also import other style files */
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  margin: 0;
+  background: linear-gradient(135deg, #0f111a 0%, #1c2230 100%);
+  color: #f0f0f0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 500;
+  min-height: 100vh;
+}
+
+mat-menu {
+  border: none;
+}
+
+.cdk-overlay-connected-position-bounding-box {
+  z-index: 2103 !important;
+}
+.cdk-overlay-container {
+  z-index: 2100 !important;
+}
+
+.cdk-overlay-pane {
+  z-index: 2101 !important;
+}
+
+mat-dialog-content {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #1a1e2b;
+  scroll-behavior: smooth;
+}
+
+mat-dialog-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+mat-dialog-content::-webkit-scrollbar-track {
+  background: #1a1e2b;
+}
+
+mat-dialog-content::-webkit-scrollbar-thumb {
+  background-color: #4b5563;
+  border-radius: 6px;
+  border: 1px solid #1a1e2b;
+}
+
+mat-dialog-content::-webkit-scrollbar-thumb:hover {
+  background-color: #64748b;
+}
+
+.generic-dialog {
+  padding: 4px;
+  border-radius: 6px;
+  max-width: 90vw !important;
+  width: 90vw !important;
+  background: #1a1e2b;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(20%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.mat-mdc-select-panel {
+  z-index: 2102 !important;
+  background: #1a1e2b !important;
+  border: 1px solid rgba(0, 0, 0, 0.15) !important;
+  border-radius: 6px !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25) !important;
+  min-width: 120px !important;
+  max-height: 300px !important;
+  overflow-y: auto !important;
+}
+
+.mat-mdc-option {
+  font-size: 12px !important;
+  line-height: 32px !important;
+  padding: 0 12px !important;
+  min-height: 32px !important;
+  color: #000000 !important;
+  font-weight: 500 !important;
+}
+
+.mat-mdc-option:hover {
+  background: rgba(103, 58, 183, 0.1) !important;
+}
+
+.mat-mdc-option.mdc-list-item--selected {
+  background: rgba(103, 58, 183, 0.15) !important;
+  color: #673ab7 !important;
+  font-weight: 600 !important;
+}

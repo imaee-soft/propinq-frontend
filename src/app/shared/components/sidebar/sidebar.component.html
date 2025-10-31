@@ -1,0 +1,38 @@
+<mat-sidenav-container class="sidenav-container">
+  <mat-sidenav
+    class="sidenav"
+    fixedInViewport
+    [mode]="'over'"
+    [opened]="this.isOpen() && this.config().enabled"
+    [style.width.px]="sidenavWidth()"
+  >
+    <mat-nav-list class="nav-list">
+      @for (item of config().items; track item.route) {
+      <div>
+        <mat-list-item
+          class="side-item"
+          [class.collapsed]="!this.isOpen()"
+          (click)="navigate(item.route)"
+          (click)="onSidebarButtonClickCloseSidebar()"
+        >
+          <span>{{ item.label }}</span>
+          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        </mat-list-item>
+      </div>
+      }
+    </mat-nav-list>
+    <div class="sidenav-footer">
+      <mat-nav-list class="footer-nav-list">
+        <mat-list-item class="side-item">
+          <span>Ayuda</span>
+          <mat-icon matListItemIcon>help</mat-icon>
+        </mat-list-item>
+        <mat-list-item class="side-item" (click)="logout()">
+          <span>Cerrar sesión</span>
+          <mat-icon matListItemIcon>logout</mat-icon>
+        </mat-list-item>
+      </mat-nav-list>
+    </div>
+  </mat-sidenav>
+  </mat-sidenav-container>
+  <ng-template #loading></ng-template>

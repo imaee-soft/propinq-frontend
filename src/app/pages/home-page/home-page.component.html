@@ -1,0 +1,369 @@
+<mat-drawer-container class="home-page-container">
+  <mat-drawer-content>
+    <app-map
+      [config]="getMapConfig()"
+      (markerClick)="onMarkerClick($event)"
+      (mapClick)="onMapClick($event)"
+      (centerChanged)="onCenterChanged($event)"
+      [coordinateToGo]="coordinateToGo()"
+    />
+
+    <app-building-component
+      (markersChange)="onMapMarkersChange($event)"
+      [buildingMarkerQueried]="buildingMarkerQueried()"
+      (buildingDetailsChange)="onBuildingDetailsChange($event)"
+      (buildingPropertiesChange)="onBuildingPropertiesChange($event)"
+    />
+    <app-property-component
+      (markersChange)="onMapMarkersChange($event)"
+      [propertyMarkerQueried]="propertyMarkerQueried()"
+      (propertyDetailsChange)="onPropertyDetailsChange($event)"
+    ></app-property-component>
+  </mat-drawer-content>
+
+  @if (buildingDetails() !== null && propertyDetails() == null) {
+  <mat-drawer
+    position="end"
+    mode="side"
+    opened
+    class="details-panel"
+    [disableClose]="true"
+  >
+    <mat-card class="building-card fade-in-up">
+      <mat-card-header>
+
+        <mat-card-title>
+          {{ buildingDetails()!.name }}
+          <button mat-icon-button (click)="toggleFavorite()" [color]="isFavorite() ? 'warn' : ''" aria-label="Favorito"
+          [attr.aria-label]="isFavorite() ? 'Quitar favorito' : 'Agregar favorito'"
+          [matTooltip]="isFavorite() ? 'Quitar favorito' : 'Agregar favorito'">
+            <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+        </mat-card-title>
+        <mat-card-subtitle>{{ buildingDetails()!.buildingTypeName }}</mat-card-subtitle>
+        <button
+          mat-icon-button
+          class="close-button"
+          (click)="onCloseDetails()"
+          aria-label="Cerrar"
+        >
+        
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content class="scrolled">
+        @if(buildingDetails()!.imagesURL.length > 0) {
+        <div class="carrousel-img-outer">
+          <div
+            class="carrousel-img-inner slide"
+            [style.--current-index]="currentImageIndex()"
+            [style.--img-count]="images.length"
+          >
+            <button
+              mat-icon-button
+              class="carousel-arrow carousel-arrow-left"
+              (click)="prevImage()"
+              [disabled]="currentImageIndex() === 0"
+              type="button"
+              tabindex="-1"
+            >
+              <mat-icon>chevron_left</mat-icon>
+            </button>
+
+            @for (image of buildingDetails()!.imagesURL; let index = $index;
+            track index) { @if(index === currentImageIndex() ) {
+            <img
+              [src]="image"
+              alt="Imagen del edificio"
+              class="carousel-image fade"
+            />
+            } }
+            <button
+              mat-icon-button
+              class="carousel-arrow carousel-arrow-right"
+              (click)="nextImage()"
+              [disabled]="currentImageIndex() === images.length - 1"
+              type="button"
+              tabindex="-1"
+            >
+              <mat-icon>chevron_right</mat-icon>
+            </button>
+          </div>
+          <div class="carousel-indicator">
+            {{ currentImageIndex() + 1 }} / {{ images.length }}
+          </div>
+        </div>
+        }
+        <div class="building-details">
+          @if (buildingDetails()!.description) {
+          <p>
+            <strong>Descripción: </strong>{{ buildingDetails()!.description }}
+          </p>
+          }
+          <p><strong>Dirección: </strong> {{ buildingDetails()!.address }}</p>
+          <p><strong>Dueño: </strong> {{ buildingDetails()!.userFullName }}</p>
+        </div>
+        <div class="content-divider"></div>
+        <div class="properties-section">
+          <div class="properties-header">
+            <h3>Propiedades</h3>
+            @if (isAuthenticated()) {
+            <button
+              mat-icon-button
+              color="primary"
+              matTooltip="Agregar nueva propiedad"
+              (click)="openNewPropertyDialog()"
+            >
+              <mat-icon>add</mat-icon>
+            </button>
+            }
+          </div>
+          <div class="property-grid">
+            @for(property of buildingProperties(); track $index) {
+            <div class="property-item">
+              <img
+                [src]="
+                  property.imagesURL && property.imagesURL.length > 0
+                    ? property.imagesURL[0]
+                    : 'https://placehold.co/400x300?text=Propiedad'
+                "
+                alt="Imagen propiedad"
+                class="property-image"
+              />
+              <div class="property-overlay">
+                <!-- Botón de favorito: llama togglePropertyFavorite y muestra estado -->
+                <button
+                  mat-icon-button
+                  class="property-action"
+                  matTooltip="{{ isPropertyFavorite(property.propertyId) ? 'Quitar favorito' : 'Marcar como favorita' }}"
+                  (click)="togglePropertyFavorite(property.propertyId); $event.stopPropagation()"
+                >
+                  <mat-icon>{{ isPropertyFavorite(property.propertyId) ? 'favorite' : 'favorite_border' }}</mat-icon>
+                </button>
+
+                <button
+                  mat-icon-button
+                  class="property-action"
+                  matTooltip="Ver imágenes"
+                  (click)="openPropertyGallery(property.imagesURL)"
+                >
+                  <mat-icon>image</mat-icon>
+                </button>
+                <button
+                  mat-button
+                  class="property-action property-action-more"
+                  matTooltip="Visualizar detalles"
+                  (click)="goToProperty(property.propertyId)"
+                >
+                  Ver Más
+                </button>
+                <button
+                  mat-icon-button
+                  class="property-action"
+                  (click)="addToComparativeList(property)"
+                  matTooltip="Agregar a la comparación"
+                >
+                  <mat-icon>balance</mat-icon>
+                </button>
+              </div>
+            </div>
+            }
+          </div>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-drawer>
+
+  } @if (propertyDetails() !== null && buildingDetails() == null) {
+  <mat-drawer
+    position="end"
+    mode="side"
+    opened
+    class="details-panel"
+    [disableClose]="true"
+  >
+    <mat-card class="property-card fade-in-up">
+      <mat-card-header>
+        <mat-card-title>{{
+          propertyDetails()!.title || "Propiedad"
+        }}</mat-card-title>
+        <button
+          mat-icon-button
+          class="close-button"
+          (click)="onCloseDetails()"
+          aria-label="Cerrar"
+        >
+          <mat-icon>close</mat-icon>
+        </button>
+      </mat-card-header>
+      <mat-card-content class="scrolled">
+        <div class="property-image-container">
+          <img
+            [src]="
+              propertyDetails()!.imagesURL &&
+              propertyDetails()!.imagesURL.length > 0
+                ? propertyDetails()!.imagesURL[0]
+                : 'https://placehold.co/400x300?text=Propiedad'
+            "
+            [alt]="propertyDetails()!.title || 'Imagen propiedad'"
+            class="property-image"
+          />
+        </div>
+        <div class="property-overlay">
+          <button mat-icon-button class="property-action"
+            matTooltip="{{ isPropertyFavorite(propertyDetails()!.propertyId) ? 'Quitar favorito' : 'Marcar como favorita' }}"
+            (click)="togglePropertyFavorite(propertyDetails()!.propertyId); $event.stopPropagation()">
+            <mat-icon>{{ isPropertyFavorite(propertyDetails()!.propertyId) ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+          <button
+            mat-icon-button
+            class="property-action"
+            [disabled]="!propertyDetails()?.imagesURL?.length"
+            (click)="
+              propertyDetails()?.imagesURL &&
+                openPropertyGallery(propertyDetails()!.imagesURL)
+            "
+          >
+            <mat-icon>image</mat-icon>
+          </button>
+          <button
+            mat-button
+            class="property-action property-action-more"
+            (click)="goToProperty(propertyDetails()!.propertyId)"
+          >
+            Ver Más
+          </button>
+          <button
+            mat-icon-button
+            class="property-action"
+            (click)="addToComparativeList(propertyDetails()!)"
+          >
+            <mat-icon>balance</mat-icon>
+          </button>
+        </div>
+      </mat-card-content>
+    </mat-card>
+  </mat-drawer>
+  }
+</mat-drawer-container>
+@if (propertyGalleryOpen()) {
+<div class="gallery-modal-overlay" (click)="closePropertyGallery()">
+  <div class="gallery-modal-content" (click)="$event.stopPropagation()">
+    <button
+      mat-icon-button
+      class="gallery-close-btn"
+      (click)="closePropertyGallery()"
+      aria-label="Cerrar galería"
+    >
+      <mat-icon>close</mat-icon>
+    </button>
+    <div class="carrousel-img-outer gallery-carousel">
+      <div class="carrousel-img-inner slide">
+        <button
+          mat-icon-button
+          class="carousel-arrow carousel-arrow-left"
+          (click)="prevGalleryImage()"
+          [disabled]="propertyGalleryIndex() === 0"
+          type="button"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        @for (image of propertyGalleryImages(); let idx = $index; track idx) {
+        @if (idx === propertyGalleryIndex()) {
+        <img [src]="image" class="carousel-image fade" />
+        } }
+        <button
+          mat-icon-button
+          class="carousel-arrow carousel-arrow-right"
+          (click)="nextGalleryImage()"
+          [disabled]="
+            propertyGalleryIndex() === propertyGalleryImages().length - 1
+          "
+          type="button"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      </div>
+      <div class="carousel-indicator">
+        {{ propertyGalleryIndex() + 1 }} / {{ propertyGalleryImages().length }}
+      </div>
+    </div>
+  </div>
+</div>
+} @if (comparativeDrawerOpen()) {
+<div class="comparative-drawer">
+  <div class="comparative-header">
+    <span>Propiedades a comparar</span>
+    <button mat-icon-button (click)="closeComparativeDrawer()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="comparative-list">
+    @if (comparativeList().length > 0) { @for (property of comparativeList();
+    let i = $index; track i) {
+    <div class="comparative-item">
+      <img
+        [src]="
+          property.imagesURL[0] || 'https://placehold.co/100x80?text=Propiedad'
+        "
+      />
+      <span>{{ property.title || "Propiedad" }}</span>
+      <button mat-icon-button color="warn" (click)="removeFromComparative(i)">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+    } } @else {
+    <div class="comparative-empty">No hay propiedades para comparar</div>
+    }
+  </div>
+  <div class="comparative-actions">
+    <button
+      mat-stroked-button
+      color="accent"
+      [disabled]="comparativeList().length < 2"
+      (click)="openComparisonDialog()"
+    >
+      Comparar
+    </button>
+    <button
+      mat-stroked-button
+      color="warn"
+      (click)="clearComparativeList()"
+      [disabled]="comparativeList().length === 0"
+    >
+      Limpiar
+    </button>
+  </div>
+</div>
+} @else { @if (buildingDetails() == null && propertyDetails() == null) {
+<button
+  mat-fab
+  color="accent"
+  class="filters-fab fade-in-up"
+  [class.filters-fab-active]="showFilters()"
+  aria-label="Filtros de búsqueda"
+  (click)="toggleFilters()"
+  matTooltip="{{ showFilters() ? 'Ocultar filtros' : 'Mostrar filtros' }}"
+  matTooltipPosition="above"
+>
+  <mat-icon>{{ showFilters() ? "search_off" : "search" }}</mat-icon>
+</button>
+<button
+  mat-fab
+  color="primary"
+  class="comparative-fab fade-in-up"
+  aria-label="Comparar propiedades"
+  (click)="openComparativeDrawer()"
+  matTooltip="Comparar propiedades"
+  matTooltipPosition="above"
+>
+  <mat-icon>balance</mat-icon>
+</button>
+} @if (showFilters()) {
+<div
+  class="filters-floating-panel fade-in-up"
+  [class.shifted]="sidebarOpened()"
+>
+  <app-filters />
+</div>
+} }

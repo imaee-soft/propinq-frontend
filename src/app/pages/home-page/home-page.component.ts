@@ -4,6 +4,7 @@ import {
   computed,
   effect,
   inject,
+  OnInit,
   Signal,
   signal,
 } from '@angular/core';
@@ -96,13 +97,14 @@ export class HomePageComponent {
     tryOpen();
   }
   private mapConfig: Signal<MapConfig> = computed(() => ({
-    center: DEFAULT_CENTER,
+    center: this.center(),
     zoom: 14.5,
     enableClick: true,
     enableControls: false,
     markers: this.markers(),
   }));
 
+  center = signal<MapCoordinate>(DEFAULT_CENTER);
   markers = signal<MapMarker[]>([]);
   buildingMarkerQueried = signal<MapMarker | null>(null);
   buildingDetails = signal<BuildingDetails | null>(null);
@@ -423,6 +425,18 @@ export class HomePageComponent {
 
   toggleFilters(): void {
     this.showFilters.set(!this.showFilters());
+  }
+
+  goToMyLocation(): void {
+    navigator.geolocation.getCurrentPosition(
+      (position) =>
+        this.center.set({
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        }),
+      () => this.center.set(DEFAULT_CENTER),
+      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
+    );
   }
 
   // Llama esto cada vez que cambie el buildingDetails

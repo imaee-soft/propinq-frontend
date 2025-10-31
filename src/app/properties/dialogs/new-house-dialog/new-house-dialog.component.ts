@@ -1,14 +1,7 @@
-import {
-  Component,
-  computed,
-  effect,
-  inject,
-  ResourceStatus,
-  signal,
-} from '@angular/core';
+import { Component, computed, effect, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
-import { MatOption } from '@angular/material/autocomplete';
+import { MatButtonModule } from '@angular/material/button';
 import { MatDialogRef } from '@angular/material/dialog';
 import {
   MatError,
@@ -19,10 +12,10 @@ import {
 import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { MatSelect } from '@angular/material/select';
-import { MatTooltip } from '@angular/material/tooltip';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { of } from 'rxjs';
 import { AuthService } from '../../../auth/services/auth.service';
+import { BUILDING_ICON_URL } from '../../../buildings/constants';
 import { MapComponent } from '../../../maps/components/map/map.component';
 import { MapClickEvent } from '../../../maps/interfaces/click-event.interface';
 import { MapConfig } from '../../../maps/interfaces/map-config.interface';
@@ -34,21 +27,25 @@ import { GenericDialogComponent } from '../../../shared/components/generic-dialo
 import { ImageLoaderComponent } from '../../../shared/components/image-loader/image-loader.component';
 import { ImageValidator } from '../../../shared/pipes/image.validator';
 import { NotificationService } from '../../../shared/services/notification.service';
-import { BuildingRequest } from '../../adapters/building-request';
-import { BuildingsService } from '../../buildings.service';
-import { BUILDING_CREATED_MESSAGE, BUILDING_ICON_URL } from '../../constants';
+import { PropertiesService } from '../../properties.service';
 
-interface BuildingFormData {
-  name: string;
+interface HouseFormData {
+  price: number;
+  bedrooms: number;
+  bathrooms: number;
+  petsAllowed: boolean;
+  hasFurniture: boolean;
+  paysExpenses: boolean;
   description: string;
-  type: string;
   address: string;
-  coordinate: MapCoordinate | null;
   images: File[] | null;
 }
 
+const CASA_TYPE = 'CASA';
+const PROPERTY_CREATED = 'La vivienda fue creada con éxito!';
+
 @Component({
-  selector: 'new-building-dialog',
+  selector: 'new-house-dialog',
   imports: [
     GenericDialogComponent,
     ReactiveFormsModule,
@@ -56,25 +53,31 @@ interface BuildingFormData {
     MatLabel,
     MatError,
     MatInput,
-    MatIcon,
-    MatTooltip,
-    MatOption,
-    MatSelect,
+    MatSlideToggleModule,
+    ImageLoaderComponent,
     MatHint,
     MatProgressSpinner,
+    MatIcon,
     MapComponent,
-    ImageLoaderComponent,
+    MatButtonModule,
   ],
-  templateUrl: './new-building-dialog.component.html',
-  styleUrl: './new-building-dialog.component.css',
+  templateUrl: './new-house-dialog.component.html',
+  styleUrl: './new-house-dialog.component.css',
 })
-export class NewBuildingDialogComponent {
+export class NewHouseDialogComponent {
   private readonly _formBuilder = inject(FormBuilder);
-  private readonly _buildingsService = inject(BuildingsService);
-  private readonly _addressService = inject(AddressService);
-  private readonly _authService = inject(AuthService);
+  private readonly _propertiesService = inject(PropertiesService);
   private readonly _notificationService = inject(NotificationService);
   private readonly _matDialogRef = inject(MatDialogRef);
+  private readonly _authService = inject(AuthService);
+  private readonly _addressService = inject(AddressService);
+
+  private _textAddress = signal<string>('');
+  private _markers = signal<MapMarker[]>([]);
+  private _coordinate = computed<MapCoordinate | null>(() => {
+    const marker = this._markers()[0];
+    return marker ? marker.coordinate : null;
+  });
 
   private readonly _textAddressResource = rxResource({
     request: () => this._coordinate(),
@@ -88,60 +91,57 @@ export class NewBuildingDialogComponent {
       address ? this._addressService.geocodeAddress(address) : of(null),
   });
 
-  private readonly _createBuildingResource = rxResource({
-    request: () => this._buildingRequest(),
-    loader: ({ request: buildingRequest }) =>
-      buildingRequest
-        ? this._buildingsService.createBuilding(buildingRequest)
-        : of(null),
-  });
-
-  private _textAddress = signal<string>('');
-  private _markers = signal<MapMarker[]>([]);
-  private _coordinate = computed<MapCoordinate | null>(() => {
-    const marker = this._markers()[0];
-    return marker ? marker.coordinate : null;
-  });
-  private _buildingRequest = signal<BuildingRequest | null>(null);
-
+  user = this._authService.user();
+  isLoading = signal(false);
+  form: ReturnType<FormBuilder['group']>;
   searchingAddress = computed(
     () =>
       this._textAddressResource.isLoading() ||
       this._coordinateAddressResource.isLoading()
   );
-
   mapConfig = computed<MapConfig>(() => ({
     center: this._coordinate() || DEFAULT_CENTER,
     markers: this._markers(),
   }));
 
-  isLoading = computed(() => this._createBuildingResource.isLoading());
-
-  form = this._formBuilder.group({
-    name: this._formBuilder.control<string>('', [
-      Validators.required,
-      Validators.minLength(5),
-    ]),
-    description: this._formBuilder.control<string>(''),
-    type: this._formBuilder.control<string>('EDIFICIO', [Validators.required]),
-    address: this._formBuilder.control<string>('', [
-      Validators.required,
-      Validators.minLength(5),
-    ]),
-    coordinate: this._formBuilder.control<MapCoordinate | null>(null, [
-      Validators.required,
-    ]),
-    images: this._formBuilder.control<File[] | null>(
-      [],
-      [
-        Validators.required,
-        ImageValidator.maxSize(3 * 1024 * 1024),
-        ImageValidator.allowedTypes(['jpg', 'jpeg', 'png', 'webp']),
-      ]
-    ),
-  });
-
   constructor() {
+    this.form = this._formBuilder.group({
+      price: this._formBuilder.control<number>(100000, [
+        Validators.required,
+        Validators.min(0),
+      ]),
+      bedrooms: this._formBuilder.control<number>(1, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      bathrooms: this._formBuilder.control<number>(1, [
+        Validators.required,
+        Validators.min(1),
+      ]),
+      petsAllowed: this._formBuilder.control<boolean>(true, [
+        Validators.required,
+      ]),
+      hasFurniture: this._formBuilder.control<boolean>(true, [
+        Validators.required,
+      ]),
+      paysExpenses: this._formBuilder.control<boolean>(true, [
+        Validators.required,
+      ]),
+      description: this._formBuilder.control<string>(''),
+      address: this._formBuilder.control<string>('', [
+        Validators.required,
+        Validators.minLength(5),
+      ]),
+      images: this._formBuilder.control<File[] | null>(
+        [],
+        [
+          Validators.required,
+          ImageValidator.maxSize(3 * 1024 * 1024),
+          ImageValidator.allowedTypes(['jpg', 'jpeg', 'png', 'webp']),
+        ]
+      ),
+    });
+
     effect(() => {
       const address = this._textAddressResource.value();
       if (address) this.form.patchValue({ address });
@@ -150,18 +150,6 @@ export class NewBuildingDialogComponent {
     effect(() => {
       const coordinate = this._coordinateAddressResource.value();
       if (coordinate) this.handleMapClick({ coordinate });
-    });
-
-    effect(() => {
-      const resource = this._createBuildingResource;
-      if (
-        resource &&
-        resource.status() === ResourceStatus.Resolved &&
-        resource.value()?.status === 201
-      ) {
-        this._notificationService.success(BUILDING_CREATED_MESSAGE, 3000);
-        this._matDialogRef.close();
-      }
     });
   }
 
@@ -202,30 +190,67 @@ export class NewBuildingDialogComponent {
       return;
     }
 
-    const { name, description, type, address, coordinate, images } = this.form
-      .value as BuildingFormData;
-    this._buildingRequest.set({
-      type,
-      name,
+    this.isLoading.set(true);
+
+    const {
+      price,
+      bedrooms,
+      bathrooms,
+      hasFurniture,
+      paysExpenses,
+      petsAllowed,
       description,
       address,
-      longitude: coordinate?.longitude || 0,
-      latitude: coordinate?.latitude || 0,
-      userId: this._authService.user()?.userId ?? '',
-      images: images || [],
-    });
+    } = this.form.value as HouseFormData;
+
+    this._propertiesService
+      .createProperty({
+        price,
+        address,
+        bedrooms,
+        bathrooms,
+        petsAllowed: petsAllowed || false,
+        hasFurniture: hasFurniture || false,
+        paysExpenses: paysExpenses || false,
+        description: description || '',
+        type: CASA_TYPE,
+        images: this.currentImages,
+        userId: this.user?.userId,
+        latitude: this._coordinate()?.latitude,
+        longitude: this._coordinate()?.longitude,
+      })
+      .subscribe({
+        next: () => {
+          this._notificationService.success(PROPERTY_CREATED, 3000);
+          this._matDialogRef.close();
+          location.reload();
+        },
+        error: () => this.isLoading.set(false),
+      });
   }
 
-  get nameControl() {
-    return this.form.get('name');
+  get priceControl() {
+    return this.form.get('price');
+  }
+
+  get bedroomsControl() {
+    return this.form.get('bedrooms');
+  }
+
+  get bathroomsControl() {
+    return this.form.get('bathrooms');
+  }
+
+  get areaControl() {
+    return this.form.get('area');
+  }
+
+  get petsAllowedControl() {
+    return this.form.get('petsAllowed');
   }
 
   get descriptionControl() {
     return this.form.get('description');
-  }
-
-  get typeControl() {
-    return this.form.get('type');
   }
 
   get addressControl() {

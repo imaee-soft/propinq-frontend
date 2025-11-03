@@ -8,6 +8,8 @@ import { of } from "rxjs";
 import { MatTableModule } from "@angular/material/table";
 import { MatIconModule } from "@angular/material/icon";
 import { MatButtonModule } from "@angular/material/button";
+import { NewHouseDialogComponent } from "../../properties/dialogs/new-house-dialog/new-house-dialog.component";
+import { EditPropertyDialogComponent } from "../../properties/dialogs/edit-property-dialog/edit-property-dialog.component";
 
 @Component({
   standalone: true,
@@ -51,12 +53,31 @@ export class PropertyPageComponent {
   }
 
   onCreate() {
-    // TODO: implement
+    this._entityDialogService
+        .openNewEntityDialog(NewHouseDialogComponent, {
+          panelClass: 'generic-dialog',
+          entity: 'house',
+        })
+        .subscribe();
   }
 
   onUpdate(property: PropertyDetails) {
-    // TODO: implement
+    this._entityDialogService
+          .openEditEntityDialog(EditPropertyDialogComponent, {
+            panelClass: 'generic-dialog',
+            entity: 'property',
+            id: property.propertyId,
+            width: '900px',
+            data: { property },
+          })
+          .subscribe((wasSuccessful) => {
+            if (wasSuccessful) {
+              this.propertiesDetailsResource.reload();
+            }
+          });
   }
+
+
 
   onDelete(propertyId: string) {
     this._propertiesService.deleteProperty(propertyId).subscribe(() => {

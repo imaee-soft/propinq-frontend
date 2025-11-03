@@ -62,7 +62,11 @@ export class LoginFormComponent {
     this.errorMessage.set(null);
     const credentials = this.loginForm.value;
     this.authService.login(credentials).subscribe({
-      next: () => {
+      next: (response) => {
+        // Guardar el userId en localStorage
+        if (response && response.user && response.user.userId) {
+          localStorage.setItem('userId', response.user.userId);
+        }
         this.router.navigateByUrl('/');
       },
       error: (error) => {

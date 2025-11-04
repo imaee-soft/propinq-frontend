@@ -174,6 +174,7 @@ export class EditPropertyDialogComponent implements OnInit {
       },
     });
     this.updateResource.trigger();
+    
   }
 
   get titleControl() {

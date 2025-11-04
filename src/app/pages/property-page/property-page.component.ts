@@ -77,8 +77,6 @@ export class PropertyPageComponent {
           });
   }
 
-
-
   onDelete(propertyId: string) {
     this._propertiesService.deleteProperty(propertyId).subscribe(() => {
       this.propertiesDetailsResource.reload();

@@ -37,16 +37,23 @@
   >
     <mat-card class="building-card fade-in-up">
       <mat-card-header>
-        <mat-card-title>{{ buildingDetails()!.name }}</mat-card-title>
-        <mat-card-subtitle>{{
-          buildingDetails()!.buildingTypeName
-        }}</mat-card-subtitle>
+
+        <mat-card-title>
+          {{ buildingDetails()!.name }}
+          <button mat-icon-button (click)="toggleFavorite()" [color]="isFavorite() ? 'warn' : ''" aria-label="Favorito"
+          [attr.aria-label]="isFavorite() ? 'Quitar favorito' : 'Agregar favorito'"
+          [matTooltip]="isFavorite() ? 'Quitar favorito' : 'Agregar favorito'">
+            <mat-icon>{{ isFavorite() ? 'favorite' : 'favorite_border' }}</mat-icon>
+          </button>
+        </mat-card-title>
+        <mat-card-subtitle>{{ buildingDetails()!.buildingTypeName }}</mat-card-subtitle>
         <button
           mat-icon-button
           class="close-button"
           (click)="onCloseDetails()"
           aria-label="Cerrar"
         >
+        
           <mat-icon>close</mat-icon>
         </button>
       </mat-card-header>
@@ -130,13 +137,16 @@
                 class="property-image"
               />
               <div class="property-overlay">
+                <!-- Botón de favorito: llama togglePropertyFavorite y muestra estado -->
                 <button
                   mat-icon-button
                   class="property-action"
-                  matTooltip="Marcar como favorita"
+                  matTooltip="{{ isPropertyFavorite(property.propertyId) ? 'Quitar favorito' : 'Marcar como favorita' }}"
+                  (click)="togglePropertyFavorite(property.propertyId); $event.stopPropagation()"
                 >
-                  <mat-icon>star_border</mat-icon>
+                  <mat-icon>{{ isPropertyFavorite(property.propertyId) ? 'favorite' : 'favorite_border' }}</mat-icon>
                 </button>
+
                 <button
                   mat-icon-button
                   class="property-action"
@@ -206,8 +216,10 @@
           />
         </div>
         <div class="property-overlay">
-          <button mat-icon-button class="property-action">
-            <mat-icon>star_border</mat-icon>
+          <button mat-icon-button class="property-action"
+            matTooltip="{{ isPropertyFavorite(propertyDetails()!.propertyId) ? 'Quitar favorito' : 'Marcar como favorita' }}"
+            (click)="togglePropertyFavorite(propertyDetails()!.propertyId); $event.stopPropagation()">
+            <mat-icon>{{ isPropertyFavorite(propertyDetails()!.propertyId) ? 'favorite' : 'favorite_border' }}</mat-icon>
           </button>
           <button
             mat-icon-button

@@ -131,5 +131,28 @@ export class PropertiesService {
       {}
     );
   }
+  updateProperty(UpdatePropertyRequest: UpdatePropertyRequest): Observable<PropertyDetails> {
+    const formData = new FormData();
+    const { payload, id } = UpdatePropertyRequest;
+
+    const { imageFiles, ...propertyData } = payload;
+
+    formData.append(
+      'property',
+      new Blob([JSON.stringify(propertyData)], {
+        type: 'application/json',
+      })
+    );
+
+    if (imageFiles && imageFiles.length > 0) {
+      imageFiles.forEach((file) => {
+        formData.append('images', file, file.name);
+      });
+    }
+    return this._http.patch<PropertyDetails>(
+      `${this._baseUrl}/${id}`,
+      formData
+    );
+  }
 
 }

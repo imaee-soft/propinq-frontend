@@ -1,0 +1,104 @@
+<form [formGroup]="form" (ngSubmit)="handleSubmit()">
+  <app-generic-dialog
+    dialogTitle="Editar Vivienda"
+    [activeSaveButton]="form.valid && hasAtLeastOneImage()"
+    [isLoading]="isLoading()"
+  >
+    <ng-template #content>
+      <div class="form-container">
+        <div class="form-layout">
+
+          <div class="form-main-fields-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Título</mat-label>
+              <input matInput formControlName="title" required>
+              @if (titleControl?.hasError('required') && titleControl?.touched) {
+                <mat-error>El título es requerido</mat-error>
+              }
+              @if (titleControl?.hasError('minlength') && titleControl?.touched) {
+                <mat-error>Debe tener al menos 5 caracteres</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Precio</mat-label>
+              <input matInput type="number" formControlName="price" required>
+              @if (priceControl?.hasError('required') && priceControl?.touched) {
+                <mat-error>El precio es requerido</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Dormitorios</mat-label>
+              <input matInput type="number" formControlName="bedrooms" required>
+              @if (bedroomsControl?.hasError('required') && bedroomsControl?.touched) {
+                <mat-error>La cantidad de dormitorios es requerida</mat-error>
+              }
+            </mat-form-field>
+
+            <mat-form-field appearance="outline">
+              <mat-label>Baños</mat-label>
+              <input matInput type="number" formControlName="bathrooms" required>
+              @if (bathroomsControl?.hasError('required') && bathroomsControl?.touched) {
+                <mat-error>La cantidad de baños es requerida</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+          <div class="toggle-fields-group">
+            <mat-slide-toggle formControlName="petsAllowed">Permite mascotas</mat-slide-toggle>
+            <mat-slide-toggle formControlName="furnishing">Amueblado</mat-slide-toggle>
+            <mat-slide-toggle formControlName="expenses">Paga expensas</mat-slide-toggle>
+          </div>
+
+          <div class="form-description-row">
+            <mat-form-field appearance="outline">
+              <mat-label>Descripción</mat-label>
+              <textarea matInput formControlName="description" required rows="5"></textarea>
+              @if (descriptionControl?.hasError('required') && descriptionControl?.touched) {
+                <mat-error>La descripción es requerida</mat-error>
+              }
+              @if (descriptionControl?.hasError('minlength') && descriptionControl?.touched) {
+                <mat-error>Debe tener al menos 10 caracteres</mat-error>
+              }
+            </mat-form-field>
+          </div>
+
+        </div>
+        <div class="image-section">
+          <h3 class="image-section-title">Imágenes de la propiedad</h3>
+          <div class="image-preview-container">
+            @for (url of existingImageUrls(); track url) {
+              <div class="image-preview-wrapper">
+                <img [src]="url" alt="Imagen existente" class="image-preview">
+                <button type="button" class="remove-image-btn" (click)="removeExistingImage(url)" mat-icon-button>
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+            @for (img of newImageFiles(); track $index) {
+              <div class="image-preview-wrapper">
+                <img [src]="img.previewUrl" alt="Nueva imagen" class="image-preview">
+                <button type="button" class="remove-image-btn" (click)="removeNewImage($index)" mat-icon-button>
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+          <div class="add-image-container">
+            <button type="button" class="add-image-btn" (click)="fileInput.click()">
+              <mat-icon>add_photo_alternate</mat-icon>
+              <span>Añadir imágenes</span>
+            </button>
+            <input hidden type="file" multiple #fileInput (change)="onFileSelected($event)" accept="image/png, image/jpeg, image/webp">
+          </div>
+          @if (form.touched && !hasAtLeastOneImage()) {
+            <mat-error class="image-error">
+              Se requiere al menos una imagen.
+            </mat-error>
+          }
+        </div>
+      </div>
+    </ng-template>
+  </app-generic-dialog>
+</form>

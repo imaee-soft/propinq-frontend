@@ -4,7 +4,6 @@ import {
   computed,
   effect,
   inject,
-  OnInit,
   Signal,
   signal,
 } from '@angular/core';
@@ -20,7 +19,7 @@ import {
   MatDrawerContent,
 } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router } from '@angular/router';
+import { Router, ActivatedRoute } from '@angular/router';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { Role } from '../../auth/enums/role.enum';
 import { BuildingsService } from '../../buildings/buildings.service';
@@ -37,7 +36,6 @@ import { ComparePropertiesDialogComponent } from '../../properties/dialogs/compa
 import { NewPropertyDialogComponent } from '../../properties/dialogs/new-property-dialog/new-property-dialog.component';
 import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
 import { PropertiesService } from '../../properties/properties.service';
-import { ActivatedRoute } from '@angular/router';
 import { FiltersComponent } from '../../shared/components/filters/filters.component';
 import { EntityDialogService } from '../../shared/services/entity-dialog.service';
 import { FiltersService } from '../../shared/services/filters.service';
@@ -80,13 +78,14 @@ export class HomePageComponent {
   private _filtersService = inject(FiltersService);
   private _sidebarService = inject(SidebarService);
   private route = inject(ActivatedRoute);
+  private favoriteService = inject(FavoriteService);
 
 
   private openBuildingDetailsFromFavorite(buildingId: string) {
     // Busca el marcador correspondiente y abre el panel
     // Si los marcadores aún no están cargados, espera un poco
     const tryOpen = () => {
-      const marker = this.markers().find(m => m.id === buildingId && m.type === 'building');
+      const marker = this.markers().find((m) => m.id === buildingId && m.type === 'building');
       if (marker) {
         this.onBuildingMarkerClick(marker);
       } else {
@@ -118,8 +117,6 @@ export class HomePageComponent {
   // Lista local de favoritos de propiedades (objetos FavoriteResponse)
   propertyFavoritesList = signal<FavoriteResponse[]>([]);
 
-  private favoriteService = inject(FavoriteService);
-  private authService = inject(AuthService);
   showFilters = signal(true);
 
   isOwner = computed(() => this._authService.user()?.role === Role.OWNER);
@@ -129,60 +126,46 @@ export class HomePageComponent {
   );
   sidebarOpened = computed(() => this._sidebarService.isOpen());
 
+  // Public flags for template conditions (centralizadas en FiltersService)
+  isFiltersModeActive = computed(() => this._filtersService.isFiltersModeActive());
+  hasNoResults = computed(() => this._filtersService.hasNoResults());
+  hasAnyFilterApplied = computed(() => this._filtersService.hasAnyFilterApplied());
+
   constructor() {
-  // Detecta si hay un query param 'building' y abre el detalle automáticamente
-  this.route.queryParams.subscribe(params => {
-    const buildingId = params['building'];
-    if (buildingId) {
-      this.openBuildingDetailsFromFavorite(buildingId);
-    }
-  });
+    // Abre detalle de building desde query param ?building=ID
+    this.route.queryParams.subscribe((params) => {
+      const buildingId = params['building'];
+      if (buildingId) {
+        this.openBuildingDetailsFromFavorite(buildingId);
+      }
+    });
 
-  // Efectos reactivos de los filtros
-  effect(() => {
-    if (
-      this._filtersService.filterNearMyLocation() ||
-      this._filtersService.filterNearPoint() ||
-      this._filtersService.filterNearPointOfInterest()
-    ) {
-      const buildings = this._filtersService.filteredBuildings().map((b) => ({
-        id: b.buildingId,
-        coordinate: { latitude: b.latitude, longitude: b.longitude },
-        icon: { url: '/building.png' },
-        type: 'building',
-      }));
+    // Un único effect que consume los marcadores actuales del servicio
+    effect(() => {
+      this.markers.set(this._filtersService.currentMarkers());
+    });
 
-      const properties = this._filtersService.filteredProperties().map((p) => ({
-        id: p.propertyId,
-        coordinate: { latitude: p.latitude, longitude: p.longitude },
-        icon: { url: '/property.png' },
-        type: 'property',
-      }));
+    // Si no hay filtros de cercanía activos, recarga marcadores base
+    effect(() => {
+      if (
+        !this._filtersService.filterNearMyLocation() &&
+        !this._filtersService.filterNearPoint() &&
+        !this._filtersService.filterNearPointOfInterest()
+      ) {
+        this.resetMapMarkers();
+      }
+    });
 
-      this.markers.set([...buildings, ...properties]);
-    }
-  });
-
-  effect(() => {
-    if (
-      !this._filtersService.filterNearMyLocation() &&
-      !this._filtersService.filterNearPoint() &&
-      !this._filtersService.filterNearPointOfInterest()
-    ) {
-      this.resetMapMarkers();
-    }
-  });
-
-  // Cargar favoritos de propiedades cuando el usuario esté presente
-  effect(() => {
-    const userId = this._authService.user()?.userId;
-    if (userId) {
-      this.loadPropertyFavorites(userId);
-    } else {
-      this.propertyFavoritesList.set([]);
-    }
-  });
-}
+    // Cargar favoritos de propiedades cuando el usuario esté presente
+    effect(() => {
+      const userId = this._authService.user()?.userId;
+      if (userId) {
+        this.loadPropertyFavorites(userId);
+      } else {
+        this.propertyFavoritesList.set([]);
+      }
+    });
+  }
 
   resetMapMarkers() {
     this._buildingsService.getBuildings().subscribe((buildings) => {
@@ -249,10 +232,9 @@ export class HomePageComponent {
   }
 
   onMapMarkersChange(markers: MapMarker[] | null): void {
-    this.markers.set([
-      ...(this.getMapConfig().markers ?? []),
-      ...(markers ?? []),
-    ]);
+    // Si hay filtros activos, ignoramos emisiones de hijos para no mezclar resultados
+    if (this.hasAnyFilterApplied()) return;
+    this.markers.set(markers ?? []);
   }
 
   onBuildingDetailsChange(buildingDetails: BuildingDetails | null): void {
@@ -441,7 +423,7 @@ export class HomePageComponent {
 
   // Llama esto cada vez que cambie el buildingDetails
   checkIfFavorite() {
-    const userId = this.authService.user()?.userId;
+  const userId = this._authService.user()?.userId;
     const buildingId = this.buildingDetails()?.buildingId;
     if (!userId || !buildingId) return;
     this.favoriteService.getFavoritesByUserAndBuilding(userId).subscribe(favs => {
@@ -452,7 +434,7 @@ export class HomePageComponent {
   }
 
   toggleFavorite() {
-    const userId = this.authService.user()?.userId;
+  const userId = this._authService.user()?.userId;
     const buildingId = this.buildingDetails()?.buildingId;
     if (!userId || !buildingId) return;
     if (this.isFavorite() && this.favoriteId()) {
@@ -489,7 +471,7 @@ export class HomePageComponent {
   // Alterna favorito de una propiedad: si existe lo borra, si no lo crea
   togglePropertyFavorite(propertyId: string | undefined | null) {
     if (!propertyId) return;
-    const userId = this.authService.user()?.userId;
+  const userId = this._authService.user()?.userId;
     if (!userId) return;
 
     const existing = this.propertyFavoritesList().find(f => f.propertyID === propertyId);
@@ -534,4 +516,3 @@ export class HomePageComponent {
     }
   }
 }
-  // Llama esto cada vez que cambie el buildingDetails

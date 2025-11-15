@@ -19,6 +19,12 @@
       [propertyMarkerQueried]="propertyMarkerQueried()"
       (propertyDetailsChange)="onPropertyDetailsChange($event)"
     ></app-property-component>
+
+    @if( isFiltersModeActive() && hasNoResults() ) {
+      <div class="no-results">
+        No se encontraron resultados con los filtros aplicados.
+      </div>
+    }
   </mat-drawer-content>
 
   @if (buildingDetails() !== null && propertyDetails() == null) {

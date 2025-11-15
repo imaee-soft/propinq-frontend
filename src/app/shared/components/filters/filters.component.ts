@@ -2,7 +2,6 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { MatButtonModule, MatFabButton } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
-import { MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
@@ -38,8 +37,7 @@ const POI_TYPES = [
     MatChipsModule,
     MatButtonModule,
     MatIconModule,
-    MatLabel,
-    MatTooltipModule,
+  MatTooltipModule,
     MatInputModule,
     MatCheckboxModule,
     MatSelectModule,
@@ -56,7 +54,8 @@ export class FiltersComponent {
   bathOptions = signal(BATH_OPTIONS);
   poiTypes = signal(POI_TYPES);
   nearTo = signal(NEAR_TO);
-  radius = signal(10);
+  // Usamos el radius del servicio como fuente de verdad
+  radius = computed(() => this._filtersService.radius());
   provinces = computed(() => this._filtersService.provinces());
   localities = computed(() => this._filtersService.localities());
 
@@ -69,15 +68,19 @@ export class FiltersComponent {
       this._filtersService.onSelectDepartmentType();
     } else if (type === 'Casas') {
       this._filtersService.onSelectPropertyType();
+    } else if (type === 'Todos') {
+      this._filtersService.onSelectAllTypes();
     }
   }
 
-  setMinPrice(price: number) {
-    this._filtersService.onSelectPriceMin(price);
+  setMinPrice(price: number | string) {
+    const n = Number(price);
+    this._filtersService.onSelectPriceMin(isNaN(n) ? ('' as any) : n);
   }
 
-  setMaxPrice(price: number) {
-    this._filtersService.onSelectPriceMax(price);
+  setMaxPrice(price: number | string) {
+    const n = Number(price);
+    this._filtersService.onSelectPriceMax(isNaN(n) ? ('' as any) : n);
   }
 
   // TODO: furniture and expenses
@@ -117,14 +120,8 @@ export class FiltersComponent {
   }
 
   changeRadius(event: Event) {
-    const target = event.target as HTMLInputElement;
-    const value = target.value;
-    if (value !== null && value !== undefined && value !== '') {
-      const numericValue = Number(value);
-      if (!isNaN(numericValue)) {
-        this.radius.set(numericValue);
-      }
-    }
+    // Delegamos al servicio para actualizar el radius y disparar recursos
+    this._filtersService.onSliderChange(event);
   }
 
   clearFilters() {

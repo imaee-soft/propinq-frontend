@@ -1,3 +1,16 @@
+.no-results {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(255, 255, 255, 0.9);
+  color: #444;
+  padding: 8px 12px;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  z-index: 1000;
+  font-size: 14px;
+}
 .filters-floating-panel {
   position: fixed;
   top: calc(50px + (100vh - 50px - 30px) / 2);

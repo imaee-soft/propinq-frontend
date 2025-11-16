@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  input,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,11 +20,14 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { NewBuildingDialogComponent } from '../../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
+import { MenuNotificationComponent } from '../../../notifications/components/menu-notification/menu-notification.component';
+import { NotificationResponse } from '../../../notifications/interfaces/notification-response.interface';
+import { NotificationsService } from '../../../notifications/notifications.service';
+import { NewHouseDialogComponent } from '../../../properties/dialogs/new-house-dialog/new-house-dialog.component';
 import { NavElement } from '../../interfaces/nav-element.interface';
 import { EntityDialogService } from '../../services/entity-dialog.service';
 import { SidebarService } from '../../services/sidebar.service';
 import { NavbarService } from './../../services/navbar.service';
-import { NewHouseDialogComponent } from '../../../properties/dialogs/new-house-dialog/new-house-dialog.component';
 
 @Component({
   imports: [
@@ -32,24 +42,30 @@ import { NewHouseDialogComponent } from '../../../properties/dialogs/new-house-d
     MatFormFieldModule,
     MatMenuModule,
     MatDivider,
+    MatBadgeModule,
+    MenuNotificationComponent,
   ],
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   private _navbarService = inject(NavbarService);
   private _sidebarService = inject(SidebarService);
   private _entityDialogService = inject(EntityDialogService);
   private _router = inject(Router);
+  private _notificationsService = inject(NotificationsService);
 
   items = input<NavElement[]>(this._navbarService.config());
-  userLogged = this._navbarService.userLogged;
   sidebarOpened = this._sidebarService.isOpen;
   filtersOpened = computed(() => this._navbarService.filtersOpen());
   navbarDisabled = computed(() => this._navbarService.disabled());
   propertyDetailsOpened = signal(false);
   buildingDetailsOpened = signal(false);
+  notifications = signal<NotificationResponse[]>([]);
+  notificationNumber = computed(
+    () => this.notifications().filter((n) => !n.seen).length
+  );
 
   isHomePage = computed(() => {
     const route = this.currentRoute();
@@ -74,12 +90,20 @@ export class NavbarComponent {
     { initialValue: this._router.url }
   );
 
+  ngOnInit() {
+    if (this.userLogged) {
+      this._notificationsService.getUserNotifications(this.userId!).subscribe({
+        next: (notifications) => this.notifications.set(notifications),
+      });
+    }
+  }
+
   toggleSidebar() {
     this._sidebarService.toggle();
   }
 
   handlePublish() {
-    if (!this.userLogged()) {
+    if (!this.userLogged) {
       this._router.navigate(['/auth/login']);
       return;
     }
@@ -111,7 +135,15 @@ export class NavbarComponent {
     this._navbarService.handleLogout();
   }
 
+  get userLogged() {
+    return this._navbarService.userLogged();
+  }
+
   get username() {
     return this._navbarService.username();
+  }
+
+  get userId() {
+    return this._navbarService.userId();
   }
 }

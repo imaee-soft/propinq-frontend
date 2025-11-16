@@ -1,0 +1,26 @@
+import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
+import { environment } from '../../environments/environment.development';
+import { AnswerContactRequest } from './interfaces/answer-contact-request.interface';
+import { ContactRequest } from './interfaces/contact-request.interface';
+import { ContactResponse } from './interfaces/contact-response.interface';
+
+@Injectable({ providedIn: 'root' })
+export class ContactsService {
+  private _http = inject(HttpClient);
+  private _baseUrl = `${environment.apiUrl}/api/v1/contacts`;
+
+  saveContactRequest(contactRequest: ContactRequest) {
+    return this._http.post(`${this._baseUrl}`, contactRequest, {
+      observe: 'response',
+    });
+  }
+
+  getContact(contactId: string) {
+    return this._http.get<ContactResponse>(`${this._baseUrl}/${contactId}`);
+  }
+
+  answerContact(contactId: string, answer: AnswerContactRequest) {
+    return this._http.patch(`${this._baseUrl}/${contactId}/answer`, answer);
+  }
+}

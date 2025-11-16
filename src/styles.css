@@ -59,6 +59,14 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   background: #1a1e2b;
 }
 
+.contact-dialog {
+  padding: 10px;
+  border-radius: 6px;
+  max-width: 40vw !important;
+  width: 40vw !important;
+  background: #1a1e2b;
+}
+
 @keyframes slideUp {
   from {
     transform: translateY(20%);

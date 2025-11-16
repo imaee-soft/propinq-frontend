@@ -4,12 +4,12 @@ import {
   computed,
   effect,
   inject,
-  OnInit,
   Signal,
   signal,
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatChip, MatChipSet } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -26,6 +26,7 @@ import { Role } from '../../auth/enums/role.enum';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { BuildingComponent } from '../../buildings/components/building/building.component';
 import { BuildingDetails } from '../../buildings/interfaces/building-details.interface';
+import { NewContactDialogComponent } from '../../contacts/dialogs/new-contact-dialog/new-contact-dialog.component';
 import { MapComponent } from '../../maps/components/map/map.component';
 import { MapClickEvent } from '../../maps/interfaces/click-event.interface';
 import { MapConfig } from '../../maps/interfaces/map-config.interface';
@@ -59,6 +60,8 @@ import { AuthService } from './../../auth/services/auth.service';
     MatTooltipModule,
     FiltersComponent,
     CommonModule,
+    MatChipSet,
+    MatChip,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -73,6 +76,7 @@ export class HomePageComponent {
   private _buildingsService = inject(BuildingsService);
   private _filtersService = inject(FiltersService);
   private _sidebarService = inject(SidebarService);
+  private _matDialog = inject(MatDialog);
 
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: this.center(),
@@ -96,6 +100,7 @@ export class HomePageComponent {
   isAuthenticated = computed(
     () => this._authService.status() === AuthStatus.AUTHENTICATED
   );
+  loggedUser = computed(() => this._authService.user());
   sidebarOpened = computed(() => this._sidebarService.isOpen());
 
   constructor() {
@@ -198,6 +203,18 @@ export class HomePageComponent {
         type: marker.type,
       });
     }
+  }
+
+  onContactOwner() {
+    if (!this.loggedUser()) {
+      this._router.navigate(['/auth/login']);
+      return;
+    }
+    if (this.propertyDetails() === null) return;
+    this._matDialog.open(NewContactDialogComponent, {
+      panelClass: 'contact-dialog',
+      data: this.propertyDetails(),
+    });
   }
 
   onMapMarkersChange(markers: MapMarker[] | null): void {

@@ -8,13 +8,12 @@ import { UpdateBuildingRequest } from './adapters/update-building-request';
 import { BuildingDetails } from './interfaces/building-details.interface';
 import { Building } from './interfaces/building.interface';
 import { BuildingDetailsPage } from './interfaces/buildings-details-page.interface';
-import { UsersService } from '../users/users.service';
 
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/buildings`;
-  private _userService = inject(UsersService);
+
   createBuilding(buildingRequest: BuildingRequest) {
     const formData = new FormData();
     const { images, ...buildingData } = buildingRequest;
@@ -54,8 +53,7 @@ export class BuildingsService {
 
   getBuildingsDetails(
     page = 0,
-    pageSize = 15,
-
+    pageSize = 15
   ): Observable<BuildingDetailsPage> {
     return this._http
       .get<BuildingDetailsPage>(
@@ -129,18 +127,23 @@ export class BuildingsService {
     );
   }
 
-  getBuildingsNear(latitude: number, longitude: number, radiusKm: number): Observable<Building[]> {
+  getBuildingsNear(
+    latitude: number,
+    longitude: number,
+    radiusKm: number
+  ): Observable<Building[]> {
     return this._http.get<Building[]>(`${this._baseUrl}/nearby`, {
       params: {
         latitude: latitude,
         longitude: longitude,
-        radiusKm: radiusKm
-      }
+        radiusKm: radiusKm,
+      },
     });
   }
 
-
-  getBuildingsNearPoi(poiType: string, radiusKm: number,
+  getBuildingsNearPoi(
+    poiType: string,
+    radiusKm: number,
     viewport: { north: number; south: number; east: number; west: number },
     limit?: number
   ) {
@@ -152,8 +155,10 @@ export class BuildingsService {
       .set('east', viewport.east)
       .set('west', viewport.west);
 
-   if (limit != null) params = params.set('limit', limit);
+    if (limit != null) params = params.set('limit', limit);
 
-    return this._http.get<Building[]>(`${this._baseUrl}/nearby/poi`, { params });
+    return this._http.get<Building[]>(`${this._baseUrl}/nearby/poi`, {
+      params,
+    });
   }
 }

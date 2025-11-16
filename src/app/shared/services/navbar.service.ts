@@ -37,6 +37,7 @@ export class NavbarService {
     () => this._authService.status() === AuthStatus.AUTHENTICATED
   );
   username = computed(() => this._authService.user()?.username);
+  userId = computed(() => this._authService.user()?.userId);
 
   handleLogout() {
     this._authService.logout();

@@ -28,6 +28,7 @@
           </mat-error>
         }
       </mat-form-field>
+
       @if(errorMessage()) {
         <div class="error-message">{{errorMessage()}}</div>
       }
@@ -41,6 +42,11 @@
         }
       </div>
       <a routerLink="/auth/signup" class="signup-link">¿No tienes cuenta? Registrate</a>
+        <div class="recaptcha-legal">
+          Este sitio está protegido por reCAPTCHA y aplican la
+          <a href="https://policies.google.com/privacy" target="_blank">Política de Privacidad</a> y los
+          <a href="https://policies.google.com/terms" target="_blank">Términos de Servicio</a> de Google.
+      </div>
     </form>
   </div>
 </section>

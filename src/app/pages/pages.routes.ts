@@ -48,7 +48,7 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./dashboard/dashboard-router.component').then(
         (m) => m.DashboardRouterComponent
-    ),
+      ),
   },
   {
     path: 'properties',
@@ -56,6 +56,13 @@ export const routes: Routes = [
       import('./property-page/property-page.component').then(
         (m) => m.PropertyPageComponent
       ),
+  },
+  {
+    path: 'mocks',
+    loadComponent: () =>
+      import(
+        '../shared/pages/mock-projects-page/mock-projects-page.component'
+      ).then((m) => m.MockProjectsPageComponent),
   },
   {
     path: '**',

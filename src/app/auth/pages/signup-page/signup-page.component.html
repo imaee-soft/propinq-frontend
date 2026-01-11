@@ -92,15 +92,6 @@
         }}</mat-error>
       }
     </mat-form-field>
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>Cuit</mat-label>
-      <input matInput placeholder="Ej. 20-12345678-9" formControlName="cuit">
-      @if (formUtils.isValidField(myForm,'cuit')) {
-        <mat-error>{{
-          formUtils.getFieldError(myForm, "cuit")
-        }}</mat-error>
-      }
-    </mat-form-field>
      <mat-form-field class="input-field" appearance="outline">
     <mat-label>Fecha de nacimiento</mat-label>
     <input matInput type="date" formControlName="birthDate" required>

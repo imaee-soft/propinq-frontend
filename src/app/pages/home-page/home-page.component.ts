@@ -44,6 +44,7 @@ import { FiltersService } from '../../shared/services/filters.service';
 import { SidebarService } from '../../shared/services/sidebar.service';
 import { CustomSnackbarService } from '../../shared/services/snackbar.service';
 import { AuthService } from './../../auth/services/auth.service';
+import { UserLocationService } from '../../maps/services/user-location.service';
 @Component({
   imports: [
     MapComponent,
@@ -77,6 +78,7 @@ export class HomePageComponent {
   private _filtersService = inject(FiltersService);
   private _sidebarService = inject(SidebarService);
   private _matDialog = inject(MatDialog);
+  private _userLocationService = inject(UserLocationService);
 
   private mapConfig: Signal<MapConfig> = computed(() => ({
     center: this.center(),
@@ -394,14 +396,7 @@ export class HomePageComponent {
   }
 
   goToMyLocation(): void {
-    navigator.geolocation.getCurrentPosition(
-      (position) =>
-        this.center.set({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        }),
-      () => this.center.set(DEFAULT_CENTER),
-      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-    );
+    const location = this._userLocationService.getUserLocation();
+    this.center.set(location);
   }
 }

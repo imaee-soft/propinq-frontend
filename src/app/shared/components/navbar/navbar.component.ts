@@ -56,7 +56,7 @@ export class NavbarComponent implements OnInit {
   private _router = inject(Router);
   private _notificationsService = inject(NotificationsService);
 
-  items = input<NavElement[]>(this._navbarService.config());
+  items = computed(() => this._navbarService.config());
   sidebarOpened = this._sidebarService.isOpen;
   filtersOpened = computed(() => this._navbarService.filtersOpen());
   navbarDisabled = computed(() => this._navbarService.disabled());
@@ -89,6 +89,8 @@ export class NavbarComponent implements OnInit {
     ),
     { initialValue: this._router.url }
   );
+
+  isOwner = computed(() => this._navbarService.isOwner());
 
   ngOnInit() {
     if (this.userLogged) {

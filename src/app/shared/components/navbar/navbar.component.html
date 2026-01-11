@@ -21,13 +21,15 @@
 
   <div class="nav-center">
     <div class="nav-actions">
-      <a
+      @if (isOwner()) {
+        <a
         class="nav-action-link nav-action-featured"
         (click)="handlePublish()"
         [matMenuTriggerFor]="publishMenu"
-      >
+        >
         Publicar
       </a>
+      }
       <mat-menu #publishMenu="matMenu">
         <div class="menu-content">
           <button mat-menu-item (click)="publishBuilding()">
@@ -65,13 +67,13 @@
       <mat-icon [matBadge]="notificationNumber()">notifications</mat-icon>
     </button>
     <mat-menu #notificationMenu="matMenu">
-      <div class="menu-content notification-menu-content">
-        @for (notification of notifications(); track $index) {
-        <menu-notification [notification]="notification"></menu-notification>
-        } @if (notifications().length == 0) {
-        <div>No hay notificaciones</div>
-        }
-      </div>
+      @if (notifications().length > 0) {
+        <div class="menu-content notification-menu-content">
+          @for (notification of notifications(); track $index) {
+            <menu-notification [notification]="notification"></menu-notification>
+          }
+        </div>
+      }
     </mat-menu>
     <button
       mat-icon-button

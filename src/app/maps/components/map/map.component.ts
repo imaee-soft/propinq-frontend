@@ -20,7 +20,6 @@ import { Point } from 'ol/geom';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import { fromLonLat } from 'ol/proj';
-import OSM from 'ol/source/OSM';
 import VectorSource from 'ol/source/Vector';
 import { Icon, Style } from 'ol/style';
 import { debounceTime, EMPTY, Subject, switchMap, takeUntil } from 'rxjs';
@@ -39,32 +38,45 @@ import {
   MIN_POI_ZOOM,
   transformFromMap,
 } from '../../utils/constants';
+import XYZ from 'ol/source/XYZ';
+import { UserLocationService } from '../../services/user-location.service';
 
 @Component({
   selector: 'app-map',
   templateUrl: 'map.component.html',
 })
-export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
+export class MapComponent implements AfterViewInit, OnDestroy {
   mapElement = viewChild<ElementRef>('mapElement');
 
   config = input<MapConfig>({});
   width = input<string>('100%');
   height = input<string>('100%');
+  coordinateToGo = input<MapCoordinate | null>(null);
 
   mapReady = output<OlMap>();
   mapClick = output<MapClickEvent>();
   markerClick = output<MapMarker>();
   centerChanged = output<MapCoordinate>();
-  coordinateToGo = input<MapCoordinate | null>(null);
 
+  private _userLocationService = inject(UserLocationService);
   private _snackbarService = inject(CustomSnackbarService);
   private _filtersService = inject(FiltersService);
   private _mapInstance = signal<OlMap | null>(null);
   private _isMapInitialized = signal<boolean>(false);
   private _mapConfig = computed(() => {
+    const location = this._userLocationService.getUserLocation();
+    const config = { ...DEFAULT_MAP_CONFIG, ...this.config() };
     return {
       ...DEFAULT_MAP_CONFIG,
-      ...this.config(),
+      ...config,
+      markers: [
+        ...(config.markers || []),
+        {
+          type: 'location',
+          coordinate: location,
+          icon: { url: '/location.png' },
+        },
+      ],
     };
   });
   private _markers = computed(() => this._mapConfig().markers || []);
@@ -81,12 +93,10 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
   });
   private _poiStyleCache = new Map<string, Style>();
 
-  private poiService = inject(PoiService);
+  private _poiService = inject(PoiService);
 
   private _viewport$ = new Subject<void>();
   private _destroy$ = new Subject<void>();
-
-  ngOnInit(): void {}
 
   ngAfterViewInit(): void {
     this.initializeMap();
@@ -142,7 +152,11 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
       target: this.mapElement()!.nativeElement,
       layers: [
         new TileLayer({
-          source: new OSM(),
+          source: new XYZ({
+            url: 'https://{1-4}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+            attributions: '©OpenStreetMap, ©CARTO',
+            maxZoom: 20,
+          }),
         }),
         this._vectorLayer,
         this._poiLayer,
@@ -203,7 +217,7 @@ export class MapComponent implements OnInit, AfterViewInit, OnDestroy {
             return EMPTY;
           }
 
-          return this.poiService.getPoisForMap(map, {
+          return this._poiService.getPoisForMap(map, {
             limit: 500,
           });
         }),

@@ -36,7 +36,6 @@ export class SidebarComponent {
   private _authService = inject(AuthService);
 
   config = computed(() => this._sidebarService.config());
-
   isOpen = computed(
     () =>
       this._sidebarService.isOpen() &&

@@ -25,69 +25,6 @@ export class SidebarService {
   config = computed((): SideConfig => {
     const status = this._authService.status();
     const user = this._authService.user();
-    if(this.isDashboardPage() === true){
-      return {
-        enabled: true,
-        items: [
-          {
-            label: 'Mapa',
-            icon: 'map',
-            route: ''
-          },
-          ...(
-        status === AuthStatus.AUTHENTICATED
-          ? user?.role.toString() === 'OWNER'
-            ? OWNER_SIDEBAR_CONFIG.items
-            : TENANT_SIDEBAR_CONFIG.items
-          : UNLOGGED_SIDEBAR_CONFIG.items
-      )
-        ]
-      };
-    }
-    if(this.isMapPage() === true){
-      return {
-        enabled: true,
-        items: [
-          {
-            label: 'Panel Administrativo',
-            icon: 'dashboard',
-            route: '/dashboard'
-          },
-          ...(
-        status === AuthStatus.AUTHENTICATED
-          ? user?.role.toString() === 'OWNER'
-            ? OWNER_SIDEBAR_CONFIG.items
-            : TENANT_SIDEBAR_CONFIG.items
-          : UNLOGGED_SIDEBAR_CONFIG.items
-      )
-        ]
-      };
-    }
-    
-    if(this.isOnAnyPage() === true) {
-      return {
-        enabled: true,
-    items: [
-      {
-        label: 'Mapa',
-        icon: 'map',
-        route: '/'
-      },
-      {
-        label: 'Panel Administrativo',
-        icon: 'dashboard',
-        route: '/dashboard'
-      },
-      ...(
-        status === AuthStatus.AUTHENTICATED
-          ? user?.role.toString() === 'OWNER'
-            ? OWNER_SIDEBAR_CONFIG.items
-            : TENANT_SIDEBAR_CONFIG.items
-          : UNLOGGED_SIDEBAR_CONFIG.items
-      )
-    ]
-      };
-    }
     return SIDEBAR_ITEMS[
       status === AuthStatus.AUTHENTICATED
         ? user?.role.toString() === 'OWNER'

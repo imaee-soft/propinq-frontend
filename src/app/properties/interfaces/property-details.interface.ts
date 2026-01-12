@@ -16,4 +16,6 @@ export interface PropertyDetails {
   deleted: boolean;
   ownerFullName: string;
   ownerId: string;
+  latitude: number;
+  longitude: number;
 }

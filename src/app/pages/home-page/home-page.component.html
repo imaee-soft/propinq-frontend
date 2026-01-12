@@ -53,7 +53,7 @@
           (click)="onCloseDetails()"
           aria-label="Cerrar"
         >
-        
+
           <mat-icon>close</mat-icon>
         </button>
       </mat-card-header>
@@ -250,7 +250,6 @@
         </div>
         <div class="home-property-overlay">
           @if (loggedUser()?.userId !== propertyDetails()!.ownerId) {
-        <div class="property-overlay">
           <button mat-icon-button class="property-action"
             matTooltip="{{ isPropertyFavorite(propertyDetails()!.propertyId) ? 'Quitar favorito' : 'Marcar como favorita' }}"
             (click)="togglePropertyFavorite(propertyDetails()!.propertyId); $event.stopPropagation()">

@@ -1,102 +1,40 @@
-.page-container {
-  background-color: #0f111a;
-  min-height: 100vh;
-  padding: 2rem;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
 
 .page-header {
+  margin-top: 30px;
   width: 100%;
-  max-width: 1200px;
+  max-width: 97%; /* igual que antes */
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 2rem;
 }
 
 .page-title {
   color: #f9fafb;
   font-size: 2.25rem;
-  font-weight: 300;
+  font-weight: 100;
 }
 
+/* MISMO estilo de FAB que tenías antes */
 .fab-add {
   background: linear-gradient(45deg, #8b5cf6, #6366f1);
   color: white;
   transition: transform 0.3s ease;
   border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  cursor: pointer;
 }
 
 .fab-add:hover {
   transform: scale(1.1) rotate(90deg);
 }
 
-.content-wrapper {
-  width: 100%;
-  max-width: 1200px;
-}
 
-.table-container {
-  background-color: #1c2230;
-  border: 1px solid #374151;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 8px 24px rgba(15, 17, 26, 0.4);
-}
-
-.building-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.mat-mdc-header-cell,
-.mat-mdc-cell {
-  padding: 1rem 1.5rem;
-  border-bottom: 1px solid #374151;
-}
-
-.mat-mdc-header-cell {
-  color: #cbd5e1;
-  font-weight: 600;
-  font-size: 0.875rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  background-color: rgba(42, 49, 66, 0.5);
-}
-
-.mat-mdc-cell {
-  color: #cbd5e1;
-}
-
-.mat-mdc-row {
-  transition: background-color 0.2s ease-out;
-}
-
-.mat-mdc-row:hover {
-  background-color: #374151;
-}
-
-.mat-mdc-row:last-child .mat-mdc-cell {
-  border-bottom: none;
-}
-
-.inactive-row {
-  opacity: 0.5;
-}
-.inactive-row:hover {
-  opacity: 0.7;
-}
-
-.actions-cell {
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 8px;
-}
-
+/* Mensajes de estado (los seguimos usando) */
 .status-message {
   padding: 3rem 1rem;
   text-align: center;
@@ -107,7 +45,7 @@
   border: 1px solid #374151;
 }
 
-.error {
+.status-message.error {
   color: #f44336;
 }
 
@@ -115,16 +53,13 @@
   .page-container {
     padding: 1rem;
   }
+
   .page-header {
     flex-direction: column;
     align-items: flex-start;
-    gap: 1rem;
   }
-  .mat-mdc-header-cell,
-  .mat-mdc-cell {
-    padding: 0.75rem 1rem;
+
+  .content-wrapper {
+    max-width: 100%;
   }
-}
-::ng-deep .mat-mdc-paginator-page-size {
-  display: none !important;
 }

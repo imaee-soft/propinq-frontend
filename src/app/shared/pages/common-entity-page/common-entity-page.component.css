@@ -7,7 +7,7 @@
 }
 
 .entity-card {
-  width: calc(25% - 12px);
+  width: calc(33% - 12px);
   min-width: 260px;
   display: flex;
   flex-direction: column;
@@ -158,10 +158,9 @@ mat-card-actions button[mat-flat-button]:disabled,
 }
 
 .pagination-zone {
-  position: relative;
-  left: 50%;
-  transform: translateX(-50%);
-  width: max-content;
+  width: 100%;
+  display: flex;
+  justify-content: center;
   margin-top: 16px;
 }
 

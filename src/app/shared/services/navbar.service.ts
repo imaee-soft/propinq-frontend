@@ -19,16 +19,19 @@ export class NavbarService {
   private _authService = inject(AuthService);
   private _dialogStateService = inject(DialogStateService);
 
+  user = this._authService.user;
+  status = this._authService.status;
+
   filtersOpen = signal(true);
   config = computed((): NavElement[] => {
     const status = this._authService.status();
     const user = this._authService.user();
+
+    if (status !== AuthStatus.AUTHENTICATED || !user)
+      return NAVBAR_ITEMS['unlogged'];
+
     return NAVBAR_ITEMS[
-      status === AuthStatus.AUTHENTICATED
-        ? user?.role === Role.OWNER
-          ? 'owner_logged'
-          : 'tenant_logged'
-        : 'unlogged'
+      user.role === Role.OWNER ? 'owner_logged' : 'tenant_logged'
     ];
   });
 
@@ -37,6 +40,11 @@ export class NavbarService {
     () => this._authService.status() === AuthStatus.AUTHENTICATED
   );
   username = computed(() => this._authService.user()?.username);
+  userId = computed(() => this._authService.user()?.userId);
+  isOwner = computed(() => {
+    const user = this._authService.user();
+    return user?.role === Role.OWNER;
+  });
 
   handleLogout() {
     this._authService.logout();

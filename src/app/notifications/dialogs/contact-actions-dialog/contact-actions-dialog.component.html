@@ -1,0 +1,55 @@
+<mat-dialog-content>
+  <h2 mat-dialog-title>Respuesta a solicitud de contacto</h2>
+  <div class="info-line">
+    <mat-icon>person</mat-icon>
+    {{ issuerFullName() }}
+  </div>
+
+  <div class="info-line">
+    <mat-icon>chat</mat-icon>
+    <span class="info-text">{{ message() }}</span>
+  </div>
+
+  <mat-button-toggle-group
+    class="full-width-group"
+    (change)="changeAction($event.value)"
+    value="ACCEPT"
+  >
+    <mat-button-toggle value="ACCEPT">Aceptar</mat-button-toggle>
+    <mat-button-toggle value="REJECT">Rechazar</mat-button-toggle>
+  </mat-button-toggle-group>
+  <mat-form-field appearance="outline">
+    <mat-label>Mensaje</mat-label>
+    <textarea
+      matInput
+      [formControl]="response"
+      [maxLength]="300"
+      rows="4"
+      placeholder="Respondé la solicitud de contacto..."
+    ></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="false">
+    <mat-icon>close</mat-icon>
+    Cerrar
+  </button>
+  <button
+    mat-flat-button
+    type="submit"
+    [disabled]="isLoading() || response.invalid"
+    (click)="submitAnswer()"
+  >
+    <div class="button-content">
+      @if (isLoading()) {
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="20"
+      ></mat-progress-spinner>
+      } @else {
+      <mat-icon>save</mat-icon>
+      <span>{{ this.action === "ACCEPT" ? "Aceptar" : "Rechazar" }}</span>
+      }
+    </div>
+  </button>
+</mat-dialog-actions>

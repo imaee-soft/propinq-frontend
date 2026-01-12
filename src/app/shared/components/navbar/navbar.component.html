@@ -1,6 +1,6 @@
 <mat-toolbar color="primary" class="navbar" [class.disabled]="navbarDisabled()">
   <div class="nav-left">
-    @if (userLogged()) {
+    @if (userLogged) {
     <button
       mat-icon-button
       (click)="toggleSidebar()"
@@ -21,13 +21,15 @@
 
   <div class="nav-center">
     <div class="nav-actions">
-      <a
+      @if (isOwner()) {
+        <a
         class="nav-action-link nav-action-featured"
         (click)="handlePublish()"
         [matMenuTriggerFor]="publishMenu"
-      >
+        >
         Publicar
       </a>
+      }
       <mat-menu #publishMenu="matMenu">
         <div class="menu-content">
           <button mat-menu-item (click)="publishBuilding()">
@@ -54,18 +56,25 @@
 
   <div class="nav-right">
     <mat-divider class="vertical-divider" vertical></mat-divider>
-    @if (userLogged()) {
+    @if (userLogged) {
     <button
       mat-icon-button
       matTooltip="Notificaciones"
       matTooltipPosition="below"
+      class="menu-trigger"
+      [matMenuTriggerFor]="notificationMenu"
     >
-      <mat-icon>notifications</mat-icon>
+      <mat-icon [matBadge]="notificationNumber()">notifications</mat-icon>
     </button>
-
-    <button mat-icon-button matTooltip="Mensajes" matTooltipPosition="below">
-      <mat-icon>message</mat-icon>
-    </button>
+    <mat-menu #notificationMenu="matMenu">
+      @if (notifications().length > 0) {
+        <div class="menu-content notification-menu-content">
+          @for (notification of notifications(); track $index) {
+            <menu-notification [notification]="notification"></menu-notification>
+          }
+        </div>
+      }
+    </mat-menu>
     <button
       mat-icon-button
       matTooltip="Mi cuenta"

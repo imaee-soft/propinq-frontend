@@ -193,16 +193,49 @@
         <mat-card-title>{{
           propertyDetails()!.title || "Propiedad"
         }}</mat-card-title>
-        <button
-          mat-icon-button
-          class="close-button"
-          (click)="onCloseDetails()"
-          aria-label="Cerrar"
-        >
+        <button mat-icon-button (click)="onCloseDetails()" aria-label="Cerrar">
           <mat-icon>close</mat-icon>
         </button>
       </mat-card-header>
-      <mat-card-content class="scrolled">
+      <mat-card-content class="property-content">
+        <div class="property-description">
+          @if (propertyDetails()!.description) {
+          <p>{{ propertyDetails()!.description }}</p>
+          }
+        </div>
+        <div class="property-info">
+          <div class="property-amenities">
+            <mat-chip-set class="mat-mdc-chip-set-stacked">
+              <mat-chip selected>
+                <mat-icon class="check-icon">{{
+                  propertyDetails()!.furnishing ? "check" : "close"
+                }}</mat-icon
+                >Amueblada</mat-chip
+              >
+              <mat-chip selected>
+                <mat-icon class="check-icon">{{
+                  propertyDetails()!.petsAllowed ? "check" : "close"
+                }}</mat-icon
+                >Mascotas</mat-chip
+              >
+              <mat-chip selected>
+                <mat-icon class="check-icon">check</mat-icon>Dueño
+                Verificado</mat-chip
+              >
+            </mat-chip-set>
+          </div>
+          <div class="price-info">
+            <div class="price-container">
+              <span class="currency">$</span>
+              <span class="price-amount">{{
+                propertyDetails()!.price | number : "1.0-0"
+              }}</span>
+            </div>
+            <div class="price-details">
+              <span class="price-label">Precio de alquiler mensual</span>
+            </div>
+          </div>
+        </div>
         <div class="property-image-container">
           <img
             [src]="
@@ -215,6 +248,8 @@
             class="property-image"
           />
         </div>
+        <div class="home-property-overlay">
+          @if (loggedUser()?.userId !== propertyDetails()!.ownerId) {
         <div class="property-overlay">
           <button mat-icon-button class="property-action"
             matTooltip="{{ isPropertyFavorite(propertyDetails()!.propertyId) ? 'Quitar favorito' : 'Marcar como favorita' }}"
@@ -233,19 +268,44 @@
             <mat-icon>image</mat-icon>
           </button>
           <button
+            class="contact-owner-button"
             mat-button
-            class="property-action property-action-more"
-            (click)="goToProperty(propertyDetails()!.propertyId)"
+            (click)="onContactOwner()"
           >
-            Ver Más
+            <mat-icon>contacts_product</mat-icon>
+            Contactar Dueño
           </button>
-          <button
-            mat-icon-button
-            class="property-action"
-            (click)="addToComparativeList(propertyDetails()!)"
-          >
-            <mat-icon>balance</mat-icon>
-          </button>
+          }
+          <div class="property-overlay-actions">
+            <button mat-icon-button matTooltip="Marcar como favorita">
+              <mat-icon>star_border</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Ver imágenes"
+              [disabled]="!propertyDetails()?.imagesURL?.length"
+              (click)="
+                propertyDetails()?.imagesURL &&
+                  openPropertyGallery(propertyDetails()!.imagesURL)
+              "
+            >
+              <mat-icon>image</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Visualizar detalles"
+              (click)="goToProperty(propertyDetails()!.propertyId)"
+            >
+              <mat-icon>more</mat-icon>
+            </button>
+            <button
+              mat-icon-button
+              matTooltip="Agregar a la comparación"
+              (click)="addToComparativeList(propertyDetails()!)"
+            >
+              <mat-icon>balance</mat-icon>
+            </button>
+          </div>
         </div>
       </mat-card-content>
     </mat-card>

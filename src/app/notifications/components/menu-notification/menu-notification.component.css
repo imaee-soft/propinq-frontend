@@ -1,0 +1,6 @@
+.notification-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: 4px;
+}

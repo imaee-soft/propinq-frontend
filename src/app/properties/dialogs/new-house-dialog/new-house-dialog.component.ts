@@ -162,8 +162,8 @@ export class NewHouseDialogComponent {
     this._markers.update(() => [
       {
         coordinate,
-        icon: { url: BUILDING_ICON_URL },
-        type: 'building',
+        icon: { url: '/property.png' },
+        type: 'property',
       },
     ]);
     this.form.patchValue({ coordinate });

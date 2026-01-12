@@ -1,0 +1,45 @@
+<mat-dialog-content>
+  <h2 mat-dialog-title>Nueva solicitud de contacto</h2>
+  <mat-label>
+    <mat-icon>home</mat-icon>
+    {{ title() }}
+  </mat-label>
+  <mat-label>
+    <mat-icon>person</mat-icon>
+    {{ owner() }}
+  </mat-label>
+  <mat-form-field appearance="outline">
+    <mat-label>Mensaje</mat-label>
+    <textarea
+      matInput
+      [formControl]="message"
+      [maxLength]="300"
+      rows="4"
+      placeholder="Enviá un mensaje al dueño..."
+    ></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-button [mat-dialog-close]="false">
+    <mat-icon>close</mat-icon>
+    Cerrar
+  </button>
+  <button
+    mat-flat-button
+    type="submit"
+    [disabled]="isLoading() || message.invalid"
+    (click)="saveContactRequest()"
+  >
+    <div class="button-content">
+      @if (isLoading()) {
+      <mat-progress-spinner
+        mode="indeterminate"
+        diameter="20"
+      ></mat-progress-spinner>
+      } @else {
+      <mat-icon>save</mat-icon>
+      <span>Contactar</span>
+      }
+    </div>
+  </button>
+</mat-dialog-actions>

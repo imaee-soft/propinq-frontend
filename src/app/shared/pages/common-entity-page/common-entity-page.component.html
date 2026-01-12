@@ -1,0 +1,53 @@
+<div class="grid-container">
+  @for (entity of cards(); track entity) {
+  <mat-card class="entity-card">
+    <mat-card-header>
+      <div class="title-row">
+        <div class="entity-container">
+          <mat-icon>person</mat-icon>
+          <span class="span-title">
+            {{ descriptor()?.user(entity) }}
+          </span>
+        </div>
+
+        <div class="badges">
+          <span class="card-date">
+            {{ formatDateWrapper(descriptor()?.date(entity)) }}
+          </span>
+
+          @if (descriptor()?.status(entity)) {
+          <span class="card-status">
+            {{ descriptor()?.status(entity) }}
+          </span>
+          }
+        </div>
+      </div>
+    </mat-card-header>
+
+    <mat-card-content>
+      <p class="name">
+        {{ descriptor()?.name(entity) }}
+      </p>
+      <div class="map-slot">
+        <div class="map-wrapper">
+          <app-map [config]="loadMapConfig(entity)"></app-map>
+        </div>
+      </div>
+    </mat-card-content>
+
+    <mat-card-actions align="end">
+      <button mat-flat-button (click)="onOpen()">Ver</button>
+      <button mat-button (click)="onDelete()">Cancelar</button>
+    </mat-card-actions>
+  </mat-card>
+  }
+  <div class="pagination-zone">
+    @if (hasMore()) {
+    <button mat-flat-button class="load-more">Recuperar más solicitudes</button>
+    } @else {
+    <span class="all-loaded">
+      Estas son todas las solicitudes de contacto.
+    </span>
+    }
+  </div>
+</div>

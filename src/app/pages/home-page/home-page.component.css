@@ -330,6 +330,52 @@ mat-grid-list {
   display: block;
 }
 
+.property-amenities mat-icon {
+  font-size: 11px;
+  height: 11px;
+  width: 11px;
+  line-height: 11px;
+  margin-right: 8px;
+}
+
+.home-property-overlay {
+  display: flex;
+  justify-content: space-between;
+}
+
+.contact-owner-button {
+  padding: 4px 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: rgba(255, 255, 255, 0.02);
+  color: #f0f4ff !important;
+  box-shadow: 0 0 0 transparent;
+  transition: all 0.2s ease-in-out;
+}
+
+.contact-owner-button:hover {
+  background-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.1);
+  transform: translateY(-1px);
+  color: #c1e3ff;
+}
+
+.contact-owner-button::after {
+  content: none !important;
+}
+
+.property-overlay-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  border-radius: 0 0 8px 8px;
+}
+
+.home-property-overlay mat-icon-button {
+  border-radius: 4px;
+}
+
 .property-overlay {
   position: absolute;
   left: 0;
@@ -357,18 +403,9 @@ mat-grid-list {
   background: rgba(150, 150, 150, 0.4) !important;
 }
 
-.property-action-more {
-  background: transparent;
-  font-size: 14px;
-  font-weight: 500;
-  color: #fff !important;
-  border-radius: 16px;
-  padding: 4px 12px;
-}
-
 .property-card {
-  width: clamp(320px, 32vw, 430px);
-  min-width: 220px;
+  width: clamp(360px, 36vw, 560px);
+  min-width: 240px;
   max-width: 96vw;
   margin: 32px auto 20px auto;
   border-radius: 8px;
@@ -413,6 +450,9 @@ mat-grid-list {
 }
 
 .property-card mat-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   padding: 20px 20px 12px 24px;
   background: linear-gradient(
     90deg,
@@ -441,6 +481,7 @@ mat-grid-list {
 .property-card mat-card-title button[mat-icon-button][color="warn"] .mat-icon {
   color: #e53935 !important;
 }
+
 .property-card .close-button {
   top: 14px;
   right: 18px;
@@ -457,12 +498,72 @@ mat-grid-list {
 }
 
 .property-card mat-card-content {
-  padding: 0 0 20px 0;
+  padding: 0 20px 20px 20px;
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 18px;
   min-height: 0;
+  background: linear-gradient(
+    90deg,
+    rgba(30, 34, 56, 0.97) 80%,
+    rgba(35, 45, 68, 0.92) 100%
+  );
+  overflow: hidden;
+}
+
+.property-description {
+  font-size: 1rem;
+  font-weight: 450;
+  line-height: 1.5rem;
+}
+
+.property-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.property-amenities,
+.price-info {
+  flex: 1;
+  width: 50%;
+  box-sizing: border-box;
+}
+
+.price-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.price-container {
+  display: flex;
+  align-items: baseline;
+  gap: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.currency {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.price-amount {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1;
+}
+
+.price-details {
+  color: var(--muted-contrast);
+  font-size: 0.875rem;
 }
 
 .property-image-container {
@@ -471,7 +572,7 @@ mat-grid-list {
   aspect-ratio: 16/9;
   background: linear-gradient(120deg, #23263b 60%, #18243b 100%);
   overflow: hidden;
-  border-radius: 16px 16px 0 0;
+  border-radius: 4px;
   box-shadow: 0 2px 8px rgba(25, 22, 33, 0.13);
 }
 
@@ -779,17 +880,11 @@ mat-grid-list {
 }
 
 .property-overlay {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 48px;
   display: flex;
   align-items: center;
   justify-content: flex-end;
   gap: 8px;
   padding: 0 8px;
-  z-index: 2;
   border-radius: 0 0 8px 8px;
   pointer-events: none;
 }

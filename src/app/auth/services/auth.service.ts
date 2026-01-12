@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
-import { SignupRequest } from './../interfaces/signupRequest.interface';
 import { computed, inject, Injectable, signal } from '@angular/core';
-import { Observable, of, timeout, finalize, EMPTY, tap, throwError } from 'rxjs';
+import { EMPTY, finalize, Observable, of, tap, throwError } from 'rxjs';
 import { environment } from '../../../environments/environment.development';
 import { ClientStorageService } from '../../shared/services/client-storage.service.abstract';
 import { AuthStatus } from '../enums/auth-status.enum';
@@ -9,6 +8,7 @@ import { AuthResponse } from '../interfaces/auth-response.interface';
 import { AuthState } from '../interfaces/auth-state.interface';
 import { LoginRequest } from '../interfaces/login-request.interface';
 import { UserAuth } from '../interfaces/user-auth.interface';
+import { SignupRequest } from './../interfaces/signupRequest.interface';
 
 const INITIAL_STATE: AuthState = {
   user: null,
@@ -29,7 +29,6 @@ export class AuthService {
   accessToken = computed(() => this._authState().accessToken);
   refreshToken = computed(() => this._authState().refreshToken);
   isLoading = signal(false);
-
 
   constructor() {
     this.checkStatus().subscribe({
@@ -96,26 +95,32 @@ export class AuthService {
     this._storage.set('refreshToken', refreshToken);
   }
 
-  signup(signupRequest: SignupRequest): Observable<{ success: boolean; status: number }> {
+  signup(
+    signupRequest: SignupRequest
+  ): Observable<{ success: boolean; status: number }> {
     if (this.isLoading()) {
       return EMPTY;
     }
 
     this.isLoading.set(true);
 
-    return this.http.post<{ success: boolean; status: number }>(`${environment.apiUrl}/auth/signup`, {
-      dni: signupRequest.dni,
-      firstName: signupRequest.firstName,
-      lastName: signupRequest.lastName,
-      email: signupRequest.email,
-      password: signupRequest.password,
-      address: signupRequest.address,
-      phoneNumber: signupRequest.phoneNumber,
-      cuit: signupRequest.cuit,
-      birthDate: signupRequest.birthDate
-    }, { responseType: 'text' as 'json' }).pipe(
-      finalize(() => this.isLoading.set(false))
-    );
+    return this.http
+      .post<{ success: boolean; status: number }>(
+        `${environment.apiUrl}/auth/signup`,
+        {
+          dni: signupRequest.dni,
+          firstName: signupRequest.firstName,
+          lastName: signupRequest.lastName,
+          email: signupRequest.email,
+          password: signupRequest.password,
+          address: signupRequest.address,
+          phoneNumber: signupRequest.phoneNumber,
+          cuit: signupRequest.cuit,
+          birthDate: signupRequest.birthDate,
+        },
+        { responseType: 'text' as 'json' }
+      )
+      .pipe(finalize(() => this.isLoading.set(false)));
   }
 
   refreshTokenRequest(): Observable<AuthResponse> {
@@ -123,22 +128,21 @@ export class AuthService {
     if (!refreshToken) {
       return throwError(() => new Error('Refresh token no disponible'));
     }
-    return this._http.post<AuthResponse>(
-      `${environment.apiUrl}/auth/refresh-token`,
-      { refreshToken }
-    ).pipe(
-      tap((response) => {
-        const { accessToken, refreshToken, user } = response;
-        this._authState.set({
-          accessToken,
-          refreshToken,
-          user,
-          status: AuthStatus.AUTHENTICATED,
-        });
-        this.setTokens(accessToken, refreshToken);
+    return this._http
+      .post<AuthResponse>(`${environment.apiUrl}/auth/refresh-token`, {
+        refreshToken,
       })
-    );
+      .pipe(
+        tap((response) => {
+          const { accessToken, refreshToken, user } = response;
+          this._authState.set({
+            accessToken,
+            refreshToken,
+            user,
+            status: AuthStatus.AUTHENTICATED,
+          });
+          this.setTokens(accessToken, refreshToken);
+        })
+      );
   }
 }
-
-

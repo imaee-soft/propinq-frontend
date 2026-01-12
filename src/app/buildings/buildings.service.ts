@@ -12,11 +12,12 @@ import { BuildingDetailsPage } from './interfaces/buildings-details-page.interfa
 import { buildFilterHttpParams } from '../shared/utilities/http-params.builder';
 import { UsersService } from '../users/users.service';
 
+
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/buildings`;
-  private _userService = inject(UsersService);
+
   createBuilding(buildingRequest: BuildingRequest) {
     const formData = new FormData();
     const { images, ...buildingData } = buildingRequest;
@@ -57,8 +58,7 @@ export class BuildingsService {
 
   getBuildingsDetails(
     page = 0,
-    pageSize = 15,
-
+    pageSize = 15
   ): Observable<BuildingDetailsPage> {
     return this._http
       .get<BuildingDetailsPage>(
@@ -143,6 +143,41 @@ export class BuildingsService {
         params,
       }
     );
+  }
+
+  getBuildingsNear(
+    latitude: number,
+    longitude: number,
+    radiusKm: number
+  ): Observable<Building[]> {
+    return this._http.get<Building[]>(`${this._baseUrl}/nearby`, {
+      params: {
+        latitude: latitude,
+        longitude: longitude,
+        radiusKm: radiusKm,
+      },
+    });
+  }
+
+  getBuildingsNearPoi(
+    poiType: string,
+    radiusKm: number,
+    viewport: { north: number; south: number; east: number; west: number },
+    limit?: number
+  ) {
+    let params = new HttpParams()
+      .set('poiType', poiType)
+      .set('radiusKm', radiusKm)
+      .set('north', viewport.north)
+      .set('south', viewport.south)
+      .set('east', viewport.east)
+      .set('west', viewport.west);
+
+    if (limit != null) params = params.set('limit', limit);
+
+    return this._http.get<Building[]>(`${this._baseUrl}/nearby/poi`, {
+      params,
+    });
   }
 
 }

@@ -91,7 +91,6 @@ export class SignupPageComponent {
         '',
         [Validators.required, Validators.pattern(FormUtils.phoneNumberPattern)],
       ],
-      cuit: ['', [Validators.pattern(FormUtils.cuitPattern)]],
       dni: [
         '',
         [Validators.required, Validators.pattern(FormUtils.dniPattern)],

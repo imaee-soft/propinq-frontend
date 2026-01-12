@@ -9,6 +9,7 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatChip, MatChipSet } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -25,6 +26,7 @@ import { Role } from '../../auth/enums/role.enum';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { BuildingComponent } from '../../buildings/components/building/building.component';
 import { BuildingDetails } from '../../buildings/interfaces/building-details.interface';
+import { NewContactDialogComponent } from '../../contacts/dialogs/new-contact-dialog/new-contact-dialog.component';
 import { MapComponent } from '../../maps/components/map/map.component';
 import { MapClickEvent } from '../../maps/interfaces/click-event.interface';
 import { MapConfig } from '../../maps/interfaces/map-config.interface';
@@ -42,6 +44,7 @@ import { FiltersService } from '../../shared/services/filters.service';
 import { SidebarService } from '../../shared/services/sidebar.service';
 import { CustomSnackbarService } from '../../shared/services/snackbar.service';
 import { AuthService } from './../../auth/services/auth.service';
+import { UserLocationService } from '../../maps/services/user-location.service';
 // Cambiado para usar el servicio de favorites central
 import { FavoriteService } from '../../favorites/services/favorite-service';
 import { FavoriteResponse } from '../../favorites/interfaces/favorite-interface';
@@ -63,6 +66,8 @@ import { FavoriteResponse } from '../../favorites/interfaces/favorite-interface'
     MatTooltipModule,
     FiltersComponent,
     CommonModule,
+    MatChipSet,
+    MatChip,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
@@ -77,6 +82,9 @@ export class HomePageComponent {
   private _buildingsService = inject(BuildingsService);
   private _filtersService = inject(FiltersService);
   private _sidebarService = inject(SidebarService);
+  private _matDialog = inject(MatDialog);
+  private _userLocationService = inject(UserLocationService);
+
   private route = inject(ActivatedRoute);
   private favoriteService = inject(FavoriteService);
 
@@ -124,6 +132,7 @@ export class HomePageComponent {
   isAuthenticated = computed(
     () => this._authService.status() === AuthStatus.AUTHENTICATED
   );
+  loggedUser = computed(() => this._authService.user());
   sidebarOpened = computed(() => this._sidebarService.isOpen());
 
   // Public flags for template conditions (centralizadas en FiltersService)
@@ -229,6 +238,18 @@ export class HomePageComponent {
         type: marker.type,
       });
     }
+  }
+
+  onContactOwner() {
+    if (!this.loggedUser()) {
+      this._router.navigate(['/auth/login']);
+      return;
+    }
+    if (this.propertyDetails() === null) return;
+    this._matDialog.open(NewContactDialogComponent, {
+      panelClass: 'contact-dialog',
+      data: this.propertyDetails(),
+    });
   }
 
   onMapMarkersChange(markers: MapMarker[] | null): void {
@@ -410,15 +431,8 @@ export class HomePageComponent {
   }
 
   goToMyLocation(): void {
-    navigator.geolocation.getCurrentPosition(
-      (position) =>
-        this.center.set({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude,
-        }),
-      () => this.center.set(DEFAULT_CENTER),
-      { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
-    );
+    const location = this._userLocationService.getUserLocation();
+    this.center.set(location);
   }
 
   // Llama esto cada vez que cambie el buildingDetails

@@ -3,11 +3,13 @@ import {
   Component,
   computed,
   inject,
+  OnInit,
+  Renderer2,
   signal,
 } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
+import { MatIconModule, MatIcon } from '@angular/material/icon';
 import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
@@ -16,20 +18,35 @@ import { EditBuildingDialogComponent } from '../../buildings/dialogs/edit-buildi
 import { NewBuildingDialogComponent } from '../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
 import { BuildingDetails } from '../../buildings/interfaces/building-details.interface';
 import { EntityDialogService } from '../../shared/services/entity-dialog.service';
-
+import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
+import { Page } from '../../shared/interfaces/page.interface';
+import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
+import { DEFAULT_CENTER } from '../../maps/utils/constants';
 @Component({
   selector: 'app-building-page',
-  imports: [MatTableModule, MatIconModule, MatButtonModule, MatPaginatorModule],
+  imports: [CommonEntityPageComponent, MatIcon],
   templateUrl: './building-page.component.html',
   styleUrls: ['./building-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BuildingPageComponent {
+export class BuildingPageComponent implements OnInit{
   private _buildingsService = inject(BuildingsService);
   private _entityDialogService = inject(EntityDialogService);
+  private renderer = inject(Renderer2);
 
   hasToQuery = signal<Boolean>(true);
   pageIndex = signal(0);
+
+  readonly page = computed<Page<BuildingDetails> | null>(() => {
+    const value = this.buildingsDetailsResource.value();
+    if (!value) return null;
+
+    return {
+      content: value.content,
+      total: value.totalElements,
+    };
+  });
+
   totalElements = computed<number>(
     () => this.buildingsDetailsResource.value()?.totalElements || 0
   );
@@ -42,16 +59,58 @@ export class BuildingPageComponent {
       return of(null);
     },
   });
-  buildings = computed<BuildingDetails[] | null>(
-    () => this.buildingsDetailsResource.value()?.content || null
-  );
 
-  displayedColumns: string[] = ['name', 'description', 'actions'];
+  descriptor: CardDescriptor<BuildingDetails> = {
+    user: (b) => b.userFullName,
+    name: (b) => b.name,
+    date: () => {
+      // Si tienes fecha en BuildingDetails, úsala aquí. Por ahora null.
+      return new Date(); // TODO: reemplazar por b.createdAt si existe
+    },
+    id: (b) => b.buildingId,
+    status: (b) => (b.deleted ? 'ELIMINADO' : b.buildingTypeName),
+    coordinates: (b) =>
+      b.latitude != null && b.longitude != null
+        ? { latitude: b.latitude, longitude: b.longitude }
+        : DEFAULT_CENTER, // o DEFAULT_CENTER si lo tienes accesible}
+    secondaryActionLabel: (b) => (b.deleted ? 'Restaurar' : 'Eliminar'),
+  };
 
-  onPageChange(event: PageEvent) {
-    this.pageIndex.set(event.pageIndex);
-    this.buildingsDetailsResource.reload();
+  ngOnInit() {
+    this.renderer.setStyle(document.body, 'overflow', 'auto');
   }
+
+  ngOnDestroy() {
+    this.renderer.removeStyle(document.body, 'overflow');
+  }
+
+  openBuilding = (id: string | number | undefined) => {
+    const building = this.buildingsDetailsResource
+      .value()
+      ?.content.find((b) => b.buildingId === id);
+    if (!building) return;
+
+    this.onUpdate(building);
+  };
+
+   deleteOrRestoreBuilding = (id: string | number | undefined) => {
+    const building = this.buildingsDetailsResource
+      .value()
+      ?.content.find((b) => b.buildingId === id);
+    if (!building) return;
+
+    if (!building.deleted) {
+      this.onDelete(building.buildingId);
+    } else {
+      this.onRestore(building.buildingId);
+    }
+  };
+
+  loadMore = () => {
+    // Siguiente página
+    this.pageIndex.update((i) => i + 1);
+    this.buildingsDetailsResource.reload();
+  };
   onCreate(): void {
     this._entityDialogService
       .openNewEntityDialog(NewBuildingDialogComponent, {

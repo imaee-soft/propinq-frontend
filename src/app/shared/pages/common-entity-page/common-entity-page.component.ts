@@ -21,6 +21,10 @@ export class CommonEntityPageComponent<T extends object> {
   descriptor = input<CardDescriptor<T>>();
   onOpen = input<(id: string | number | undefined) => void>();
   onDelete = input<(id: string | number | undefined) => void>();
+  primaryActionLabel = input<string>('Ver');
+  allLoadedText = input<string>('Estas son todas las solicitudes de contacto.');
+  loadMoreLabel = input<string>('Recuperar más solicitudes');
+  iconUrl = input<string>('/building.png');
 
   cards = computed(() => this.page()?.content ?? []);
   total = computed(() => this.page()?.total ?? null);
@@ -46,7 +50,7 @@ export class CommonEntityPageComponent<T extends object> {
           {
             type: 'building',
             coordinate: coords,
-            icon: { url: '/building.png' },
+            icon: { url: this.iconUrl() },
           },
         ],
       });

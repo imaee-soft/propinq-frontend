@@ -204,13 +204,17 @@ export class NewBuildingDialogComponent {
 
     const { name, description, type, address, coordinate, images } = this.form
       .value as BuildingFormData;
+
+      if (!coordinate) {
+        return;
+      }
     this._buildingRequest.set({
       type,
       name,
       description,
       address,
-      longitude: coordinate?.longitude || 0,
-      latitude: coordinate?.latitude || 0,
+      longitude: coordinate?.longitude,
+      latitude: coordinate?.latitude,
       userId: this._authService.user()?.userId ?? '',
       images: images || [],
     });

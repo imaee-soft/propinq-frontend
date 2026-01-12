@@ -36,18 +36,31 @@
     </mat-card-content>
 
     <mat-card-actions align="end">
-      <button mat-flat-button (click)="onOpen()">Ver</button>
-      <button mat-button (click)="onDelete()">Cancelar</button>
+      <button
+        mat-flat-button
+        (click)="onOpen()?.(descriptor()?.id(entity))"
+      >
+        {{ primaryActionLabel() }}
+      </button>
+
+      <button
+        mat-button
+        (click)="onDelete()?.(descriptor()?.id(entity))"
+      >
+        {{ descriptor()?.secondaryActionLabel?.(entity) }}
+      </button>
     </mat-card-actions>
   </mat-card>
   }
   <div class="pagination-zone">
     @if (hasMore()) {
-    <button mat-flat-button class="load-more">Recuperar más solicitudes</button>
+      <button mat-flat-button class="load-more">
+        {{ loadMoreLabel() }}
+      </button>
     } @else {
-    <span class="all-loaded">
-      Estas son todas las solicitudes de contacto.
-    </span>
+      <span class="all-loaded">
+        {{ allLoadedText() }}
+      </span>
     }
   </div>
 </div>

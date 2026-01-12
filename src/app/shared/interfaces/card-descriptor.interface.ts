@@ -7,4 +7,5 @@ export interface CardDescriptor<T> {
   id: (entity: T) => string | number;
   coordinates: (entity: T) => MapCoordinate;
   status?: (entity: T) => string | undefined;
+  secondaryActionLabel?: (entity: T) => string | undefined;
 }

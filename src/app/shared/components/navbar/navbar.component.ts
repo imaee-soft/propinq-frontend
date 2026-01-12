@@ -24,12 +24,9 @@ import { MenuNotificationComponent } from '../../../notifications/components/men
 import { NotificationResponse } from '../../../notifications/interfaces/notification-response.interface';
 import { NotificationsService } from '../../../notifications/notifications.service';
 import { NewHouseDialogComponent } from '../../../properties/dialogs/new-house-dialog/new-house-dialog.component';
-import { NavElement } from '../../interfaces/nav-element.interface';
 import { EntityDialogService } from '../../services/entity-dialog.service';
 import { SidebarService } from '../../services/sidebar.service';
 import { NavbarService } from './../../services/navbar.service';
-import { NewHouseDialogComponent } from '../../../properties/dialogs/new-house-dialog/new-house-dialog.component';
-
 @Component({
   imports: [
     CommonModule,

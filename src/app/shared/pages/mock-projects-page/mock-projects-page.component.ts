@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject, OnInit, Renderer2 } from '@angular/core';
 import { Page } from '../../interfaces/page.interface';
 import mockPage from './mock-projects.json';
 import { CardDescriptor } from '../../interfaces/card-descriptor.interface';
@@ -22,8 +22,9 @@ interface Project {
   templateUrl: './mock-projects-page.component.html',
   styleUrl: './mock-projects-page.component.css',
 })
-export class MockProjectsPageComponent {
+export class MockProjectsPageComponent implements OnInit{
   page = mockPage as Page<Project>;
+  private renderer = inject(Renderer2);
 
   descriptor: CardDescriptor<Project> = {
     user: (p) => p.owner,
@@ -32,8 +33,15 @@ export class MockProjectsPageComponent {
     id: (p) => p.id,
     status: (p) => p.status,
     coordinates: (p) => ({ latitude: p.lat, longitude: p.lng }),
+    secondaryActionLabel: (p) => 'Cancelar',
   };
 
+  ngOnInit() {
+    this.renderer.setStyle(document.body, 'overflow', 'auto');
+  }
+  ngOnDestroy() {
+    this.renderer.removeStyle(document.body, 'overflow');
+  }
   openProject(id: string | number | undefined) {
     console.log('OPEN', id);
     alert(`Acceder a proyecto ${id}`);

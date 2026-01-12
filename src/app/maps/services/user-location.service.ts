@@ -4,7 +4,7 @@ import { DEFAULT_CENTER } from '../utils/constants';
 
 @Injectable({providedIn: 'root'})
 export class UserLocationService {
-    
+
     userLocation = signal<MapCoordinate>(DEFAULT_CENTER);
 
     constructor() {
@@ -16,7 +16,9 @@ export class UserLocationService {
                     longitude: position.coords.longitude,
                 });
             },
-            () => DEFAULT_CENTER,
+            () => {
+              this.userLocation.set(DEFAULT_CENTER);
+            },
             { enableHighAccuracy: true, timeout: 5000, maximumAge: 0 }
         );
     }

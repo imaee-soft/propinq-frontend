@@ -7,6 +7,8 @@ export interface BuildingDetails {
   userId:           string;
   userFullName:     string;
   buildingTypeName: string;
-  deleted:         boolean;
+  deleted:          boolean;
+  latitude?:        number;
+  longitude?:       number;
 }
 

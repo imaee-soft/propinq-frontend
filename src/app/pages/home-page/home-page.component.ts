@@ -284,6 +284,7 @@ export class HomePageComponent {
 
   onCenterChanged(coordinate: MapCoordinate): void {
     this._filtersService.setMyLocation(coordinate);
+
   }
 
   onCloseDetails(): void {

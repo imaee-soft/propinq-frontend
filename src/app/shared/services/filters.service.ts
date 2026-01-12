@@ -2,7 +2,8 @@ import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import Map from 'ol/Map';
 import { transformExtent } from 'ol/proj';
-import { of } from 'rxjs';
+import { of, forkJoin } from 'rxjs';
+import { map } from 'rxjs/operators';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { Building } from '../../buildings/interfaces/building.interface';
 import { LocalityResponse } from '../../localities/interfaces/locality.interface';
@@ -32,13 +33,38 @@ export class FiltersService {
   filterPriceMax = signal<number | null>(null);
   filterPropertyType = signal<boolean>(false);
   filterDepartmentType = signal<boolean>(false);
-  filterAllowPets = signal<boolean>(false);
+  filterAllowPets = signal<boolean | null>(null);
   filterRooms = signal<number | null>(null);
   filterBathrooms = signal<number | null>(null);
   provinces = signal<ProvinceResponse[]>([]);
   localities = signal<LocalityResponse[]>([]);
   filteredBuildings = signal<Building[]>([]);
   filteredProperties = signal<Property[]>([]);
+  // Resultados base (sin filtros) gestionados por el servicio
+  private baseBuildings = signal<Building[]>([]);
+  private baseProperties = signal<Property[]>([]);
+  // Estado derivado centralizado para consumo desde componentes
+  isFiltersModeActive = computed(
+    () =>
+      this.filterNearMyLocation() ||
+      this.filterNearPoint() ||
+      this.filterNearPointOfInterest()
+  );
+  hasAnyFilterApplied = computed(() => {
+    return (
+      this.isFiltersModeActive() ||
+      this.filterPriceMin() !== null ||
+      this.filterPriceMax() !== null ||
+      this.filterRooms() !== null ||
+      this.filterBathrooms() !== null ||
+      this.filterAllowPets() !== null ||
+      this.filterPropertyType() === true ||
+      this.filterDepartmentType() === true
+    );
+  });
+  hasNoResults = computed(
+    () => this.filteredBuildings().length === 0 && this.filteredProperties().length === 0
+  );
   filterProvince = signal<ProvinceResponse | null>(null);
   filterLocality = signal<LocalityResponse | null>(null);
   filterNearMyLocation = signal<boolean>(false);
@@ -67,130 +93,193 @@ export class FiltersService {
     },
   });
 
+  // Unificados: un recurso por entidad que alterna entre ubicación y POI
   buildingsResource = rxResource({
-    request: computed(() => ({
-      latitude: this._coordinate().latitude,
-      longitude: this._coordinate().longitude,
-      radiusKm: this.radius(),
-    })),
-    loader: (request) => {
-      if (
-        this.filterNearMyLocation() === false &&
-        this.filterNearPointOfInterest() === false
-      ) {
-        return of([]);
+    request: computed(() => {
+      const typeSelection: 'buildings' | 'properties' | 'all' = this.filterDepartmentType()
+        ? 'buildings'
+        : this.filterPropertyType()
+        ? 'properties'
+        : 'all';
+      const attrs = {
+        priceMin: this.filterPriceMin(),
+        priceMax: this.filterPriceMax(),
+        bedrooms: this.filterRooms(),
+        bathrooms: this.filterBathrooms(),
+        petsAllowed: this.filterAllowPets(),
+      };
+      if (this.filterNearPointOfInterest() && this.viewport()) {
+        return { mode: 'poi', typeSelection, attrs, radiusKm: this.radius(), ...this.viewport(), poiType: this.selectedPointOfInterest() } as const;
       }
-      return this._buildingsService.getBuildingsNear(
-        request.request.latitude,
-        request.request.longitude,
-        request.request.radiusKm
-      );
+      if (this.filterNearMyLocation() || this.filterNearPoint()) {
+        return { mode: 'location', typeSelection, attrs, latitude: this._coordinate().latitude, longitude: this._coordinate().longitude, radiusKm: this.radius() } as const;
+      }
+      // attributes-only fallback: permite filtrar sin modo activo
+      return { mode: 'attributes', typeSelection, attrs } as const;
+    }),
+    loader: (request) => {
+      const r = request.request as any;
+      if (r.typeSelection === 'properties') return of<Building[]>([]);
+      if (r.mode === 'idle') return of<Building[]>([]);
+      if (r.mode === 'attributes') {
+        return this._buildingsService.getBuildings({
+          attributes: {
+            priceMin: r.attrs.priceMin ?? undefined,
+            priceMax: r.attrs.priceMax ?? undefined,
+            bedrooms: r.attrs.bedrooms ?? undefined,
+            bathrooms: r.attrs.bathrooms ?? undefined,
+            petsAllowed: r.attrs.petsAllowed,
+          },
+        });
+      }
+      if (r.mode === 'location') {
+        return this._buildingsService.getBuildings({
+          attributes: {
+            priceMin: r.attrs.priceMin ?? undefined,
+            priceMax: r.attrs.priceMax ?? undefined,
+            bedrooms: r.attrs.bedrooms ?? undefined,
+            bathrooms: r.attrs.bathrooms ?? undefined,
+            petsAllowed: r.attrs.petsAllowed,
+          },
+          location: {
+            latitude: r.latitude,
+            longitude: r.longitude,
+            radiusKm: r.radiusKm,
+          },
+        });
+      }
+      // mode === 'poi'
+      const west = Math.min(r.west ?? 0, r.east ?? 0);
+      const east = Math.max(r.west ?? 0, r.east ?? 0);
+      return this._buildingsService.getBuildings({
+        attributes: {
+          priceMin: r.attrs.priceMin ?? undefined,
+          priceMax: r.attrs.priceMax ?? undefined,
+          bedrooms: r.attrs.bedrooms ?? undefined,
+          bathrooms: r.attrs.bathrooms ?? undefined,
+          petsAllowed: r.attrs.petsAllowed,
+        },
+        poi: {
+          poiType: r.poiType ?? undefined,
+          radiusKm: r.radiusKm,
+          north: r.north ?? 0,
+          south: r.south ?? 0,
+          east,
+          west,
+          limit: 100,
+        },
+      });
     },
   });
 
   propertiesResource = rxResource({
+    request: computed(() => {
+      const typeSelection: 'buildings' | 'properties' | 'all' = this.filterDepartmentType()
+        ? 'buildings'
+        : this.filterPropertyType()
+        ? 'properties'
+        : 'all';
+      const attrs = {
+        priceMin: this.filterPriceMin(),
+        priceMax: this.filterPriceMax(),
+        bedrooms: this.filterRooms(),
+        bathrooms: this.filterBathrooms(),
+        petsAllowed: this.filterAllowPets(),
+      };
+      if (this.filterNearPointOfInterest() && this.viewport()) {
+        return { mode: 'poi', typeSelection, attrs, radiusKm: this.radius(), ...this.viewport(), poiType: this.selectedPointOfInterest() } as const;
+      }
+      if (this.filterNearMyLocation() || this.filterNearPoint()) {
+        return { mode: 'location', typeSelection, attrs, latitude: this._coordinate().latitude, longitude: this._coordinate().longitude, radiusKm: this.radius() } as const;
+      }
+      // attributes-only fallback: permite filtrar sin modo activo
+      return { mode: 'attributes', typeSelection, attrs } as const;
+    }),
+    loader: (request) => {
+      const r = request.request as any;
+      if (r.typeSelection === 'buildings') return of<Property[]>([]);
+      if (r.mode === 'idle') return of<Property[]>([]);
+      if (r.mode === 'attributes') {
+        return this._propertiesService.getProperties({
+          attributes: {
+            priceMin: r.attrs.priceMin ?? undefined,
+            priceMax: r.attrs.priceMax ?? undefined,
+            bedrooms: r.attrs.bedrooms ?? undefined,
+            bathrooms: r.attrs.bathrooms ?? undefined,
+            petsAllowed: r.attrs.petsAllowed,
+          },
+        });
+      }
+      if (r.mode === 'location') {
+        return this._propertiesService.getProperties({
+          attributes: {
+            priceMin: r.attrs.priceMin ?? undefined,
+            priceMax: r.attrs.priceMax ?? undefined,
+            bedrooms: r.attrs.bedrooms ?? undefined,
+            bathrooms: r.attrs.bathrooms ?? undefined,
+            petsAllowed: r.attrs.petsAllowed ?? undefined,
+            buildingType: r.attrs.buildingType ?? undefined, // ignorado por /properties
+          },
+          location: {
+            latitude: r.latitude,
+            longitude: r.longitude,
+            radiusKm: r.radiusKm,
+          },
+        });
+      }
+      // mode === 'poi'
+      const west = Math.min(r.west ?? 0, r.east ?? 0);
+      const east = Math.max(r.west ?? 0, r.east ?? 0);
+      return this._propertiesService.getProperties({
+        attributes: {
+          priceMin: r.attrs.priceMin ?? undefined,
+          priceMax: r.attrs.priceMax ?? undefined,
+          bedrooms: r.attrs.bedrooms ?? undefined,
+          bathrooms: r.attrs.bathrooms ?? undefined,
+          petsAllowed: r.attrs.petsAllowed,
+        },
+        poi: {
+          poiType: r.poiType ?? undefined,
+          radiusKm: r.radiusKm,
+          north: r.north ?? 0,
+          south: r.south ?? 0,
+          east,
+          west,
+          limit: 100,
+        },
+      });
+    },
+  });
+
+  // Carga base de resultados cuando no hay filtros aplicados
+  baseResultsResource = rxResource({
     request: computed(() => ({
-      latitude: this._coordinate().latitude,
-      longitude: this._coordinate().longitude,
-      radiusKm: this.radius(),
+      active: !this.hasAnyFilterApplied(),
+      dept: this.filterDepartmentType(),
+      house: this.filterPropertyType(),
     })),
     loader: (request) => {
-      if (
-        this.filterNearMyLocation() === false &&
-        this.filterNearPoint() === false &&
-        this.filterNearPointOfInterest() === false
-      ) {
-        return of([]);
+      const r = request.request as { active: boolean; dept: boolean; house: boolean };
+      if (!r || !r.active) {
+        return of({ buildings: [] as Building[], properties: [] as Property[] });
       }
-      return this._propertiesService.getPropertiesNear(
-        request.request.latitude,
-        request.request.longitude,
-        request.request.radiusKm
-      );
+      if (r.dept && !r.house) {
+        return this._buildingsService
+          .getBuildings()
+          .pipe(map((buildings) => ({ buildings, properties: [] as Property[] })));
+      }
+      if (r.house && !r.dept) {
+        return this._propertiesService
+          .getProperties()
+          .pipe(map((properties) => ({ buildings: [] as Building[], properties })));
+      }
+      return forkJoin({
+        buildings: this._buildingsService.getBuildings(),
+        properties: this._propertiesService.getProperties(),
+      });
     },
   });
 
-  buildingsNearPoiResource = rxResource({
-    request: computed(() => {
-      if (
-        this.filterNearPointOfInterest() &&
-        this.viewport() &&
-        this.selectedPointOfInterest()
-      ) {
-        return {
-          poiType: this.selectedPointOfInterest(),
-          radiusKm: this.radius(),
-          ...this.viewport(),
-          limit: 100,
-        };
-      }
-      return null;
-    }),
-    loader: (request: any) => {
-      if (
-        this.filterNearMyLocation() === false &&
-        this.filterNearPoint() === false &&
-        this.filterNearPointOfInterest() === false
-      ) {
-        return of([]);
-      }
-      if (!request.request || typeof request.request.poiType !== 'string') {
-        return of([]);
-      }
-      return this._buildingsService.getBuildingsNearPoi(
-        request.request.poiType,
-        request.request.radiusKm,
-        {
-          north: request.request.north ?? 0,
-          south: request.request.south ?? 0,
-          east: request.request.east ?? 0,
-          west: request.request.west ?? 0,
-        },
-        request.request.limit
-      );
-    },
-  });
-
-  propertiesNearPoiResource = rxResource({
-    request: computed(() => {
-      if (
-        this.filterNearPointOfInterest() &&
-        this.viewport() &&
-        this.selectedPointOfInterest()
-      ) {
-        return {
-          poiType: this.selectedPointOfInterest(),
-          radiusKm: this.radius(),
-          ...this.viewport(),
-          limit: 100,
-        };
-      }
-      return null;
-    }),
-    loader: (request) => {
-      if (
-        this.filterNearMyLocation() === false &&
-        this.filterNearPoint() === false &&
-        this.filterNearPointOfInterest() === false
-      ) {
-        return of([]);
-      }
-      if (!request.request || typeof request.request.poiType !== 'string') {
-        return of([]);
-      }
-      return this._propertiesService.getPropertiesNearPoi(
-        request.request.poiType,
-        request.request.radiusKm,
-        {
-          north: request.request.north ?? 0,
-          south: request.request.south ?? 0,
-          east: request.request.east ?? 0,
-          west: request.request.west ?? 0,
-        },
-        request.request.limit
-      );
-    },
-  });
 
   viewport = signal<{
     north: number;
@@ -246,19 +335,64 @@ export class FiltersService {
       }
     });
 
+    // Sin filtros: mantener resultados base frescos
     effect(() => {
-      const buildingsData = this.buildingsNearPoiResource.value();
-      if (buildingsData) {
-        this.filteredBuildings.set(buildingsData);
+      const base = this.baseResultsResource.value();
+      if (base) {
+        this.baseBuildings.set(base.buildings);
+        this.baseProperties.set(base.properties);
       }
     });
 
+    // Limpiar la lista no seleccionada al cambiar el tipo (Casas/Departamentos)
     effect(() => {
-      const propertiesData = this.propertiesNearPoiResource.value();
-      if (propertiesData) {
-        this.filteredProperties.set(propertiesData);
+      const dept = this.filterDepartmentType();
+      const house = this.filterPropertyType();
+      if (dept && !house) {
+        this.filteredProperties.set([]);
+      } else if (house && !dept) {
+        this.filteredBuildings.set([]);
       }
     });
+
+    // Efectos de POI separados ya no son necesarios (unificado en cada resource)
+  }
+
+  // Resultado unificado según si hay filtros activos o no
+  currentResults = computed(() => {
+    if (this.hasAnyFilterApplied()) {
+      return {
+        buildings: this.filteredBuildings(),
+        properties: this.filteredProperties(),
+      };
+    }
+    return {
+      buildings: this.baseBuildings(),
+      properties: this.baseProperties(),
+    };
+  });
+
+  // Marcadores ya tipados para el mapa (con type)
+  currentMarkers = computed(() => {
+    const b = this.currentResults().buildings.map((x) => ({
+      id: x.buildingId,
+      coordinate: { latitude: x.latitude, longitude: x.longitude },
+      icon: { url: '/building.png' },
+      type: 'building' as const,
+    }));
+    const p = this.currentResults().properties.map((x) => ({
+      id: x.propertyId,
+      coordinate: { latitude: x.latitude, longitude: x.longitude },
+      icon: { url: '/property.png' },
+      type: 'property' as const,
+    }));
+    return [...b, ...p];
+  });
+
+  // Selección explícita de "Todos": limpia ambos toggles
+  onSelectAllTypes() {
+    this.filterPropertyType.set(false);
+    this.filterDepartmentType.set(false);
   }
 
   onSelectMyLocation() {
@@ -291,15 +425,19 @@ export class FiltersService {
     this.selectedPointOfInterest.set(event);
   }
 
-  onSliderChange(event: Event) {
-    const target = event.target as HTMLInputElement;
-    const value = target.value;
-    if (value !== null && value !== undefined && value !== '') {
-      const numericValue = Number(value);
-      if (!isNaN(numericValue)) {
-        this.radius.set(numericValue);
+  onSliderChange(event: any) {
+    // Soportar tanto MatSliderChange (event.value) como eventos nativos (event.target.value)
+    let next: number | null = null;
+    if (event && typeof event.value === 'number') {
+      next = event.value as number;
+    } else if (event && event.target && event.target.value !== undefined) {
+      const raw = event.target.value;
+      if (raw !== null && raw !== undefined && raw !== '') {
+        const n = Number(raw);
+        if (!isNaN(n)) next = n;
       }
     }
+    if (next !== null) this.radius.set(next);
   }
 
   onSelectProvince(event: ProvinceResponse) {
@@ -320,27 +458,22 @@ export class FiltersService {
   }
 
   onSelectPropertyType() {
-    const current = this.filterPropertyType();
-    if (current) {
-      this.filterPropertyType.set(false);
-    } else {
-      this.filterPropertyType.set(true);
-      this.filterDepartmentType.set(false);
-    }
+    // Idempotente: seleccionar "Casas" siempre activa casas y desactiva departamentos
+    this.filterPropertyType.set(true);
+    this.filterDepartmentType.set(false);
   }
 
   onSelectDepartmentType() {
-    const current = this.filterDepartmentType();
-    if (current) {
-      this.filterDepartmentType.set(false);
-    } else {
-      this.filterDepartmentType.set(true);
-      this.filterPropertyType.set(false);
-    }
+    // Idempotente: seleccionar "Departamentos" siempre activa departamentos y desactiva casas
+    this.filterDepartmentType.set(true);
+    this.filterPropertyType.set(false);
   }
 
-  onSelectAllowPets(event: boolean) {
-    this.filterAllowPets.set(event);
+  onSelectAllowPets(checked: boolean) {
+    // checked=true  -> true (filtrar solo que permitan mascotas)
+    // checked=false -> false (filtrar solo que NO permitan mascotas)
+    // Si necesitáramos estado indeterminado desde UI, podríamos mapearlo a null
+    this.filterAllowPets.set(checked);
   }
 
   onSelectRooms(event: number) {
@@ -363,7 +496,8 @@ export class FiltersService {
     this.filterPriceMax.set(null);
     this.filterPropertyType.set(false);
     this.filterDepartmentType.set(false);
-    this.filterAllowPets.set(false);
+    // Volver a estado indeterminado (sin filtro)
+    this.filterAllowPets.set(null);
     this.filterRooms.set(null);
     this.filterBathrooms.set(null);
     this._coordinate.set({ latitude: 0, longitude: 0 });

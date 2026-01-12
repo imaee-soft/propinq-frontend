@@ -28,6 +28,7 @@ import { NavElement } from '../../interfaces/nav-element.interface';
 import { EntityDialogService } from '../../services/entity-dialog.service';
 import { SidebarService } from '../../services/sidebar.service';
 import { NavbarService } from './../../services/navbar.service';
+import { NewHouseDialogComponent } from '../../../properties/dialogs/new-house-dialog/new-house-dialog.component';
 
 @Component({
   imports: [

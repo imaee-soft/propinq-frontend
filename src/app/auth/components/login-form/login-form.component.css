@@ -219,3 +219,26 @@ button[mat-icon-button][matSuffix] .mat-mdc-button-persistent-ripple {
     padding: 32px 24px;
   }
 }
+
+.recaptcha-legal {
+  font-size: 11px;
+  color: #64748b;
+  text-align: center;
+  margin-top: 30px;
+  margin-bottom: 10px;
+  line-height: 1.4;
+  opacity: 0.8;
+}
+
+.recaptcha-legal a {
+  color: #3b82f6;
+  text-decoration: none;
+}
+
+.recaptcha-legal a:hover {
+  text-decoration: underline;
+}
+
+.grecaptcha-badge {
+  visibility: hidden !important;
+}

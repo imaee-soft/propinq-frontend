@@ -21,6 +21,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs/internal/observable/of';
 import { from } from 'rxjs/internal/observable/from';
 import { catchError } from 'rxjs/internal/operators/catchError';
+import {BUILDING_UPDATED_MESSAGE } from '../../constants';
 
 interface NewImagePreview {
   file: File;
@@ -71,7 +72,7 @@ export class EditBuildingDialogComponent implements OnInit {
   constructor() {
     effect(() => {
       if (this.updateResource.status() === ResourceStatus.Resolved && this.updateResource.value()) {
-        this._notificationService.success('Inmueble actualizado correctamente');
+        this._notificationService.success(BUILDING_UPDATED_MESSAGE);
         this._matDialogRef.close(true);
       }
     });

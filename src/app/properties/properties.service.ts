@@ -5,6 +5,8 @@ import { environment } from '../../environments/environment.development';
 import { CreatePropertyRequest } from './interfaces/create-property-request.interface';
 import { PropertyDetails } from './interfaces/property-details.interface';
 import { Property } from './interfaces/property.interface';
+import { PropertyFilterRequest } from './interfaces/property-filter.request';
+import { buildFilterHttpParams } from '../shared/utilities/http-params.builder';
 import { UpdatePropertyRequest } from './interfaces/update-property-request.interface';
 import { PropertyDetailsPage } from './interfaces/property-details-page.interface';
 
@@ -13,8 +15,15 @@ export class PropertiesService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/properties`;
 
-  getProperties(): Observable<Property[]> {
-    return this._http.get<Property[]>(`${this._baseUrl}`);
+  getProperties(filter?: PropertyFilterRequest | null): Observable<Property[]> {
+    if (filter === null) {
+      return throwError(() => new Error('Invalid filter: null'));
+    }
+    const params = buildFilterHttpParams(filter ?? undefined);
+    return this._http.get<Property[]>(
+      `${environment.apiUrl}/api/v1/properties`,
+      { params }
+    );
   }
 
   getPropertyDetails(
@@ -120,6 +129,29 @@ export class PropertiesService {
     return this._http.patch<PropertyDetails>(
      `${this._baseUrl}/${propertyId}/restore`,
       {}
+    );
+  }
+  updateProperty(UpdatePropertyRequest: UpdatePropertyRequest): Observable<PropertyDetails> {
+    const formData = new FormData();
+    const { payload, id } = UpdatePropertyRequest;
+
+    const { imageFiles, ...propertyData } = payload;
+
+    formData.append(
+      'property',
+      new Blob([JSON.stringify(propertyData)], {
+        type: 'application/json',
+      })
+    );
+
+    if (imageFiles && imageFiles.length > 0) {
+      imageFiles.forEach((file) => {
+        formData.append('images', file, file.name);
+      });
+    }
+    return this._http.patch<PropertyDetails>(
+      `${this._baseUrl}/${id}`,
+      formData
     );
   }
 

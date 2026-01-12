@@ -138,6 +138,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._mapInstance.set(map);
     this._isMapInitialized.set(true);
     this.mapReady.emit(map);
+    // Inicializar viewport inmediatamente para que el modo POI tenga bounds sin requerir mover el mapa
+    this._filtersService.setViewportFromMap(map);
     this._viewport$.next();
   }
 

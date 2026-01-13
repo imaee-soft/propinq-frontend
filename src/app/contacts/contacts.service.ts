@@ -1,7 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { AnswerContactRequest } from './interfaces/answer-contact-request.interface';
+import { ContactDetailsPage } from './interfaces/contact-details-page.interface';
 import { ContactRequest } from './interfaces/contact-request.interface';
 import { ContactResponse } from './interfaces/contact-response.interface';
 
@@ -9,6 +11,12 @@ import { ContactResponse } from './interfaces/contact-response.interface';
 export class ContactsService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/contacts`;
+
+  getContactsDetails(page = 0, size = 8): Observable<ContactDetailsPage> {
+    return this._http.get<ContactDetailsPage>(`${this._baseUrl}/tenant`, {
+      params: { page, size },
+    });
+  }
 
   saveContactRequest(contactRequest: ContactRequest) {
     return this._http.post(`${this._baseUrl}`, contactRequest, {
@@ -22,5 +30,9 @@ export class ContactsService {
 
   answerContact(contactId: string, answer: AnswerContactRequest) {
     return this._http.patch(`${this._baseUrl}/${contactId}/answer`, answer);
+  }
+
+  deleteContact(contactId: string) {
+    return this._http.delete(`${this._baseUrl}/${contactId}`);
   }
 }

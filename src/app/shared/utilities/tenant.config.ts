@@ -1,7 +1,7 @@
 export const TENANT_NAVBAR_ITEMS = [
   {
     name: 'Contactos',
-    url: '/my-contacts',
+    url: '/tenant-contacts',
   },
   {
     name: 'Favoritos',
@@ -24,7 +24,7 @@ export const TENANT_SIDEBAR_CONFIG = {
     {
       label: 'Mis solicitudes de contacto',
       icon: 'chat',
-      route: '/my-contact-requests',
+      route: '/tenant-contacts',
     },
     {
       label: 'Mis favoritos',

@@ -1,10 +1,12 @@
-
 import { Routes } from '@angular/router';
 
 export const routes: Routes = [
   {
     path: 'favorites',
-    loadComponent: () => import('./favorite-page/favorite-page.component').then(m => m.FavoritePageComponent),
+    loadComponent: () =>
+      import('./favorite-page/favorite-page.component').then(
+        (m) => m.FavoritePageComponent
+      ),
   },
   {
     path: '',
@@ -13,7 +15,7 @@ export const routes: Routes = [
         (m) => m.HomePageComponent
       ),
   },
- {
+  {
     path: 'signup',
     loadComponent: () =>
       import('../auth/pages/signup-page/signup-page.component').then(
@@ -23,16 +25,16 @@ export const routes: Routes = [
   {
     path: 'auth/verify-email',
     loadComponent: () =>
-      import('../auth/pages/verify-email-page/verify-email-page.component').then(
-        (m) => m.VerifyEmailPageComponent
-      ),
+      import(
+        '../auth/pages/verify-email-page/verify-email-page.component'
+      ).then((m) => m.VerifyEmailPageComponent),
   },
   {
     path: 'auth/activate',
     loadComponent: () =>
-      import('../auth/pages/account-activation-page/account-activation-page.component').then(
-        (m) => m.AccountActivationPageComponent
-      ),
+      import(
+        '../auth/pages/account-activation-page/account-activation-page.component'
+      ).then((m) => m.AccountActivationPageComponent),
   },
   {
     path: 'login',
@@ -91,11 +93,11 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'mocks',
+    path: 'tenant-contacts',
     loadComponent: () =>
-      import(
-        '../shared/pages/mock-projects-page/mock-projects-page.component'
-      ).then((m) => m.MockProjectsPageComponent),
+      import('./tenant-contacts-page/tenant-contacts-page.component').then(
+        (m) => m.TenantContactsPageComponent
+      ),
   },
   {
     path: '**',

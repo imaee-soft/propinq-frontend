@@ -1,14 +1,50 @@
-.grid-container {
+.page-header {
+  margin-top: 20px;
+  margin-left: 64px;
+  width: 100%;
+  max-width: 97%;
   display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
   justify-content: space-between;
-  padding: 8px 64px;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+}
+
+.fab-add {
+  background: linear-gradient(45deg, #8b5cf6, #6366f1);
+  color: white;
+  transition: transform 0.3s ease;
+  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
+  cursor: pointer;
+}
+
+.fab-add:hover {
+  transform: scale(1.1) rotate(90deg);
+}
+
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  padding: 16px 64px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .entity-card {
-  width: calc(33% - 12px);
-  min-width: 260px;
+  width: 100%;
   display: flex;
   flex-direction: column;
 

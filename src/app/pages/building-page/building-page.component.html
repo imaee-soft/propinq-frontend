@@ -1,34 +1,24 @@
-  <header class="page-header">
-    <h2 style="margin-left: 64px; margin-top: 30px">Inmuebles</h2>
-    <button
-      mat-fab
-      class="fab-add"
-      (click)="onCreate()"
-      aria-label="Agregar nuevo inmueble"
-      title="Agregar nuevo inmueble"
-    >
-      <mat-icon>add</mat-icon>
-    </button>
-  </header>
-
-    @if (buildingsDetailsResource.isLoading() && !page()) {
-      <div class="status-message loading">Cargando inmuebles...</div>
-    } @else if (buildingsDetailsResource.error()) {
-      <div class="status-message error">Error al cargar los inmuebles.</div>
-    } @else if (!page()) {
-      <div class="status-message empty">No hay inmuebles registrados.</div>
-    } @else if (page()!.content.length === 0) {
-      <div class="status-message empty">No hay inmuebles registrados.</div>
-    } @else {
-      <common-entity-page
-        [page]="page()!"
-        [descriptor]="descriptor"
-        [onOpen]="openBuilding.bind(this)"
-        [onDelete]="deleteOrRestoreBuilding.bind(this)"
-        [primaryActionLabel]="'Modificar'"
-        [allLoadedText]="'Estos son todos los inmuebles.'"
-        [loadMoreLabel]="'Recuperar más inmuebles.'"
-        [iconUrl]="'/building.png'"
-      >
-      </common-entity-page>
-    }
+@if (buildingsDetailsResource.isLoading() && !page()) {
+<div class="status-message loading">Cargando inmuebles...</div>
+} @else if (buildingsDetailsResource.error()) {
+<div class="status-message error">Error al cargar los inmuebles.</div>
+} @else if (!page()) {
+<div class="status-message empty">No hay inmuebles registrados.</div>
+} @else if (page()!.content.length === 0) {
+<div class="status-message empty">No hay inmuebles registrados.</div>
+} @else {
+<common-entity-page
+  [page]="page()!"
+  [descriptor]="descriptor"
+  [onOpen]="openBuilding.bind(this)"
+  [onDelete]="deleteOrRestoreBuilding.bind(this)"
+  [primaryActionLabel]="'Modificar'"
+  [allLoadedText]="'Estos son todos los inmuebles.'"
+  [loadMoreLabel]="'Recuperar más inmuebles.'"
+  [iconUrl]="'/building.png'"
+  [pageTitle]="'Mis Inmuebles'"
+  [newEntity]="onCreate.bind(this)"
+  [newEntityLabel]="'Nuevo inmueble'"
+>
+</common-entity-page>
+}

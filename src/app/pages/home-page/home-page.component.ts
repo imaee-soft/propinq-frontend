@@ -20,7 +20,7 @@ import {
   MatDrawerContent,
 } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { Router, ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { Role } from '../../auth/enums/role.enum';
 import { BuildingsService } from '../../buildings/buildings.service';
@@ -32,6 +32,7 @@ import { MapClickEvent } from '../../maps/interfaces/click-event.interface';
 import { MapConfig } from '../../maps/interfaces/map-config.interface';
 import { MapCoordinate } from '../../maps/interfaces/map-coordinate.interface';
 import { MapMarker } from '../../maps/interfaces/map-marker.interface';
+import { UserLocationService } from '../../maps/services/user-location.service';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { PropertyComponent } from '../../properties/components/property.component';
 import { ComparePropertiesDialogComponent } from '../../properties/dialogs/compare-properties-dialog/compare-properties-dialog.component';
@@ -44,11 +45,9 @@ import { FiltersService } from '../../shared/services/filters.service';
 import { SidebarService } from '../../shared/services/sidebar.service';
 import { CustomSnackbarService } from '../../shared/services/snackbar.service';
 import { AuthService } from './../../auth/services/auth.service';
-import { UserLocationService } from '../../maps/services/user-location.service';
 // Cambiado para usar el servicio de favorites central
-import { FavoriteService } from '../../favorites/services/favorite-service';
 import { FavoriteResponse } from '../../favorites/interfaces/favorite-interface';
-
+import { FavoriteService } from '../../favorites/services/favorite-service';
 
 @Component({
   imports: [
@@ -88,12 +87,13 @@ export class HomePageComponent {
   private route = inject(ActivatedRoute);
   private favoriteService = inject(FavoriteService);
 
-
   private openBuildingDetailsFromFavorite(buildingId: string) {
     // Busca el marcador correspondiente y abre el panel
     // Si los marcadores aún no están cargados, espera un poco
     const tryOpen = () => {
-      const marker = this.markers().find((m) => m.id === buildingId && m.type === 'building');
+      const marker = this.markers().find(
+        (m) => m.id === buildingId && m.type === 'building'
+      );
       if (marker) {
         this.onBuildingMarkerClick(marker);
       } else {
@@ -136,9 +136,13 @@ export class HomePageComponent {
   sidebarOpened = computed(() => this._sidebarService.isOpen());
 
   // Public flags for template conditions (centralizadas en FiltersService)
-  isFiltersModeActive = computed(() => this._filtersService.isFiltersModeActive());
+  isFiltersModeActive = computed(() =>
+    this._filtersService.isFiltersModeActive()
+  );
   hasNoResults = computed(() => this._filtersService.hasNoResults());
-  hasAnyFilterApplied = computed(() => this._filtersService.hasAnyFilterApplied());
+  hasAnyFilterApplied = computed(() =>
+    this._filtersService.hasAnyFilterApplied()
+  );
 
   constructor() {
     // Abre detalle de building desde query param ?building=ID
@@ -284,7 +288,6 @@ export class HomePageComponent {
 
   onCenterChanged(coordinate: MapCoordinate): void {
     this._filtersService.setMyLocation(coordinate);
-
   }
 
   onCloseDetails(): void {
@@ -438,18 +441,20 @@ export class HomePageComponent {
 
   // Llama esto cada vez que cambie el buildingDetails
   checkIfFavorite() {
-  const userId = this._authService.user()?.userId;
+    const userId = this._authService.user()?.userId;
     const buildingId = this.buildingDetails()?.buildingId;
     if (!userId || !buildingId) return;
-    this.favoriteService.getFavoritesByUserAndBuilding(userId).subscribe(favs => {
-      const fav = favs.find(f => f.buildingID === buildingId);
-      this.isFavorite.set(!!fav);
-      this.favoriteId.set(fav ? fav.favoriteID : null);
-    });
+    this.favoriteService
+      .getFavoritesByUserAndBuilding(userId)
+      .subscribe((favs) => {
+        const fav = favs.find((f) => f.buildingID === buildingId);
+        this.isFavorite.set(!!fav);
+        this.favoriteId.set(fav ? fav.favoriteID : null);
+      });
   }
 
   toggleFavorite() {
-  const userId = this._authService.user()?.userId;
+    const userId = this._authService.user()?.userId;
     const buildingId = this.buildingDetails()?.buildingId;
     if (!userId || !buildingId) return;
     if (this.isFavorite() && this.favoriteId()) {
@@ -458,17 +463,21 @@ export class HomePageComponent {
         this.favoriteId.set(null);
       });
     } else {
-      this.favoriteService.addFavorite({ userID: userId, buildingID: buildingId }).subscribe(res => {
-        this.isFavorite.set(true);
-        this.favoriteId.set(res.favoriteID);
-      });
+      this.favoriteService
+        .addFavorite({ userID: userId, buildingID: buildingId })
+        .subscribe((res) => {
+          this.isFavorite.set(true);
+          this.favoriteId.set(res.favoriteID);
+        });
     }
   }
 
   // Devuelve true si la propiedad está en la lista de favoritos del usuario
   isPropertyFavorite(propertyId: string | undefined | null): boolean {
     if (!propertyId) return false;
-    return !!this.propertyFavoritesList().find(f => f.propertyID === propertyId);
+    return !!this.propertyFavoritesList().find(
+      (f) => f.propertyID === propertyId
+    );
   }
 
   // Carga favoritos de propiedades del usuario y los guarda localmente
@@ -479,22 +488,26 @@ export class HomePageComponent {
       },
       error: () => {
         this.propertyFavoritesList.set([]);
-      }
+      },
     });
   }
 
   // Alterna favorito de una propiedad: si existe lo borra, si no lo crea
   togglePropertyFavorite(propertyId: string | undefined | null) {
     if (!propertyId) return;
-  const userId = this._authService.user()?.userId;
+    const userId = this._authService.user()?.userId;
     if (!userId) return;
 
-    const existing = this.propertyFavoritesList().find(f => f.propertyID === propertyId);
+    const existing = this.propertyFavoritesList().find(
+      (f) => f.propertyID === propertyId
+    );
     if (existing) {
       // borrar optimista: quitar inmediatamente de la lista
       const removedId = existing.favoriteID;
       const prevList = this.propertyFavoritesList();
-      this.propertyFavoritesList.set(prevList.filter(f => f.favoriteID !== removedId));
+      this.propertyFavoritesList.set(
+        prevList.filter((f) => f.favoriteID !== removedId)
+      );
 
       this.favoriteService.removeFavorite(removedId).subscribe({
         next: () => {
@@ -502,9 +515,12 @@ export class HomePageComponent {
         },
         error: () => {
           // revertir en caso de error
-          this.propertyFavoritesList.set([...this.propertyFavoritesList(), existing]);
+          this.propertyFavoritesList.set([
+            ...this.propertyFavoritesList(),
+            existing,
+          ]);
           this._snackbarService.error('No se pudo quitar de favoritos', 2000);
-        }
+        },
       });
     } else {
       // crear optimista: agregar un favorito temporal para mostrar el corazón
@@ -512,22 +528,33 @@ export class HomePageComponent {
       const tempFav: FavoriteResponse = {
         favoriteID: tempId,
         userID: userId,
-        propertyID: propertyId
+        propertyID: propertyId,
       };
-      this.propertyFavoritesList.set([...this.propertyFavoritesList(), tempFav]);
+      this.propertyFavoritesList.set([
+        ...this.propertyFavoritesList(),
+        tempFav,
+      ]);
 
-      this.favoriteService.addFavorite({ userID: userId, propertyID: propertyId }).subscribe({
-        next: (res) => {
-          // reemplazar el temporal por la respuesta real (con favoriteID del servidor)
-          const updated = this.propertyFavoritesList().map(f => f.favoriteID === tempId ? res : f);
-          this.propertyFavoritesList.set(updated);
-        },
-        error: () => {
-          // quitar el temporal y notificar
-          this.propertyFavoritesList.set(this.propertyFavoritesList().filter(f => f.favoriteID !== tempId));
-          this._snackbarService.error('No se pudo agregar a favoritos', 2000);
-        }
-      });
+      this.favoriteService
+        .addFavorite({ userID: userId, propertyID: propertyId })
+        .subscribe({
+          next: (res) => {
+            // reemplazar el temporal por la respuesta real (con favoriteID del servidor)
+            const updated = this.propertyFavoritesList().map((f) =>
+              f.favoriteID === tempId ? res : f
+            );
+            this.propertyFavoritesList.set(updated);
+          },
+          error: () => {
+            // quitar el temporal y notificar
+            this.propertyFavoritesList.set(
+              this.propertyFavoritesList().filter(
+                (f) => f.favoriteID !== tempId
+              )
+            );
+            this._snackbarService.error('No se pudo agregar a favoritos', 2000);
+          },
+        });
     }
   }
 }

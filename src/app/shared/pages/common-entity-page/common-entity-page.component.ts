@@ -1,13 +1,12 @@
-import { Component, computed, input, Input, OnInit } from '@angular/core';
+import { Component, computed, input } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatIconModule } from '@angular/material/icon';
+import { MapComponent } from '../../../maps/components/map/map.component';
+import { MapConfig } from '../../../maps/interfaces/map-config.interface';
+import { DEFAULT_CENTER } from '../../../maps/utils/constants';
 import { CardDescriptor } from '../../interfaces/card-descriptor.interface';
 import { Page } from '../../interfaces/page.interface';
-import { MatCard, MatCardModule } from '@angular/material/card';
-import { DatePipe } from '@angular/common';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MapConfig } from '../../../maps/interfaces/map-config.interface';
-import { MapComponent } from '../../../maps/components/map/map.component';
-import { DEFAULT_CENTER } from '../../../maps/utils/constants';
 import { formatDate } from '../../utilities/date.pipes';
 
 @Component({
@@ -26,6 +25,10 @@ export class CommonEntityPageComponent<T extends object> {
   loadMoreLabel = input<string>('Recuperar más solicitudes');
   iconUrl = input<string>('/building.png');
 
+  pageTitle = input<string>('Consulta');
+  newEntity = input<() => void>();
+  newEntityLabel = input<string>('Nueva entidad');
+
   cards = computed(() => this.page()?.content ?? []);
   total = computed(() => this.page()?.total ?? null);
   hasMore = computed(() => {
@@ -35,6 +38,10 @@ export class CommonEntityPageComponent<T extends object> {
   });
 
   private _mapConfigs = new WeakMap<T, MapConfig>();
+
+  goBack() {
+    window.history.back();
+  }
 
   formatDateWrapper(date: Date | undefined): string {
     return formatDate(date);

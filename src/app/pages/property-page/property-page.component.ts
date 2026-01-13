@@ -1,19 +1,25 @@
-import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  Component,
+  computed,
+  inject,
+  signal,
+} from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { of } from 'rxjs';
 
+import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
 import { PropertiesService } from '../../properties/properties.service';
 import { EntityDialogService } from '../../shared/services/entity-dialog.service';
-import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
 
-import { NewHouseDialogComponent } from '../../properties/dialogs/new-house-dialog/new-house-dialog.component';
 import { EditPropertyDialogComponent } from '../../properties/dialogs/edit-property-dialog/edit-property-dialog.component';
+import { NewHouseDialogComponent } from '../../properties/dialogs/new-house-dialog/new-house-dialog.component';
 
-import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
-import { Page } from '../../shared/interfaces/page.interface';
-import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
-import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { MatIconModule } from '@angular/material/icon';
+import { DEFAULT_CENTER } from '../../maps/utils/constants';
+import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
+import { Page } from '../../shared/interfaces/page.interface';
+import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
 
 @Component({
   standalone: true,
@@ -54,11 +60,11 @@ export class PropertyPageComponent {
   );
 
   descriptor: CardDescriptor<PropertyDetails> = {
-    user: (p) => p.ownerFullName ?? '',          // ajusta al campo real de propietario si es otro
+    user: (p) => p.ownerFullName ?? '',
     name: (p) => p.title,
     date: (p) => new Date(),
     id: (p) => p.propertyId,
-    status: (p) => (p.deleted ? 'ELIMINADA' : ''), // ejemplo
+    status: (p) => (p.deleted ? 'ELIMINADA' : ''),
     coordinates: (p) =>
       p.latitude != null && p.longitude != null
         ? { latitude: p.latitude, longitude: p.longitude }

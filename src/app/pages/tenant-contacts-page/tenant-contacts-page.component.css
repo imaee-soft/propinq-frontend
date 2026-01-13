@@ -1,0 +1,13 @@
+.page-header {
+  margin-top: 30px;
+  width: 100%;
+  max-width: 97%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.page-title {
+  margin-left: 64px;
+  margin-top: 30px;
+}

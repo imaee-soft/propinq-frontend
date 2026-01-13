@@ -8,28 +8,24 @@ import {
   signal,
 } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule, MatIcon } from '@angular/material/icon';
-import { MatPaginatorModule, PageEvent } from '@angular/material/paginator';
-import { MatTableModule } from '@angular/material/table';
 import { of } from 'rxjs/internal/observable/of';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { EditBuildingDialogComponent } from '../../buildings/dialogs/edit-building-dialog/edit-building-dialog.component';
 import { NewBuildingDialogComponent } from '../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
 import { BuildingDetails } from '../../buildings/interfaces/building-details.interface';
-import { EntityDialogService } from '../../shared/services/entity-dialog.service';
-import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
-import { Page } from '../../shared/interfaces/page.interface';
-import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
+import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
+import { Page } from '../../shared/interfaces/page.interface';
+import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
+import { EntityDialogService } from '../../shared/services/entity-dialog.service';
 @Component({
   selector: 'app-building-page',
-  imports: [CommonEntityPageComponent, MatIcon],
+  imports: [CommonEntityPageComponent],
   templateUrl: './building-page.component.html',
   styleUrls: ['./building-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class BuildingPageComponent implements OnInit{
+export class BuildingPageComponent implements OnInit {
   private _buildingsService = inject(BuildingsService);
   private _entityDialogService = inject(EntityDialogService);
   private renderer = inject(Renderer2);
@@ -93,7 +89,7 @@ export class BuildingPageComponent implements OnInit{
     this.onUpdate(building);
   };
 
-   deleteOrRestoreBuilding = (id: string | number | undefined) => {
+  deleteOrRestoreBuilding = (id: string | number | undefined) => {
     const building = this.buildingsDetailsResource
       .value()
       ?.content.find((b) => b.buildingId === id);

@@ -34,7 +34,7 @@ export const OWNER_SIDEBAR_CONFIG = {
     {
       label: 'Mis contactos',
       icon: 'person',
-      route: '/my-contacts',
+      route: '/owner-contacts',
     },
     {
       label: 'Reportes y estadísticas',

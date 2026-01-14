@@ -1,19 +1,19 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
-import { tap } from 'rxjs';
-import { ContactsService } from '../../contacts/contacts.service';
-import { ContactDetails } from '../../contacts/interfaces/contact-details.interface';
-import { DEFAULT_CENTER } from '../../maps/utils/constants';
-import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
-import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
-import { NotificationService } from '../../shared/services/notification.service';
+import { Component, inject, OnInit, signal } from "@angular/core";
+import { CommonEntityPageComponent } from "../../shared/pages/common-entity-page/common-entity-page.component";
+import { ContactsService } from "../../contacts/contacts.service";
+import { NotificationService } from "../../shared/services/notification.service";
+import { ContactDetails } from "../../contacts/interfaces/contact-details.interface";
+import { CardDescriptor } from "../../shared/interfaces/card-descriptor.interface";
+import { DEFAULT_CENTER } from "../../maps/utils/constants";
+import { tap } from "rxjs";
 
 @Component({
-  selector: 'app-tenant-contacts-page',
+  selector: 'app-owner-contacts-page',
   imports: [CommonEntityPageComponent],
-  templateUrl: './tenant-contacts-page.component.html',
-  styleUrls: ['./tenant-contacts-page.component.css'],
+  templateUrl: './owner-contacts-page.component.html',
+  styleUrls: ['./owner-contacts-page.component.css'],
 })
-export class TenantContactsPageComponent implements OnInit {
+export class OwnerContactsPageComponent implements OnInit {
   private _contactsService = inject(ContactsService);
   private _notificationService = inject(NotificationService);
 
@@ -42,7 +42,7 @@ export class TenantContactsPageComponent implements OnInit {
   loadContacts() {
     if (!this.canQuery()) return;
     this._contactsService
-      .getTenantContactsDetails(this.pageIndex())
+      .getOwnerContactsDetails(this.pageIndex())
       .pipe(
         tap((newContacts) => {
           this.contacts.set([...this.contacts(), ...newContacts.content]);

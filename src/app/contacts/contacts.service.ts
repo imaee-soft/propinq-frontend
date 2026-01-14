@@ -12,8 +12,14 @@ export class ContactsService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/contacts`;
 
-  getContactsDetails(page = 0, size = 6): Observable<ContactDetailsPage> {
+  getTenantContactsDetails(page = 0, size = 6): Observable<ContactDetailsPage> {
     return this._http.get<ContactDetailsPage>(`${this._baseUrl}/tenant`, {
+      params: { page, size },
+    });
+  }
+
+  getOwnerContactsDetails(page = 0, size = 6): Observable<ContactDetailsPage> {
+    return this._http.get<ContactDetailsPage>(`${this._baseUrl}/owner`, {
       params: { page, size },
     });
   }

@@ -1,0 +1,13 @@
+<common-entity-page
+  [elements]="contacts()"
+  [descriptor]="descriptor"
+  [primaryActionLabel]="'Responder'"
+  [allLoadedText]="'Estas son todas las solicitudes de contacto.'"
+  [loadMoreLabel]="'Recuperar más solicitudes de contacto'"
+  [iconUrl]="'/location.png'"
+  [pageTitle]="'Solicitudes de Contacto'"
+  [onDelete]="delete.bind(this)"
+  [hasMoreEntities]="canQuery()"
+  [moreEntities]="loadMore.bind(this)"
+>
+</common-entity-page>

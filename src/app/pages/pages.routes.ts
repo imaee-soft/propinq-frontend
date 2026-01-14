@@ -100,6 +100,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'owner-contacts',
+    loadComponent: () =>
+      import('./owner-contacts-page/owner-contacts-page.component').then(
+        (m) => m.OwnerContactsPageComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

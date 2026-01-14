@@ -1,4 +1,6 @@
-
+:host {
+  width: 100%;
+}
 .page-header {
   margin-top: 30px;
   width: 100%;

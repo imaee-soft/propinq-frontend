@@ -1,8 +1,22 @@
+:host {
+  display: block;
+  height: 90%;
+  min-height: 0;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1e2b;
+  padding: 20px 4px;
+  border-radius: 24px;
+  height: 100%;
+  min-height: 0;
+  margin: 4px 16px;
+}
+
 .page-header {
-  margin-top: 20px;
-  margin-left: 64px;
-  width: 100%;
-  max-width: 97%;
+  padding: 0 64px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -33,27 +47,62 @@
   transform: scale(1.1) rotate(90deg);
 }
 
+.scroll-zone {
+  flex: 1;
+  flex-direction: column;
+  min-height: 0;
+  height: auto;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+}
+
+.scroll-zone::before,
+.scroll-zone::after {
+  content: "";
+  position: sticky;
+  display: block;
+  pointer-events: none;
+  z-index: 10;
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.scroll-zone::before {
+  top: 0;
+  height: 4px;
+  background: linear-gradient(
+    to bottom,
+    rgba(26, 30, 43, 0.9),
+    rgba(26, 30, 43, 0)
+  );
+}
+
+.scroll-zone::after {
+  bottom: 0;
+  height: 4px;
+  background: linear-gradient(
+    to top,
+    rgba(26, 30, 43, 0.9),
+    rgba(26, 30, 43, 0)
+  );
+}
+
 .grid-container {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 16px;
-  padding: 16px 64px;
-  overflow-y: auto;
-  overflow-x: hidden;
-  box-sizing: border-box;
+  padding: 0 64px;
 }
 
 .entity-card {
   width: 100%;
   display: flex;
   flex-direction: column;
-
-  background: linear-gradient(180deg, #1a1e2b 0%, #1f2436 100%);
+  background-color: #1a1e2b;
   border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #e2e8f0;
-
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
   transition: all 0.25s ease;
 }
 
@@ -88,13 +137,11 @@
   color: #cbd5e1;
   padding: 4px 10px;
   border-radius: 999px;
-
   background: linear-gradient(
     135deg,
     rgba(79, 70, 229, 0.25),
     rgba(124, 58, 237, 0.25)
   );
-
   border: 1px solid rgba(124, 58, 237, 0.4);
   white-space: nowrap;
   box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.1) inset;
@@ -104,13 +151,8 @@
   font-size: 0.7rem;
   padding: 4px 10px;
   border-radius: 999px;
-  text-transform: uppercase;
   letter-spacing: 0.05em;
   font-weight: 600;
-
-  background: rgba(16, 185, 129, 0.15);
-  color: #6ee7b7;
-  border: 1px solid rgba(16, 185, 129, 0.4);
 }
 
 .map-slot {
@@ -194,21 +236,20 @@ mat-card-actions button[mat-flat-button]:disabled,
 }
 
 .pagination-zone {
-  width: 100%;
+  flex-shrink: 0;
   display: flex;
   justify-content: center;
-  margin-top: 16px;
+  margin-top: 20px;
 }
 
 .all-loaded {
   font-size: 0.9rem;
   opacity: 0.7;
-  padding: 0.4rem 0.8rem;
-  border-radius: 12px;
-  border: 1px dashed var(--card-border);
 }
 
 .load-more {
-  padding: 20px 80px !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  padding: 0 80px !important;
   border-radius: 30px !important;
 }

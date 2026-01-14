@@ -43,6 +43,10 @@ export class BuildingPageComponent implements OnInit {
     };
   });
 
+  pageContent = computed<BuildingDetails[]>(
+    () => this.buildingsDetailsResource.value()?.content || []
+  );
+
   totalElements = computed<number>(
     () => this.buildingsDetailsResource.value()?.totalElements || 0
   );

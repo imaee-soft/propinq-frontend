@@ -8,7 +8,7 @@
 <div class="status-message empty">No hay inmuebles registrados.</div>
 } @else {
 <common-entity-page
-  [page]="page()!"
+  [elements]="page()?.content"
   [descriptor]="descriptor"
   [onOpen]="openBuilding.bind(this)"
   [onDelete]="deleteOrRestoreBuilding.bind(this)"

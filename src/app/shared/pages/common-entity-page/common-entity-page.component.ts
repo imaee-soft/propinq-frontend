@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, computed, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -6,17 +7,50 @@ import { MapComponent } from '../../../maps/components/map/map.component';
 import { MapConfig } from '../../../maps/interfaces/map-config.interface';
 import { DEFAULT_CENTER } from '../../../maps/utils/constants';
 import { CardDescriptor } from '../../interfaces/card-descriptor.interface';
-import { Page } from '../../interfaces/page.interface';
 import { formatDate } from '../../utilities/date.pipes';
+
+interface StatusConfig {
+  label: string;
+  color: string;
+  background: string;
+  border: string;
+}
+
+const STATUS_MAP: { [key: string]: StatusConfig } = {
+  CREATED: {
+    label: 'Creada',
+    color: '#fde68a',
+    background: 'rgba(245, 158, 11, 0.15)',
+    border: '1px solid rgba(245, 158, 11, 0.4)',
+  },
+  REJECTED: {
+    label: 'Rechazada',
+    color: '#fca5a5',
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+  },
+  ACCEPTED: {
+    label: 'Aprobada',
+    color: '#6ee7b7',
+    background: 'rgba(16, 185, 129, 0.15)',
+    border: '1px solid rgba(16, 185, 129, 0.4)',
+  },
+};
 
 @Component({
   selector: 'common-entity-page',
   templateUrl: 'common-entity-page.component.html',
   styleUrls: ['common-entity-page.component.css'],
-  imports: [MatCardModule, MatIconModule, MatButtonModule, MapComponent],
+  imports: [
+    MatCardModule,
+    MatIconModule,
+    MatButtonModule,
+    MapComponent,
+    CommonModule,
+  ],
 })
 export class CommonEntityPageComponent<T extends object> {
-  page = input<Page<T>>();
+  elements = input<T[]>();
   descriptor = input<CardDescriptor<T>>();
   onOpen = input<(id: string | number | undefined) => void>();
   onDelete = input<(id: string | number | undefined) => void>();
@@ -29,13 +63,10 @@ export class CommonEntityPageComponent<T extends object> {
   newEntity = input<() => void>();
   newEntityLabel = input<string>('Nueva entidad');
 
-  cards = computed(() => this.page()?.content ?? []);
-  total = computed(() => this.page()?.total ?? null);
-  hasMore = computed(() => {
-    const total = this.total();
-    if (total === null) return true;
-    return this.cards().length < total;
-  });
+  hasMoreEntities = input<boolean>(true);
+  moreEntities = input<() => void>();
+
+  cards = computed(() => this.elements() ?? []);
 
   private _mapConfigs = new WeakMap<T, MapConfig>();
 
@@ -45,6 +76,12 @@ export class CommonEntityPageComponent<T extends object> {
 
   formatDateWrapper(date: Date | undefined): string {
     return formatDate(date);
+  }
+
+  getStatusConfig(entity: T): StatusConfig | null {
+    const status = this.descriptor()?.status?.(entity);
+    if (!status) return null;
+    return STATUS_MAP[status] ?? null;
   }
 
   loadMapConfig(entity: T): MapConfig {

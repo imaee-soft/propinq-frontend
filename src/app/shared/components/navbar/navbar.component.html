@@ -22,11 +22,11 @@
   <div class="nav-center">
     <div class="nav-actions">
       @if (isOwner()) {
-        <a
+      <a
         class="nav-action-link nav-action-featured"
         (click)="handlePublish()"
         [matMenuTriggerFor]="publishMenu"
-        >
+      >
         Publicar
       </a>
       }
@@ -54,8 +54,19 @@
     </div>
   </div>
 
-  <div class="nav-right">
-    <mat-divider class="vertical-divider" vertical></mat-divider>
+  <div
+    class="nav-right"
+    [ngStyle]="
+      userLogged
+        ? {
+            'border-radius': '40px',
+            'background-color': '#1a1e2b',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            padding: '0 8px'
+          }
+        : {}
+    "
+  >
     @if (userLogged) {
     <button
       mat-icon-button
@@ -68,11 +79,11 @@
     </button>
     <mat-menu #notificationMenu="matMenu">
       @if (notifications().length > 0) {
-        <div class="menu-content notification-menu-content">
-          @for (notification of notifications(); track $index) {
-            <menu-notification [notification]="notification"></menu-notification>
-          }
-        </div>
+      <div class="menu-content notification-menu-content">
+        @for (notification of notifications(); track $index) {
+        <menu-notification [notification]="notification"></menu-notification>
+        }
+      </div>
       }
     </mat-menu>
     <button

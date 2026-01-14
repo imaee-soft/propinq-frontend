@@ -57,14 +57,12 @@ export class OwnerContactsPageComponent implements OnInit {
       const contactId = String(params['id'] ?? '');
       if (!contactId) return;
 
-      // Evitar abrirlo 2 veces si el effect corre de nuevo
       if (this._matDialog.openDialogs.length > 0) return;
 
       const ref = this._matDialog.open(ContactActionsDialogComponent, {
         panelClass: 'contact-dialog',
         data: {
           contactId,
-          // ideal: pasar también notifierFullName, pero ahora no lo tenés acá seguro
           notifierFullName: '',
         },
       });

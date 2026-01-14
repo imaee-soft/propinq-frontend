@@ -1,20 +1,5 @@
-@if (contactsDetailsResource.isLoading() && !page()) {
-<div class="status-message loading">Cargando solicitudes de contacto...</div>
-} @else if (contactsDetailsResource.error()) {
-<div class="status-message error">
-  Error al cargar las solicitudes de contacto.
-</div>
-} @else if (!page()) {
-<div class="status-message empty">
-  No hay solicitudes de contacto registradas.
-</div>
-} @else if (page()!.content.length === 0) {
-<div class="status-message empty">
-  No hay solicitudes de contacto registradas.
-</div>
-} @else {
 <common-entity-page
-  [page]="page()!"
+  [elements]="contacts()"
   [descriptor]="descriptor"
   [primaryActionLabel]="'Ver'"
   [allLoadedText]="'Estas son todas las solicitudes de contacto.'"
@@ -22,6 +7,7 @@
   [iconUrl]="'/location.png'"
   [pageTitle]="'Solicitudes de Contacto'"
   [onDelete]="delete.bind(this)"
+  [hasMoreEntities]="canQuery()"
+  [moreEntities]="loadMore.bind(this)"
 >
 </common-entity-page>
-}

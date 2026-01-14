@@ -4,7 +4,7 @@
   left: 0;
   right: 0;
   height: 30px;
-  background: linear-gradient(to right, #1a1e2b, #232a3b);
+  background-color: #232a3b;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -12,8 +12,7 @@
   font-family: "Montserrat", sans-serif;
   color: #e2e8f0;
   font-size: 14px;
-  z-index: 1100;
-  box-shadow: 0 -1px 6px rgba(0, 0, 0, 0.6);
+  z-index: 900;
 }
 
 .footer-left {

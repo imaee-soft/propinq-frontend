@@ -107,6 +107,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'reports',
+    loadComponent: () =>
+      import('./reports-page/reports-page.component').then(
+        (m) => m.ReportsPageComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

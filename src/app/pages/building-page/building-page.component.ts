@@ -73,7 +73,6 @@ export class BuildingPageComponent implements OnInit {
       b.latitude != null && b.longitude != null
         ? { latitude: b.latitude, longitude: b.longitude }
         : DEFAULT_CENTER, // o DEFAULT_CENTER si lo tienes accesible}
-    secondaryActionLabel: (b) => (b.deleted ? 'Restaurar' : 'Eliminar'),
   };
 
   ngOnInit() {

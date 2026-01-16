@@ -1,4 +1,5 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
+import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { ContactsService } from '../../contacts/contacts.service';
 import { ContactDetails } from '../../contacts/interfaces/contact-details.interface';
@@ -6,6 +7,12 @@ import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
 import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
 import { NotificationService } from '../../shared/services/notification.service';
+
+const statusMap: Record<string, string> = {
+  CREATED: 'Pendiente',
+  REJECTED: 'Contactado',
+  ACCEPTED: 'Rechazado',
+};
 
 @Component({
   selector: 'app-tenant-contacts-page',
@@ -15,6 +22,7 @@ import { NotificationService } from '../../shared/services/notification.service'
 })
 export class TenantContactsPageComponent implements OnInit {
   private _contactsService = inject(ContactsService);
+  private _router = inject(Router);
   private _notificationService = inject(NotificationService);
 
   canQuery = signal<boolean>(true);
@@ -32,7 +40,6 @@ export class TenantContactsPageComponent implements OnInit {
       p.latitude != null && p.longitude != null
         ? { latitude: p.latitude, longitude: p.longitude }
         : DEFAULT_CENTER,
-    secondaryActionLabel: (p) => 'Eliminar',
   };
 
   ngOnInit(): void {
@@ -59,9 +66,39 @@ export class TenantContactsPageComponent implements OnInit {
     this.loadContacts();
   };
 
-  delete = (contactId: string | number | undefined) => {
-    const contact = this.contacts().find((c) => c.contactId === contactId);
+  primaryAction = (contactId: string | number | undefined) => {
+    const contact = this.getContact(contactId);
     if (!contact) return;
+    this.navigateToProperty(contact);
+  };
+
+  canExecuteSecondaryAction = (contact: ContactDetails): boolean => {
+    return true;
+  };
+
+  secondaryAction = (contactId: string | number | undefined) => {
+    const contact = this.getContact(contactId);
+    if (!contact) return;
+    this._router.navigate(['/contact-details', contact.contactId]);
+  };
+
+  thirdActionLabel = (contactId: string | number | undefined): string => {
+    const contact = this.getContact(contactId);
+    if (!contact) return 'Ir a la propiedad';
+    return contact.status === 'REJECTED' ? 'Ver mensajes' : 'Abrir chat';
+  };
+
+  canExecuteThirdAction = (contact: ContactDetails): boolean => {
+    return contact.status === 'CREATED';
+  };
+
+  thirdAction = (contactId: string | number | undefined) => {
+    const contact = this.getContact(contactId);
+    if (!contact) return;
+    this.delete(contact);
+  };
+
+  delete(contact: ContactDetails) {
     this._contactsService.deleteContact(contact.contactId).subscribe({
       next: () => {
         this._notificationService.success(
@@ -76,7 +113,15 @@ export class TenantContactsPageComponent implements OnInit {
         );
       },
     });
-  };
+  }
+
+  private navigateToProperty(contact: ContactDetails) {
+    this._router.navigate(['/properties', contact.propertyId]);
+  }
+
+  private getContact(contactId: string | number | undefined) {
+    return this.contacts().find((c) => c.contactId === contactId);
+  }
 
   private resetPage() {
     this.contacts.set([]);

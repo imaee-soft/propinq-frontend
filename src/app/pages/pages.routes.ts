@@ -114,6 +114,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'contact-details/:contactId',
+    loadComponent: () =>
+      import('./contact-details-page/contact-details-page.component').then(
+        (m) => m.ContactDetailsPageComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

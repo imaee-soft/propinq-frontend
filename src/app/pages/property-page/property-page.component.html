@@ -1,19 +1,10 @@
-@if (propertiesDetailsResource.isLoading() && !page()) {
-<div class="status-message loading">Cargando viviendas...</div>
-} @else if (propertiesDetailsResource.error()) {
-<div class="status-message error">Error al cargar las viviendas.</div>
-} @else if (!page()) {
-<div class="status-message empty">No hay viviendas registradas.</div>
-} @else if (page()!.content.length === 0) {
-<div class="status-message empty">No hay viviendas registradas.</div>
-} @else {
 <common-entity-page
   [elements]="page()?.content"
   [descriptor]="descriptor"
-  [onOpen]="openProperty.bind(this)"
-  [onDelete]="deleteOrRestoreProperty.bind(this)"
+  [primaryAction]="openProperty.bind(this)"
+  [secondaryAction]="deleteOrRestoreProperty.bind(this)"
   [primaryActionLabel]="'Modificar'"
-  [allLoadedText]="'Estas son todas las viviendas.'"
+  [allLoadedLabel]="'Estas son todas las viviendas.'"
   [loadMoreLabel]="'Recuperar más viviendas'"
   [iconUrl]="'/property.png'"
   [pageTitle]="'Mis Viviendas'"
@@ -21,4 +12,3 @@
   [newEntityLabel]="'Nueva vivienda'"
 >
 </common-entity-page>
-}

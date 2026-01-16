@@ -69,7 +69,6 @@ export class PropertyPageComponent {
       p.latitude != null && p.longitude != null
         ? { latitude: p.latitude, longitude: p.longitude }
         : DEFAULT_CENTER,
-    secondaryActionLabel: (p) => (p.deleted ? 'Restaurar' : 'Eliminar'),
   };
 
   openProperty = (id: string | number | undefined) => {

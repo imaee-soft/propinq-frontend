@@ -1,0 +1,80 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-content">
+      <button mat-icon-button class="back-button">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2 class="page-title">Solicitud de contacto</h2>
+    </div>
+  </header>
+
+  <div class="detail-card">
+    <div class="header-content with-margin">
+      <div class="entities">
+        <div class="entity-container">
+          <mat-icon>home</mat-icon>
+          <span class="span-title">{{ contact.propertyAddress }}</span>
+        </div>
+        <div class="entity-container">
+          <mat-icon>person</mat-icon>
+          <span class="span-title">{{ contact.owner }}</span>
+        </div>
+      </div>
+      <div class="badges">
+        <span class="card-date">
+          {{ formatDateWrapper(contact.contactDate) }}
+        </span>
+
+        @if (getStatusConfig(contact.status); as status) {
+        <span
+          class="card-status"
+          [ngStyle]="{
+            color: status.color,
+            background: status.background,
+            border: status.border
+          }"
+        >
+          {{ status.label }}
+        </span>
+        }
+      </div>
+    </div>
+
+    <div class="map-slot">
+      <div class="map-wrapper">
+        <app-map [config]="mapConfig"></app-map>
+      </div>
+    </div>
+  </div>
+
+  <div class="messages-card">
+    <div class="entity-container with-margin">
+      <mat-icon>forum</mat-icon>
+      <span class="span-title">Conversación</span>
+    </div>
+
+    <mat-card-content>
+      <div class="message message-tenant">
+        <div class="bubble">
+          {{ contact.message }}
+        </div>
+        <span class="message-label"
+          >{{ contact.issuer }},
+          {{ formatDateWrapper(contact.contactDate) }}</span
+        >
+      </div>
+
+      @if (contact.answer) {
+      <div class="message message-owner">
+        <div class="bubble">
+          {{ contact.answer }}
+        </div>
+        <span class="message-label"
+          >{{ contact.owner }},
+          {{ formatDateWrapper(contact.answerDate) }}</span
+        >
+      </div>
+      }</mat-card-content
+    >
+  </div>
+</div>

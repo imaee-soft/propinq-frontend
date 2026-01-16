@@ -65,26 +65,42 @@
         <mat-card-actions align="end">
           <button
             mat-flat-button
-            (click)="onOpen()?.(descriptor()?.id(entity))"
+            (click)="primaryAction()?.(descriptor()?.id(entity))"
           >
             {{ primaryActionLabel() }}
           </button>
 
-          <button mat-button (click)="onDelete()?.(descriptor()?.id(entity))">
-            {{ descriptor()?.secondaryActionLabel?.(entity) }}
+          @if (canExecuteSecondaryAction()(entity)) {
+          <button
+            mat-button
+            (click)="secondaryAction()?.(descriptor()?.id(entity))"
+          >
+            {{ secondaryActionLabel() }}
           </button>
+          } @if (canExecuteThirdAction()(entity)) {
+          <button
+            mat-button
+            (click)="thirdAction()?.(descriptor()?.id(entity))"
+          >
+            {{ thirdActionLabel() }}
+          </button>
+          }
         </mat-card-actions>
       </mat-card>
       }
     </div>
     <div class="pagination-zone">
       @if (hasMoreEntities()) {
-      <button mat-flat-button class="load-more" (click)="moreEntities()?.()">
+      <button
+        mat-flat-button
+        class="load-more"
+        (click)="loadMoreEntities()?.()"
+      >
         {{ loadMoreLabel() }}
       </button>
       } @else {
       <span class="all-loaded">
-        {{ allLoadedText() }}
+        {{ allLoadedLabel() }}
       </span>
       }
     </div>

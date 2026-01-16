@@ -10,10 +10,10 @@
 <common-entity-page
   [elements]="page()?.content"
   [descriptor]="descriptor"
-  [onOpen]="openBuilding.bind(this)"
-  [onDelete]="deleteOrRestoreBuilding.bind(this)"
+  [primaryAction]="openBuilding.bind(this)"
+  [secondaryAction]="deleteOrRestoreBuilding.bind(this)"
   [primaryActionLabel]="'Modificar'"
-  [allLoadedText]="'Estos son todos los inmuebles.'"
+  [allLoadedLabel]="'Estos son todos los inmuebles.'"
   [loadMoreLabel]="'Recuperar más inmuebles.'"
   [iconUrl]="'/building.png'"
   [pageTitle]="'Mis Inmuebles'"

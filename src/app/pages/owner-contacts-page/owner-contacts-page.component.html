@@ -2,13 +2,13 @@
   [elements]="contacts()"
   [descriptor]="descriptor"
   [primaryActionLabel]="'Responder'"
-  [allLoadedText]="'Estas son todas las solicitudes de contacto.'"
+  [allLoadedLabel]="'Estas son todas las solicitudes de contacto.'"
   [loadMoreLabel]="'Recuperar más solicitudes de contacto'"
   [iconUrl]="'/location.png'"
   [pageTitle]="'Solicitudes de Contacto'"
-  [onOpen]="openAnswerDialog"
-  [onDelete]="delete.bind(this)"
+  [primaryAction]="openAnswerDialog"
+  [secondaryAction]="delete.bind(this)"
   [hasMoreEntities]="canQuery()"
-  [moreEntities]="loadMore.bind(this)"
+  [loadMoreEntities]="loadMore.bind(this)"
 >
 </common-entity-page>

@@ -1,16 +1,16 @@
-import { Component, effect, inject, OnInit, signal } from "@angular/core";
-import { CommonEntityPageComponent } from "../../shared/pages/common-entity-page/common-entity-page.component";
-import { ContactsService } from "../../contacts/contacts.service";
-import { NotificationService } from "../../shared/services/notification.service";
-import { ContactDetails } from "../../contacts/interfaces/contact-details.interface";
-import { CardDescriptor } from "../../shared/interfaces/card-descriptor.interface";
-import { DEFAULT_CENTER } from "../../maps/utils/constants";
+import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { ContactsService } from '../../contacts/contacts.service';
+import { ContactDetails } from '../../contacts/interfaces/contact-details.interface';
+import { DEFAULT_CENTER } from '../../maps/utils/constants';
+import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
+import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
+import { NotificationService } from '../../shared/services/notification.service';
 
-import { tap } from "rxjs";
-import { QueryParamsService } from "../../shared/services/query-params.service";
-import { DialogStateService } from "../../shared/services/dialog-state.service";
-import { ContactActionsDialogComponent } from "../../notifications/dialogs/contact-actions-dialog/contact-actions-dialog.component";
-import { MatDialog } from "@angular/material/dialog";
+import { MatDialog } from '@angular/material/dialog';
+import { tap } from 'rxjs';
+import { ContactActionsDialogComponent } from '../../notifications/dialogs/contact-actions-dialog/contact-actions-dialog.component';
+import { DialogStateService } from '../../shared/services/dialog-state.service';
+import { QueryParamsService } from '../../shared/services/query-params.service';
 
 @Component({
   selector: 'app-owner-contacts-page',
@@ -22,8 +22,7 @@ export class OwnerContactsPageComponent implements OnInit {
   private _contactsService = inject(ContactsService);
   private _notificationService = inject(NotificationService);
   private _queryParamsService = inject(QueryParamsService);
-    private _matDialog = inject(MatDialog);
-
+  private _matDialog = inject(MatDialog);
 
   canQuery = signal<boolean>(true);
   pageIndex = signal(0);
@@ -40,19 +39,17 @@ export class OwnerContactsPageComponent implements OnInit {
       p.latitude != null && p.longitude != null
         ? { latitude: p.latitude, longitude: p.longitude }
         : DEFAULT_CENTER,
-    secondaryActionLabel: (p) => 'Eliminar',
   };
 
-
-
-   private _dialogState = inject(DialogStateService);
+  private _dialogState = inject(DialogStateService);
 
   constructor() {
     effect(() => {
       const params = this._queryParamsService.queryParams();
       if (!params) return;
 
-      if (params['entity'] !== 'contact' || params['action'] !== 'answer') return;
+      if (params['entity'] !== 'contact' || params['action'] !== 'answer')
+        return;
 
       const contactId = String(params['id'] ?? '');
       if (!contactId) return;
@@ -77,7 +74,6 @@ export class OwnerContactsPageComponent implements OnInit {
       });
     });
   }
-
 
   ngOnInit(): void {
     this.loadContacts();
@@ -129,14 +125,13 @@ export class OwnerContactsPageComponent implements OnInit {
     this.canQuery.set(true);
   }
 
-
   openAnswerDialog = (contactId: string | number | undefined) => {
-  if (!contactId) return;
+    if (!contactId) return;
 
-  this._queryParamsService.pushQueryParams({
-    entity: 'contact',
-    action: 'answer',
-    id: String(contactId),
-  });
-};
+    this._queryParamsService.pushQueryParams({
+      entity: 'contact',
+      action: 'answer',
+      id: String(contactId),
+    });
+  };
 }

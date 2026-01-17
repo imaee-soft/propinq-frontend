@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { AnswerContactRequest } from './interfaces/answer-contact-request.interface';
 import { ContactDetailsPage } from './interfaces/contact-details-page.interface';
+import { ContactDetails } from './interfaces/contact-details.interface';
 import { ContactRequest } from './interfaces/contact-request.interface';
 import { ContactResponse } from './interfaces/contact-response.interface';
 
@@ -40,5 +41,11 @@ export class ContactsService {
 
   deleteContact(contactId: string) {
     return this._http.delete(`${this._baseUrl}/${contactId}`);
+  }
+
+  getContactDetails(contactId: string) {
+    return this._http.get<ContactDetails>(
+      `${this._baseUrl}/${contactId}/details`
+    );
   }
 }

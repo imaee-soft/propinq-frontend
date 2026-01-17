@@ -105,7 +105,7 @@
           Contactar
         </button>
         } @else {
-        <button mat-raised-button class="contacted-action" disabled>
+        <button mat-raised-button class="contacted-action">
           <mat-icon>check_small</mat-icon>
           Contactado
         </button>
@@ -113,7 +113,7 @@
 
         <button mat-stroked-button class="secondary-action">
           <mat-icon>favorite_border</mat-icon>
-          Guardar en favoritos
+          Favorito
         </button>
 
         <button mat-stroked-button class="secondary-action">
@@ -126,9 +126,14 @@
 
   <div class="property-info-section">
     <div class="property-header">
-      <h1 class="property-title">
-        {{ propertyDetailsResource.value()!.title }}
-      </h1>
+      <div class="header-content">
+        <button mat-icon-button class="back-button" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h1 class="property-title">
+          {{ propertyDetailsResource.value()!.title }}
+        </h1>
+      </div>
 
       <div class="property-status">
         @if(propertyDetailsResource.value()!.deleted) {

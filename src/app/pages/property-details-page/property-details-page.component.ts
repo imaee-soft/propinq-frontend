@@ -75,6 +75,13 @@ export class PropertyDetailsPageComponent implements OnInit {
   ngOnInit() {
     this.renderer.setStyle(document.body, 'overflow', 'auto');
   }
+
+  goBack() {
+    window.history.back();
+  }
+
+  goToContact() {}
+
   ngOnDestroy() {
     this.renderer.removeStyle(document.body, 'overflow');
   }

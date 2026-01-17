@@ -16,9 +16,16 @@
   padding: 20px 4px;
   border-radius: 20px;
   display: grid;
-  grid-template-columns: 1fr 2fr;
+  grid-template-columns: 1fr min-content;
   grid-template-rows: auto 1fr;
   gap: 10px;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
 }
 
 .gallery-section {
@@ -174,7 +181,6 @@
   font-size: 1.75rem;
   font-weight: 700;
   color: var(--text);
-  margin: 0 0 1rem 0;
   line-height: 1.3;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -207,10 +213,6 @@
 .floor-info {
   color: var(--muted-contrast);
   font-size: 0.9rem;
-}
-
-.property-status {
-  margin-bottom: 1rem;
 }
 
 .status-chip {
@@ -293,7 +295,7 @@ s.section-title {
   grid-row: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: center;
   align-items: center;
   min-height: fit-content;
   gap: 1.5rem;
@@ -316,7 +318,7 @@ s.section-title {
 
 .price-container {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 0.25rem;
   margin-bottom: 0.5rem;
 }
@@ -379,7 +381,6 @@ s.section-title {
 }
 
 .primary-action:hover {
-  transform: translateY(-2px) !important;
   box-shadow: 0 8px 24px rgba(139, 92, 246, 0.4) !important;
 }
 
@@ -396,8 +397,8 @@ s.section-title {
   opacity: 0.95 !important;
 }
 
-.contacted-action.mat-button-disabled {
-  opacity: 1 !important;
+.contacted-action:hover {
+  box-shadow: 0 8px 24px rgba(34, 197, 94, 0.35) !important;
 }
 
 .secondary-action {

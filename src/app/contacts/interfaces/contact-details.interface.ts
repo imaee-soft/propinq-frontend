@@ -12,4 +12,5 @@ export interface ContactDetails {
   status: string;
   latitude: number;
   longitude: number;
+  isOwnerRetrieving: boolean;
 }

@@ -20,25 +20,25 @@ export class ReportsPageComponent {
   private authService = inject(AuthService);
 
   // Signal con el usuario logueado
-  readonly user = toSignal(of(this.authService.user()));
-
-  // Signal con el ID del owner logueado
-  readonly ownerId = computed(() => this.user()?.userId ?? null);
+  readonly user = this.authService.user;
 
   // Signal para parámetros de filtro
-  readonly filters = computed(() =>
-    this.ownerId() ? { owner_id: this.ownerId() } : undefined
-  );
+  readonly filters = computed(() => {
+  const email = this.user()?.username ?? null;
 
-  // Recurso reactivo para obtener el URL seguro de embedding Metabase
+  if (!email) { return undefined; }
+  return { email };
+  });
+
   readonly reportsResource = rxResource({
-    request: () =>
-      this.ownerId()
-        ? this.embedService.getEmbedUrl('dashboard', 3,{ owner_id: this.ownerId()! })
-        : of(null),
-    loader: ({ request }) => request,
-  }
-  );
+    request: () => {
+      const filters = this.filters();
+      // Solo ejecuta si hay filtros válidos
+      if (filters) return this.embedService.getEmbedUrl('dashboard', 2, filters);
+      return of(null);
+    },
+    loader: ({ request }) => request
+  });
 
   readonly metabaseIframeUrl = computed<SafeResourceUrl | null>(() => {
     const result = this.reportsResource.value();
@@ -47,7 +47,6 @@ export class ReportsPageComponent {
       : null;
   });
 
-  // Signal para loading y error
   readonly isLoading = computed(() => this.reportsResource.isLoading());
   readonly error = computed(() =>
     this.reportsResource.error() && !this.isLoading() ? 'Could not load report. Please try again.' : null

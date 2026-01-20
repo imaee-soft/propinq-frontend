@@ -56,7 +56,7 @@ export class TenantContactsPageComponent implements OnInit {
           this.totalElements.set(newContacts.totalElements);
           if (newContacts.totalElements === this.contacts().length)
             this.canQuery.set(false);
-        })
+        }),
       )
       .subscribe();
   }
@@ -72,10 +72,6 @@ export class TenantContactsPageComponent implements OnInit {
     this.navigateToProperty(contact);
   };
 
-  canExecuteSecondaryAction = (contact: ContactDetails): boolean => {
-    return true;
-  };
-
   secondaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
@@ -83,9 +79,7 @@ export class TenantContactsPageComponent implements OnInit {
   };
 
   thirdActionLabel = (contactId: string | number | undefined): string => {
-    const contact = this.getContact(contactId);
-    if (!contact) return 'Ir a la propiedad';
-    return contact.status === 'REJECTED' ? 'Ver mensajes' : 'Abrir chat';
+    return 'Eliminar';
   };
 
   canExecuteThirdAction = (contact: ContactDetails): boolean => {
@@ -102,14 +96,14 @@ export class TenantContactsPageComponent implements OnInit {
     this._contactsService.deleteContact(contact.contactId).subscribe({
       next: () => {
         this._notificationService.success(
-          'La solicitud de contacto fue eliminada correctamente'
+          'La solicitud de contacto fue eliminada correctamente',
         );
         this.resetPage();
         this.loadContacts();
       },
       error: () => {
         this._notificationService.error(
-          'Ocurrió un error al eliminar el contacto'
+          'Ocurrió un error al eliminar el contacto',
         );
       },
     });

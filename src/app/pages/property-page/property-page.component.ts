@@ -1,12 +1,10 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  computed,
   inject,
+  OnInit,
   signal,
 } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { of } from 'rxjs';
 
 import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
 import { PropertiesService } from '../../properties/properties.service';
@@ -16,10 +14,12 @@ import { EditPropertyDialogComponent } from '../../properties/dialogs/edit-prope
 import { NewHouseDialogComponent } from '../../properties/dialogs/new-house-dialog/new-house-dialog.component';
 
 import { MatIconModule } from '@angular/material/icon';
+import { Router } from '@angular/router';
+import { tap } from 'rxjs';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
-import { Page } from '../../shared/interfaces/page.interface';
 import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
+import { NotificationService } from '../../shared/services/notification.service';
 
 @Component({
   standalone: true,
@@ -29,113 +29,143 @@ import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page
   styleUrl: './property-page.component.css',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class PropertyPageComponent {
+export class PropertyPageComponent implements OnInit {
   private _propertiesService = inject(PropertiesService);
+  private _router = inject(Router);
+  private _notificationService = inject(NotificationService);
   private _entityDialogService = inject(EntityDialogService);
 
-  hasToQuery = signal<boolean>(true);
+  canQuery = signal<boolean>(true);
   pageIndex = signal(0);
-
-  propertiesDetailsResource = rxResource({
-    loader: () => {
-      if (this.hasToQuery()) {
-        return this._propertiesService.getPropertiesDetails(this.pageIndex());
-      }
-      return of(null);
-    },
-  });
-
-  readonly page = computed<Page<PropertyDetails> | null>(() => {
-    const value = this.propertiesDetailsResource.value();
-    if (!value) return null;
-
-    return {
-      content: value.content,
-      total: value.totalElements,
-    };
-  });
-
-  totalElements = computed<number>(
-    () => this.propertiesDetailsResource.value()?.totalElements || 0
-  );
+  properties = signal<PropertyDetails[]>([]);
+  totalElements = signal(0);
 
   descriptor: CardDescriptor<PropertyDetails> = {
     user: (p) => p.ownerFullName ?? '',
     name: (p) => p.title,
     date: (p) => new Date(),
     id: (p) => p.propertyId,
-    status: (p) => (p.deleted ? 'ELIMINADA' : ''),
+    status: (p) => (p.deleted ? 'DELETED' : 'ACTIVE'),
     coordinates: (p) =>
       p.latitude != null && p.longitude != null
         ? { latitude: p.latitude, longitude: p.longitude }
         : DEFAULT_CENTER,
   };
 
-  openProperty = (id: string | number | undefined) => {
-    const property = this.propertiesDetailsResource
-      .value()
-      ?.content.find((p) => p.propertyId === id);
-    if (!property) return;
+  ngOnInit(): void {
+    this.loadProperties();
+  }
 
-    this.onUpdate(property);
-  };
-
-  deleteOrRestoreProperty = (id: string | number | undefined) => {
-    const property = this.propertiesDetailsResource
-      .value()
-      ?.content.find((p) => p.propertyId === id);
-    if (!property) return;
-
-    if (!property.deleted) {
-      this.onDelete(property.propertyId);
-    } else {
-      this.onRestore(property.propertyId);
-    }
-  };
-
-  loadMore = () => {
-    this.pageIndex.update((i) => i + 1);
-    this.propertiesDetailsResource.reload();
-  };
-
-  onCreate() {
+  create() {
+    console.log('Creating property');
     this._entityDialogService
       .openNewEntityDialog(NewHouseDialogComponent, {
         panelClass: 'generic-dialog',
+        backdropClass: 'dialog-backdrop',
         entity: 'house',
       })
       .subscribe((wasSuccessful) => {
         if (wasSuccessful) {
-          this.propertiesDetailsResource.reload();
+          this.resetPage();
+          this.loadProperties();
         }
       });
   }
 
-  onUpdate(property: PropertyDetails) {
+  loadProperties() {
+    if (!this.canQuery()) return;
+    this._propertiesService
+      .getPropertiesDetails(this.pageIndex())
+      .pipe(
+        tap((newProperties) => {
+          this.properties.set([...this.properties(), ...newProperties.content]);
+          this.totalElements.set(newProperties.totalElements);
+          if (newProperties.totalElements === this.properties().length)
+            this.canQuery.set(false);
+        }),
+      )
+      .subscribe();
+  }
+
+  loadMore = () => {
+    this.pageIndex.update((i) => i + 1);
+    this.loadProperties();
+  };
+
+  primaryAction = (id: string | number | undefined) => {
+    const property = this.properties().find((p) => p.propertyId === id);
+    if (!property) return;
+    this.update(property);
+  };
+
+  update(property: PropertyDetails) {
     this._entityDialogService
       .openEditEntityDialog(EditPropertyDialogComponent, {
         panelClass: 'generic-dialog',
         entity: 'property',
         id: property.propertyId,
+        backdropClass: 'dialog-backdrop',
         width: '900px',
         data: { property },
       })
       .subscribe((wasSuccessful) => {
         if (wasSuccessful) {
-          this.propertiesDetailsResource.reload();
+          this.resetPage();
+          this.loadProperties();
         }
       });
   }
 
-  onDelete(propertyId: string) {
+  secondaryAction = (id: string | number | undefined) => {
+    const property = this.getProperty(id);
+    if (!property) return;
+    this._router.navigate(['/properties', property.propertyId]);
+  };
+
+  thirdActionLabel = (id: string | number | undefined): string => {
+    const property = this.getProperty(id);
+    if (!property) return '';
+    return property.deleted ? 'Restaurar' : 'Eliminar';
+  };
+
+  thirdAction = (id: string | number | undefined) => {
+    const property = this.getProperty(id);
+    if (!property) return;
+    if (!property.deleted) {
+      this.delete(property.propertyId);
+    } else {
+      this.restore(property.propertyId);
+    }
+  };
+
+  delete(propertyId: string) {
     this._propertiesService.deleteProperty(propertyId).subscribe(() => {
-      this.propertiesDetailsResource.reload();
+      this._notificationService.success(
+        'La vivienda fue eliminada correctamente',
+      );
+      this.resetPage();
+      this.loadProperties();
     });
   }
 
-  onRestore(propertyId: string) {
+  restore(propertyId: string) {
     this._propertiesService.restoreProperty(propertyId).subscribe(() => {
-      this.propertiesDetailsResource.reload();
+      this._notificationService.success(
+        'La vivienda fue restaurada correctamente',
+      );
+      this.resetPage();
+      this.loadProperties();
     });
+  }
+
+  private getProperty(propertyId: string | number | undefined) {
+    return this.properties().find((p) => p.propertyId === propertyId);
+  }
+
+  private resetPage() {
+    this.properties.set([]);
+    this.totalElements.set(0);
+    this.pageIndex.set(0);
+    this.canQuery.set(true);
   }
 }

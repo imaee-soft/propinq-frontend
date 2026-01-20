@@ -28,16 +28,16 @@
         </span>
 
         @if (getStatusConfig((contactDetails$ | async)?.status!); as status) {
-        <span
-          class="card-status"
-          [ngStyle]="{
-            color: status.color,
-            background: status.background,
-            border: status.border
-          }"
-        >
-          {{ status.label }}
-        </span>
+          <span
+            class="card-status"
+            [ngStyle]="{
+              color: status.color,
+              background: status.background,
+              border: status.border,
+            }"
+          >
+            {{ status.label }}
+          </span>
         }
       </div>
     </div>
@@ -74,23 +74,36 @@
       </div>
 
       @if ((contactDetails$ | async)?.answer) {
-      <div
-        class="message"
-        [ngClass]="
-          (contactDetails$ | async)?.isOwnerRetrieving
-            ? 'my-message'
-            : 'their-message'
-        "
-      >
-        <div class="bubble">
-          {{ (contactDetails$ | async)?.answer }}
-        </div>
-        <span class="message-label"
-          >{{ (contactDetails$ | async)?.owner }},
-          {{ formatDateWrapper((contactDetails$ | async)?.answerDate) }}</span
+        <div
+          class="message"
+          [ngClass]="
+            (contactDetails$ | async)?.isOwnerRetrieving
+              ? 'my-message'
+              : 'their-message'
+          "
         >
+          <div class="bubble">
+            {{ (contactDetails$ | async)?.answer }}
+          </div>
+          <span class="message-label"
+            >{{ (contactDetails$ | async)?.owner }},
+            {{ formatDateWrapper((contactDetails$ | async)?.answerDate) }}</span
+          >
+        </div>
+      }
+    </mat-card-content>
+
+    @if (canAnswer$ | async) {
+      <div class="action-slot">
+        <button
+          mat-fab
+          class="fab-add"
+          (click)="answer()"
+          [matTooltip]="'Responder solicitud'"
+        >
+          <mat-icon>reply</mat-icon>
+        </button>
       </div>
-      }</mat-card-content
-    >
+    }
   </div>
 </div>

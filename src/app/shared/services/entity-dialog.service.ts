@@ -20,18 +20,35 @@ export class EntityDialogService {
     return dialogRef.afterClosed().pipe(
       finalize(() => {
         this.queryParamsService.removeQueryParams(['entity', 'action']);
-      })
+      }),
     );
   }
 
-  openEditEntityDialog<T>(component: ComponentType<T>, config: DialogConfig & { id: string }) {
+  openEditEntityDialog<T>(
+    component: ComponentType<T>,
+    config: DialogConfig & { id: string },
+  ) {
     const { entity, id, ...rest } = config;
     this.queryParamsService.pushQueryParams({ entity, action: 'edit', id });
     const dialogRef = this.dialog.open(component, rest);
     return dialogRef.afterClosed().pipe(
       finalize(() => {
         this.queryParamsService.removeQueryParams(['entity', 'action', 'id']);
-      })
+      }),
+    );
+  }
+
+  openActionsDialog<T>(
+    component: ComponentType<T>,
+    config: DialogConfig & { id: string; action: string },
+  ) {
+    const { entity, id, action, ...rest } = config;
+    this.queryParamsService.pushQueryParams({ entity, action, id });
+    const dialogRef = this.dialog.open(component, rest);
+    return dialogRef.afterClosed().pipe(
+      finalize(() => {
+        this.queryParamsService.removeQueryParams(['entity', 'action', 'id']);
+      }),
     );
   }
 }

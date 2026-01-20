@@ -3,6 +3,7 @@ import { Component, computed, input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
+import { MatTooltip } from '@angular/material/tooltip';
 import { STATUS_MAP, StatusConfig } from '../../../contacts/contacts.utils';
 import { MapComponent } from '../../../maps/components/map/map.component';
 import { MapConfig } from '../../../maps/interfaces/map-config.interface';
@@ -20,6 +21,7 @@ import { formatDate } from '../../utilities/date.pipes';
     MatButtonModule,
     MapComponent,
     CommonModule,
+    MatTooltip,
   ],
 })
 export class CommonEntityPageComponent<T extends object> {
@@ -30,14 +32,16 @@ export class CommonEntityPageComponent<T extends object> {
   secondaryActionLabel = input<string>('Acción 2');
   canExecuteSecondaryAction = input<(entity: T) => boolean>(() => true);
   secondaryAction = input<(id: string | number | undefined) => void>();
-  thirdActionLabel = input<string>('Acción 3');
+  thirdActionLabel = input<(id: string | number | undefined) => string>(
+    () => 'Acción 3',
+  );
   thirdAction = input<(id: string | number | undefined) => void>();
   canExecuteThirdAction = input<(entity: T) => boolean>(() => true);
 
   iconUrl = input<string>('/building.png');
   pageTitle = input<string>('Consulta');
   allLoadedLabel = input<string>(
-    'Estas son todas las solicitudes de contacto.'
+    'Estas son todas las solicitudes de contacto.',
   );
 
   hasMoreEntities = input<boolean>(true);

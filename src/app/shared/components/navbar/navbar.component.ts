@@ -53,7 +53,7 @@ export class NavbarComponent implements OnInit {
   buildingDetailsOpened = signal(false);
   notifications = signal<NotificationResponse[]>([]);
   notificationNumber = computed(
-    () => this.notifications().filter((n) => !n.seen).length
+    () => this.notifications().filter((n) => !n.seen).length,
   );
 
   isHomePage = computed(() => {
@@ -67,16 +67,16 @@ export class NavbarComponent implements OnInit {
       this.isHomePage() &&
       !this.sidebarOpened() &&
       !this.propertyDetailsOpened() &&
-      !this.buildingDetailsOpened()
+      !this.buildingDetailsOpened(),
   );
 
   currentRoute = toSignal(
     this._router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
       map(() => this._router.url),
-      startWith(this._router.url)
+      startWith(this._router.url),
     ),
-    { initialValue: this._router.url }
+    { initialValue: this._router.url },
   );
 
   isOwner = computed(() => this._navbarService.isOwner());
@@ -124,6 +124,7 @@ export class NavbarComponent implements OnInit {
 
   handleLogout() {
     this._navbarService.handleLogout();
+    this._router.navigate(['/auth/login']);
   }
 
   get userLogged() {

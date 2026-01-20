@@ -4,6 +4,10 @@ export const OWNER_NAVBAR_ITEMS = [
     url: '/my-rentals',
   },
   {
+    name: 'Contactos',
+    url: '/owner-contacts',
+  },
+  {
     name: 'Inmuebles',
     url: '/buildings',
   },

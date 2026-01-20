@@ -1,15 +1,14 @@
-import { Component, effect, inject, OnInit, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { ContactsService } from '../../contacts/contacts.service';
 import { ContactDetails } from '../../contacts/interfaces/contact-details.interface';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
 import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
-import { NotificationService } from '../../shared/services/notification.service';
 
-import { MatDialog } from '@angular/material/dialog';
+import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { ContactActionsDialogComponent } from '../../notifications/dialogs/contact-actions-dialog/contact-actions-dialog.component';
-import { DialogStateService } from '../../shared/services/dialog-state.service';
+import { EntityDialogService } from '../../shared/services/entity-dialog.service';
 import { QueryParamsService } from '../../shared/services/query-params.service';
 
 @Component({
@@ -20,9 +19,9 @@ import { QueryParamsService } from '../../shared/services/query-params.service';
 })
 export class OwnerContactsPageComponent implements OnInit {
   private _contactsService = inject(ContactsService);
-  private _notificationService = inject(NotificationService);
+  private _router = inject(Router);
   private _queryParamsService = inject(QueryParamsService);
-  private _matDialog = inject(MatDialog);
+  private _entityDialogService = inject(EntityDialogService);
 
   canQuery = signal<boolean>(true);
   pageIndex = signal(0);
@@ -41,40 +40,6 @@ export class OwnerContactsPageComponent implements OnInit {
         : DEFAULT_CENTER,
   };
 
-  private _dialogState = inject(DialogStateService);
-
-  constructor() {
-    effect(() => {
-      const params = this._queryParamsService.queryParams();
-      if (!params) return;
-
-      if (params['entity'] !== 'contact' || params['action'] !== 'answer')
-        return;
-
-      const contactId = String(params['id'] ?? '');
-      if (!contactId) return;
-
-      if (this._matDialog.openDialogs.length > 0) return;
-
-      const ref = this._matDialog.open(ContactActionsDialogComponent, {
-        panelClass: 'contact-dialog',
-        data: {
-          contactId,
-          notifierFullName: '',
-        },
-      });
-
-      ref.afterClosed().subscribe((changed: boolean) => {
-        this._queryParamsService.clearQueryParams();
-
-        if (changed) {
-          this.resetPage();
-          this.loadContacts();
-        }
-      });
-    });
-  }
-
   ngOnInit(): void {
     this.loadContacts();
   }
@@ -89,7 +54,7 @@ export class OwnerContactsPageComponent implements OnInit {
           this.totalElements.set(newContacts.totalElements);
           if (newContacts.totalElements === this.contacts().length)
             this.canQuery.set(false);
-        })
+        }),
       )
       .subscribe();
   }
@@ -99,24 +64,61 @@ export class OwnerContactsPageComponent implements OnInit {
     this.loadContacts();
   };
 
-  delete = (contactId: string | number | undefined) => {
-    const contact = this.contacts().find((c) => c.contactId === contactId);
+  primaryAction = (contactId: string | number | undefined) => {
+    const contact = this.getContact(contactId);
     if (!contact) return;
-    this._contactsService.deleteContact(contact.contactId).subscribe({
-      next: () => {
-        this._notificationService.success(
-          'La solicitud de contacto fue eliminada correctamente'
-        );
-        this.resetPage();
-        this.loadContacts();
-      },
-      error: () => {
-        this._notificationService.error(
-          'Ocurrió un error al eliminar el contacto'
-        );
-      },
-    });
+    this._router.navigate(['/properties', contact.propertyId]);
   };
+
+  thirdActionLabel = (contactId: string | number | undefined): string => {
+    return 'Responder';
+  };
+
+  canExecuteSecondaryAction = (contact: ContactDetails): boolean => {
+    return true;
+  };
+
+  secondaryAction = (contactId: string | number | undefined) => {
+    const contact = this.getContact(contactId);
+    if (!contact) return;
+    this._router.navigate(['/contact-details', contact.contactId]);
+  };
+
+  canExecuteThirdAction = (contact: ContactDetails): boolean => {
+    return contact.status === 'CREATED';
+  };
+
+  thirdAction = (contactId: string | number | undefined) => {
+    const contact = this.getContact(contactId);
+    if (!contact) return;
+    this.openAnswerDialog(contact);
+  };
+
+  openAnswerDialog = (contact: ContactDetails) => {
+    this._entityDialogService
+      .openActionsDialog(ContactActionsDialogComponent, {
+        panelClass: 'contact-dialog',
+        entity: 'contact',
+        action: 'answer',
+        backdropClass: 'dialog-backdrop',
+        id: contact.contactId,
+        data: {
+          contactId: contact.contactId,
+          notifierFullName: contact.issuer,
+        },
+      })
+      .subscribe((changed: boolean) => {
+        this._queryParamsService.clearQueryParams();
+        if (changed) {
+          this.resetPage();
+          this.loadContacts();
+        }
+      });
+  };
+
+  private getContact(contactId: string | number | undefined) {
+    return this.contacts().find((c) => c.contactId === contactId);
+  }
 
   private resetPage() {
     this.contacts.set([]);
@@ -124,14 +126,4 @@ export class OwnerContactsPageComponent implements OnInit {
     this.pageIndex.set(0);
     this.canQuery.set(true);
   }
-
-  openAnswerDialog = (contactId: string | number | undefined) => {
-    if (!contactId) return;
-
-    this._queryParamsService.pushQueryParams({
-      entity: 'contact',
-      action: 'answer',
-      id: String(contactId),
-    });
-  };
 }

@@ -22,32 +22,32 @@ export class PropertiesService {
     const params = buildFilterHttpParams(filter ?? undefined);
     return this._http.get<Property[]>(
       `${environment.apiUrl}/api/v1/properties`,
-      { params }
+      { params },
     );
   }
 
   getPropertyDetails(
-    propertyQueried: string | null
+    propertyQueried: string | null,
   ): Observable<PropertyDetails> {
     if (propertyQueried == null) {
       return throwError(() => new Error('Invalid propertyQueried: null'));
     }
 
     return this._http.get<PropertyDetails>(
-      `${environment.apiUrl}/api/v1/properties/${propertyQueried}`
+      `${environment.apiUrl}/api/v1/properties/${propertyQueried}`,
     );
   }
 
   getPropertiesDetails(
     page = 0,
-    pageSize = 15
+    pageSize = 6,
   ): Observable<PropertyDetailsPage> {
     return this._http
       .get<PropertyDetailsPage>(
         `${environment.apiUrl}/api/v1/properties/details`,
         {
           params: { page, size: pageSize },
-        }
+        },
       )
       .pipe(
         map((response) => {
@@ -56,7 +56,7 @@ export class PropertiesService {
             propertyId: property.propertyId,
           }));
           return { ...response, content: content };
-        })
+        }),
       );
   }
 
@@ -68,7 +68,7 @@ export class PropertiesService {
       'property',
       new Blob([JSON.stringify(propertyData)], {
         type: 'application/json',
-      })
+      }),
     );
 
     if (images && images.length > 0) {
@@ -85,7 +85,7 @@ export class PropertiesService {
   getPropertiesNear(
     latitude: number,
     longitude: number,
-    radiusKm: number
+    radiusKm: number,
   ): Observable<Property[]> {
     return this._http.get<Property[]>(
       `${environment.apiUrl}/api/v1/properties/nearby`,
@@ -95,7 +95,7 @@ export class PropertiesService {
           longitude: longitude,
           radiusKm: radiusKm,
         },
-      }
+      },
     );
   }
 
@@ -103,7 +103,7 @@ export class PropertiesService {
     poiType: string,
     radiusKm: number,
     viewport: { north: number; south: number; east: number; west: number },
-    limit?: number
+    limit?: number,
   ) {
     let params = new HttpParams()
       .set('poiType', poiType)
@@ -117,7 +117,7 @@ export class PropertiesService {
 
     return this._http.get<Property[]>(
       `${environment.apiUrl}/api/v1/properties/nearby/poi`,
-      { params }
+      { params },
     );
   }
 
@@ -128,11 +128,11 @@ export class PropertiesService {
   restoreProperty(propertyId: string): Observable<PropertyDetails> {
     return this._http.patch<PropertyDetails>(
       `${this._baseUrl}/${propertyId}/restore`,
-      {}
+      {},
     );
   }
   updateProperty(
-    UpdatePropertyRequest: UpdatePropertyRequest
+    UpdatePropertyRequest: UpdatePropertyRequest,
   ): Observable<PropertyDetails> {
     const formData = new FormData();
     const { payload, id } = UpdatePropertyRequest;
@@ -143,7 +143,7 @@ export class PropertiesService {
       'property',
       new Blob([JSON.stringify(propertyData)], {
         type: 'application/json',
-      })
+      }),
     );
 
     if (imageFiles && imageFiles.length > 0) {
@@ -153,7 +153,7 @@ export class PropertiesService {
     }
     return this._http.patch<PropertyDetails>(
       `${this._baseUrl}/${id}`,
-      formData
+      formData,
     );
   }
 }

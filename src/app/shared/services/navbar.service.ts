@@ -26,18 +26,18 @@ export class NavbarService {
   config = computed((): NavElement[] => {
     const status = this._authService.status();
     const user = this._authService.user();
-
-    if (status !== AuthStatus.AUTHENTICATED || !user)
-      return NAVBAR_ITEMS['unlogged'];
-
     return NAVBAR_ITEMS[
-      user.role === Role.OWNER ? 'owner_logged' : 'tenant_logged'
+      status === AuthStatus.AUTHENTICATED
+        ? user?.role.toString() === 'OWNER'
+          ? 'owner_logged'
+          : 'tenant_logged'
+        : 'unlogged'
     ];
   });
 
   disabled = computed(() => this._dialogStateService.isDialogOpen());
   userLogged = computed(
-    () => this._authService.status() === AuthStatus.AUTHENTICATED
+    () => this._authService.status() === AuthStatus.AUTHENTICATED,
   );
   username = computed(() => this._authService.user()?.username);
   userId = computed(() => this._authService.user()?.userId);

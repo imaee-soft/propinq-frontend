@@ -7,101 +7,102 @@
       <h2>{{ pageTitle() }}</h2>
     </div>
     @if (newEntity()) {
-    <button
-      mat-fab
-      class="fab-add"
-      (click)="newEntity()"
-      [title]="newEntityLabel()"
-    >
-      <mat-icon>add</mat-icon>
-    </button>
+      <button
+        mat-fab
+        class="fab-add"
+        (click)="newEntity()?.()"
+        [matTooltip]="newEntityLabel()"
+      >
+        <mat-icon>add</mat-icon>
+      </button>
     }
   </header>
   <div class="scroll-zone">
     <div class="grid-container">
       @for (entity of cards(); track entity) {
-      <mat-card class="entity-card">
-        <mat-card-header>
-          <div class="title-row">
-            <div class="entity-container">
-              <mat-icon>person</mat-icon>
-              <span class="span-title">
-                {{ descriptor()?.user(entity) }}
-              </span>
+        <mat-card class="entity-card">
+          <mat-card-header>
+            <div class="title-row">
+              <div class="entity-container">
+                <mat-icon>person</mat-icon>
+                <span class="span-title">
+                  {{ descriptor()?.user(entity) }}
+                </span>
+              </div>
+
+              <div class="badges">
+                <span class="card-date">
+                  {{ formatDateWrapper(descriptor()?.date(entity)) }}
+                </span>
+
+                @if (getStatusConfig(entity); as status) {
+                  <span
+                    class="card-status"
+                    [ngStyle]="{
+                      color: status.color,
+                      background: status.background,
+                      border: status.border,
+                    }"
+                  >
+                    {{ status.label }}
+                  </span>
+                }
+              </div>
             </div>
+          </mat-card-header>
 
-            <div class="badges">
-              <span class="card-date">
-                {{ formatDateWrapper(descriptor()?.date(entity)) }}
-              </span>
+          <mat-card-content>
+            <p class="name">
+              {{ descriptor()?.name(entity) }}
+            </p>
+            <div class="map-slot">
+              <div class="map-wrapper">
+                <app-map [config]="loadMapConfig(entity)"></app-map>
+              </div>
+            </div>
+          </mat-card-content>
 
-              @if (getStatusConfig(entity); as status) {
-              <span
-                class="card-status"
-                [ngStyle]="{
-                  color: status.color,
-                  background: status.background,
-                  border: status.border
-                }"
+          <mat-card-actions align="end">
+            <button
+              mat-flat-button
+              (click)="primaryAction()?.(descriptor()?.id(entity))"
+            >
+              {{ primaryActionLabel() }}
+            </button>
+
+            @if (canExecuteSecondaryAction()(entity)) {
+              <button
+                mat-button
+                (click)="secondaryAction()?.(descriptor()?.id(entity))"
               >
-                {{ status.label }}
-              </span>
-              }
-            </div>
-          </div>
-        </mat-card-header>
-
-        <mat-card-content>
-          <p class="name">
-            {{ descriptor()?.name(entity) }}
-          </p>
-          <div class="map-slot">
-            <div class="map-wrapper">
-              <app-map [config]="loadMapConfig(entity)"></app-map>
-            </div>
-          </div>
-        </mat-card-content>
-
-        <mat-card-actions align="end">
-          <button
-            mat-flat-button
-            (click)="primaryAction()?.(descriptor()?.id(entity))"
-          >
-            {{ primaryActionLabel() }}
-          </button>
-
-          @if (canExecuteSecondaryAction()(entity)) {
-          <button
-            mat-button
-            (click)="secondaryAction()?.(descriptor()?.id(entity))"
-          >
-            {{ secondaryActionLabel() }}
-          </button>
-          } @if (canExecuteThirdAction()(entity)) {
-          <button
-            mat-button
-            (click)="thirdAction()?.(descriptor()?.id(entity))"
-          >
-            {{ thirdActionLabel() }}
-          </button>
-          }
-        </mat-card-actions>
-      </mat-card>
+                {{ secondaryActionLabel() }}
+              </button>
+            }
+            @if (canExecuteThirdAction()(entity)) {
+              <button
+                mat-button
+                (click)="thirdAction()?.(descriptor()?.id(entity))"
+              >
+                {{ thirdActionLabel()(descriptor()?.id(entity)) }}
+              </button>
+            }
+          </mat-card-actions>
+        </mat-card>
       }
     </div>
     <div class="pagination-zone">
       @if (hasMoreEntities()) {
-      <button
-        mat-flat-button
-        class="load-more"
-        (click)="loadMoreEntities()?.()"
-      >
-        {{ loadMoreLabel() }}
-      </button>
+        <button
+          mat-flat-button
+          class="load-more"
+          (click)="loadMoreEntities()?.()"
+        >
+          {{ loadMoreLabel() }}
+        </button>
       } @else {
-      <span class="all-loaded">
-        {{ allLoadedLabel() }}
-      </span>
+        <span class="all-loaded">
+          {{ allLoadedLabel() }}
+        </span>
       }
     </div>
   </div>

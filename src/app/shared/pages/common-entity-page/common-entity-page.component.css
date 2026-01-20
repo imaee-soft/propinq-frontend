@@ -33,14 +33,8 @@
   background: linear-gradient(45deg, #8b5cf6, #6366f1);
   color: white;
   transition: transform 0.3s ease;
-  border-radius: 50%;
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-left: auto;
   cursor: pointer;
+  margin-right: 16px;
 }
 
 .fab-add:hover {

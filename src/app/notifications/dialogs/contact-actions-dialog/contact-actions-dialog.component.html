@@ -10,14 +10,26 @@
     <span class="info-text">{{ message() }}</span>
   </div>
 
-  <mat-button-toggle-group
-    class="full-width-group"
-    (change)="changeAction($event.value)"
-    value="ACCEPT"
-  >
-    <mat-button-toggle value="ACCEPT">Aceptar</mat-button-toggle>
-    <mat-button-toggle value="REJECT">Rechazar</mat-button-toggle>
-  </mat-button-toggle-group>
+  <div class="decision-group">
+    <button
+      mat-button
+      class="decision-btn accept"
+      [class.active]="action === 'ACCEPT'"
+      (click)="changeAction('ACCEPT')"
+    >
+      Aceptar
+    </button>
+
+    <button
+      mat-button
+      class="decision-btn reject"
+      [class.active]="action === 'REJECT'"
+      (click)="changeAction('REJECT')"
+    >
+      Rechazar
+    </button>
+  </div>
+
   <mat-form-field appearance="outline">
     <mat-label>Mensaje</mat-label>
     <textarea
@@ -30,25 +42,26 @@
   </mat-form-field>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button mat-button [mat-dialog-close]="false">
+  <button mat-flat-button class="close-btn" [mat-dialog-close]="false">
     <mat-icon>close</mat-icon>
     Cerrar
   </button>
   <button
     mat-flat-button
+    class="submit-btn"
     type="submit"
     [disabled]="isLoading() || response.invalid"
     (click)="submitAnswer()"
   >
     <div class="button-content">
       @if (isLoading()) {
-      <mat-progress-spinner
-        mode="indeterminate"
-        diameter="20"
-      ></mat-progress-spinner>
+        <mat-progress-spinner
+          mode="indeterminate"
+          diameter="20"
+        ></mat-progress-spinner>
       } @else {
-      <mat-icon>save</mat-icon>
-      <span>{{ this.action === "ACCEPT" ? "Aceptar" : "Rechazar" }}</span>
+        <mat-icon>save</mat-icon>
+        <span>{{ this.action === "ACCEPT" ? "Aceptar" : "Rechazar" }}</span>
       }
     </div>
   </button>

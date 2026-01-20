@@ -18,8 +18,20 @@ export const STATUS_MAP: { [key: string]: StatusConfig } = {
     background: 'rgba(239, 68, 68, 0.15)',
     border: '1px solid rgba(239, 68, 68, 0.4)',
   },
+  DELETED: {
+    label: 'Eliminada',
+    color: '#fca5a5',
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+  },
   ACCEPTED: {
     label: 'Aprobada',
+    color: '#6ee7b7',
+    background: 'rgba(16, 185, 129, 0.15)',
+    border: '1px solid rgba(16, 185, 129, 0.4)',
+  },
+  ACTIVE: {
+    label: 'Activa',
     color: '#6ee7b7',
     background: 'rgba(16, 185, 129, 0.15)',
     border: '1px solid rgba(16, 185, 129, 0.4)',

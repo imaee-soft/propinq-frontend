@@ -141,3 +141,21 @@
   padding: 12px;
   color: #e2e8f0;
 }
+
+.action-slot {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 16px;
+}
+
+.fab-add {
+  background: linear-gradient(45deg, #8b5cf6, #6366f1);
+  color: white;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  margin-right: 16px;
+}
+
+.fab-add:hover {
+  transform: scale(1.1) rotate(90deg);
+}

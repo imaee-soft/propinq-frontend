@@ -26,6 +26,11 @@ mat-menu {
   border: none;
 }
 
+.dialog-backdrop {
+  background: rgba(10, 12, 20, 0.55);
+  backdrop-filter: blur(10px) saturate(140%);
+}
+
 .cdk-overlay-connected-position-bounding-box {
   z-index: 2103 !important;
 }

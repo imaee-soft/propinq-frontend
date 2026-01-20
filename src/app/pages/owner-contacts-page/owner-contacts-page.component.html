@@ -1,14 +1,18 @@
 <common-entity-page
   [elements]="contacts()"
   [descriptor]="descriptor"
-  [primaryActionLabel]="'Responder'"
-  [allLoadedLabel]="'Estas son todas las solicitudes de contacto.'"
-  [loadMoreLabel]="'Recuperar más solicitudes de contacto'"
+  [primaryActionLabel]="'Ver propiedad'"
+  [primaryAction]="primaryAction.bind(this)"
+  [secondaryActionLabel]="'Ver solicitud'"
+  [secondaryAction]="secondaryAction.bind(this)"
+  [thirdActionLabel]="thirdActionLabel.bind(this)"
+  [canExecuteThirdAction]="canExecuteThirdAction.bind(this)"
+  [thirdAction]="thirdAction.bind(this)"
   [iconUrl]="'/location.png'"
   [pageTitle]="'Solicitudes de Contacto'"
-  [primaryAction]="openAnswerDialog"
-  [secondaryAction]="delete.bind(this)"
+  [allLoadedLabel]="'Estas son todas las solicitudes de contacto.'"
   [hasMoreEntities]="canQuery()"
+  [loadMoreLabel]="'Recuperar más solicitudes de contacto'"
   [loadMoreEntities]="loadMore.bind(this)"
 >
 </common-entity-page>

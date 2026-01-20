@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, input } from '@angular/core';
+import { Component, computed, inject } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,9 +8,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule } from '@angular/router';
-import { AuthService } from '../../../auth/services/auth.service';
 import { AuthStatus } from '../../../auth/enums/auth-status.enum';
-import { SideConfig } from '../../interfaces/side-config.interface';
+import { AuthService } from '../../../auth/services/auth.service';
 import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
@@ -39,7 +38,7 @@ export class SidebarComponent {
   isOpen = computed(
     () =>
       this._sidebarService.isOpen() &&
-      this._authService.status() === AuthStatus.AUTHENTICATED
+      this._authService.status() === AuthStatus.AUTHENTICATED,
   );
   sidenavWidth = computed(() => (this._sidebarService.isOpen() ? 320 : 0));
   isDashboardPage = computed(() => this._sidebarService.isDashboardPage());
@@ -50,10 +49,10 @@ export class SidebarComponent {
 
   logout() {
     this._authService.logout();
+    this._router.navigate(['/auth/login']);
   }
 
   onSidebarButtonClickCloseSidebar() {
     this._sidebarService.toggle();
   }
-
 }

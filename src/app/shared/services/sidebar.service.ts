@@ -1,14 +1,13 @@
-import { SideConfig } from './../interfaces/side-config.interface';
 import { computed, inject, Injectable, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
-import { AuthService } from '../../auth/services/auth.service';
+import { filter, map, startWith } from 'rxjs';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
-import { Role } from '../../auth/enums/role.enum';
+import { AuthService } from '../../auth/services/auth.service';
 import { OWNER_SIDEBAR_CONFIG } from '../utilities/owner.config';
 import { TENANT_SIDEBAR_CONFIG } from '../utilities/tenant.config';
 import { UNLOGGED_SIDEBAR_CONFIG } from '../utilities/unlogged.config';
-import { filter, map, startWith } from 'rxjs';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { SideConfig } from './../interfaces/side-config.interface';
 
 const SIDEBAR_ITEMS: Record<string, SideConfig> = {
   unlogged: UNLOGGED_SIDEBAR_CONFIG,
@@ -40,11 +39,9 @@ export class SidebarService {
     this._isOpen.set(!this._isOpen());
   }
 
-
-
   urlSignal = toSignal(
     this.router.events.pipe(
-      filter(e => e instanceof NavigationEnd),
+      filter((e) => e instanceof NavigationEnd),
       map(() => this.router.url),
       startWith(this.router.url)
     ),

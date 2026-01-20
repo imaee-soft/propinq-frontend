@@ -1,0 +1,109 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-content">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>Solicitud de contacto</h2>
+    </div>
+  </header>
+
+  <div class="detail-card">
+    <div class="header-content with-margin">
+      <div class="entities">
+        <div class="entity-container">
+          <mat-icon>home</mat-icon>
+          <span class="span-title">{{
+            (contactDetails$ | async)?.propertyAddress
+          }}</span>
+        </div>
+        <div class="entity-container">
+          <mat-icon>person</mat-icon>
+          <span class="span-title">{{ (contactDetails$ | async)?.owner }}</span>
+        </div>
+      </div>
+      <div class="badges">
+        <span class="card-date">
+          {{ formatDateWrapper((contactDetails$ | async)?.contactDate) }}
+        </span>
+
+        @if (getStatusConfig((contactDetails$ | async)?.status!); as status) {
+          <span
+            class="card-status"
+            [ngStyle]="{
+              color: status.color,
+              background: status.background,
+              border: status.border,
+            }"
+          >
+            {{ status.label }}
+          </span>
+        }
+      </div>
+    </div>
+
+    <div class="map-slot">
+      <div class="map-wrapper">
+        <app-map [config]="(mapConfig$ | async)!"></app-map>
+      </div>
+    </div>
+  </div>
+
+  <div class="messages-card">
+    <div class="entity-container with-margin">
+      <mat-icon>forum</mat-icon>
+      <span class="span-title">Conversación</span>
+    </div>
+
+    <mat-card-content>
+      <div
+        class="message"
+        [ngClass]="
+          (contactDetails$ | async)?.isOwnerRetrieving
+            ? 'their-message'
+            : 'my-message'
+        "
+      >
+        <div class="bubble">
+          {{ (contactDetails$ | async)?.message }}
+        </div>
+        <span class="message-label"
+          >{{ (contactDetails$ | async)?.issuer }},
+          {{ formatDateWrapper((contactDetails$ | async)?.contactDate) }}</span
+        >
+      </div>
+
+      @if ((contactDetails$ | async)?.answer) {
+        <div
+          class="message"
+          [ngClass]="
+            (contactDetails$ | async)?.isOwnerRetrieving
+              ? 'my-message'
+              : 'their-message'
+          "
+        >
+          <div class="bubble">
+            {{ (contactDetails$ | async)?.answer }}
+          </div>
+          <span class="message-label"
+            >{{ (contactDetails$ | async)?.owner }},
+            {{ formatDateWrapper((contactDetails$ | async)?.answerDate) }}</span
+          >
+        </div>
+      }
+    </mat-card-content>
+
+    @if (canAnswer$ | async) {
+      <div class="action-slot">
+        <button
+          mat-fab
+          class="fab-add"
+          (click)="answer()"
+          [matTooltip]="'Responder solicitud'"
+        >
+          <mat-icon>reply</mat-icon>
+        </button>
+      </div>
+    }
+  </div>
+</div>

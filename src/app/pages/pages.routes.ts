@@ -100,6 +100,27 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'owner-contacts',
+    loadComponent: () =>
+      import('./owner-contacts-page/owner-contacts-page.component').then(
+        (m) => m.OwnerContactsPageComponent
+      ),
+  },
+  {
+    path: 'reports',
+    loadComponent: () =>
+      import('./reports-page/reports-page.component').then(
+        (m) => m.ReportsPageComponent
+      ),
+  },
+  {
+    path: 'contact-details/:contactId',
+    loadComponent: () =>
+      import('./contact-details-page/contact-details-page.component').then(
+        (m) => m.ContactDetailsPageComponent
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

@@ -1,16 +1,8 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  computed,
-  inject,
-  input,
-  OnInit,
-  signal,
-} from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
-import { MatDivider } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -39,7 +31,6 @@ import { NavbarService } from './../../services/navbar.service';
     MatInputModule,
     MatFormFieldModule,
     MatMenuModule,
-    MatDivider,
     MatBadgeModule,
     MenuNotificationComponent,
   ],
@@ -62,7 +53,7 @@ export class NavbarComponent implements OnInit {
   buildingDetailsOpened = signal(false);
   notifications = signal<NotificationResponse[]>([]);
   notificationNumber = computed(
-    () => this.notifications().filter((n) => !n.seen).length
+    () => this.notifications().filter((n) => !n.seen).length,
   );
 
   isHomePage = computed(() => {
@@ -76,16 +67,16 @@ export class NavbarComponent implements OnInit {
       this.isHomePage() &&
       !this.sidebarOpened() &&
       !this.propertyDetailsOpened() &&
-      !this.buildingDetailsOpened()
+      !this.buildingDetailsOpened(),
   );
 
   currentRoute = toSignal(
     this._router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
       map(() => this._router.url),
-      startWith(this._router.url)
+      startWith(this._router.url),
     ),
-    { initialValue: this._router.url }
+    { initialValue: this._router.url },
   );
 
   isOwner = computed(() => this._navbarService.isOwner());
@@ -133,6 +124,7 @@ export class NavbarComponent implements OnInit {
 
   handleLogout() {
     this._navbarService.handleLogout();
+    this._router.navigate(['/auth/login']);
   }
 
   get userLogged() {

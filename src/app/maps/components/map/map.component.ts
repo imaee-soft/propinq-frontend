@@ -7,7 +7,6 @@ import {
   inject,
   input,
   OnDestroy,
-  OnInit,
   output,
   signal,
   viewChild,
@@ -21,6 +20,7 @@ import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import { fromLonLat } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
+import XYZ from 'ol/source/XYZ';
 import { Icon, Style } from 'ol/style';
 import { debounceTime, EMPTY, Subject, switchMap, takeUntil } from 'rxjs';
 import { FiltersService } from '../../../shared/services/filters.service';
@@ -31,6 +31,7 @@ import { MapCoordinate } from '../../interfaces/map-coordinate.interface';
 import { MapMarker } from '../../interfaces/map-marker.interface';
 import { PoiViewportResponse } from '../../interfaces/poi-viewport-response.interface';
 import { PoiService } from '../../services/poi.service';
+import { UserLocationService } from '../../services/user-location.service';
 import {
   DEFAULT_CENTER,
   DEFAULT_MAP_CONFIG,
@@ -38,8 +39,6 @@ import {
   MIN_POI_ZOOM,
   transformFromMap,
 } from '../../utils/constants';
-import XYZ from 'ol/source/XYZ';
-import { UserLocationService } from '../../services/user-location.service';
 
 @Component({
   selector: 'app-map',
@@ -52,6 +51,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   width = input<string>('100%');
   height = input<string>('100%');
   coordinateToGo = input<MapCoordinate | null>(null);
+  loadInfo = input<boolean>(false);
 
   mapReady = output<OlMap>();
   mapClick = output<MapClickEvent>();
@@ -64,19 +64,24 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _mapInstance = signal<OlMap | null>(null);
   private _isMapInitialized = signal<boolean>(false);
   private _mapConfig = computed(() => {
-    const location = this._userLocationService.getUserLocation();
-    const config = { ...DEFAULT_MAP_CONFIG, ...this.config() };
-    return {
+    const baseConfig = {
       ...DEFAULT_MAP_CONFIG,
-      ...config,
-      markers: [
-        ...(config.markers || []),
-        {
-          type: 'location',
-          coordinate: location,
-          icon: { url: '/location.png' },
-        },
-      ],
+      ...this.config(),
+    };
+
+    const markers = [...(baseConfig.markers ?? [])];
+
+    if (this.loadInfo()) {
+      markers.push({
+        type: 'location',
+        coordinate: this._userLocationService.getUserLocation(),
+        icon: { url: '/location.png' },
+      });
+    }
+
+    return {
+      ...baseConfig,
+      markers,
     };
   });
   private _markers = computed(() => this._mapConfig().markers || []);
@@ -100,7 +105,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initializeMap();
-    this.initializeViewportListener();
+
+    if (this.loadInfo()) {
+      this.initializeViewportListener();
+    }
   }
 
   ngOnDestroy(): void {
@@ -115,13 +123,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._poiLayer.setStyle(this.poiStyleForFeature);
 
     effect(
-      () => this._markers() && this._isMapInitialized() && this.updateMarkers()
+      () => this._markers() && this._isMapInitialized() && this.updateMarkers(),
     );
     effect(
       () =>
         this._center() &&
         this._isMapInitialized() &&
-        this.goToCoordinate(this._center())
+        this.goToCoordinate(this._center()),
     );
 
     effect(() => {
@@ -138,8 +146,11 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     this._mapInstance.set(map);
     this._isMapInitialized.set(true);
     this.mapReady.emit(map);
-    // Inicializar viewport inmediatamente para que el modo POI tenga bounds sin requerir mover el mapa
-    this._filtersService.setViewportFromMap(map);
+
+    if (this.loadInfo()) {
+      this._filtersService.setViewportFromMap(map);
+    }
+
     this._viewport$.next();
   }
 
@@ -181,7 +192,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
       const feature = map.forEachFeatureAtPixel(
         event.pixel,
-        (feature) => feature
+        (feature) => feature,
       );
 
       if (feature && feature.get('marker')) {
@@ -200,7 +211,9 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         const lonLat = transformFromMap(center);
         this.centerChanged.emit(lonLat);
       }
-      this._filtersService.setViewportFromMap(map);
+      if (this.loadInfo()) {
+        this._filtersService.setViewportFromMap(map);
+      }
     });
   }
 
@@ -223,7 +236,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             limit: 500,
           });
         }),
-        takeUntil(this._destroy$)
+        takeUntil(this._destroy$),
       )
       .subscribe({
         next: (result) => this.renderPoiMarkers(result.items),
@@ -286,7 +299,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   }: MapMarker): Feature {
     const feature = new Feature({
       geometry: new Point(
-        fromLonLat([coordinate.longitude, coordinate.latitude])
+        fromLonLat([coordinate.longitude, coordinate.latitude]),
       ),
       id,
       title,
@@ -300,7 +313,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             src: icon.url,
             scale: 1,
           }),
-        })
+        }),
       );
 
     return feature;

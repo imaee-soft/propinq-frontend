@@ -67,11 +67,11 @@ export class ContactActionsDialogComponent implements OnInit {
   setDefaultResponse() {
     if (this.action === 'ACCEPT') {
       this.response.setValue(
-        `Hola ${this._data.notifierFullName}! Acepto tu solicitud. \nEstoy dispuesto a que dialoguemos vía WhatsApp para discutir el alquiler de la propiedad. ¡Saludos!`
+        `Hola ${this._data.notifierFullName}! Acepto tu solicitud. \nEstoy dispuesto a que dialoguemos vía WhatsApp para discutir el alquiler de la propiedad. ¡Saludos!`,
       );
     } else {
       this.response.setValue(
-        `Hola ${this._data.notifierFullName}. Lamento informarte que no puedo aceptar tu solicitud de contacto en este momento. \nTe deseo lo mejor en tu búsqueda de propiedades. ¡Saludos!`
+        `Hola ${this._data.notifierFullName}. Lamento informarte que no puedo aceptar tu solicitud de contacto en este momento. \nTe deseo lo mejor en tu búsqueda de propiedades. ¡Saludos!`,
       );
     }
   }
@@ -88,7 +88,7 @@ export class ContactActionsDialogComponent implements OnInit {
           this.isLoading.set(false);
           this._matDialogRef.close(true);
           this._notificationService.success(
-            this.action === 'ACCEPT' ? CONTACT_ACCEPTED : CONTACT_REJECTED
+            this.action === 'ACCEPT' ? CONTACT_ACCEPTED : CONTACT_REJECTED,
           );
         },
         error: () => this.isLoading.set(false),

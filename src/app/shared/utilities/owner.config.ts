@@ -4,6 +4,10 @@ export const OWNER_NAVBAR_ITEMS = [
     url: '/my-rentals',
   },
   {
+    name: 'Contactos',
+    url: '/owner-contacts',
+  },
+  {
     name: 'Inmuebles',
     url: '/buildings',
   },
@@ -34,7 +38,7 @@ export const OWNER_SIDEBAR_CONFIG = {
     {
       label: 'Mis contactos',
       icon: 'person',
-      route: '/my-contacts',
+      route: '/owner-contacts',
     },
     {
       label: 'Reportes y estadísticas',

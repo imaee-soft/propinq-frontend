@@ -1,24 +1,19 @@
-@if (propertiesDetailsResource.isLoading() && !page()) {
-<div class="status-message loading">Cargando viviendas...</div>
-} @else if (propertiesDetailsResource.error()) {
-<div class="status-message error">Error al cargar las viviendas.</div>
-} @else if (!page()) {
-<div class="status-message empty">No hay viviendas registradas.</div>
-} @else if (page()!.content.length === 0) {
-<div class="status-message empty">No hay viviendas registradas.</div>
-} @else {
 <common-entity-page
-  [page]="page()!"
+  [elements]="properties()"
   [descriptor]="descriptor"
-  [onOpen]="openProperty.bind(this)"
-  [onDelete]="deleteOrRestoreProperty.bind(this)"
   [primaryActionLabel]="'Modificar'"
-  [allLoadedText]="'Estas son todas las viviendas.'"
-  [loadMoreLabel]="'Recuperar más viviendas'"
+  [primaryAction]="primaryAction.bind(this)"
+  [secondaryActionLabel]="'Ver'"
+  [secondaryAction]="secondaryAction.bind(this)"
+  [thirdActionLabel]="thirdActionLabel.bind(this)"
+  [thirdAction]="thirdAction.bind(this)"
   [iconUrl]="'/property.png'"
   [pageTitle]="'Mis Viviendas'"
-  [newEntity]="onCreate.bind(this)"
+  [allLoadedLabel]="'Estas son todas las viviendas.'"
+  [hasMoreEntities]="canQuery()"
+  [loadMoreLabel]="'Recuperar más viviendas'"
+  [loadMoreEntities]="loadMore.bind(this)"
   [newEntityLabel]="'Nueva vivienda'"
+  [newEntity]="create.bind(this)"
 >
 </common-entity-page>
-}

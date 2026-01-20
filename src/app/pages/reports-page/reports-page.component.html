@@ -1,0 +1,30 @@
+<div class="page-container">
+  <div class="page-header">
+    <div class="header-content">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <div class="page-title">Reportes y Estadísticas</div>
+    </div>
+  </div>
+
+  <div class="content-wrapper" style="margin-top:2.5rem;">
+    @if (isLoading()) {
+      <div class="status-message loading">Cargando reportes...</div>
+    }
+    @if (error()) {
+      <div class="status-message error">{{ error() }}</div>
+    }
+    @if (!isLoading() && !error() && metabaseIframeUrl()) {
+      <iframe
+        [src]="metabaseIframeUrl()"
+        width="1700"
+        height="650"
+        class="metabase-iframe"
+        frameborder="0"
+        allowfullscreen
+        style="margin:auto;display:block;border-radius:14px;"
+      ></iframe>
+    }
+  </div>
+</div>

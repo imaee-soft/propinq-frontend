@@ -1,23 +1,29 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
-import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
-import { MatButtonModule } from '@angular/material/button';
-import { MatTabsModule } from '@angular/material/tabs';
-import { MatCardModule } from '@angular/material/card';
-import { RouterModule, Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
-import { FavoriteService } from '../../favorites/services/favorite-service';
-import { FavoriteResponse } from '../../favorites/interfaces/favorite-interface';
-import { MatTableDataSource } from '@angular/material/table';
+import { Component, OnInit } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatCardModule } from '@angular/material/card';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatTableModule } from '@angular/material/table';
+import { MatTabsModule } from '@angular/material/tabs';
+import { Router, RouterModule } from '@angular/router';
 import { BuildingsService } from '../../buildings/buildings.service';
+import { FavoriteService } from '../../favorites/services/favorite-service';
 import { PropertiesService } from '../../properties/properties.service';
 
 @Component({
   selector: 'app-favorite-page',
   standalone: true,
-  imports: [CommonModule, MatTableModule, MatPaginatorModule, MatButtonModule, RouterModule, MatTabsModule, MatCardModule],
+  imports: [
+    CommonModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatButtonModule,
+    RouterModule,
+    MatTabsModule,
+    MatCardModule,
+  ],
   templateUrl: './favorite-page.component.html',
-  styleUrls: ['./favorite-page.component.css']
+  styleUrls: ['./favorite-page.component.css'],
 })
 export class FavoritePageComponent implements OnInit {
   // For Angular Material tabs
@@ -39,47 +45,64 @@ export class FavoritePageComponent implements OnInit {
     if (userId) {
       userId = userId.toUpperCase();
       // Fetch building favorites and map to card data
-      this.favoriteService.getFavoritesByUserAndBuilding(userId).subscribe(favs => {
-        const validFavs = favs.filter(fav => !!fav.buildingID);
-        Promise.all(
-          validFavs.map(fav =>
-            this.buildingsService.getBuildingDetails(fav.buildingID!).toPromise()
-              .then(details => ({
-                ...fav,
-                type: 'Edificio',
-                name: details?.name || fav.buildingID,
-                description: details?.description || '',
-                address: details?.address || '',
-                owner: details?.userFullName || '',
-                image: details?.imagesURL && details.imagesURL.length > 0 ? details.imagesURL[0] : null
-              }))
-          )
-        ).then(cards => {
-          this.buildingFavorites = cards;
-          this.updateAllFavorites();
+      this.favoriteService
+        .getFavoritesByUserAndBuilding(userId)
+        .subscribe((favs) => {
+          const validFavs = favs.filter((fav) => !!fav.buildingID);
+          Promise.all(
+            validFavs.map((fav) =>
+              this.buildingsService
+                .getBuildingDetails(fav.buildingID!)
+                .toPromise()
+                .then((details) => ({
+                  ...fav,
+                  type: 'Edificio',
+                  name: details?.name || fav.buildingID,
+                  description: details?.description || '',
+                  address: details?.address || '',
+                  owner: details?.userFullName || '',
+                  image:
+                    details?.imagesURL && details.imagesURL.length > 0
+                      ? details.imagesURL[0]
+                      : null,
+                }))
+            )
+          ).then((cards) => {
+            this.buildingFavorites = cards;
+            this.updateAllFavorites();
+          });
         });
-      });
       // Fetch property favorites and map to card data
-      this.favoriteService.getFavoritesByUserAndProperty(userId).subscribe(favs => {
-        const validFavs = favs.filter(fav => !!fav.propertyID);
-        Promise.all(
-          validFavs.map(fav =>
-            this.propertiesService.getPropertyDetails(fav.propertyID!).toPromise()
-              .then(details => ({
-                ...fav,
-                type: 'Vivienda',
-                name: details?.title || fav.propertyID,
-                description: details?.description || '',
-                address: details?.address || '',
-                owner: (details as any)?.userFullName || (details as any)?.ownerFullName || '',
-                image: details?.imagesURL && details.imagesURL.length > 0 ? details.imagesURL[0] : null
-              }))
-          )
-        ).then(cards => {
-          this.propertyFavorites = cards;
-          this.updateAllFavorites();
+      this.favoriteService
+        .getFavoritesByUserAndProperty(userId)
+        .subscribe((favs) => {
+          const validFavs = favs.filter((fav) => !!fav.propertyID);
+          Promise.all(
+            validFavs.map((fav) =>
+              this.propertiesService
+                .getPropertyDetails(fav.propertyID!)
+                .toPromise()
+                .then((details) => ({
+                  ...fav,
+                  type: 'Vivienda',
+                  name: details?.title || fav.propertyID,
+                  description: details?.description || '',
+                  address: details?.address || '',
+                  owner:
+                    (details as any)?.userFullName ||
+                    (details as any)?.ownerFullName ||
+                    '',
+                  image:
+                    details?.imagesURL && details.imagesURL.length > 0
+                      ? details.imagesURL[0]
+                      : null,
+                }))
+            )
+          ).then((cards) => {
+            this.propertyFavorites = cards;
+            this.updateAllFavorites();
+          });
         });
-      });
     }
   }
 

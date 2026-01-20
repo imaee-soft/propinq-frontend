@@ -1,3 +1,7 @@
+:host {
+  width: 100%;
+}
+
 .content-wrapper {
   width: 100%;
   max-width: 97%;

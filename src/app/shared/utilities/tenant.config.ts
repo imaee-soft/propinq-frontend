@@ -8,8 +8,8 @@ export const TENANT_NAVBAR_ITEMS = [
     url: '/favorites',
   },
   {
-    name: 'Intereses',
-    url: '/interests',
+    name: 'Ayuda',
+    url: '/help',
   },
 ];
 
@@ -32,9 +32,9 @@ export const TENANT_SIDEBAR_CONFIG = {
       route: '/favorites',
     },
     {
-      label: 'Mis intereses',
-      icon: 'bookmark',
-      route: '/interests',
+      label: 'Ayuda',
+      icon: 'help',
+      route: '/help',
     },
   ],
 };

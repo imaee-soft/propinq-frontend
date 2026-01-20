@@ -7,7 +7,7 @@
   color: #444;
   padding: 8px 12px;
   border-radius: 6px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   font-size: 14px;
 }
@@ -46,6 +46,7 @@ mat-drawer-content {
   flex-direction: column;
   background: transparent !important;
 }
+
 .mat-drawer-container {
   overflow: hidden;
 }
@@ -462,7 +463,12 @@ mat-grid-list {
   border-radius: 22px 22px 0 0;
   gap: 8px;
 }
-.property-card mat-card-title { font-size: 1.4rem; font-weight: 700; letter-spacing: .01em; color: #fff; }
+.property-card mat-card-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: #fff;
+}
 .property-card mat-card-title {
   display: flex;
   align-items: flex-end;

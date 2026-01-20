@@ -1,29 +1,27 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { tap } from 'rxjs';
 import { ContactsService } from '../../contacts/contacts.service';
 import { ContactDetails } from '../../contacts/interfaces/contact-details.interface';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
 import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
-import { NotificationService } from '../../shared/services/notification.service';
 
-const statusMap: Record<string, string> = {
-  CREATED: 'Pendiente',
-  REJECTED: 'Contactado',
-  ACCEPTED: 'Rechazado',
-};
+import { Router } from '@angular/router';
+import { tap } from 'rxjs';
+import { ContactActionsDialogComponent } from '../../notifications/dialogs/contact-actions-dialog/contact-actions-dialog.component';
+import { EntityDialogService } from '../../shared/services/entity-dialog.service';
+import { QueryParamsService } from '../../shared/services/query-params.service';
 
 @Component({
-  selector: 'app-tenant-contacts-page',
+  selector: 'app-owner-contacts-page',
   imports: [CommonEntityPageComponent],
-  templateUrl: './tenant-contacts-page.component.html',
-  styleUrls: ['./tenant-contacts-page.component.css'],
+  templateUrl: './owner-contacts-page.component.html',
+  styleUrls: ['./owner-contacts-page.component.css'],
 })
-export class TenantContactsPageComponent implements OnInit {
+export class OwnerContactsPageComponent implements OnInit {
   private _contactsService = inject(ContactsService);
   private _router = inject(Router);
-  private _notificationService = inject(NotificationService);
+  private _queryParamsService = inject(QueryParamsService);
+  private _entityDialogService = inject(EntityDialogService);
 
   canQuery = signal<boolean>(true);
   pageIndex = signal(0);
@@ -49,7 +47,7 @@ export class TenantContactsPageComponent implements OnInit {
   loadContacts() {
     if (!this.canQuery()) return;
     this._contactsService
-      .getTenantContactsDetails(this.pageIndex())
+      .getOwnerContactsDetails(this.pageIndex())
       .pipe(
         tap((newContacts) => {
           this.contacts.set([...this.contacts(), ...newContacts.content]);
@@ -69,17 +67,21 @@ export class TenantContactsPageComponent implements OnInit {
   primaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
-    this.navigateToProperty(contact);
+    this._router.navigate(['/properties', contact.propertyId]);
+  };
+
+  thirdActionLabel = (contactId: string | number | undefined): string => {
+    return 'Responder';
+  };
+
+  canExecuteSecondaryAction = (contact: ContactDetails): boolean => {
+    return true;
   };
 
   secondaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
     this._router.navigate(['/contact-details', contact.contactId]);
-  };
-
-  thirdActionLabel = (contactId: string | number | undefined): string => {
-    return 'Eliminar';
   };
 
   canExecuteThirdAction = (contact: ContactDetails): boolean => {
@@ -89,29 +91,30 @@ export class TenantContactsPageComponent implements OnInit {
   thirdAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
-    this.delete(contact);
+    this.openAnswerDialog(contact);
   };
 
-  delete(contact: ContactDetails) {
-    this._contactsService.deleteContact(contact.contactId).subscribe({
-      next: () => {
-        this._notificationService.success(
-          'La solicitud de contacto fue eliminada correctamente',
-        );
-        this.resetPage();
-        this.loadContacts();
-      },
-      error: () => {
-        this._notificationService.error(
-          'Ocurrió un error al eliminar el contacto',
-        );
-      },
-    });
-  }
-
-  private navigateToProperty(contact: ContactDetails) {
-    this._router.navigate(['/properties', contact.propertyId]);
-  }
+  openAnswerDialog = (contact: ContactDetails) => {
+    this._entityDialogService
+      .openActionsDialog(ContactActionsDialogComponent, {
+        panelClass: 'contact-dialog',
+        entity: 'contact',
+        action: 'answer',
+        backdropClass: 'dialog-backdrop',
+        id: contact.contactId,
+        data: {
+          contactId: contact.contactId,
+          notifierFullName: contact.issuer,
+        },
+      })
+      .subscribe((changed: boolean) => {
+        this._queryParamsService.clearQueryParams();
+        if (changed) {
+          this.resetPage();
+          this.loadContacts();
+        }
+      });
+  };
 
   private getContact(contactId: string | number | undefined) {
     return this.contacts().find((c) => c.contactId === contactId);

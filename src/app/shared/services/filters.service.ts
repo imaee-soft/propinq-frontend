@@ -2,7 +2,7 @@ import { computed, effect, inject, Injectable, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import Map from 'ol/Map';
 import { transformExtent } from 'ol/proj';
-import { of, forkJoin } from 'rxjs';
+import { forkJoin, of } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { Building } from '../../buildings/interfaces/building.interface';
@@ -48,7 +48,7 @@ export class FiltersService {
     () =>
       this.filterNearMyLocation() ||
       this.filterNearPoint() ||
-      this.filterNearPointOfInterest()
+      this.filterNearPointOfInterest(),
   );
   hasAnyFilterApplied = computed(() => {
     return (
@@ -63,7 +63,9 @@ export class FiltersService {
     );
   });
   hasNoResults = computed(
-    () => this.filteredBuildings().length === 0 && this.filteredProperties().length === 0
+    () =>
+      this.filteredBuildings().length === 0 &&
+      this.filteredProperties().length === 0,
   );
   filterProvince = signal<ProvinceResponse | null>(null);
   filterLocality = signal<LocalityResponse | null>(null);
@@ -81,14 +83,14 @@ export class FiltersService {
 
   localitiesResource = rxResource({
     request: computed(() =>
-      this.provinces().find((province) => province === this.filterProvince())
+      this.provinces().find((province) => province === this.filterProvince()),
     ),
     loader: (request) => {
       if (!request.request) {
         return of(null);
       }
       return this._localityService.getLocalitiesByProvince(
-        this.provinces().find((province) => province === request.request)?.id!
+        this.provinces().find((province) => province === request.request)?.id!,
       );
     },
   });
@@ -96,11 +98,12 @@ export class FiltersService {
   // Unificados: un recurso por entidad que alterna entre ubicación y POI
   buildingsResource = rxResource({
     request: computed(() => {
-      const typeSelection: 'buildings' | 'properties' | 'all' = this.filterDepartmentType()
-        ? 'buildings'
-        : this.filterPropertyType()
-        ? 'properties'
-        : 'all';
+      const typeSelection: 'buildings' | 'properties' | 'all' =
+        this.filterDepartmentType()
+          ? 'buildings'
+          : this.filterPropertyType()
+            ? 'properties'
+            : 'all';
       const attrs = {
         priceMin: this.filterPriceMin(),
         priceMax: this.filterPriceMax(),
@@ -109,10 +112,24 @@ export class FiltersService {
         petsAllowed: this.filterAllowPets(),
       };
       if (this.filterNearPointOfInterest() && this.viewport()) {
-        return { mode: 'poi', typeSelection, attrs, radiusKm: this.radius(), ...this.viewport(), poiType: this.selectedPointOfInterest() } as const;
+        return {
+          mode: 'poi',
+          typeSelection,
+          attrs,
+          radiusKm: this.radius(),
+          ...this.viewport(),
+          poiType: this.selectedPointOfInterest(),
+        } as const;
       }
       if (this.filterNearMyLocation() || this.filterNearPoint()) {
-        return { mode: 'location', typeSelection, attrs, latitude: this._coordinate().latitude, longitude: this._coordinate().longitude, radiusKm: this.radius() } as const;
+        return {
+          mode: 'location',
+          typeSelection,
+          attrs,
+          latitude: this._coordinate().latitude,
+          longitude: this._coordinate().longitude,
+          radiusKm: this.radius(),
+        } as const;
       }
       // attributes-only fallback: permite filtrar sin modo activo
       return { mode: 'attributes', typeSelection, attrs } as const;
@@ -174,11 +191,12 @@ export class FiltersService {
 
   propertiesResource = rxResource({
     request: computed(() => {
-      const typeSelection: 'buildings' | 'properties' | 'all' = this.filterDepartmentType()
-        ? 'buildings'
-        : this.filterPropertyType()
-        ? 'properties'
-        : 'all';
+      const typeSelection: 'buildings' | 'properties' | 'all' =
+        this.filterDepartmentType()
+          ? 'buildings'
+          : this.filterPropertyType()
+            ? 'properties'
+            : 'all';
       const attrs = {
         priceMin: this.filterPriceMin(),
         priceMax: this.filterPriceMax(),
@@ -187,10 +205,24 @@ export class FiltersService {
         petsAllowed: this.filterAllowPets(),
       };
       if (this.filterNearPointOfInterest() && this.viewport()) {
-        return { mode: 'poi', typeSelection, attrs, radiusKm: this.radius(), ...this.viewport(), poiType: this.selectedPointOfInterest() } as const;
+        return {
+          mode: 'poi',
+          typeSelection,
+          attrs,
+          radiusKm: this.radius(),
+          ...this.viewport(),
+          poiType: this.selectedPointOfInterest(),
+        } as const;
       }
       if (this.filterNearMyLocation() || this.filterNearPoint()) {
-        return { mode: 'location', typeSelection, attrs, latitude: this._coordinate().latitude, longitude: this._coordinate().longitude, radiusKm: this.radius() } as const;
+        return {
+          mode: 'location',
+          typeSelection,
+          attrs,
+          latitude: this._coordinate().latitude,
+          longitude: this._coordinate().longitude,
+          radiusKm: this.radius(),
+        } as const;
       }
       // attributes-only fallback: permite filtrar sin modo activo
       return { mode: 'attributes', typeSelection, attrs } as const;
@@ -259,19 +291,30 @@ export class FiltersService {
       house: this.filterPropertyType(),
     })),
     loader: (request) => {
-      const r = request.request as { active: boolean; dept: boolean; house: boolean };
+      const r = request.request as {
+        active: boolean;
+        dept: boolean;
+        house: boolean;
+      };
       if (!r || !r.active) {
-        return of({ buildings: [] as Building[], properties: [] as Property[] });
+        return of({
+          buildings: [] as Building[],
+          properties: [] as Property[],
+        });
       }
       if (r.dept && !r.house) {
         return this._buildingsService
           .getBuildings()
-          .pipe(map((buildings) => ({ buildings, properties: [] as Property[] })));
+          .pipe(
+            map((buildings) => ({ buildings, properties: [] as Property[] })),
+          );
       }
       if (r.house && !r.dept) {
         return this._propertiesService
           .getProperties()
-          .pipe(map((properties) => ({ buildings: [] as Building[], properties })));
+          .pipe(
+            map((properties) => ({ buildings: [] as Building[], properties })),
+          );
       }
       return forkJoin({
         buildings: this._buildingsService.getBuildings(),
@@ -279,7 +322,6 @@ export class FiltersService {
       });
     },
   });
-
 
   viewport = signal<{
     north: number;
@@ -296,7 +338,7 @@ export class FiltersService {
     const [minX, minY, maxX, maxY] = transformExtent(
       extent3857,
       'EPSG:3857',
-      'EPSG:4326'
+      'EPSG:4326',
     );
     this.viewport.set({
       west: minX,
@@ -335,7 +377,6 @@ export class FiltersService {
       }
     });
 
-    // Sin filtros: mantener resultados base frescos
     effect(() => {
       const base = this.baseResultsResource.value();
       if (base) {
@@ -344,7 +385,6 @@ export class FiltersService {
       }
     });
 
-    // Limpiar la lista no seleccionada al cambiar el tipo (Casas/Departamentos)
     effect(() => {
       const dept = this.filterDepartmentType();
       const house = this.filterPropertyType();
@@ -354,11 +394,8 @@ export class FiltersService {
         this.filteredBuildings.set([]);
       }
     });
-
-    // Efectos de POI separados ya no son necesarios (unificado en cada resource)
   }
 
-  // Resultado unificado según si hay filtros activos o no
   currentResults = computed(() => {
     if (this.hasAnyFilterApplied()) {
       return {

@@ -1,17 +1,22 @@
-import { Component, Inject, inject, signal, computed, effect, OnInit } from '@angular/core';
+import {
+  Component,
+  computed,
+  effect,
+  inject,
+  OnInit,
+  signal,
+} from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatError, MatFormField, MatLabel } from '@angular/material/form-field';
+import { MatIcon } from '@angular/material/icon';
 import { MatInput } from '@angular/material/input';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { GenericDialogComponent } from '../../../shared/components/generic-dialog/generic-dialog/generic-dialog.component';
-import { ImageLoaderComponent } from '../../../shared/components/image-loader/image-loader.component';
-import { ImageValidator } from '../../../shared/pipes/image.validator';
 import { NotificationService } from '../../../shared/services/notification.service';
-import { PropertiesService } from '../../properties.service';
-import { UpdatePropertyRequest} from '../../interfaces/update-property-request.interface';
 import { PropertyDetails } from '../../interfaces/property-details.interface';
-import { MatIcon } from '@angular/material/icon';
+import { UpdatePropertyRequest } from '../../interfaces/update-property-request.interface';
+import { PropertiesService } from '../../properties.service';
 
 interface NewImagePreview {
   file: File;
@@ -30,7 +35,7 @@ const PROPERTY_UPDATED = 'La propiedad fue actualizada con éxito!';
     MatError,
     MatInput,
     MatSlideToggleModule,
-    MatIcon
+    MatIcon,
   ],
   templateUrl: './edit-property-dialog.component.html',
   styleUrl: './edit-property-dialog.component.css',
@@ -45,7 +50,10 @@ export class EditPropertyDialogComponent implements OnInit {
   isLoading = computed(() => this.updateResource.isLoading());
   existingImageUrls = signal<string[]>([]);
   newImageFiles = signal<NewImagePreview[]>([]);
-  hasAtLeastOneImage = computed(() => this.existingImageUrls().length > 0 || this.newImageFiles().length > 0);
+  hasAtLeastOneImage = computed(
+    () =>
+      this.existingImageUrls().length > 0 || this.newImageFiles().length > 0,
+  );
 
   public data: { property: PropertyDetails } = inject(MAT_DIALOG_DATA);
 
@@ -72,9 +80,7 @@ export class EditPropertyDialogComponent implements OnInit {
     furnishing: this._formBuilder.control<boolean>(false, [
       Validators.required,
     ]),
-    expenses: this._formBuilder.control<boolean>(false, [
-      Validators.required,
-    ]),
+    expenses: this._formBuilder.control<boolean>(false, [Validators.required]),
     description: this._formBuilder.control<string>('', [
       Validators.required,
       Validators.minLength(10),
@@ -83,7 +89,7 @@ export class EditPropertyDialogComponent implements OnInit {
 
   constructor() {
     effect(() => {
-      if (this.updateResource.status() === 'resolved' && this.updateResource.value()) {
+      if (this.updateResource.status() === 'resolved') {
         this._notificationService.success(PROPERTY_UPDATED);
         this._matDialogRef.close(true);
       }
@@ -91,7 +97,7 @@ export class EditPropertyDialogComponent implements OnInit {
   }
 
   private updateResource = {
-    status: signal<'idle' | 'loading' | 'resolved'| 'error'>('idle'),
+    status: signal<'idle' | 'loading' | 'resolved' | 'error'>('idle'),
     value: signal(null),
     isLoading: () => this.updateResource.status() === 'loading',
     trigger: async () => {
@@ -128,7 +134,9 @@ export class EditPropertyDialogComponent implements OnInit {
   }
 
   removeExistingImage(urlToRemove: string): void {
-    this.existingImageUrls.update(urls => urls.filter(url => url !== urlToRemove));
+    this.existingImageUrls.update((urls) =>
+      urls.filter((url) => url !== urlToRemove),
+    );
   }
 
   onFileSelected(event: Event): void {
@@ -136,15 +144,15 @@ export class EditPropertyDialogComponent implements OnInit {
     if (!input.files) return;
 
     const files = Array.from(input.files);
-    const newPreviews: NewImagePreview[] = files.map(file => ({
+    const newPreviews: NewImagePreview[] = files.map((file) => ({
       file: file,
-      previewUrl: URL.createObjectURL(file)
+      previewUrl: URL.createObjectURL(file),
     }));
-    this.newImageFiles.update(current => [...current, ...newPreviews]);
+    this.newImageFiles.update((current) => [...current, ...newPreviews]);
   }
 
   removeNewImage(indexToRemove: number): void {
-    this.newImageFiles.update(current => {
+    this.newImageFiles.update((current) => {
       URL.revokeObjectURL(current[indexToRemove].previewUrl);
       return current.filter((_, index) => index !== indexToRemove);
     });
@@ -153,7 +161,9 @@ export class EditPropertyDialogComponent implements OnInit {
   handleSubmit(): void {
     if (this.form.invalid || !this.hasAtLeastOneImage()) {
       this.form.markAllAsTouched();
-      this._notificationService.error('Por favor, complete todos los campos y asegúrese de que haya al menos una imagen.');
+      this._notificationService.error(
+        'Por favor, complete todos los campos y asegúrese de que haya al menos una imagen.',
+      );
       return;
     }
     const formValue = this.form.value;
@@ -164,7 +174,7 @@ export class EditPropertyDialogComponent implements OnInit {
         description: formValue.description!,
         type: 'CASA',
         existingImagesURLS: this.existingImageUrls(),
-        imageFiles: this.newImageFiles().map(img => img.file),
+        imageFiles: this.newImageFiles().map((img) => img.file),
         price: formValue.price!,
         bedrooms: formValue.bedrooms!,
         bathrooms: formValue.bathrooms!,
@@ -174,7 +184,6 @@ export class EditPropertyDialogComponent implements OnInit {
       },
     });
     this.updateResource.trigger();
-    
   }
 
   get titleControl() {

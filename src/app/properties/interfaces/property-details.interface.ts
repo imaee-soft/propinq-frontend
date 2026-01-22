@@ -19,5 +19,5 @@ export interface PropertyDetails {
   latitude: number;
   longitude: number;
   isFavorite: boolean;
-  isContacted: boolean;
+  contactId: string;
 }

@@ -1,0 +1,53 @@
+<mat-card class="property-card fade-in-up">
+  <mat-card-header>
+    <mat-card-title>{{ building()!.name || "Edificio" }}</mat-card-title>
+    <button mat-icon-button (click)="close.emit()" aria-label="Cerrar">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-header>
+  <mat-card-content class="property-content">
+    <div class="property-description">
+      @if (building()!.description) {
+        <p>{{ building()!.description }}</p>
+      }
+    </div>
+    <div class="building-info">
+      <div class="info-section type">
+        <mat-icon>apartment</mat-icon>
+        <span>{{ building()!.buildingTypeName }}</span>
+      </div>
+      <div class="info-section owner">
+        <mat-icon>person</mat-icon>
+        <span>{{ building()!.userFullName }}</span>
+      </div>
+      <div class="info-section address full-width">
+        <mat-icon>location_on</mat-icon>
+        <span>{{ building()!.address || "Dirección no disponible" }}</span>
+      </div>
+    </div>
+    <app-image-section
+      [images]="building()!.imagesURL || []"
+      [showThumbnails]="false"
+    ></app-image-section>
+    <div class="home-property-overlay">
+      @if (loggedUser()?.userId !== building()!.userId) {
+        <button class="contact-owner-button" mat-button>
+          <mat-icon>contacts_product</mat-icon>
+          Solicitar Incorporación
+        </button>
+      }
+      <div class="property-overlay-actions">
+        <button mat-icon-button matTooltip="Marcar como favorito">
+          <mat-icon>star_border</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          matTooltip="Visualizar detalles"
+          (click)="goToBuildingDetails()"
+        >
+          <mat-icon>more</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

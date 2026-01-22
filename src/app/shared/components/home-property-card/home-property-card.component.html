@@ -1,0 +1,107 @@
+<mat-card class="property-card fade-in-up">
+  <mat-card-header>
+    <mat-card-title>{{ property()!.title || "Propiedad" }}</mat-card-title>
+    <button mat-icon-button (click)="closed.emit()" aria-label="Cerrar">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-header>
+  <mat-card-content class="property-content">
+    <div class="property-description">
+      @if (property()!.description) {
+        <p>{{ property()!.description }}</p>
+      }
+    </div>
+    <div class="property-info">
+      <div class="property-amenities">
+        <mat-chip-set class="mat-mdc-chip-set-stacked">
+          <mat-chip selected>
+            <mat-icon class="check-icon">{{
+              property()!.furnishing ? "check" : "close"
+            }}</mat-icon
+            >Amueblada</mat-chip
+          >
+          <mat-chip selected>
+            <mat-icon class="check-icon">{{
+              property()!.petsAllowed ? "check" : "close"
+            }}</mat-icon
+            >Mascotas</mat-chip
+          >
+          <mat-chip selected>
+            <mat-icon class="check-icon">check</mat-icon>Dueño
+            Verificado</mat-chip
+          >
+        </mat-chip-set>
+      </div>
+      <div class="price-info">
+        <div class="price-container">
+          <span class="currency">$</span>
+          <span class="price-amount">{{
+            property()!.price | number: "1.0-0"
+          }}</span>
+        </div>
+        <div class="price-details">
+          <span class="price-label">Precio de alquiler mensual</span>
+        </div>
+      </div>
+    </div>
+    <app-image-section
+      [images]="property()!.imagesURL || []"
+      [showThumbnails]="false"
+    ></app-image-section>
+    <div class="home-property-overlay">
+      @if (
+        loggedUser()?.userId !== property()!.ownerId && !property()!.contactId
+      ) {
+        <button
+          mat-button
+          class="contact-owner-button"
+          (click)="contactOwner()"
+        >
+          <mat-icon>contacts_product</mat-icon>
+          Contactar Dueño
+        </button>
+      }
+      @if (
+        loggedUser()?.userId !== property()!.ownerId && property()!.contactId
+      ) {
+        <button mat-button class="contacted-action" (click)="goToContact()">
+          <mat-icon>check_small</mat-icon>
+          Ver Contacto
+        </button>
+      }
+      <div class="property-overlay-actions">
+        @if (isFavorite()) {
+          <button
+            mat-icon-button
+            matTooltip="Desmarcar como favorita"
+            (click)="unmarkAsFavorite()"
+          >
+            <mat-icon>star</mat-icon>
+          </button>
+        } @else {
+          <button
+            mat-icon-button
+            matTooltip="Marcar como favorita"
+            (click)="markAsFavorite()"
+          >
+            <mat-icon>star_border</mat-icon>
+          </button>
+        }
+        <button
+          mat-icon-button
+          matTooltip="Visualizar detalles"
+          (click)="goToPropertyDetails()"
+        >
+          <mat-icon>more</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          matTooltip="Agregar a la comparación"
+          (click)="compared.emit(property()!)"
+        >
+          <mat-icon>balance</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

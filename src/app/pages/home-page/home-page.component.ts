@@ -9,7 +9,6 @@ import {
 } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
-import { MatChip, MatChipSet } from '@angular/material/chips';
 import { MatDialog } from '@angular/material/dialog';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatGridListModule } from '@angular/material/grid-list';
@@ -20,13 +19,12 @@ import {
   MatDrawerContent,
 } from '@angular/material/sidenav';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { Role } from '../../auth/enums/role.enum';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { BuildingComponent } from '../../buildings/components/building/building.component';
 import { BuildingDetails } from '../../buildings/interfaces/building-details.interface';
-import { NewContactDialogComponent } from '../../contacts/dialogs/new-contact-dialog/new-contact-dialog.component';
 import { MapComponent } from '../../maps/components/map/map.component';
 import { MapClickEvent } from '../../maps/interfaces/click-event.interface';
 import { MapConfig } from '../../maps/interfaces/map-config.interface';
@@ -48,6 +46,8 @@ import { AuthService } from './../../auth/services/auth.service';
 // Cambiado para usar el servicio de favorites central
 import { FavoriteResponse } from '../../favorites/interfaces/favorite-interface';
 import { FavoriteService } from '../../favorites/services/favorite-service';
+import { HomeBuildingCardComponent } from '../../shared/components/home-building-card/home-building-card.component';
+import { HomePropertyCardComponent } from '../../shared/components/home-property-card/home-property-card.component';
 
 @Component({
   imports: [
@@ -65,14 +65,13 @@ import { FavoriteService } from '../../favorites/services/favorite-service';
     MatTooltipModule,
     FiltersComponent,
     CommonModule,
-    MatChipSet,
-    MatChip,
+    HomePropertyCardComponent,
+    HomeBuildingCardComponent,
   ],
   templateUrl: './home-page.component.html',
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {
-  private _router = inject(Router);
   private _dialog = inject(MatDialog);
   private _authService = inject(AuthService);
   private _snackbarService = inject(CustomSnackbarService);
@@ -81,7 +80,6 @@ export class HomePageComponent {
   private _buildingsService = inject(BuildingsService);
   private _filtersService = inject(FiltersService);
   private _sidebarService = inject(SidebarService);
-  private _matDialog = inject(MatDialog);
   private _userLocationService = inject(UserLocationService);
 
   private route = inject(ActivatedRoute);
@@ -92,7 +90,7 @@ export class HomePageComponent {
     // Si los marcadores aún no están cargados, espera un poco
     const tryOpen = () => {
       const marker = this.markers().find(
-        (m) => m.id === buildingId && m.type === 'building'
+        (m) => m.id === buildingId && m.type === 'building',
       );
       if (marker) {
         this.onBuildingMarkerClick(marker);
@@ -130,18 +128,18 @@ export class HomePageComponent {
   isOwner = computed(() => this._authService.user()?.role === Role.OWNER);
   coordinateToGo = computed(() => this._filtersService.coordinateToGo());
   isAuthenticated = computed(
-    () => this._authService.status() === AuthStatus.AUTHENTICATED
+    () => this._authService.status() === AuthStatus.AUTHENTICATED,
   );
   loggedUser = computed(() => this._authService.user());
   sidebarOpened = computed(() => this._sidebarService.isOpen());
 
   // Public flags for template conditions (centralizadas en FiltersService)
   isFiltersModeActive = computed(() =>
-    this._filtersService.isFiltersModeActive()
+    this._filtersService.isFiltersModeActive(),
   );
   hasNoResults = computed(() => this._filtersService.hasNoResults());
   hasAnyFilterApplied = computed(() =>
-    this._filtersService.hasAnyFilterApplied()
+    this._filtersService.hasAnyFilterApplied(),
   );
 
   constructor() {
@@ -244,20 +242,7 @@ export class HomePageComponent {
     }
   }
 
-  onContactOwner() {
-    if (!this.loggedUser()) {
-      this._router.navigate(['/auth/login']);
-      return;
-    }
-    if (this.propertyDetails() === null) return;
-    this._matDialog.open(NewContactDialogComponent, {
-      panelClass: 'contact-dialog',
-      data: this.propertyDetails(),
-    });
-  }
-
   onMapMarkersChange(markers: MapMarker[] | null): void {
-    // Si hay filtros activos, ignoramos emisiones de hijos para no mezclar resultados
     if (this.hasAnyFilterApplied()) return;
     this.markers.set(markers ?? []);
   }
@@ -297,58 +282,23 @@ export class HomePageComponent {
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
     }
-
-    this.currentImageIndex.set(0);
-  }
-
-  currentImageIndex = signal(0);
-
-  get images() {
-    return this.buildingDetails()?.imagesURL ?? [];
-  }
-
-  prevImage() {
-    if (this.currentImageIndex() > 0)
-      this.currentImageIndex.set(this.currentImageIndex() - 1);
-  }
-
-  nextImage() {
-    if (this.currentImageIndex() < this.images.length - 1)
-      this.currentImageIndex.set(this.currentImageIndex() + 1);
-  }
-
-  public propertyGalleryOpen = signal(false);
-  public propertyGalleryImages = signal<string[]>([]);
-  public propertyGalleryIndex = signal(0);
-
-  public openPropertyGallery(images: string[], startIndex = 0) {
-    this.propertyGalleryOpen.set(true);
-    this.propertyGalleryImages.set(images ?? []);
-    this.propertyGalleryIndex.set(startIndex);
-  }
-
-  public closePropertyGallery() {
-    this.propertyGalleryOpen.set(false);
-    this.propertyGalleryImages.set([]);
-    this.propertyGalleryIndex.set(0);
-  }
-
-  public prevGalleryImage() {
-    if (this.propertyGalleryIndex() > 0)
-      this.propertyGalleryIndex.set(this.propertyGalleryIndex() - 1);
-  }
-
-  public nextGalleryImage() {
-    if (this.propertyGalleryIndex() < this.propertyGalleryImages().length - 1)
-      this.propertyGalleryIndex.set(this.propertyGalleryIndex() + 1);
-  }
-
-  goToProperty(propertyId: string) {
-    if (!propertyId) return;
-    this._router.navigate(['/properties', propertyId]);
   }
 
   comparativeList = signal<PropertyDetails[]>([]);
+
+  markPropertyAsFavorite() {
+    const property = this.propertyDetails();
+    if (!property) return;
+    property.isFavorite = true;
+    this.propertyDetails.set({ ...property });
+  }
+
+  unmarkPropertyAsFavorite() {
+    const property = this.propertyDetails();
+    if (!property) return;
+    property.isFavorite = false;
+    this.propertyDetails.set({ ...property });
+  }
 
   addToComparativeList(property: PropertyDetails) {
     if (!property) return;
@@ -357,7 +307,7 @@ export class HomePageComponent {
     ) {
       this._snackbarService.error(
         'La Vivienda ya está agregada a la Comparación',
-        1500
+        1500,
       );
       return;
     }
@@ -476,7 +426,7 @@ export class HomePageComponent {
   isPropertyFavorite(propertyId: string | undefined | null): boolean {
     if (!propertyId) return false;
     return !!this.propertyFavoritesList().find(
-      (f) => f.propertyID === propertyId
+      (f) => f.propertyID === propertyId,
     );
   }
 
@@ -499,14 +449,14 @@ export class HomePageComponent {
     if (!userId) return;
 
     const existing = this.propertyFavoritesList().find(
-      (f) => f.propertyID === propertyId
+      (f) => f.propertyID === propertyId,
     );
     if (existing) {
       // borrar optimista: quitar inmediatamente de la lista
       const removedId = existing.favoriteID;
       const prevList = this.propertyFavoritesList();
       this.propertyFavoritesList.set(
-        prevList.filter((f) => f.favoriteID !== removedId)
+        prevList.filter((f) => f.favoriteID !== removedId),
       );
 
       this.favoriteService.removeFavorite(removedId).subscribe({
@@ -541,7 +491,7 @@ export class HomePageComponent {
           next: (res) => {
             // reemplazar el temporal por la respuesta real (con favoriteID del servidor)
             const updated = this.propertyFavoritesList().map((f) =>
-              f.favoriteID === tempId ? res : f
+              f.favoriteID === tempId ? res : f,
             );
             this.propertyFavoritesList.set(updated);
           },
@@ -549,8 +499,8 @@ export class HomePageComponent {
             // quitar el temporal y notificar
             this.propertyFavoritesList.set(
               this.propertyFavoritesList().filter(
-                (f) => f.favoriteID !== tempId
-              )
+                (f) => f.favoriteID !== tempId,
+              ),
             );
             this._snackbarService.error('No se pudo agregar a favoritos', 2000);
           },

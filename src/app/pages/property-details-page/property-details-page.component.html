@@ -1,220 +1,198 @@
 @if (resourceStatus() === 2) {
-<div class="loader-container">
-  <mat-spinner></mat-spinner>
-  <span>Cargando información de la propiedad...</span>
-</div>
+  <div class="loader-container">
+    <mat-spinner></mat-spinner>
+    <span>Cargando información de la propiedad...</span>
+  </div>
 } @else if (resourceStatus() === 1) {
-<div class="error-container">
-  <mat-icon color="warn">error</mat-icon>
-  <span>Error al cargar la propiedad.</span>
-  <button
-    mat-raised-button
-    color="primary"
-    (click)="propertyDetailsResource.reload()"
-  >
-    Reintentar
-  </button>
-</div>
+  <div class="error-container">
+    <mat-icon color="warn">error</mat-icon>
+    <span>Error al cargar la propiedad.</span>
+    <button
+      mat-raised-button
+      color="primary"
+      (click)="propertyDetailsResource.reload()"
+    >
+      Reintentar
+    </button>
+  </div>
 } @else if (resourceStatus() === 4 && propertyDetailsResource.value()) {
-<div class="property-layout">
-  @if (images.length > 0) {
-  <div class="gallery-section">
-    <div class="main-image-container">
-      <img
-        [src]="images[currentImageIndex()]"
-        alt="Imagen propiedad"
-        class="main-image"
-      />
-
-      <div class="image-navigation-overlay">
-        <button
-          mat-icon-button
-          class="nav-btn nav-prev"
-          (click)="prevImage()"
-          [disabled]="currentImageIndex() === 0"
-        >
-          <mat-icon>chevron_left</mat-icon>
-        </button>
-        <button
-          mat-icon-button
-          class="nav-btn nav-next"
-          (click)="nextImage()"
-          [disabled]="currentImageIndex() === images.length - 1"
-        >
-          <mat-icon>chevron_right</mat-icon>
-        </button>
+  <div class="property-layout">
+    @if (images.length > 0) {
+      <div class="gallery-section">
+        <app-image-section [images]="images" [showThumbnails]="true" />
       </div>
-
-      <div class="image-counter">
-        {{ currentImageIndex() + 1 }} / {{ images.length }}
+    } @else {
+      <div class="no-images">
+        <mat-icon>image_not_supported</mat-icon>
+        <span>No hay imágenes disponibles</span>
       </div>
-    </div>
-
-    @if (images.length > 1) {
-    <div class="thumbnails-container">
-      @for (image of images; track $index) {
-      <button
-        class="thumbnail-btn"
-        [class.active]="currentImageIndex() === $index"
-        (click)="setCurrentImage($index)"
-      >
-        <img
-          [src]="image"
-          [alt]="'Thumbnail ' + ($index + 1)"
-          class="thumbnail-image"
-        />
-      </button>
-      }
-    </div>
     }
-  </div>
-  } @else {
-  <div class="no-images">
-    <mat-icon>image_not_supported</mat-icon>
-    <span>No hay imágenes disponibles</span>
-  </div>
-  }
 
-  <div class="sidebar">
-    <div class="price-card">
-      <div class="price-section">
-        <div class="price-container">
-          <span class="currency">$</span>
-          <span class="price-amount">{{
-            propertyDetailsResource.value()!.price | number : "1.0-0"
-          }}</span>
-        </div>
-        <div class="price-details">
-          <span class="price-label">Precio de alquiler mensual</span>
-        </div>
-      </div>
-
-      <div class="contact-section">
-        <div class="contact-info">
-          <div class="seller-badge">
-            <mat-icon class="verified-icon">verified</mat-icon>
-            <span>Propietario verificado</span>
+    <div class="sidebar">
+      <div class="price-card">
+        <div class="price-section">
+          <div class="price-container">
+            <span class="currency">$</span>
+            <span class="price-amount">{{
+              propertyDetailsResource.value()!.price | number: "1.0-0"
+            }}</span>
+          </div>
+          <div class="price-details">
+            <span class="price-label">Precio de alquiler mensual</span>
           </div>
         </div>
+
+        <div class="contact-section">
+          <div class="contact-info">
+            <div class="seller-badge">
+              <mat-icon class="verified-icon">verified</mat-icon>
+              <span>Propietario verificado</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="actions-section">
+          @if (!propertyDetailsResource.value()!.contactId) {
+            <button
+              mat-raised-button
+              class="primary-action"
+              (click)="contactOwner()"
+            >
+              <mat-icon>message</mat-icon>
+              Contactar
+            </button>
+          } @else {
+            <button
+              mat-raised-button
+              class="contacted-action"
+              (click)="goToContact()"
+            >
+              <mat-icon>check_small</mat-icon>
+              Ver Contacto
+            </button>
+          }
+
+          @if (propertyDetailsResource.value()!.isFavorite) {
+            <button
+              mat-stroked-button
+              class="secondary-action is-favorite"
+              (click)="unmarkAsFavorite()"
+            >
+              <mat-icon>star</mat-icon>
+              Favorito
+            </button>
+          } @else {
+            <button
+              mat-stroked-button
+              class="secondary-action"
+              (click)="markAsFavorite()"
+            >
+              <mat-icon>star_border</mat-icon>
+              Marcar favorito
+            </button>
+          }
+
+          <button mat-stroked-button class="secondary-action">
+            <mat-icon>share</mat-icon>
+            Compartir
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="property-info-section">
+      <div class="property-header">
+        <div class="header-content">
+          <button mat-icon-button class="back-button" (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <h1 class="property-title">
+            {{ propertyDetailsResource.value()!.title }}
+          </h1>
+        </div>
+
+        <div class="property-status">
+          @if (propertyDetailsResource.value()!.deleted) {
+            <mat-chip class="status-chip deleted"> No disponible </mat-chip>
+          } @else {
+            <mat-chip class="status-chip available"> Disponible </mat-chip>
+          }
+        </div>
       </div>
 
-      <div class="actions-section">
-        @if (!propertyDetailsResource.value()!.isContacted) {
-        <button mat-raised-button class="primary-action" routerLink="/contact">
-          <mat-icon>message</mat-icon>
-          Contactar
-        </button>
-        } @else {
-        <button mat-raised-button class="contacted-action">
-          <mat-icon>check_small</mat-icon>
-          Contactado
-        </button>
+      <div class="property-location">
+        <mat-icon class="location-icon">place</mat-icon>
+        <span class="address">{{
+          propertyDetailsResource.value()!.address
+        }}</span>
+        @if (propertyDetailsResource.value()!.apartmentNumber) {
+          <span class="apartment-info"
+            >• Depto:
+            {{ propertyDetailsResource.value()!.apartmentNumber }}</span
+          >
         }
-
-        <button mat-stroked-button class="secondary-action">
-          <mat-icon>favorite_border</mat-icon>
-          Favorito
-        </button>
-
-        <button mat-stroked-button class="secondary-action">
-          <mat-icon>share</mat-icon>
-          Compartir
-        </button>
-      </div>
-    </div>
-  </div>
-
-  <div class="property-info-section">
-    <div class="property-header">
-      <div class="header-content">
-        <button mat-icon-button class="back-button" (click)="goBack()">
-          <mat-icon>arrow_back</mat-icon>
-        </button>
-        <h1 class="property-title">
-          {{ propertyDetailsResource.value()!.title }}
-        </h1>
-      </div>
-
-      <div class="property-status">
-        @if(propertyDetailsResource.value()!.deleted) {
-        <mat-chip class="status-chip deleted"> No disponible </mat-chip>
-        } @else {
-        <mat-chip class="status-chip available"> Disponible </mat-chip>
+        @if (propertyDetailsResource.value()!.floor != null) {
+          <span class="floor-info"
+            >• Piso: {{ propertyDetailsResource.value()!.floor }}</span
+          >
         }
       </div>
-    </div>
 
-    <div class="property-location">
-      <mat-icon class="location-icon">place</mat-icon>
-      <span class="address">{{
-        propertyDetailsResource.value()!.address
-      }}</span>
-      @if(propertyDetailsResource.value()!.apartmentNumber) {
-      <span class="apartment-info"
-        >• Depto: {{ propertyDetailsResource.value()!.apartmentNumber }}</span
-      >
-      } @if(propertyDetailsResource.value()!.floor != null) {
-      <span class="floor-info"
-        >• Piso: {{ propertyDetailsResource.value()!.floor }}</span
-      >
-      }
-    </div>
-
-    <div class="property-location">
-      <mat-icon class="location-icon">description</mat-icon>
-      <span class="description">
-        {{ propertyDetailsResource.value()!.description }}
-      </span>
-    </div>
-
-    <div class="main-features">
-      <div class="feature-item">
-        <mat-icon class="feature-icon">hotel</mat-icon>
-        <span class="feature-label">{{
-          propertyDetailsResource.value()!.bedrooms
-        }}</span>
-        <span class="feature-text">dormitorios</span>
-      </div>
-      <div class="feature-item">
-        <mat-icon class="feature-icon">bathtub</mat-icon>
-        <span class="feature-label">{{
-          propertyDetailsResource.value()!.bathrooms
-        }}</span>
-        <span class="feature-text">baños</span>
-      </div>
-      <div class="feature-item">
-        <mat-icon class="feature-icon">money</mat-icon>
-        <span class="feature-text">{{
-          propertyDetailsResource.value()!.expenses
-            ? "Con expensas"
-            : "Sin expensas"
-        }}</span>
-      </div>
-      <div class="feature-item">
-        <mat-icon class="feature-icon">weekend</mat-icon>
-        <span class="feature-text">
-          {{
-            propertyDetailsResource.value()!.furnishing
-              ? "Amueblado"
-              : "Sin amueblar"
-          }}
+      <div class="property-location">
+        <mat-icon class="location-icon">description</mat-icon>
+        <span class="description">
+          {{ propertyDetailsResource.value()!.description }}
         </span>
       </div>
 
-      <div
-        class="feature-item pets"
-        [class.allowed]="propertyDetailsResource.value()!.petsAllowed"
-      >
-        <mat-icon class="feature-icon">{{
-          propertyDetailsResource.value()!.petsAllowed ? "pets" : "block"
-        }}</mat-icon>
-        <span class="feature-text">{{
-          propertyDetailsResource.value()!.petsAllowed
-            ? "Mascotas permitidas"
-            : "Sin mascotas"
-        }}</span>
+      <div class="main-features">
+        <div class="feature-item">
+          <mat-icon class="feature-icon">hotel</mat-icon>
+          <span class="feature-label">{{
+            propertyDetailsResource.value()!.bedrooms
+          }}</span>
+          <span class="feature-text">dormitorios</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">bathtub</mat-icon>
+          <span class="feature-label">{{
+            propertyDetailsResource.value()!.bathrooms
+          }}</span>
+          <span class="feature-text">baños</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">money</mat-icon>
+          <span class="feature-text">{{
+            propertyDetailsResource.value()!.expenses
+              ? "Con expensas"
+              : "Sin expensas"
+          }}</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">weekend</mat-icon>
+          <span class="feature-text">
+            {{
+              propertyDetailsResource.value()!.furnishing
+                ? "Amueblado"
+                : "Sin amueblar"
+            }}
+          </span>
+        </div>
+
+        <div
+          class="feature-item pets"
+          [class.allowed]="propertyDetailsResource.value()!.petsAllowed"
+        >
+          <mat-icon class="feature-icon">{{
+            propertyDetailsResource.value()!.petsAllowed ? "pets" : "block"
+          }}</mat-icon>
+          <span class="feature-text">{{
+            propertyDetailsResource.value()!.petsAllowed
+              ? "Mascotas permitidas"
+              : "Sin mascotas"
+          }}</span>
+        </div>
       </div>
     </div>
   </div>
-</div>
 }

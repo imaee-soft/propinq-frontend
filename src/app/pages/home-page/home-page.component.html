@@ -37,6 +37,8 @@
       <app-home-building-card
         [building]="buildingDetails()!"
         (close)="onCloseDetails()"
+        (markedAsFavorite)="markBuildingAsFavorite($event)"
+        (unmarkedAsFavorite)="unmarkBuildingAsFavorite()"
       />
     </mat-drawer>
   }
@@ -51,7 +53,7 @@
       <app-home-property-card
         [property]="propertyDetails()!"
         (closed)="onCloseDetails()"
-        (markedAsFavorite)="markPropertyAsFavorite()"
+        (markedAsFavorite)="markPropertyAsFavorite($event)"
         (unmarkedAsFavorite)="unmarkPropertyAsFavorite()"
         (compared)="addToComparativeList($event)"
       />

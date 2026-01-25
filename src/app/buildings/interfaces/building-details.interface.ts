@@ -8,6 +8,8 @@ export interface BuildingDetails {
   userFullName: string;
   buildingTypeName: string;
   deleted: boolean;
+  favoriteId: string | null;
   latitude?: number;
   longitude?: number;
+  createdAt: Date;
 }

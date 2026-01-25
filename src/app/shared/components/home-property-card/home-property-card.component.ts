@@ -6,9 +6,12 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router } from '@angular/router';
+import { tap } from 'rxjs';
 import { AuthService } from '../../../auth/services/auth.service';
 import { NewContactDialogComponent } from '../../../contacts/dialogs/new-contact-dialog/new-contact-dialog.component';
+import { FavoriteResponse } from '../../../favorites/interfaces/favorite-interface';
 import { FavoriteService } from '../../../favorites/services/favorite-service';
+import { EditPropertyDialogComponent } from '../../../properties/dialogs/edit-property-dialog/edit-property-dialog.component';
 import { PropertyDetails } from '../../../properties/interfaces/property-details.interface';
 import { EntityDialogService } from '../../services/entity-dialog.service';
 import { ImageSectionComponent } from '../image-section/image-section.component';
@@ -38,12 +41,18 @@ export class HomePropertyCardComponent {
 
   property = input<PropertyDetails>();
   closed = output<void>();
-  markedAsFavorite = output<void>();
+  markedAsFavorite = output<FavoriteResponse>();
   unmarkedAsFavorite = output<void>();
   compared = output<PropertyDetails>();
 
   loggedUser = computed(() => this._authService.user());
-  isFavorite = computed(() => this.property()?.isFavorite);
+  isOwnerRetrieving = computed(
+    () =>
+      this.loggedUser() !== null &&
+      this.property() !== null &&
+      this.loggedUser()!.userId === this.property()!.ownerId,
+  );
+  favoriteId = computed(() => this.property()?.favoriteId);
 
   contactOwner() {
     if (!this.loggedUser()) {
@@ -61,6 +70,25 @@ export class HomePropertyCardComponent {
       .subscribe();
   }
 
+  update() {
+    const property = this.property();
+    if (!property) return;
+    this._entityDialogService
+      .openEditEntityDialog(EditPropertyDialogComponent, {
+        panelClass: 'generic-dialog',
+        entity: 'property',
+        id: property.propertyId,
+        backdropClass: 'dialog-backdrop',
+        width: '900px',
+        data: { property },
+      })
+      .subscribe((wasSuccessful) => {
+        if (wasSuccessful) {
+          this.closed.emit();
+        }
+      });
+  }
+
   markAsFavorite() {
     if (this.property() === null) return;
     this._favoriteService
@@ -68,9 +96,12 @@ export class HomePropertyCardComponent {
         userID: this.loggedUser()!.userId,
         propertyID: this.property()!.propertyId,
       })
-      .subscribe(() => {
-        this.markedAsFavorite.emit();
-      });
+      .pipe(
+        tap((favorite) => {
+          this.markedAsFavorite.emit(favorite);
+        }),
+      )
+      .subscribe();
   }
 
   unmarkAsFavorite() {

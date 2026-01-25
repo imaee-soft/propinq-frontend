@@ -36,4 +36,16 @@ export const STATUS_MAP: { [key: string]: StatusConfig } = {
     background: 'rgba(16, 185, 129, 0.15)',
     border: '1px solid rgba(16, 185, 129, 0.4)',
   },
+  building: {
+    label: 'Inmueble',
+    color: '#fde68a',
+    background: 'rgba(245, 158, 11, 0.15)',
+    border: '1px solid rgba(245, 158, 11, 0.4)',
+  },
+  property: {
+    label: 'Vivienda',
+    color: '#fde68a',
+    background: 'rgba(245, 158, 11, 0.15)',
+    border: '1px solid rgba(245, 158, 11, 0.4)',
+  },
 };

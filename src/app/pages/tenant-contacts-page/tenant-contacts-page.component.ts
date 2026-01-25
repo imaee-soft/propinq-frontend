@@ -8,12 +8,6 @@ import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interfac
 import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
 import { NotificationService } from '../../shared/services/notification.service';
 
-const statusMap: Record<string, string> = {
-  CREATED: 'Pendiente',
-  REJECTED: 'Contactado',
-  ACCEPTED: 'Rechazado',
-};
-
 @Component({
   selector: 'app-tenant-contacts-page',
   imports: [CommonEntityPageComponent],
@@ -33,7 +27,7 @@ export class TenantContactsPageComponent implements OnInit {
   descriptor: CardDescriptor<ContactDetails> = {
     user: (p) => p.owner ?? '',
     name: (p) => p.propertyAddress,
-    date: (p) => new Date(),
+    date: (p) => new Date(p.contactDate),
     id: (p) => p.contactId,
     status: (p) => p.status,
     coordinates: (p) =>

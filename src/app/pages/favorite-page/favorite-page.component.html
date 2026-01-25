@@ -1,63 +1,18 @@
-
-<h2 style="margin-bottom: 16px;">Favoritos</h2>
-<mat-tab-group [(selectedIndex)]="selectedTab">
-	<mat-tab label="Mis favoritos"></mat-tab>
-	<mat-tab label="Inmuebles favoritos"></mat-tab>
-	<mat-tab label="Viviendas favoritas"></mat-tab>
-</mat-tab-group>
-
-<div class="favorites-container">
-	<ng-container [ngSwitch]="selectedTab">
-		<!-- Mis favoritos: muestra todos -->
-		<div *ngSwitchCase="0" class="favorites-grid">
-			<ng-container *ngFor="let fav of allFavorites">
-				<mat-card class="favorite-card" (click)="goToFavorite(fav)">
-					<mat-card-header>
-						<mat-card-title>{{ fav.name }}</mat-card-title>
-						<mat-card-subtitle>{{ fav.type }}</mat-card-subtitle>
-					</mat-card-header>
-					<img mat-card-image [src]="fav.image" alt="Imagen" *ngIf="fav.image">
-					<mat-card-content>
-						<p><b>Descripción:</b> {{ fav.description }}</p>
-						<p><b>Dirección:</b> {{ fav.address }}</p>
-						<p><b>Dueño:</b> {{ fav.owner }}</p>
-					</mat-card-content>
-				</mat-card>
-			</ng-container>
-		</div>
-		<!-- Inmuebles favoritos -->
-		<div *ngSwitchCase="1" class="favorites-grid">
-			<ng-container *ngFor="let fav of buildingFavorites">
-				<mat-card class="favorite-card" (click)="goToBuilding(fav.buildingID)">
-					<mat-card-header>
-						<mat-card-title>{{ fav.name }}</mat-card-title>
-						<mat-card-subtitle>Edificio</mat-card-subtitle>
-					</mat-card-header>
-					<img mat-card-image [src]="fav.image" alt="Imagen" *ngIf="fav.image">
-					<mat-card-content>
-						<p><b>Descripción:</b> {{ fav.description }}</p>
-						<p><b>Dirección:</b> {{ fav.address }}</p>
-						<p><b>Dueño:</b> {{ fav.owner }}</p>
-					</mat-card-content>
-				</mat-card>
-			</ng-container>
-		</div>
-		<!-- Viviendas favoritas -->
-		<div *ngSwitchCase="2" class="favorites-grid">
-			<ng-container *ngFor="let fav of propertyFavorites">
-				<mat-card class="favorite-card" (click)="goToProperty(fav.propertyID)">
-					<mat-card-header>
-						<mat-card-title>{{ fav.name }}</mat-card-title>
-						<mat-card-subtitle>Vivienda</mat-card-subtitle>
-					</mat-card-header>
-					<img mat-card-image [src]="fav.image" alt="Imagen" *ngIf="fav.image">
-					<mat-card-content>
-						<p><b>Descripción:</b> {{ fav.description }}</p>
-						<p><b>Dirección:</b> {{ fav.address }}</p>
-						<p><b>Dueño:</b> {{ fav.owner }}</p>
-					</mat-card-content>
-				</mat-card>
-			</ng-container>
-		</div>
-	</ng-container>
-</div>
+<common-entity-page
+  [elements]="favorites()"
+  [descriptor]="descriptor"
+  [primaryActionLabel]="'Ver elemento'"
+  [primaryAction]="primaryAction.bind(this)"
+  [secondaryActionLabel]="'Eliminar'"
+  [secondaryAction]="secondaryAction.bind(this)"
+  [iconUrl]="'/location.png'"
+  [pageTitle]="'Favoritos'"
+  [allLoadedLabel]="'Estos son todos tus favoritos.'"
+  [hasMoreEntities]="canQuery()"
+  [loadMoreLabel]="'Recuperar más favoritos'"
+  [loadMoreEntities]="loadMore.bind(this)"
+  [chipFilters]="chipFilters"
+  [currentFilter]="currentFilter()"
+  (changeFilter)="changeFavoriteType($event)"
+>
+</common-entity-page>

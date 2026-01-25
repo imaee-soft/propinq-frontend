@@ -1,30 +1,44 @@
-import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FavoriteResponse } from '../interfaces/favorite-interface';
 import { environment } from '../../../environments/environment.development';
+import {
+  FavoriteEntityPage,
+  FavoriteResponse,
+} from '../interfaces/favorite-interface';
 
 @Injectable({ providedIn: 'root' })
 export class FavoriteService {
-	private apiUrl = `${environment.apiUrl}/api/v1/favorites`;
+  private apiUrl = `${environment.apiUrl}/api/v1/favorites`;
+  private http = inject(HttpClient);
 
-	constructor(private http: HttpClient) {}
+  getFavoriteBuildings(
+    page: number,
+    size: number = 6,
+  ): Observable<FavoriteEntityPage> {
+    return this.http.get<FavoriteEntityPage>(`${this.apiUrl}/buildings`, {
+      params: { page, size },
+    });
+  }
 
-	getFavoritesByUserAndBuilding(userId: string): Observable<FavoriteResponse[]> {
-		return this.http.get<FavoriteResponse[]>(`${this.apiUrl}/user/${userId}/building`);
-	}
+  getFavoriteProperties(
+    page: number,
+    size: number = 6,
+  ): Observable<FavoriteEntityPage> {
+    return this.http.get<FavoriteEntityPage>(`${this.apiUrl}/properties`, {
+      params: { page, size },
+    });
+  }
 
-	getFavoritesByUserAndProperty(userId: string): Observable<FavoriteResponse[]> {
-		return this.http.get<FavoriteResponse[]>(`${this.apiUrl}/user/${userId}/property`);
-	}
+  addFavorite(payload: {
+    userID: string;
+    propertyID?: string;
+    buildingID?: string;
+  }): Observable<FavoriteResponse> {
+    return this.http.post<FavoriteResponse>(this.apiUrl, payload);
+  }
 
-	// Nuevo: crear favorito (building o property según payload)
-	addFavorite(payload: { userID: string; propertyID?: string; buildingID?: string }): Observable<FavoriteResponse> {
-		return this.http.post<FavoriteResponse>(this.apiUrl, payload);
-	}
-
-	// Nuevo: eliminar favorito por favoriteID
-	removeFavorite(favoriteId: string): Observable<void> {
-		return this.http.delete<void>(`${this.apiUrl}/${favoriteId}`);
-	}
+  removeFavorite(favoriteId: string): Observable<void> {
+    return this.http.delete<void>(`${this.apiUrl}/${favoriteId}`);
+  }
 }

@@ -70,21 +70,27 @@
         </button>
       }
       <div class="property-overlay-actions">
-        @if (isFavorite()) {
-          <button
-            mat-icon-button
-            matTooltip="Desmarcar como favorita"
-            (click)="unmarkAsFavorite()"
-          >
-            <mat-icon>star</mat-icon>
-          </button>
+        @if (!isOwnerRetrieving()) {
+          @if (favoriteId()) {
+            <button
+              mat-icon-button
+              matTooltip="Desmarcar como favorita"
+              (click)="unmarkAsFavorite()"
+            >
+              <mat-icon>star</mat-icon>
+            </button>
+          } @else {
+            <button
+              mat-icon-button
+              matTooltip="Marcar como favorita"
+              (click)="markAsFavorite()"
+            >
+              <mat-icon>star_border</mat-icon>
+            </button>
+          }
         } @else {
-          <button
-            mat-icon-button
-            matTooltip="Marcar como favorita"
-            (click)="markAsFavorite()"
-          >
-            <mat-icon>star_border</mat-icon>
+          <button mat-icon-button matTooltip="Editar" (click)="update()">
+            <mat-icon>edit</mat-icon>
           </button>
         }
         <button

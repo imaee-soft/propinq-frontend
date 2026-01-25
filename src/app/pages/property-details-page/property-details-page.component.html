@@ -52,46 +52,51 @@
         </div>
 
         <div class="actions-section">
-          @if (!propertyDetailsResource.value()!.contactId) {
-            <button
-              mat-raised-button
-              class="primary-action"
-              (click)="contactOwner()"
-            >
-              <mat-icon>message</mat-icon>
-              Contactar
-            </button>
+          @if (!isOwnerRetrieving()) {
+            @if (!propertyDetailsResource.value()!.contactId) {
+              <button
+                mat-raised-button
+                class="primary-action"
+                (click)="contactOwner()"
+              >
+                <mat-icon>message</mat-icon>
+                Contactar
+              </button>
+            } @else {
+              <button
+                mat-raised-button
+                class="contacted-action"
+                (click)="goToContact()"
+              >
+                <mat-icon>check_small</mat-icon>
+                Ver Contacto
+              </button>
+            }
+            @if (propertyDetailsResource.value()!.favoriteId) {
+              <button
+                mat-stroked-button
+                class="secondary-action is-favorite"
+                (click)="unmarkAsFavorite()"
+              >
+                <mat-icon>star</mat-icon>
+                Favorito
+              </button>
+            } @else {
+              <button
+                mat-stroked-button
+                class="secondary-action"
+                (click)="markAsFavorite()"
+              >
+                <mat-icon>star_border</mat-icon>
+                Marcar favorito
+              </button>
+            }
           } @else {
-            <button
-              mat-raised-button
-              class="contacted-action"
-              (click)="goToContact()"
-            >
-              <mat-icon>check_small</mat-icon>
-              Ver Contacto
+            <button mat-raised-button class="primary-action" (click)="update()">
+              <mat-icon>edit</mat-icon>
+              Editar
             </button>
           }
-
-          @if (propertyDetailsResource.value()!.isFavorite) {
-            <button
-              mat-stroked-button
-              class="secondary-action is-favorite"
-              (click)="unmarkAsFavorite()"
-            >
-              <mat-icon>star</mat-icon>
-              Favorito
-            </button>
-          } @else {
-            <button
-              mat-stroked-button
-              class="secondary-action"
-              (click)="markAsFavorite()"
-            >
-              <mat-icon>star_border</mat-icon>
-              Marcar favorito
-            </button>
-          }
-
           <button mat-stroked-button class="secondary-action">
             <mat-icon>share</mat-icon>
             Compartir

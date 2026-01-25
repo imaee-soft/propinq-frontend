@@ -3,15 +3,13 @@ import { inject, Injectable } from '@angular/core';
 import { map, Observable, throwError } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { PropertyDetails } from '../properties/interfaces/property-details.interface';
+import { PropertyFilterRequest } from '../properties/interfaces/property-filter.request';
+import { buildFilterHttpParams } from '../shared/utilities/http-params.builder';
 import { BuildingRequest } from './adapters/building-request';
 import { UpdateBuildingRequest } from './adapters/update-building-request';
 import { BuildingDetails } from './interfaces/building-details.interface';
 import { Building } from './interfaces/building.interface';
-import { PropertyFilterRequest } from '../properties/interfaces/property-filter.request';
 import { BuildingDetailsPage } from './interfaces/buildings-details-page.interface';
-import { buildFilterHttpParams } from '../shared/utilities/http-params.builder';
-import { UsersService } from '../users/users.service';
-
 
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
@@ -26,7 +24,7 @@ export class BuildingsService {
       'building',
       new Blob([JSON.stringify(buildingData)], {
         type: 'application/json',
-      })
+      }),
     );
 
     if (images && images.length > 0) {
@@ -46,26 +44,23 @@ export class BuildingsService {
   }
 
   getBuildingDetails(
-    buildingQueried: string | null
+    buildingQueried: string | null,
   ): Observable<BuildingDetails> {
     if (buildingQueried == null) {
       return throwError(() => new Error('Invalid buildingQueried: null'));
     }
     return this._http.get<BuildingDetails>(
-      `${environment.apiUrl}/api/v1/buildings/${buildingQueried}`
+      `${environment.apiUrl}/api/v1/buildings/${buildingQueried}`,
     );
   }
 
-  getBuildingsDetails(
-    page = 0,
-    pageSize = 15
-  ): Observable<BuildingDetailsPage> {
+  getBuildingsDetails(page = 0, pageSize = 6): Observable<BuildingDetailsPage> {
     return this._http
       .get<BuildingDetailsPage>(
         `${environment.apiUrl}/api/v1/buildings/details`,
         {
           params: { page, size: pageSize },
-        }
+        },
       )
       .pipe(
         map((response) => {
@@ -74,12 +69,12 @@ export class BuildingsService {
             buildingId: building.buildingId,
           }));
           return { ...response, content: content };
-        })
+        }),
       );
   }
 
   updateBuilding(
-    updateBuildingRequest: UpdateBuildingRequest
+    updateBuildingRequest: UpdateBuildingRequest,
   ): Observable<BuildingDetails> {
     const formData = new FormData();
     const { payload, id } = updateBuildingRequest;
@@ -90,7 +85,7 @@ export class BuildingsService {
       'building',
       new Blob([JSON.stringify(buildingData)], {
         type: 'application/json',
-      })
+      }),
     );
 
     if (imageFiles && imageFiles.length > 0) {
@@ -101,7 +96,7 @@ export class BuildingsService {
 
     return this._http.patch<BuildingDetails>(
       `${this._baseUrl}/${id}`,
-      formData
+      formData,
     );
   }
 
@@ -112,16 +107,20 @@ export class BuildingsService {
   restoreBuilding(buildingId: string): Observable<BuildingDetails> {
     return this._http.patch<BuildingDetails>(
       `${this._baseUrl}/${buildingId}/restore`,
-      {}
+      {},
     );
   }
 
-  getBuildingProperties(buildingId: string, attributes?: PropertyFilterRequest['attributes']): Observable<PropertyDetails[]> {
+  getBuildingProperties(
+    buildingId: string,
+    attributes?: PropertyFilterRequest['attributes'],
+  ): Observable<PropertyDetails[]> {
     let params = new HttpParams();
     if (attributes) {
       const a = attributes;
       const add = (k: string, v: any) => {
-        if (v !== undefined && v !== null && v !== '') params = params.set(k, String(v));
+        if (v !== undefined && v !== null && v !== '')
+          params = params.set(k, String(v));
       };
       add('attributes.buildingType', a.buildingType);
       add('attributes.priceMin', a.priceMin);
@@ -132,7 +131,10 @@ export class BuildingsService {
       add('attributes.areaMin', a.areaMin);
       add('attributes.areaMax', a.areaMax);
     }
-    return this._http.get<PropertyDetails[]>(`${this._baseUrl}/${buildingId}/properties`, { params });
+    return this._http.get<PropertyDetails[]>(
+      `${this._baseUrl}/${buildingId}/properties`,
+      { params },
+    );
   }
 
   hasApartment(buildingId: string, number: string): Observable<boolean> {
@@ -141,14 +143,14 @@ export class BuildingsService {
       `${this._baseUrl}/${buildingId}/has-apartment`,
       {
         params,
-      }
+      },
     );
   }
 
   getBuildingsNear(
     latitude: number,
     longitude: number,
-    radiusKm: number
+    radiusKm: number,
   ): Observable<Building[]> {
     return this._http.get<Building[]>(`${this._baseUrl}/nearby`, {
       params: {
@@ -163,7 +165,7 @@ export class BuildingsService {
     poiType: string,
     radiusKm: number,
     viewport: { north: number; south: number; east: number; west: number },
-    limit?: number
+    limit?: number,
   ) {
     let params = new HttpParams()
       .set('poiType', poiType)
@@ -179,5 +181,4 @@ export class BuildingsService {
       params,
     });
   }
-
 }

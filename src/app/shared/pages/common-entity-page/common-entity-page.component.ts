@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input } from '@angular/core';
+import { Component, computed, input, output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
+import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltip } from '@angular/material/tooltip';
 import { STATUS_MAP, StatusConfig } from '../../../contacts/contacts.utils';
@@ -11,12 +12,18 @@ import { DEFAULT_CENTER } from '../../../maps/utils/constants';
 import { CardDescriptor } from '../../interfaces/card-descriptor.interface';
 import { formatDate } from '../../utilities/date.pipes';
 
+export interface ChipFilter {
+  id: string;
+  label: string;
+}
+
 @Component({
   selector: 'common-entity-page',
   templateUrl: 'common-entity-page.component.html',
   styleUrls: ['common-entity-page.component.css'],
   imports: [
     MatCardModule,
+    MatChipsModule,
     MatIconModule,
     MatButtonModule,
     MapComponent,
@@ -27,6 +34,8 @@ import { formatDate } from '../../utilities/date.pipes';
 export class CommonEntityPageComponent<T extends object> {
   elements = input<T[]>();
   descriptor = input<CardDescriptor<T>>();
+  chipFilters = input<ChipFilter[]>();
+
   primaryActionLabel = input<string>('Acción 1');
   primaryAction = input<(id: string | number | undefined) => void>();
   secondaryActionLabel = input<string>('Acción 2');
@@ -50,9 +59,13 @@ export class CommonEntityPageComponent<T extends object> {
 
   newEntityLabel = input<string>('Nueva entidad');
   newEntity = input<() => void>();
+  zeroEntitiesLabel = input<string>('No hay entidades para mostrar.');
+  createFirstEntityLabel = input<string>('Crear la primera entidad');
+
+  currentFilter = input<ChipFilter | undefined>(undefined);
+  changeFilter = output<ChipFilter>();
 
   cards = computed(() => this.elements() ?? []);
-
   private _mapConfigs = new WeakMap<T, MapConfig>();
 
   goBack() {

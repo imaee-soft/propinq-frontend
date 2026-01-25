@@ -104,6 +104,7 @@ export class NavbarComponent implements OnInit {
     this._entityDialogService
       .openNewEntityDialog(NewBuildingDialogComponent, {
         panelClass: 'generic-dialog',
+        backdropClass: 'dialog-backdrop',
         entity: 'building',
       })
       .subscribe();
@@ -113,6 +114,7 @@ export class NavbarComponent implements OnInit {
     this._entityDialogService
       .openNewEntityDialog(NewHouseDialogComponent, {
         panelClass: 'generic-dialog',
+        backdropClass: 'dialog-backdrop',
         entity: 'house',
       })
       .subscribe();

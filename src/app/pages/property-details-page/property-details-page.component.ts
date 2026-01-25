@@ -14,10 +14,11 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, of } from 'rxjs';
+import { map, of, tap } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { NewContactDialogComponent } from '../../contacts/dialogs/new-contact-dialog/new-contact-dialog.component';
 import { FavoriteService } from '../../favorites/services/favorite-service';
+import { EditPropertyDialogComponent } from '../../properties/dialogs/edit-property-dialog/edit-property-dialog.component';
 import { PropertiesService } from '../../properties/properties.service';
 import { ImageSectionComponent } from '../../shared/components/image-section/image-section.component';
 import { EntityDialogService } from '../../shared/services/entity-dialog.service';
@@ -73,6 +74,12 @@ export class PropertyDetailsPageComponent implements OnInit {
   });
 
   userLogged = computed(() => this._authService.user());
+  isOwnerRetrieving = computed(() => {
+    const property = this.propertyDetailsResource.value();
+    const user = this.userLogged();
+    if (property === null || user === null) return false;
+    return property.ownerId === user.userId;
+  });
 
   ngOnInit() {
     this._renderer.setStyle(document.body, 'overflow', 'auto');
@@ -112,20 +119,48 @@ export class PropertyDetailsPageComponent implements OnInit {
         userID: this.userLogged()!.userId,
         propertyID: property.propertyId,
       })
-      .subscribe(() => {
-        if (!property) return;
-        this.propertyDetailsResource.update((current) =>
-          current ? { ...current, isFavorite: true } : current,
-        );
-      });
+      .pipe(
+        tap((favorite) => {
+          if (!property) return;
+          this.propertyDetailsResource.update((current) =>
+            current ? { ...current, favoriteId: favorite.favoriteID } : current,
+          );
+        }),
+      )
+      .subscribe();
   }
 
   unmarkAsFavorite() {
     const property = this.propertyDetailsResource.value();
     if (property === null || this.userLogged() === null) return;
-    this.propertyDetailsResource.update((current) =>
-      current ? { ...current, isFavorite: false } : current,
-    );
+    if (property.favoriteId) {
+      this._favoriteService
+        .removeFavorite(property.favoriteId)
+        .subscribe(() => {
+          this.propertyDetailsResource.update((current) =>
+            current ? { ...current, favoriteId: null } : current,
+          );
+        });
+    }
+  }
+
+  update() {
+    const property = this.propertyDetailsResource.value();
+    if (!property) return;
+    this._entityDialogService
+      .openEditEntityDialog(EditPropertyDialogComponent, {
+        panelClass: 'generic-dialog',
+        entity: 'property',
+        id: property.propertyId,
+        backdropClass: 'dialog-backdrop',
+        width: '900px',
+        data: { property },
+      })
+      .subscribe((wasSuccessful) => {
+        if (wasSuccessful) {
+          this.propertyDetailsResource.reload();
+        }
+      });
   }
 
   ngOnDestroy() {

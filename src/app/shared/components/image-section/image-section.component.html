@@ -21,7 +21,7 @@
         mat-icon-button
         class="nav-btn nav-next"
         (click)="nextImage()"
-        [disabled]="currentImageIndex() === images.length - 1"
+        [disabled]="currentImageIndex() === imagesCount() - 1"
       >
         <mat-icon>chevron_right</mat-icon>
       </button>

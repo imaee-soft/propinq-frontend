@@ -27,7 +27,6 @@
         <span>No hay imágenes disponibles</span>
       </div>
     }
-
     <div class="sidebar">
       <div class="price-card">
         <div class="price-section">
@@ -88,7 +87,7 @@
                 (click)="markAsFavorite()"
               >
                 <mat-icon>star_border</mat-icon>
-                Marcar favorito
+                Preferir
               </button>
             }
           } @else {
@@ -130,17 +129,6 @@
         <span class="address">{{
           propertyDetailsResource.value()!.address
         }}</span>
-        @if (propertyDetailsResource.value()!.apartmentNumber) {
-          <span class="apartment-info"
-            >• Depto:
-            {{ propertyDetailsResource.value()!.apartmentNumber }}</span
-          >
-        }
-        @if (propertyDetailsResource.value()!.floor != null) {
-          <span class="floor-info"
-            >• Piso: {{ propertyDetailsResource.value()!.floor }}</span
-          >
-        }
       </div>
 
       <div class="property-location">

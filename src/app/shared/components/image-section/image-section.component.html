@@ -9,22 +9,24 @@
       />
     }
     <div class="image-navigation-overlay">
-      <button
-        mat-icon-button
-        class="nav-btn nav-prev"
-        (click)="prevImage()"
-        [disabled]="currentImageIndex() === 0"
-      >
-        <mat-icon>chevron_left</mat-icon>
-      </button>
-      <button
-        mat-icon-button
-        class="nav-btn nav-next"
-        (click)="nextImage()"
-        [disabled]="currentImageIndex() === imagesCount() - 1"
-      >
-        <mat-icon>chevron_right</mat-icon>
-      </button>
+      @if (imagesCount() > 1) {
+        <button
+          mat-icon-button
+          class="nav-btn nav-prev"
+          (click)="prevImage()"
+          [disabled]="currentImageIndex() === 0"
+        >
+          <mat-icon>chevron_left</mat-icon>
+        </button>
+        <button
+          mat-icon-button
+          class="nav-btn nav-next"
+          (click)="nextImage()"
+          [disabled]="currentImageIndex() === imagesCount() - 1"
+        >
+          <mat-icon>chevron_right</mat-icon>
+        </button>
+      }
     </div>
     <div class="image-counter">
       {{ currentImageIndex() + 1 }} / {{ imagesCount() }}

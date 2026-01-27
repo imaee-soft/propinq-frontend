@@ -22,15 +22,19 @@
 }
 
 .page-header {
+  width: 100%;
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+}
+
+.page-header > button {
+  margin-left: auto;
 }
 
 .header-content {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 16px;
 }
 

@@ -1,14 +1,15 @@
 :host {
   width: 100%;
-  padding: 1.5rem;
+  padding: 1rem;
+  display: block;
+  overflow-y: auto;
   box-sizing: border-box;
   font-family: Inter, "Roboto", "Helvetica Neue", Arial, sans-serif;
-  min-height: fit-content;
-  overflow: hidden;
+  margin-bottom: 30px;
 }
 
 .property-layout {
-  max-width: 1200px;
+  max-width: 1350px;
   margin: 0 auto;
   align-items: start;
   overflow: hidden;
@@ -26,6 +27,7 @@
   align-items: center;
   justify-content: center;
   gap: 16px;
+  margin-bottom: 8px;
 }
 
 .gallery-section {

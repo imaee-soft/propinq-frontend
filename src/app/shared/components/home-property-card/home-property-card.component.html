@@ -70,6 +70,13 @@
         </button>
       }
       <div class="property-overlay-actions">
+        <button
+          mat-icon-button
+          matTooltip="Ver detalles"
+          (click)="goToPropertyDetails()"
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
         @if (!isOwnerRetrieving()) {
           @if (favoriteId()) {
             <button
@@ -95,17 +102,13 @@
         }
         <button
           mat-icon-button
-          matTooltip="Visualizar detalles"
-          (click)="goToPropertyDetails()"
-        >
-          <mat-icon>more</mat-icon>
-        </button>
-        <button
-          mat-icon-button
           matTooltip="Agregar a la comparación"
           (click)="compared.emit(property()!)"
         >
           <mat-icon>balance</mat-icon>
+        </button>
+        <button mat-icon-button matTooltip="Compartir">
+          <mat-icon>share</mat-icon>
         </button>
       </div>
     </div>

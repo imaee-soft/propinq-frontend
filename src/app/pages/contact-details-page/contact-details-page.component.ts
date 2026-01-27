@@ -63,6 +63,12 @@ export class ContactDetailsPageComponent {
     map((contact) => contact.status === 'CREATED' && contact.isOwnerRetrieving),
   );
 
+  canRent$ = this.contactDetails$.pipe(
+    map(
+      (contact) => contact.status === 'ACCEPTED' && contact.isOwnerRetrieving,
+    ),
+  );
+
   contactId = () => this._route.snapshot.params['contactId'];
   issuerFullName = toSignal(
     this.contactDetails$.pipe(map((contact) => contact.issuer)),

@@ -36,7 +36,6 @@ import { UserLocationService } from '../../maps/services/user-location.service';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { PropertyComponent } from '../../properties/components/property.component';
 import { ComparePropertiesDialogComponent } from '../../properties/dialogs/compare-properties-dialog/compare-properties-dialog.component';
-import { NewPropertyDialogComponent } from '../../properties/dialogs/new-property-dialog/new-property-dialog.component';
 import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
 import { PropertiesService } from '../../properties/properties.service';
 import { FiltersComponent } from '../../shared/components/filters/filters.component';
@@ -335,19 +334,6 @@ export class HomePageComponent {
 
   clearComparativeList() {
     this.comparativeList.set([]);
-  }
-
-  openNewPropertyDialog() {
-    this._entityDialogService
-      .openNewEntityDialog(NewPropertyDialogComponent, {
-        panelClass: 'generic-dialog',
-        entity: 'property',
-        data: {
-          buildingId: this.buildingDetails()?.buildingId ?? '',
-          buildingName: this.buildingDetails()?.name ?? '',
-        },
-      })
-      .subscribe();
   }
 
   openComparisonDialog() {

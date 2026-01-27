@@ -30,13 +30,14 @@
       [showThumbnails]="false"
     ></app-image-section>
     <div class="home-property-overlay">
-      @if (loggedUser()?.userId !== building()!.userId) {
-        <button class="contact-owner-button" mat-button>
-          <mat-icon>contacts_product</mat-icon>
-          Solicitar Incorporación
-        </button>
-      }
       <div class="property-overlay-actions">
+        <button
+          mat-icon-button
+          matTooltip="Ver detalles"
+          (click)="goToBuildingDetails()"
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
         @if (!isOwnerRetrieving()) {
           @if (favoriteId()) {
             <button
@@ -49,23 +50,26 @@
           } @else {
             <button
               mat-icon-button
-              matTooltip="Marcar como favorita"
+              matTooltip="Marcar como favorito"
               (click)="markAsFavorite()"
             >
               <mat-icon>star_border</mat-icon>
             </button>
           }
         } @else {
+          <button
+            mat-icon-button
+            matTooltip="Nueva propiedad"
+            (click)="newProperty()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
           <button mat-icon-button matTooltip="Editar" (click)="update()">
             <mat-icon>edit</mat-icon>
           </button>
         }
-        <button
-          mat-icon-button
-          matTooltip="Visualizar detalles"
-          (click)="goToBuildingDetails()"
-        >
-          <mat-icon>more</mat-icon>
+        <button mat-icon-button matTooltip="Compartir">
+          <mat-icon>share</mat-icon>
         </button>
       </div>
     </div>

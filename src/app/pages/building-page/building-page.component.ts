@@ -100,6 +100,7 @@ export class BuildingPageComponent implements OnInit {
         panelClass: 'generic-dialog',
         entity: 'building',
         id: building.buildingId,
+        backdropClass: 'dialog-backdrop',
         width: '900px',
         data: { building },
       })

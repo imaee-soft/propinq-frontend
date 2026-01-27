@@ -6,6 +6,11 @@
       </button>
       <h2>Solicitud de contacto</h2>
     </div>
+    @if (canRent$ | async) {
+      <button mat-fab class="fab-add" [matTooltip]="'Registrar alquiler'">
+        <mat-icon>handshake</mat-icon>
+      </button>
+    }
   </header>
 
   <div class="detail-card">

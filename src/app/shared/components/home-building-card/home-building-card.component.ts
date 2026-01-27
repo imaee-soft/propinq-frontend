@@ -10,6 +10,7 @@ import { EditBuildingDialogComponent } from '../../../buildings/dialogs/edit-bui
 import { BuildingDetails } from '../../../buildings/interfaces/building-details.interface';
 import { FavoriteResponse } from '../../../favorites/interfaces/favorite-interface';
 import { FavoriteService } from '../../../favorites/services/favorite-service';
+import { NewPropertyDialogComponent } from '../../../properties/dialogs/new-property-dialog/new-property-dialog.component';
 import { EntityDialogService } from '../../services/entity-dialog.service';
 import { ImageSectionComponent } from '../image-section/image-section.component';
 
@@ -48,6 +49,20 @@ export class HomeBuildingCardComponent {
       this.loggedUser()!.userId === this.building()!.userId,
   );
 
+  newProperty() {
+    this._entityDialogService
+      .openNewEntityDialog(NewPropertyDialogComponent, {
+        panelClass: 'generic-dialog',
+        entity: 'property',
+        backdropClass: 'dialog-backdrop',
+        data: {
+          buildingId: this.building()?.buildingId ?? '',
+          buildingName: this.building()?.name ?? '',
+        },
+      })
+      .subscribe();
+  }
+
   update(): void {
     const building = this.building();
     if (!building) return;
@@ -55,6 +70,7 @@ export class HomeBuildingCardComponent {
       .openEditEntityDialog(EditBuildingDialogComponent, {
         panelClass: 'generic-dialog',
         entity: 'building',
+        backdropClass: 'dialog-backdrop',
         id: building.buildingId,
         width: '900px',
         data: { building },

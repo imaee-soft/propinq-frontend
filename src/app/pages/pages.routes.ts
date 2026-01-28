@@ -107,6 +107,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'help',
+    loadComponent: () =>
+      import('./help-page/help-page.component').then(
+        (m) => m.HelpPageComponent,
+      ),
+  },
+  {
     path: '**',
     redirectTo: '',
   },

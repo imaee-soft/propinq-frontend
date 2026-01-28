@@ -16,11 +16,11 @@ export const TENANT_NAVBAR_ITEMS = [
 export const TENANT_SIDEBAR_CONFIG = {
   enabled: true,
   items: [
-    // {
-    //   label: 'Mi alquiler',
-    //   icon: 'apartment',
-    //   route: '/my-rentals',
-    // },
+    {
+      label: 'Mi alquiler',
+      icon: 'apartment',
+      route: '/my-rentals',
+    },
     {
       label: 'Mis solicitudes de contacto',
       icon: 'chat',
@@ -30,11 +30,6 @@ export const TENANT_SIDEBAR_CONFIG = {
       label: 'Mis favoritos',
       icon: 'favorite',
       route: '/favorites',
-    },
-    {
-      label: 'Ayuda',
-      icon: 'help',
-      route: '/help',
     },
   ],
 };

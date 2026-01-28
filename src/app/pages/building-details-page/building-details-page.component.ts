@@ -8,7 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, shareReplay, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, map, shareReplay, tap } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { EditBuildingDialogComponent } from '../../buildings/dialogs/edit-building-dialog/edit-building-dialog.component';
@@ -42,9 +42,21 @@ export class BuildingDetailsPageComponent {
   private _favoriteService = inject(FavoriteService);
   private _router = inject(Router);
 
-  building$ = this._buildingsService
+  private buildingSource$ = this._buildingsService
     .getBuildingDetails(this._activatedRoute.snapshot.params['buildingId'])
-    .pipe(shareReplay(1));
+    .pipe(shareReplay({ bufferSize: 1, refCount: true }));
+  private favoritePatch$ = new BehaviorSubject<string | null | undefined>(
+    undefined,
+  );
+
+  building$ = combineLatest([this.buildingSource$, this.favoritePatch$]).pipe(
+    map(([building, favoriteOverride]) =>
+      favoriteOverride === undefined
+        ? building
+        : { ...building, favoriteId: favoriteOverride },
+    ),
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
 
   isOwnerRetrieving$ = this.building$.pipe(
     map((building) => {
@@ -120,13 +132,7 @@ export class BuildingDetailsPageComponent {
       })
       .pipe(
         tap((favoriteResponse) => {
-          this.building$ = this.building$.pipe(
-            map((building) => ({
-              ...building,
-              favoriteId: favoriteResponse.favoriteID,
-            })),
-            shareReplay(1),
-          );
+          this.favoritePatch$.next(favoriteResponse.favoriteID);
         }),
       )
       .subscribe();
@@ -138,13 +144,7 @@ export class BuildingDetailsPageComponent {
       .removeFavorite(this.favoriteId()!)
       .pipe(
         tap(() => {
-          this.building$ = this.building$.pipe(
-            map((building) => ({
-              ...building,
-              favoriteId: null,
-            })),
-            shareReplay(1),
-          );
+          this.favoritePatch$.next(null);
         }),
       )
       .subscribe();

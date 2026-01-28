@@ -39,7 +39,7 @@ export class AuthService {
         const { accessToken, refreshToken } = this.getTokens();
         this._authState.set({ accessToken, refreshToken, user, status });
       },
-      error: (err) => {
+      error: () => {
         this.logout();
       },
     });

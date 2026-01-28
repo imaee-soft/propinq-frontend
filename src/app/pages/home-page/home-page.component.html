@@ -1,12 +1,14 @@
 <mat-drawer-container class="home-page-container">
   <mat-drawer-content>
-    <app-map
-      [config]="getMapConfig()"
-      (markerClick)="onMarkerClick($event)"
-      (mapClick)="onMapClick($event)"
-      (centerChanged)="onCenterChanged($event)"
-      [coordinateToGo]="coordinateToGo()"
-    />
+    <div class="map-wrapper">
+      <app-map
+        [config]="getMapConfig()"
+        (markerClick)="onMarkerClick($event)"
+        (mapClick)="onMapClick($event)"
+        (centerChanged)="onCenterChanged($event)"
+        [coordinateToGo]="coordinateToGo()"
+      />
+    </div>
     <app-building-component
       (markersChange)="onMapMarkersChange($event)"
       [buildingMarkerQueried]="buildingMarkerQueried()"

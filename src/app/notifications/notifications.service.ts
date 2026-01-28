@@ -1,16 +1,39 @@
 import { HttpClient } from '@angular/common/http';
-import { inject, Injectable } from '@angular/core';
+import { effect, inject, Injectable, signal } from '@angular/core';
 import { environment } from '../../environments/environment.development';
+import { AuthService } from '../auth/services/auth.service';
 import { NotificationResponse } from './interfaces/notification-response.interface';
 
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/notifications`;
+  private _authService = inject(AuthService);
+
+  loggedUserNotifications = signal<NotificationResponse[]>([]);
+
+  constructor() {
+    effect(() => {
+      const user = this._authService.user();
+      if (user) {
+        this.getUserNotifications(user.userId).subscribe((notifications) => {
+          this.loggedUserNotifications.set(notifications);
+        });
+      } else {
+        this.loggedUserNotifications.set([]);
+      }
+    });
+  }
 
   getUserNotifications(userId: string) {
     return this._http.get<NotificationResponse[]>(
-      `${this._baseUrl}/user/${userId}`
+      `${this._baseUrl}/user/${userId}`,
+    );
+  }
+
+  deleteNotification(notificationId: string) {
+    this.loggedUserNotifications.update((notifications) =>
+      notifications.filter((n) => n.notificationId !== notificationId),
     );
   }
 }

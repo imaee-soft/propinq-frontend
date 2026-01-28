@@ -96,12 +96,16 @@ export class PropertyDetailsPageComponent implements OnInit {
     }
     const property = this.propertyDetailsResource.value();
     if (property === null) return;
-    this._entityDialogService.openNewEntityDialog(NewContactDialogComponent, {
-      entity: 'contact',
-      panelClass: 'contact-dialog',
-      backdropClass: 'dialog-backdrop',
-      data: property,
-    });
+    this._entityDialogService
+      .openNewEntityDialog(NewContactDialogComponent, {
+        entity: 'contact',
+        panelClass: 'contact-dialog',
+        backdropClass: 'dialog-backdrop',
+        data: property,
+      })
+      .subscribe(() => {
+        window.location.reload();
+      });
   }
 
   goToContact() {
@@ -169,7 +173,7 @@ export class PropertyDetailsPageComponent implements OnInit {
 
   get images(): string[] {
     const resource = this.propertyDetailsResource;
-    if (resource.status() === ResourceStatus.Resolved && resource.value) {
+    if (resource.value) {
       return resource.value()?.imagesURL ?? [];
     }
     return [];

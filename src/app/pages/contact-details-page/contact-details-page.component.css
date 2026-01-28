@@ -8,7 +8,7 @@
 }
 
 .page-container {
-  max-width: 1200px;
+  max-width: 1350px;
   margin: 0 auto;
   align-items: start;
   overflow: hidden;
@@ -35,7 +35,9 @@
 .header-content {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 16px;
+  margin-right: 16px;
 }
 
 .detail-card {

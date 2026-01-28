@@ -7,4 +7,5 @@ export interface NotificationResponse {
   notifierFullName: string;
   notifierUserId: string;
   contactId: string;
+  url: string;
 }

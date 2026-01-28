@@ -114,9 +114,9 @@ export class FavoritePageComponent implements OnInit {
     const favorite = this.getFavorite(favoriteId);
     if (!favorite) return;
     if (favorite.type === 'building') {
-      this._router.navigate(['/building-details', favorite.entityId]);
+      this._router.navigate(['/buildings', favorite.entityId]);
     } else {
-      this._router.navigate(['/property-details', favorite.entityId]);
+      this._router.navigate(['/properties', favorite.entityId]);
     }
   };
 

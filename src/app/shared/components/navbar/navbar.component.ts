@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
@@ -13,7 +13,6 @@ import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { NewBuildingDialogComponent } from '../../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
 import { MenuNotificationComponent } from '../../../notifications/components/menu-notification/menu-notification.component';
-import { NotificationResponse } from '../../../notifications/interfaces/notification-response.interface';
 import { NotificationsService } from '../../../notifications/notifications.service';
 import { NewHouseDialogComponent } from '../../../properties/dialogs/new-house-dialog/new-house-dialog.component';
 import { EntityDialogService } from '../../services/entity-dialog.service';
@@ -38,7 +37,7 @@ import { NavbarService } from './../../services/navbar.service';
   templateUrl: './navbar.component.html',
   styleUrls: ['./navbar.component.css'],
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent {
   private _navbarService = inject(NavbarService);
   private _sidebarService = inject(SidebarService);
   private _entityDialogService = inject(EntityDialogService);
@@ -51,7 +50,9 @@ export class NavbarComponent implements OnInit {
   navbarDisabled = computed(() => this._navbarService.disabled());
   propertyDetailsOpened = signal(false);
   buildingDetailsOpened = signal(false);
-  notifications = signal<NotificationResponse[]>([]);
+  notifications = computed(() =>
+    this._notificationsService.loggedUserNotifications(),
+  );
   notificationNumber = computed(
     () => this.notifications().filter((n) => !n.seen).length,
   );
@@ -80,14 +81,6 @@ export class NavbarComponent implements OnInit {
   );
 
   isOwner = computed(() => this._navbarService.isOwner());
-
-  ngOnInit() {
-    if (this.userLogged) {
-      this._notificationsService.getUserNotifications(this.userId!).subscribe({
-        next: (notifications) => this.notifications.set(notifications),
-      });
-    }
-  }
 
   toggleSidebar() {
     this._sidebarService.toggle();

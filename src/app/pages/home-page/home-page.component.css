@@ -11,11 +11,12 @@
   z-index: 1000;
   font-size: 14px;
 }
+
 .filters-floating-panel {
   position: fixed;
   top: calc(50px + (100vh - 50px - 30px) / 2);
   transform: translateY(-50%);
-  left: 20px;
+  left: 110px;
   width: 420px;
   background: transparent;
   border: none;
@@ -35,10 +36,11 @@
 }
 
 .home-page-container {
-  height: 100vh;
-  width: 100vw;
+  height: calc(100vh - 90px);
+  width: calc(100vw - 95px);
   overflow: hidden;
-  background: transparent !important;
+  background-color: #232a3b;
+  margin-left: 16px;
 }
 
 mat-drawer-content {
@@ -56,10 +58,17 @@ mat-drawer-content {
   overflow: hidden;
 }
 
-app-map {
+.map-wrapper {
+  position: relative;
+  border-radius: 16px;
+  margin: 4px;
+  overflow: hidden;
   flex: 2 1 0;
   min-width: 400px;
   height: 100%;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    0 8px 24px rgba(0, 0, 0, 0.35);
 }
 
 .details-panel {
@@ -176,8 +185,6 @@ mat-card-content {
   display: flex;
   flex-direction: column;
 }
-
-
 
 .close-button {
   position: absolute;

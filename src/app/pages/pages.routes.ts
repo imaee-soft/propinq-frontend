@@ -72,13 +72,6 @@ export const routes: Routes = [
       ),
   },
   {
-    path: 'localities',
-    loadComponent: () =>
-      import('../localities/components/locality.component').then(
-        (m) => m.LocalityComponent,
-      ),
-  },
-  {
     path: 'dashboard',
     loadComponent: () =>
       import('./dashboard/dashboard-router.component').then(

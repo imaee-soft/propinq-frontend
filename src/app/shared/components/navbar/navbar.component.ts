@@ -3,6 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
@@ -32,6 +33,7 @@ import { NavbarService } from './../../services/navbar.service';
     MatMenuModule,
     MatBadgeModule,
     MenuNotificationComponent,
+    MatDividerModule,
   ],
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -53,9 +55,7 @@ export class NavbarComponent {
   notifications = computed(() =>
     this._notificationsService.loggedUserNotifications(),
   );
-  notificationNumber = computed(
-    () => this.notifications().filter((n) => !n.seen).length,
-  );
+  notificationNumber = computed(() => this.notifications().length);
 
   isHomePage = computed(() => {
     const route = this.currentRoute();

@@ -1,7 +1,8 @@
-import { Component, signal } from "@angular/core";
+import { Component, signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
-  imports: [],
+  imports: [MatButtonModule],
   templateUrl: './help-page.component.html',
   styleUrl: './help-page.component.css',
 })
@@ -10,11 +11,13 @@ export class HelpPageComponent {
 
   openIndexes = signal<number[]>([]);
 
+  goBack() {
+    window.history.back();
+  }
+
   toggleAccordion(idx: number) {
-    this.openIndexes.update(opened =>
-      opened.includes(idx)
-        ? opened.filter(i => i !== idx)
-        : [...opened, idx]
+    this.openIndexes.update((opened) =>
+      opened.includes(idx) ? opened.filter((i) => i !== idx) : [...opened, idx],
     );
   }
 
@@ -22,4 +25,3 @@ export class HelpPageComponent {
     return this.openIndexes().includes(idx);
   }
 }
-

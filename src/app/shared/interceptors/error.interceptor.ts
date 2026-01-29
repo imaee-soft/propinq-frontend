@@ -15,16 +15,18 @@ export class ErrorInterceptor implements HttpInterceptor {
 
   intercept(
     req: HttpRequest<any>,
-    next: HttpHandler
+    next: HttpHandler,
   ): Observable<HttpEvent<any>> {
     return next.handle(req).pipe(
       catchError((error: HttpErrorResponse) => {
         const errorMessage =
           error.error?.message ||
           'Ocurrió un error inesperado. Contacte a un administrador.';
-        this._injector.get(NotificationService).error(errorMessage, 3000);
+        if (error.status !== 401 && error.status !== 403) {
+          this._injector.get(NotificationService).error(errorMessage, 3000);
+        }
         return throwError(() => new Error(errorMessage));
-      })
+      }),
     );
   }
 }

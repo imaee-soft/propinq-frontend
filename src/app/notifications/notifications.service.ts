@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { effect, inject, Injectable, signal } from '@angular/core';
+import { tap } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { AuthService } from '../auth/services/auth.service';
 import { NotificationResponse } from './interfaces/notification-response.interface';
@@ -16,9 +17,7 @@ export class NotificationsService {
     effect(() => {
       const user = this._authService.user();
       if (user) {
-        this.getUserNotifications(user.userId).subscribe((notifications) => {
-          this.loggedUserNotifications.set(notifications);
-        });
+        this.getUserNotifications(user.userId).subscribe();
       } else {
         this.loggedUserNotifications.set([]);
       }
@@ -26,9 +25,25 @@ export class NotificationsService {
   }
 
   getUserNotifications(userId: string) {
-    return this._http.get<NotificationResponse[]>(
-      `${this._baseUrl}/user/${userId}`,
-    );
+    return this._http
+      .get<NotificationResponse[]>(`${this._baseUrl}/user/${userId}`)
+      .pipe(
+        tap((notifications) => {
+          this.loggedUserNotifications.set(notifications);
+        }),
+      );
+  }
+
+  markAsSeen(notificationId: string) {
+    return this._http
+      .patch<NotificationResponse>(`${this._baseUrl}/${notificationId}`, {})
+      .pipe(
+        tap(() => {
+          this.loggedUserNotifications.update((notifications) =>
+            notifications.filter((n) => n.notificationId !== notificationId),
+          );
+        }),
+      );
   }
 
   deleteNotification(notificationId: string) {

@@ -40,7 +40,14 @@ export class MenuNotificationComponent {
 
   openNotification() {
     const notification = this.notification();
+    this.markAsSeen(notification);
     this._router.navigateByUrl(notification.url ?? '/');
+  }
+
+  markAsSeen(notification: NotificationResponse) {
+    this._notificationsService
+      .markAsSeen(notification.notificationId)
+      .subscribe();
   }
 
   deleteNotification() {

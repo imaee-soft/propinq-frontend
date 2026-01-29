@@ -76,6 +76,19 @@
             }
           </div>
         }
+        @if (notifications().length == 0) {
+          <div class="no-notifications">
+            <mat-icon>notifications_none</mat-icon>
+            <span class="no-notifications-text">
+              No tenés notificaciones nuevas
+            </span>
+          </div>
+        }
+        <div class="see-all-notifications">
+          <a routerLink="/notifications" class="see-all-notifications-link"
+            >Ver todas las notificaciones</a
+          >
+        </div>
       </mat-menu>
       <button
         mat-icon-button

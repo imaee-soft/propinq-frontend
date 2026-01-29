@@ -24,14 +24,6 @@
             <mat-icon>{{ item.icon }}</mat-icon>
           </mat-list-item>
         }
-        <mat-list-item
-          class="side-item"
-          matTooltip="Cerrar sesión"
-          matTooltipPosition="right"
-          (click)="logout()"
-        >
-          <mat-icon>logout</mat-icon>
-        </mat-list-item>
       }
       <mat-list-item
         class="side-item"
@@ -41,6 +33,16 @@
       >
         <mat-icon>help</mat-icon>
       </mat-list-item>
+      @if (userLogged()) {
+        <mat-list-item
+          class="side-item"
+          matTooltip="Cerrar sesión"
+          matTooltipPosition="right"
+          (click)="logout()"
+        >
+          <mat-icon>logout</mat-icon>
+        </mat-list-item>
+      }
     </mat-nav-list>
   </mat-sidenav>
 </mat-sidenav-container>

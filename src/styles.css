@@ -129,3 +129,8 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   border-radius: 12px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
 }
+
+.mat-mdc-paginator-page-size,
+.mat-mdc-paginator-range-label {
+  display: none !important;
+}

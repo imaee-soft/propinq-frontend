@@ -67,11 +67,7 @@ export class OwnerContactsPageComponent implements OnInit {
   primaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
-    this._router.navigate(['/properties', contact.propertyId]);
-  };
-
-  thirdActionLabel = (contactId: string | number | undefined): string => {
-    return 'Responder';
+    this._router.navigate(['/contact-details', contact.contactId]);
   };
 
   canExecuteSecondaryAction = (contact: ContactDetails): boolean => {
@@ -81,11 +77,15 @@ export class OwnerContactsPageComponent implements OnInit {
   secondaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
-    this._router.navigate(['/contact-details', contact.contactId]);
+    this._router.navigate(['/properties', contact.propertyId]);
   };
 
   canExecuteThirdAction = (contact: ContactDetails): boolean => {
     return contact.status === 'CREATED';
+  };
+
+  thirdActionLabel = (contactId: string | number | undefined): string => {
+    return 'Responder';
   };
 
   thirdAction = (contactId: string | number | undefined) => {

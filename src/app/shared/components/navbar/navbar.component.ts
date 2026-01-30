@@ -126,6 +126,18 @@ export class NavbarComponent {
     return this._navbarService.userLogged();
   }
 
+  get userRole() {
+    const role = this._navbarService.user()?.role.toString();
+    if (!role) return '';
+    return role === 'ADMIN'
+      ? 'Administrador'
+      : role === 'OWNER'
+        ? 'Propietario'
+        : 'Usuario';
+
+    return this._navbarService.user()?.role.toString() || '';
+  }
+
   get username() {
     return this._navbarService.username();
   }

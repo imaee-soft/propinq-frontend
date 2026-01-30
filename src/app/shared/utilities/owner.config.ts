@@ -13,6 +13,11 @@ export const OWNER_SIDEBAR_CONFIG = {
   enabled: true,
   items: [
     {
+      label: 'Mis notificaciones',
+      icon: 'notifications',
+      route: '/notifications',
+    },
+    {
       label: 'Mis alquileres',
       icon: 'apartment',
       route: '/my-rentals',
@@ -29,7 +34,7 @@ export const OWNER_SIDEBAR_CONFIG = {
     },
     {
       label: 'Mis viviendas',
-      icon: 'home',
+      icon: 'house',
       route: '/properties',
     },
     {

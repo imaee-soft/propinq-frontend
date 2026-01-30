@@ -8,4 +8,5 @@ export interface NotificationResponse {
   notifierUserId: string;
   contactId: string;
   url: string;
+  createdAt: Date;
 }

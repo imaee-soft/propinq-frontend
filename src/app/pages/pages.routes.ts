@@ -1,4 +1,7 @@
 import { Routes } from '@angular/router';
+import { OwnerGuard } from '../shared/guards/owner.guard';
+import { TenantGuard } from '../shared/guards/tenant.guard';
+import { UserGuard } from '../shared/guards/user.guard';
 
 export const routes: Routes = [
   {
@@ -7,6 +10,7 @@ export const routes: Routes = [
       import('./favorite-page/favorite-page.component').then(
         (m) => m.FavoritePageComponent,
       ),
+    canActivate: [TenantGuard],
   },
   {
     path: '',
@@ -49,6 +53,7 @@ export const routes: Routes = [
       import('./building-page/building-page.component').then(
         (m) => m.BuildingPageComponent,
       ),
+    canActivate: [OwnerGuard],
   },
   {
     path: 'buildings/:buildingId',
@@ -63,6 +68,7 @@ export const routes: Routes = [
       import('./property-page/property-page.component').then(
         (m) => m.PropertyPageComponent,
       ),
+    canActivate: [OwnerGuard],
   },
   {
     path: 'properties/:propertyId',
@@ -77,6 +83,7 @@ export const routes: Routes = [
       import('./dashboard/dashboard-router.component').then(
         (m) => m.DashboardRouterComponent,
       ),
+    canActivate: [OwnerGuard],
   },
   {
     path: 'tenant-contacts',
@@ -84,6 +91,7 @@ export const routes: Routes = [
       import('./tenant-contacts-page/tenant-contacts-page.component').then(
         (m) => m.TenantContactsPageComponent,
       ),
+    canActivate: [TenantGuard],
   },
   {
     path: 'owner-contacts',
@@ -91,6 +99,7 @@ export const routes: Routes = [
       import('./owner-contacts-page/owner-contacts-page.component').then(
         (m) => m.OwnerContactsPageComponent,
       ),
+    canActivate: [OwnerGuard],
   },
   {
     path: 'reports',
@@ -98,6 +107,7 @@ export const routes: Routes = [
       import('./reports-page/reports-page.component').then(
         (m) => m.ReportsPageComponent,
       ),
+    canActivate: [OwnerGuard],
   },
   {
     path: 'contact-details/:contactId',
@@ -105,6 +115,7 @@ export const routes: Routes = [
       import('./contact-details-page/contact-details-page.component').then(
         (m) => m.ContactDetailsPageComponent,
       ),
+    canActivate: [UserGuard],
   },
   {
     path: 'help',
@@ -112,6 +123,14 @@ export const routes: Routes = [
       import('./help-page/help-page.component').then(
         (m) => m.HelpPageComponent,
       ),
+  },
+  {
+    path: 'notifications',
+    loadComponent: () =>
+      import('./notifications-page/notifications-page.component').then(
+        (m) => m.NotificationsPageComponent,
+      ),
+    canActivate: [UserGuard],
   },
   {
     path: '**',

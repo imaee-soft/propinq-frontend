@@ -3,6 +3,7 @@ import { effect, inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { AuthService } from '../auth/services/auth.service';
+import { LargePage } from '../shared/interfaces/page.interface';
 import { NotificationResponse } from './interfaces/notification-response.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -17,14 +18,23 @@ export class NotificationsService {
     effect(() => {
       const user = this._authService.user();
       if (user) {
-        this.getUserNotifications(user.userId).subscribe();
+        this.getUserUnseenNotifications(user.userId).subscribe();
       } else {
         this.loggedUserNotifications.set([]);
       }
     });
   }
 
-  getUserNotifications(userId: string) {
+  getUserNotifications(userId: string, page: number, size: number = 6) {
+    return this._http.get<LargePage<NotificationResponse>>(
+      `${this._baseUrl}/user-all/${userId}`,
+      {
+        params: { page, size },
+      },
+    );
+  }
+
+  getUserUnseenNotifications(userId: string) {
     return this._http
       .get<NotificationResponse[]>(`${this._baseUrl}/user/${userId}`)
       .pipe(
@@ -36,7 +46,7 @@ export class NotificationsService {
 
   markAsSeen(notificationId: string) {
     return this._http
-      .patch<NotificationResponse>(`${this._baseUrl}/${notificationId}`, {})
+      .patch<NotificationResponse>(`${this._baseUrl}/see/${notificationId}`, {})
       .pipe(
         tap(() => {
           this.loggedUserNotifications.update((notifications) =>
@@ -44,6 +54,13 @@ export class NotificationsService {
           );
         }),
       );
+  }
+
+  markAsUnseen(notificationId: string) {
+    return this._http.patch<NotificationResponse>(
+      `${this._baseUrl}/unsee/${notificationId}`,
+      {},
+    );
   }
 
   deleteNotification(notificationId: string) {

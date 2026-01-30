@@ -63,13 +63,13 @@ export class TenantContactsPageComponent implements OnInit {
   primaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
-    this.navigateToProperty(contact);
+    this._router.navigate(['/contact-details', contact.contactId]);
   };
 
   secondaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
-    this._router.navigate(['/contact-details', contact.contactId]);
+    this.navigateToProperty(contact);
   };
 
   thirdActionLabel = (contactId: string | number | undefined): string => {

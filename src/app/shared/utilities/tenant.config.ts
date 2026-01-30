@@ -17,6 +17,11 @@ export const TENANT_SIDEBAR_CONFIG = {
   enabled: true,
   items: [
     {
+      label: 'Mis notificaciones',
+      icon: 'notifications',
+      route: '/notifications',
+    },
+    {
       label: 'Mi alquiler',
       icon: 'apartment',
       route: '/my-rentals',

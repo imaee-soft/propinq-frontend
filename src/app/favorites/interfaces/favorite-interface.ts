@@ -23,6 +23,7 @@ export interface FavoriteEntity {
   date: Date;
   latitude?: number;
   longitude?: number;
+  favoriteDate: Date;
 }
 
 export interface FavoriteEntityPage {

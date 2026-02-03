@@ -69,7 +69,7 @@
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.75rem;
   color: var(--muted-contrast);
   flex-wrap: wrap;
 }
@@ -111,7 +111,7 @@
   display: grid;
   grid-template-columns: repeat(3, minmax(150px, 1fr));
   gap: 1.5rem;
-  margin-bottom: 2rem;
+  margin-top: 1.5rem;
   padding: 1.5rem;
   background: rgba(255, 255, 255, 0.02);
   border-radius: 12px;
@@ -218,6 +218,7 @@ s.section-title {
 .price-details {
   color: var(--muted-contrast);
   font-size: 0.875rem;
+  text-align: center;
 }
 
 .contact-section {

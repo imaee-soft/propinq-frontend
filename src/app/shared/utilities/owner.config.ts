@@ -19,7 +19,7 @@ export const OWNER_SIDEBAR_CONFIG = {
     },
     {
       label: 'Mis alquileres',
-      icon: 'apartment',
+      icon: 'handshake',
       route: '/my-rentals',
     },
     {

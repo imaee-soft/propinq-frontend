@@ -55,7 +55,7 @@ export class FavoritePageComponent implements OnInit {
   descriptor: CardDescriptor<FavoriteEntity> = {
     user: (p) => p.ownerName,
     name: (p) => p.title,
-    date: (p) => new Date(p.date),
+    date: (p) => p.favoriteDate,
     id: (p) => p.favoriteId,
     status: (p) => p.type,
     coordinates: (p) =>

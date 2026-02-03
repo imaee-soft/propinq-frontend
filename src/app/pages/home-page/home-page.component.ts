@@ -25,8 +25,9 @@ import { Role } from '../../auth/enums/role.enum';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { BuildingComponent } from '../../buildings/components/building/building.component';
 import { BuildingDetails } from '../../buildings/interfaces/building-details.interface';
+import { ComparisionService } from '../../comparision/comparision.service';
+import { ComparisionPreviewComponent } from '../../comparision/components/comparision-preview/comparision-preview.component';
 import { FavoriteResponse } from '../../favorites/interfaces/favorite-interface';
-import { FavoriteService } from '../../favorites/services/favorite-service';
 import { MapComponent } from '../../maps/components/map/map.component';
 import { MapClickEvent } from '../../maps/interfaces/click-event.interface';
 import { MapConfig } from '../../maps/interfaces/map-config.interface';
@@ -35,7 +36,6 @@ import { MapMarker } from '../../maps/interfaces/map-marker.interface';
 import { UserLocationService } from '../../maps/services/user-location.service';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { PropertyComponent } from '../../properties/components/property.component';
-import { ComparePropertiesDialogComponent } from '../../properties/dialogs/compare-properties-dialog/compare-properties-dialog.component';
 import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
 import { PropertiesService } from '../../properties/properties.service';
 import { FiltersComponent } from '../../shared/components/filters/filters.component';
@@ -44,7 +44,6 @@ import { HomePropertyCardComponent } from '../../shared/components/home-property
 import { EntityDialogService } from '../../shared/services/entity-dialog.service';
 import { FiltersService } from '../../shared/services/filters.service';
 import { SidebarService } from '../../shared/services/sidebar.service';
-import { CustomSnackbarService } from '../../shared/services/snackbar.service';
 import { AuthService } from './../../auth/services/auth.service';
 
 @Component({
@@ -70,18 +69,16 @@ import { AuthService } from './../../auth/services/auth.service';
   styleUrl: './home-page.component.css',
 })
 export class HomePageComponent {
-  private _dialog = inject(MatDialog);
   private _authService = inject(AuthService);
-  private _snackbarService = inject(CustomSnackbarService);
-  private _entityDialogService = inject(EntityDialogService);
   private _propertiesService = inject(PropertiesService);
+  private _route = inject(ActivatedRoute);
   private _buildingsService = inject(BuildingsService);
   private _filtersService = inject(FiltersService);
   private _sidebarService = inject(SidebarService);
   private _userLocationService = inject(UserLocationService);
-
-  private route = inject(ActivatedRoute);
-  private favoriteService = inject(FavoriteService);
+  private _comparisionService = inject(ComparisionService);
+  private _matDialog = inject(MatDialog);
+  private _entityDialogService = inject(EntityDialogService);
 
   private openBuildingDetailsFromFavorite(buildingId: string) {
     // Busca el marcador correspondiente y abre el panel
@@ -141,10 +138,12 @@ export class HomePageComponent {
   );
 
   comparativeList = signal<PropertyDetails[]>([]);
+  comparativeDrawerOpen = signal(false);
+  comparedProperties = computed(() => this._comparisionService.properties());
 
   constructor() {
     // Abre detalle de building desde query param ?building=ID
-    this.route.queryParams.subscribe((params) => {
+    this._route.queryParams.subscribe((params) => {
       const buildingId = params['building'];
       if (buildingId) {
         this.openBuildingDetailsFromFavorite(buildingId);
@@ -300,70 +299,38 @@ export class HomePageComponent {
   }
 
   addToComparativeList(property: PropertyDetails) {
-    if (!property) return;
-    if (
-      this.comparativeList().find((p) => p.propertyId === property.propertyId)
-    ) {
-      this._snackbarService.error(
-        'La Vivienda ya está agregada a la Comparación',
-        1500,
-      );
-      return;
-    }
-    this.comparativeList.set([...this.comparativeList(), property]);
-    this._snackbarService.success('Vivienda Agregada a la Comparación', 1500);
+    this._comparisionService.addToComparativeList(property);
   }
 
-  public comparativeDrawerOpen = signal(false);
-
-  openComparativeDrawer() {
-    this.buildingMarkerQueried.set(null);
-    this.propertyMarkerQueried.set(null);
+  openComparisionPreview() {
     this.comparativeDrawerOpen.set(true);
+    this._entityDialogService
+      .openComparisionDialog(ComparisionPreviewComponent, {
+        panelClass: 'comparision-preview-dialog',
+        entity: 'comparision-preview',
+        action: 'preview',
+        backdropClass: 'dialog-backdrop',
+      })
+      .subscribe((changed: boolean) => {
+        if (changed === true) {
+          this._comparisionService.openComparisonDialog();
+        } else {
+          this.closeComparativeDrawer();
+        }
+      });
   }
 
   closeComparativeDrawer() {
     this.comparativeDrawerOpen.set(false);
   }
 
-  removeFromComparative(index: number) {
-    const arr = [...this.comparativeList()];
-    arr.splice(index, 1);
-    this.comparativeList.set(arr);
-  }
-
-  clearComparativeList() {
-    this.comparativeList.set([]);
-  }
-
   openComparisonDialog() {
-    if (this.comparativeList().length < 2) return;
-    this.closeComparativeDrawer();
-    const attrs = localStorage.getItem('compareAttributes');
-    const userCompareAttributes = attrs
-      ? JSON.parse(attrs)
-      : [
-          { label: 'Precio', key: 'price', enabled: true, priority: 1 },
-          { label: 'Superficie (m²)', key: 'area', enabled: true, priority: 2 },
-          { label: 'Ambientes', key: 'bedrooms', enabled: true, priority: 3 },
-          { label: 'Baños', key: 'bathrooms', enabled: false, priority: 4 },
-          {
-            label: 'Mascotas',
-            key: 'petsAllowed',
-            enabled: false,
-            priority: 5,
-          },
-        ];
-    this._dialog.open(ComparePropertiesDialogComponent, {
-      data: {
-        properties: this.comparativeList(),
-        compareAttributes: userCompareAttributes,
-      },
-      width: '90vw',
-      maxWidth: '99vw',
-      panelClass: 'compare-dialog-panel',
-    });
-    this.comparativeList.set([]);
+    this._comparisionService
+      .openComparisonDialog()
+      ?.afterClosed()
+      .subscribe(() => {
+        this.closeComparativeDrawer();
+      });
   }
 
   toggleFilters(): void {

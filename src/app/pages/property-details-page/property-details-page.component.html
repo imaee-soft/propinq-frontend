@@ -40,16 +40,6 @@
             <span class="price-label">Precio de alquiler mensual</span>
           </div>
         </div>
-
-        <div class="contact-section">
-          <div class="contact-info">
-            <div class="seller-badge">
-              <mat-icon class="verified-icon">verified</mat-icon>
-              <span>Propietario verificado</span>
-            </div>
-          </div>
-        </div>
-
         <div class="actions-section">
           @if (!isOwnerRetrieving()) {
             @if (!propertyDetailsResource.value()!.contactId) {
@@ -96,9 +86,13 @@
               Editar
             </button>
           }
-          <button mat-stroked-button class="secondary-action">
-            <mat-icon>share</mat-icon>
-            Compartir
+          <button
+            mat-stroked-button
+            class="secondary-action"
+            (click)="compare()"
+          >
+            <mat-icon>balance</mat-icon>
+            Comparar
           </button>
         </div>
       </div>
@@ -123,6 +117,22 @@
           }
         </div>
       </div>
+
+      @if (propertyDetailsResource.value()!.buildingId) {
+        <div class="property-location">
+          <mat-icon class="location-icon">domain</mat-icon>
+          <span class="address">{{
+            propertyDetailsResource.value()!.buildingName
+          }}</span>
+          <button
+            mat-icon-button
+            [matTooltip]="'Ver inmueble'"
+            (click)="goToBuilding()"
+          >
+            <mat-icon>open_in_new</mat-icon>
+          </button>
+        </div>
+      }
 
       <div class="property-location">
         <mat-icon class="location-icon">place</mat-icon>

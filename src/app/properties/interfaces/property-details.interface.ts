@@ -21,4 +21,5 @@ export interface PropertyDetails {
   favoriteId: string | null;
   contactId: string;
   createdAt: Date;
+  buildingName: string;
 }

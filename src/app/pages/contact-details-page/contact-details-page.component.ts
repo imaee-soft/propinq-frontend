@@ -5,7 +5,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatIconModule } from '@angular/material/icon';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { map, shareReplay } from 'rxjs';
 import { ContactsService } from '../../contacts/contacts.service';
 import { STATUS_MAP, StatusConfig } from '../../contacts/contacts.utils';
@@ -31,6 +31,7 @@ import { formatDate } from '../../shared/utilities/date.pipes';
 })
 export class ContactDetailsPageComponent {
   private _route = inject(ActivatedRoute);
+  private _router = inject(Router);
   private _contactService = inject(ContactsService);
   private _entityDialogService = inject(EntityDialogService);
   private _queryParamsService = inject(QueryParamsService);
@@ -76,6 +77,16 @@ export class ContactDetailsPageComponent {
 
   goBack() {
     window.history.back();
+  }
+
+  goToProperty() {
+    this.contactDetails$.subscribe((contact) => {
+      const url = this._router.createUrlTree([
+        '/properties',
+        contact.propertyId,
+      ]);
+      window.open(url.toString(), '_blank');
+    });
   }
 
   formatDateWrapper(date: Date | undefined): string {

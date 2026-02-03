@@ -13,9 +13,11 @@ import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { ActivatedRoute, Router } from '@angular/router';
 import { map, of, tap } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
+import { ComparisionService } from '../../comparision/comparision.service';
 import { NewContactDialogComponent } from '../../contacts/dialogs/new-contact-dialog/new-contact-dialog.component';
 import { FavoriteService } from '../../favorites/services/favorite-service';
 import { EditPropertyDialogComponent } from '../../properties/dialogs/edit-property-dialog/edit-property-dialog.component';
@@ -32,6 +34,7 @@ import { EntityDialogService } from '../../shared/services/entity-dialog.service
     MatIconModule,
     MatButtonModule,
     MatChipsModule,
+    MatTooltipModule,
     ImageSectionComponent,
   ],
   templateUrl: './property-details-page.component.html',
@@ -45,6 +48,7 @@ export class PropertyDetailsPageComponent implements OnInit {
   private _router = inject(Router);
   private _authService = inject(AuthService);
   private _entityDialogService = inject(EntityDialogService);
+  private _comparisionService = inject(ComparisionService);
 
   propertyId = toSignal(
     this._route.paramMap.pipe(map((params) => params.get('propertyId'))),
@@ -87,6 +91,14 @@ export class PropertyDetailsPageComponent implements OnInit {
 
   goBack() {
     window.history.back();
+  }
+
+  goToBuilding() {
+    const buildingId = this.propertyDetailsResource.value()?.buildingId;
+    if (buildingId) {
+      const url = this._router.createUrlTree(['/buildings', buildingId]);
+      window.open(url.toString(), '_blank');
+    }
   }
 
   contactOwner() {
@@ -165,6 +177,12 @@ export class PropertyDetailsPageComponent implements OnInit {
           this.propertyDetailsResource.reload();
         }
       });
+  }
+
+  compare() {
+    this._comparisionService.addToComparativeList(
+      this.propertyDetailsResource.value()!,
+    );
   }
 
   ngOnDestroy() {

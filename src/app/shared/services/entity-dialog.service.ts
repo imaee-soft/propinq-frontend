@@ -51,4 +51,18 @@ export class EntityDialogService {
       }),
     );
   }
+
+  openComparisionDialog<T>(
+    component: ComponentType<T>,
+    config: DialogConfig & { action: string },
+  ) {
+    const { entity, action, ...rest } = config;
+    this.queryParamsService.pushQueryParams({ entity, action });
+    const dialogRef = this.dialog.open(component, rest);
+    return dialogRef.afterClosed().pipe(
+      finalize(() => {
+        this.queryParamsService.removeQueryParams(['entity', 'action']);
+      }),
+    );
+  }
 }

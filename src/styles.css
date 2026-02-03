@@ -79,8 +79,22 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   border-radius: 6px;
   max-width: 40vw !important;
   width: 40vw !important;
-
   background: #1a1e2b;
+}
+
+.comparision-preview-dialog {
+  padding: 10px;
+  border-radius: 6px;
+  max-width: 80vw !important;
+  width: 80vw !important;
+  height: 65vh !important;
+  max-height: 65vh !important;
+  background: #1a1e2b;
+}
+
+.comparision-preview-dialog .mat-mdc-dialog-surface {
+  background: transparent;
+  box-shadow: none;
 }
 
 @keyframes slideUp {

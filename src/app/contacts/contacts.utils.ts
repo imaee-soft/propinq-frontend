@@ -25,7 +25,7 @@ export const STATUS_MAP: { [key: string]: StatusConfig } = {
     border: '1px solid rgba(239, 68, 68, 0.4)',
   },
   ACCEPTED: {
-    label: 'Aprobada',
+    label: 'En negociación',
     color: '#6ee7b7',
     background: 'rgba(16, 185, 129, 0.15)',
     border: '1px solid rgba(16, 185, 129, 0.4)',

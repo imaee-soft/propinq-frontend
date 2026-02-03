@@ -62,58 +62,7 @@
     </mat-drawer>
   }
 </mat-drawer-container>
-@if (comparativeDrawerOpen()) {
-  <div class="comparative-drawer">
-    <div class="comparative-header">
-      <span>Propiedades a comparar</span>
-      <button mat-icon-button (click)="closeComparativeDrawer()">
-        <mat-icon>close</mat-icon>
-      </button>
-    </div>
-    <div class="comparative-list">
-      @if (comparativeList().length > 0) {
-        @for (property of comparativeList(); let i = $index; track i) {
-          <div class="comparative-item">
-            <img
-              [src]="
-                property.imagesURL[0] ||
-                'https://placehold.co/100x80?text=Propiedad'
-              "
-            />
-            <span>{{ property.title || "Propiedad" }}</span>
-            <button
-              mat-icon-button
-              color="warn"
-              (click)="removeFromComparative(i)"
-            >
-              <mat-icon>close</mat-icon>
-            </button>
-          </div>
-        }
-      } @else {
-        <div class="comparative-empty">No hay propiedades para comparar</div>
-      }
-    </div>
-    <div class="comparative-actions">
-      <button
-        mat-stroked-button
-        color="accent"
-        [disabled]="comparativeList().length < 2"
-        (click)="openComparisonDialog()"
-      >
-        Comparar
-      </button>
-      <button
-        mat-stroked-button
-        color="warn"
-        (click)="clearComparativeList()"
-        [disabled]="comparativeList().length === 0"
-      >
-        Limpiar
-      </button>
-    </div>
-  </div>
-} @else {
+@if (!comparativeDrawerOpen()) {
   @if (buildingDetails() == null && propertyDetails() == null) {
     <div class="fab-container">
       <button
@@ -133,7 +82,7 @@
         color="primary"
         class="comparative-fab fade-in-up"
         aria-label="Comparar propiedades"
-        (click)="openComparativeDrawer()"
+        (click)="openComparisionPreview()"
         matTooltip="Comparar propiedades"
         matTooltipPosition="below"
       >

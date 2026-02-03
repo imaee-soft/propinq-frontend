@@ -19,9 +19,13 @@ export class ContactsService {
     });
   }
 
-  getOwnerContactsDetails(page = 0, size = 6): Observable<ContactDetailsPage> {
+  getOwnerContactsDetails(
+    page = 0,
+    size = 6,
+    status = 'all',
+  ): Observable<ContactDetailsPage> {
     return this._http.get<ContactDetailsPage>(`${this._baseUrl}/owner`, {
-      params: { page, size },
+      params: { page, size, status },
     });
   }
 
@@ -45,7 +49,7 @@ export class ContactsService {
 
   getContactDetails(contactId: string) {
     return this._http.get<ContactDetails>(
-      `${this._baseUrl}/${contactId}/details`
+      `${this._baseUrl}/${contactId}/details`,
     );
   }
 }

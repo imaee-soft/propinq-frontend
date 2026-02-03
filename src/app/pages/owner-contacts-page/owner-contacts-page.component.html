@@ -14,6 +14,9 @@
   [hasMoreEntities]="canQuery()"
   [loadMoreLabel]="'Recuperar más solicitudes de contacto'"
   [loadMoreEntities]="loadMore.bind(this)"
+  [chipFilters]="chipFilters"
+  [currentFilter]="currentFilter()"
+  (changeFilter)="changeContactState($event)"
   [zeroEntitiesLabel]="'Aún no tienes solicitudes de contacto registradas.'"
 >
 </common-entity-page>

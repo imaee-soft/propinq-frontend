@@ -86,14 +86,21 @@
               Editar
             </button>
           }
-          <button
-            mat-stroked-button
-            class="secondary-action"
-            (click)="compare()"
-          >
-            <mat-icon>balance</mat-icon>
-            Comparar
-          </button>
+          @if (!isBeingCompared()) {
+            <button
+              mat-stroked-button
+              class="secondary-action"
+              (click)="compare()"
+            >
+              <mat-icon>balance</mat-icon>
+              Comparar
+            </button>
+          } @else {
+            <button mat-stroked-button class="secondary-action is-favorite">
+              <mat-icon>balance</mat-icon>
+              Comparando
+            </button>
+          }
         </div>
       </div>
     </div>

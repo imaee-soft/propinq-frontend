@@ -36,6 +36,7 @@ import { MapMarker } from '../../maps/interfaces/map-marker.interface';
 import { UserLocationService } from '../../maps/services/user-location.service';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { PropertyComponent } from '../../properties/components/property.component';
+import { ComparePropertiesDialogComponent } from '../../properties/dialogs/compare-properties-dialog/compare-properties-dialog.component';
 import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
 import { PropertiesService } from '../../properties/properties.service';
 import { FiltersComponent } from '../../shared/components/filters/filters.component';
@@ -45,6 +46,19 @@ import { EntityDialogService } from '../../shared/services/entity-dialog.service
 import { FiltersService } from '../../shared/services/filters.service';
 import { SidebarService } from '../../shared/services/sidebar.service';
 import { AuthService } from './../../auth/services/auth.service';
+
+const comparativeItems = [
+  { label: 'Precio', key: 'price', enabled: true, priority: 1 },
+  { label: 'Superficie (m²)', key: 'area', enabled: true, priority: 2 },
+  { label: 'Ambientes', key: 'bedrooms', enabled: true, priority: 3 },
+  { label: 'Baños', key: 'bathrooms', enabled: false, priority: 4 },
+  {
+    label: 'Mascotas',
+    key: 'petsAllowed',
+    enabled: false,
+    priority: 5,
+  },
+];
 
 @Component({
   imports: [
@@ -313,7 +327,7 @@ export class HomePageComponent {
       })
       .subscribe((changed: boolean) => {
         if (changed === true) {
-          this._comparisionService.openComparisonDialog();
+          this.openComparisonDialog();
         } else {
           this.closeComparativeDrawer();
         }
@@ -325,9 +339,21 @@ export class HomePageComponent {
   }
 
   openComparisonDialog() {
-    this._comparisionService
-      .openComparisonDialog()
-      ?.afterClosed()
+    if (this.comparedProperties().length < 2) return;
+    const attrs = localStorage.getItem('compareAttributes');
+    const userCompareAttributes = attrs ? JSON.parse(attrs) : comparativeItems;
+    this._matDialog
+      .open(ComparePropertiesDialogComponent, {
+        data: {
+          properties: this.comparedProperties(),
+          compareAttributes: userCompareAttributes,
+        },
+        width: '90vw',
+        maxWidth: '99vw',
+        panelClass: 'compare-dialog-panel',
+        backdropClass: 'dialog-backdrop',
+      })
+      .afterClosed()
       .subscribe(() => {
         this.closeComparativeDrawer();
       });

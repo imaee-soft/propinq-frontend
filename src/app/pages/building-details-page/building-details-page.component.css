@@ -258,7 +258,7 @@
 .properties-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 4px;
+  gap: 8px;
   justify-content: center;
 }
 

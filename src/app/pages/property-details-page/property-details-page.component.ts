@@ -2,10 +2,12 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   computed,
+  effect,
   inject,
   OnInit,
   Renderer2,
   ResourceStatus,
+  signal,
 } from '@angular/core';
 import { rxResource, toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
@@ -84,10 +86,23 @@ export class PropertyDetailsPageComponent implements OnInit {
     if (property === null || user === null) return false;
     return property.ownerId === user.userId;
   });
+  isBeingCompared = signal<boolean>(false);
+
+  constructor() {
+    effect(() => {
+      const property = this.propertyDetailsResource.value();
+      if (!property) return;
+      this.isBeingCompared.set(
+        this._comparisionService.isBeingCompared(property.propertyId),
+      );
+    });
+  }
 
   ngOnInit() {
     this._renderer.setStyle(document.body, 'overflow', 'auto');
   }
+
+  checkComparision() {}
 
   goBack() {
     window.history.back();
@@ -183,6 +198,7 @@ export class PropertyDetailsPageComponent implements OnInit {
     this._comparisionService.addToComparativeList(
       this.propertyDetailsResource.value()!,
     );
+    this.isBeingCompared.set(true);
   }
 
   ngOnDestroy() {

@@ -85,10 +85,10 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
 .comparision-preview-dialog {
   padding: 10px;
   border-radius: 6px;
-  max-width: 80vw !important;
-  width: 80vw !important;
-  height: 65vh !important;
-  max-height: 65vh !important;
+  max-width: 83vw !important;
+  width: 83vw !important;
+  height: 70vh !important;
+  max-height: 70vh !important;
   background: #1a1e2b;
 }
 

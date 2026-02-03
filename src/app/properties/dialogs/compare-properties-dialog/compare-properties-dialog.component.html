@@ -1,7 +1,12 @@
 <div class="compare-dialog-container">
   <div class="compare-header">
-    <span>Comparar propiedades</span>
-    <button mat-icon-button (click)="close()" type ="button" aria-label="Cerrar diálogo">
+    <span>Comparación de propiedades</span>
+    <button
+      mat-icon-button
+      (click)="close()"
+      type="button"
+      aria-label="Cerrar diálogo"
+    >
       <mat-icon>close</mat-icon>
     </button>
   </div>
@@ -11,36 +16,45 @@
       <thead>
         <tr>
           <th class="compare-attr-header"></th>
-          @for(property of properties(); let i = $index; track i) {
+          @for (property of properties(); let i = $index; track i) {
             <th class="compare-prop-header">
               <div class="compare-header-photo-title">
-                <img [src]="getPhoto(property)" alt="Foto" class="compare-photo-large" />
-              <div class="compare-title-large">{{ property.title }}</div>
+                <img
+                  [src]="getPhoto(property)"
+                  alt="Foto"
+                  class="compare-photo-large"
+                />
+                <div class="compare-title-large">{{ property.title }}</div>
               </div>
             </th>
           }
         </tr>
       </thead>
       <tbody>
-        @for(attribute of attributes(); let i = $index; track i) {
-        <tr>
-          <th class="compare-attr">{{ attribute.label }}</th>
-          @for(property of properties(); let j = $index; track j) {
-          <td [ngClass]="getCellClass(attribute, property)">
-            <ng-container [ngSwitch]="attribute.type">
-              <span *ngSwitchCase="'boolean'">{{ displayBoolean(!!property[attribute.key]) }}</span>
-              <span *ngSwitchDefault>{{ property[attribute.key] }}</span>
-            </ng-container>
-          </td>
-          }
-
+        @for (attribute of attributes(); let i = $index; track i) {
+          <tr>
+            <th class="compare-attr">{{ attribute.label }}</th>
+            @for (property of properties(); let j = $index; track j) {
+              <td [ngClass]="getCellClass(attribute, property)">
+                <ng-container [ngSwitch]="attribute.type">
+                  <span *ngSwitchCase="'boolean'">{{
+                    displayBoolean(!!property[attribute.key])
+                  }}</span>
+                  <span *ngSwitchDefault>{{ property[attribute.key] }}</span>
+                </ng-container>
+              </td>
+            }
+          </tr>
         }
         <tr>
-        <th class="compare-attr"></th>
-          @for(property of properties(); let j = $index; track j) {
+          <th class="compare-attr"></th>
+          @for (property of properties(); let j = $index; track j) {
             <td class="compare-ver-mas">
-              <button mat-stroked-button color="primary"
-                (click)="goToProperty(property.propertyId)">
+              <button
+                mat-stroked-button
+                color="primary"
+                (click)="goToProperty(property.propertyId)"
+              >
                 Ver Más
               </button>
             </td>

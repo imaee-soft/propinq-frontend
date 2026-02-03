@@ -1,125 +1,161 @@
 <section class="signup-page-container">
   <div class="signup-bg-half">
-    <img src="PropInq.png" alt="">
+    <img src="PropInq.png" alt="" />
   </div>
   <div class="signup-form-half">
-    <form autocomplete="off" [formGroup]="myForm" (ngSubmit)="onSignup()" class="signup-form">
-    <h1>Tu Camino a Casa</h1>
-    <br>
-    <div class="row-fields">
-      <mat-form-field class="input-field" appearance="outline">
-        <mat-label>Nombre</mat-label>
-        <input matInput placeholder="Ej. John" formControlName="firstName" required>
-        @if (formUtils.isValidField(myForm,'firstName')) {
-          <mat-error>{{
-            formUtils.getFieldError(myForm, "firstName", "nombre")
-          }}</mat-error>
-        }
-      </mat-form-field>
+    <form
+      autocomplete="off"
+      [formGroup]="myForm"
+      (ngSubmit)="onSignup()"
+      class="signup-form"
+    >
+      <h1>Tu Camino a Casa</h1>
+      <br />
+      <div class="row-fields">
+        <mat-form-field class="input-field" appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input
+            matInput
+            placeholder="Ej. John"
+            formControlName="firstName"
+            required
+          />
+          @if (formUtils.isValidField(myForm, "firstName")) {
+            <mat-error>{{
+              formUtils.getFieldError(myForm, "firstName", "nombre")
+            }}</mat-error>
+          }
+        </mat-form-field>
 
-      <mat-form-field class="input-field" appearance="outline">
-        <mat-label>Apellido</mat-label>
-        <input matInput placeholder="Ej. Doe" formControlName="lastName" required>
-        @if (formUtils.isValidField(myForm,'lastName')) {
-          <mat-error>{{
-            formUtils.getFieldError(myForm, "lastName", "apellido")
-          }}</mat-error>
-        }
-      </mat-form-field>
-    </div>
+        <mat-form-field class="input-field" appearance="outline">
+          <mat-label>Apellido</mat-label>
+          <input
+            matInput
+            placeholder="Ej. Doe"
+            formControlName="lastName"
+            required
+          />
+          @if (formUtils.isValidField(myForm, "lastName")) {
+            <mat-error>{{
+              formUtils.getFieldError(myForm, "lastName", "apellido")
+            }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
       <mat-form-field class="input-field" appearance="outline">
         <mat-label>Correo electrónico</mat-label>
-        <input matInput type="email" formControlName="email" required>
-        @if (formUtils.isValidField(myForm,'email')) {
+        <input matInput type="email" formControlName="email" required />
+        @if (formUtils.isValidField(myForm, "email")) {
+          <mat-error>{{ formUtils.getFieldError(myForm, "email") }}</mat-error>
+        }
+      </mat-form-field>
+      <div class="row-fields">
+        <mat-form-field class="input-field" appearance="outline">
+          <mat-label>Contraseña</mat-label>
+          <input
+            matInput
+            [type]="hidePassword() ? 'password' : 'text'"
+            formControlName="password"
+            required
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="hidePassword.set(!hidePassword())"
+          >
+            <mat-icon>{{
+              hidePassword() ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+          @if (formUtils.isValidField(myForm, "password")) {
+            <mat-error>{{
+              formUtils.getFieldError(myForm, "password")
+            }}</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="input-field" appearance="outline">
+          <mat-label>Confirmar contraseña</mat-label>
+          <input
+            matInput
+            [type]="hideConfirmPassword() ? 'password' : 'text'"
+            formControlName="confirmPassword"
+            required
+          />
+          <button
+            mat-icon-button
+            matSuffix
+            type="button"
+            (click)="hideConfirmPassword.set(!hideConfirmPassword())"
+          >
+            <mat-icon>{{
+              hideConfirmPassword() ? "visibility_off" : "visibility"
+            }}</mat-icon>
+          </button>
+          <mat-error>
+            @if (formUtils.isValidField(myForm, "confirmPassword")) {
+              {{ formUtils.getFieldError(myForm, "confirmPassword") }}
+            }
+          </mat-error>
+        </mat-form-field>
+      </div>
+      <div class="row-fields">
+        <mat-form-field class="input-field" appearance="outline">
+          <mat-label>Dirección</mat-label>
+          <input
+            matInput
+            placeholder="Ej. Calle Falsa 123"
+            formControlName="address"
+            required
+          />
+          @if (formUtils.isValidField(myForm, "address")) {
+            <mat-error>{{
+              formUtils.getFieldError(myForm, "address")
+            }}</mat-error>
+          }
+        </mat-form-field>
+        <mat-form-field class="input-field" appearance="outline">
+          <mat-label>Teléfono</mat-label>
+          <input
+            matInput
+            placeholder="Ej. 3535233546"
+            formControlName="phoneNumber"
+            required
+          />
+          @if (formUtils.isValidField(myForm, "phoneNumber")) {
+            <mat-error>{{
+              formUtils.getFieldError(myForm, "phoneNumber")
+            }}</mat-error>
+          }
+        </mat-form-field>
+      </div>
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Fecha de nacimiento</mat-label>
+        <input matInput type="date" formControlName="birthDate" required />
+        @if (formUtils.isValidField(myForm, "birthDate")) {
           <mat-error>{{
-            formUtils.getFieldError(myForm, "email")
+            formUtils.getFieldError(myForm, "birthDate")
           }}</mat-error>
         }
       </mat-form-field>
-    <div class="row-fields">
-      <mat-form-field class="input-field" appearance="outline">
-        <mat-label>Contraseña</mat-label>
-        <input matInput [type]="hidePassword() ? 'password' : 'text'" formControlName="password" required>
-        <button mat-icon-button matSuffix type="button" (click)="hidePassword.set(!hidePassword())">
-          <mat-icon>{{hidePassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-        @if (formUtils.isValidField(myForm,'password')) {
-          <mat-error>{{
-            formUtils.getFieldError(myForm, "password")
-          }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field class="input-field" appearance="outline">
-        <mat-label>Confirmar contraseña</mat-label>
-        <input matInput [type]="hideConfirmPassword() ? 'password' : 'text'" formControlName="confirmPassword" required>
-        <button mat-icon-button matSuffix type="button" (click)="hideConfirmPassword.set(!hideConfirmPassword())">
-          <mat-icon>{{hideConfirmPassword() ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-        <mat-error>
-        @if (formUtils.isValidField(myForm,'confirmPassword')) {
-          {{formUtils.getFieldError(myForm, "confirmPassword")}}
-        }
-        </mat-error>
 
-      </mat-form-field>
-    </div>
-    <div class="row-fields">
-      <mat-form-field class="input-field" appearance="outline">
-        <mat-label>Dirección</mat-label>
-        <input matInput placeholder="Ej. Calle Falsa 123" formControlName="address" required>
-        @if (formUtils.isValidField(myForm,'address')) {
-          <mat-error>{{
-            formUtils.getFieldError(myForm, "address")
-          }}</mat-error>
-        }
-      </mat-form-field>
-      <mat-form-field class="input-field" appearance="outline">
-        <mat-label>Teléfono</mat-label>
-        <input matInput placeholder="Ej. 3535233546" formControlName="phoneNumber" required>
-        @if (formUtils.isValidField(myForm,'phoneNumber')) {
-          <mat-error>{{
-            formUtils.getFieldError(myForm, "phoneNumber")
-          }}</mat-error>
-        }
-      </mat-form-field>
-    </div>
-    <mat-form-field class="input-field" appearance="outline">
-      <mat-label>DNI</mat-label>
-      <input matInput placeholder="Ej. 12345678" formControlName="dni">
-      @if (formUtils.isValidField(myForm,'dni')) {
-        <mat-error>{{
-          formUtils.getFieldError(myForm, "dni")
-        }}</mat-error>
-      }
-    </mat-form-field>
-     <mat-form-field class="input-field" appearance="outline">
-    <mat-label>Fecha de nacimiento</mat-label>
-    <input matInput type="date" formControlName="birthDate" required>
-    @if (formUtils.isValidField(myForm,'birthDate')) {
-      <mat-error>{{
-        formUtils.getFieldError(myForm, "birthDate")
-      }}</mat-error>
-    }
-  </mat-form-field>
-
-    @if (getIsLoading()) {
+      @if (getIsLoading()) {
         <mat-progress-spinner
-        mode="indeterminate"
-        diameter="30"
+          mode="indeterminate"
+          diameter="30"
         ></mat-progress-spinner>
-    } @else {
-      <button
-        mat-raised-button color="primary"
-        type="submit"
-        class="submit-btn"
-        (click)="onSignup()"
-      >
-      Registrarse
-      </button>
-    }
-    <a routerLink="/auth/login" class="login-link">¿Ya tienes una cuenta?</a>
-  </form>
+      } @else {
+        <button
+          mat-raised-button
+          color="primary"
+          type="submit"
+          class="submit-btn"
+          (click)="onSignup()"
+        >
+          Registrarse
+        </button>
+      }
+      <a routerLink="/auth/login" class="login-link">¿Ya tienes una cuenta?</a>
+    </form>
   </div>
-
 </section>
-

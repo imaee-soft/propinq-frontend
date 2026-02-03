@@ -1,0 +1,147 @@
+@if ((building$ | async) === null) {
+  <div class="loader-container">
+    <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+  </div>
+} @else {
+  <div class="building-layout">
+    <div class="building-info-section">
+      <div class="building-header">
+        <div class="header-content">
+          <button mat-icon-button (click)="goBack()">
+            <mat-icon>arrow_back</mat-icon>
+          </button>
+          <h1 class="building-title">
+            {{ building()?.name }}
+          </h1>
+        </div>
+
+        <div>
+          @if (deleted$ | async; as deleted) {
+            <mat-chip class="status-chip deleted"> No disponible </mat-chip>
+          } @else {
+            <mat-chip class="status-chip available"> Disponible </mat-chip>
+          }
+        </div>
+      </div>
+      <div class="building-location">
+        <mat-icon class="location-icon">place</mat-icon>
+        <span class="address">{{ address$ | async }}</span>
+      </div>
+      <div class="building-location">
+        <mat-icon class="location-icon">description</mat-icon>
+        <span class="description">
+          {{ description$ | async }}
+        </span>
+      </div>
+    </div>
+    <div class="building-sidebar">
+      <div class="property-number-section">
+        <span class="property-number">{{ totalProperties$ | async }}</span>
+        <span class="property-number-label">Propiedades disponibles</span>
+      </div>
+      <div class="actions-section">
+        @if (isOwnerRetrieving$ | async; as isOwnerRetrieving) {
+          <button mat-raised-button class="primary-action" (click)="update()">
+            <mat-icon>edit</mat-icon>
+            Editar
+          </button>
+          <button
+            mat-stroked-button
+            class="new-property-action"
+            (click)="newProperty()"
+          >
+            <mat-icon>add</mat-icon>
+            Propiedad
+          </button>
+        } @else {
+          @if (favoriteId$ | async; as favoriteId) {
+            <button
+              mat-stroked-button
+              class="secondary-action is-favorite"
+              (click)="unmarkAsFavorite()"
+            >
+              <mat-icon>star</mat-icon>
+              Favorito
+            </button>
+          } @else {
+            <button
+              mat-stroked-button
+              class="secondary-action"
+              (click)="markAsFavorite()"
+            >
+              <mat-icon>star_border</mat-icon>
+              Preferir
+            </button>
+          }
+          <button mat-stroked-button class="secondary-action">
+            <mat-icon>share</mat-icon>
+            Compartir
+          </button>
+        }
+      </div>
+    </div>
+    @if (images$ | async; as images) {
+      <div class="gallery-section">
+        <app-image-section [images]="images" [showThumbnails]="true" />
+      </div>
+    }
+    @if (properties$ | async; as properties) {
+      @if (properties.length > 0) {
+        <div class="properties-section">
+          <div class="properties-section-header">
+            <h1 class="building-title">Propiedades</h1>
+            @if (isOwnerRetrieving$ | async) {
+              <button
+                mat-fab
+                class="fab-add"
+                (click)="newProperty()"
+                [matTooltip]="'Nueva propiedad'"
+              >
+                <mat-icon>add</mat-icon>
+              </button>
+            }
+          </div>
+          <div class="properties-grid">
+            @for (property of properties; track properties$) {
+              <mat-card class="property-card">
+                <mat-card-header>
+                  <div class="title-row">
+                    <div class="entity-container">
+                      <mat-icon>apartment</mat-icon>
+                      <span class="span-title">
+                        {{ property.title }}
+                      </span>
+                    </div>
+                    <div class="badges">
+                      <span class="card-date">
+                        {{ formatDateWrapper(property.createdAt) }}
+                      </span>
+                    </div>
+                  </div>
+                </mat-card-header>
+                <mat-card-content>
+                  <div class="image-slot">
+                    <img
+                      [src]="property.imagesURL[0]"
+                      [attr.key]="property.imagesURL[0]"
+                      class="main-image"
+                    />
+                  </div>
+                </mat-card-content>
+                <mat-card-actions align="end">
+                  <button mat-flat-button (click)="goToProperty(property)">
+                    <mat-icon>visibility</mat-icon>
+                    Ver
+                  </button>
+                </mat-card-actions>
+              </mat-card>
+            }
+          </div>
+          <div class="end-zone">
+            <span class="end-text">Estas son todas las propiedades.</span>
+          </div>
+        </div>
+      }
+    }
+  </div>
+}

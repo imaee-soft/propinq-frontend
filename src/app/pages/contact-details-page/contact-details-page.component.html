@@ -6,6 +6,16 @@
       </button>
       <h2>Solicitud de contacto</h2>
     </div>
+    @if (canRent$ | async) {
+      <div class="contact-actions">
+        <button mat-fab class="fab-add" [matTooltip]="'Registrar alquiler'">
+          <mat-icon>handshake</mat-icon>
+        </button>
+        <button mat-fab class="fab-add" [matTooltip]="'Cancelar negociación'">
+          <mat-icon>subtitles_off</mat-icon>
+        </button>
+      </div>
+    }
   </header>
 
   <div class="detail-card">
@@ -16,6 +26,13 @@
           <span class="span-title">{{
             (contactDetails$ | async)?.propertyAddress
           }}</span>
+          <button
+            mat-icon-button
+            [matTooltip]="'Ver propiedad'"
+            (click)="goToProperty()"
+          >
+            <mat-icon>open_in_new</mat-icon>
+          </button>
         </div>
         <div class="entity-container">
           <mat-icon>person</mat-icon>

@@ -18,6 +18,8 @@ export interface PropertyDetails {
   ownerId: string;
   latitude: number;
   longitude: number;
-  isFavorite: boolean;
-  isContacted: boolean;
+  favoriteId: string | null;
+  contactId: string;
+  createdAt: Date;
+  buildingName: string;
 }

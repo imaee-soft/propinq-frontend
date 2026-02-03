@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  height: 90%;
+  min-height: 0;
+  width: 100%;
+}
+
+.notifications-table-wrapper {
+  display: flex;
+  justify-content: center;
+  width: inherit;
+  margin: 4px 64px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.notifications-table {
+  text-align: center;
+  padding: 10px 32px;
+  background: inherit;
+}
+
+.notifications-table .mat-mdc-cell,
+.notifications-table .mat-mdc-header-cell {
+  border-bottom: none !important;
+  font-size: 0.9rem;
+  color: #cbd5e1;
+  padding: 12px 32px;
+}
+
+.notifications-cell-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.paginator-wrapper {
+  margin: 4px 64px;
+}
+
+.notifications-paginator {
+  text-align: center;
+  background: inherit;
+}

@@ -26,7 +26,7 @@ export class ComparePropertiesDialogComponent {
     compareAttributes: UserComparisonAttribute[];
   };
   public properties: Signal<PropertyDetails[]> = signal(
-    this.data.properties ?? []
+    this.data.properties ?? [],
   );
 
   private readonly typeMap: Record<string, 'boolean' | 'number' | 'string'> = {
@@ -69,16 +69,26 @@ export class ComparePropertiesDialogComponent {
       type: 'boolean',
       higherIsBetter: true,
     },
-    { label: 'Expensas', key: 'expenses', type: 'boolean', higherIsBetter: false },
-    { label: 'Amoblado', key: 'furnishing', type: 'boolean', higherIsBetter: true },
+    {
+      label: 'Expensas',
+      key: 'expenses',
+      type: 'boolean',
+      higherIsBetter: false,
+    },
+    {
+      label: 'Amoblado',
+      key: 'furnishing',
+      type: 'boolean',
+      higherIsBetter: true,
+    },
   ]);
 
   public comparedKeys: Signal<Set<string>> = signal(
     new Set(
       (this.data.compareAttributes ?? [])
         .filter((a) => a.enabled)
-        .map((a) => a.key)
-    )
+        .map((a) => a.key),
+    ),
   );
   private dialogRef = inject(MatDialogRef<ComparePropertiesDialogComponent>);
 
@@ -98,7 +108,7 @@ export class ComparePropertiesDialogComponent {
 
   getCellClass(
     attr: ComparePropertyAttribute,
-    property: PropertyDetails
+    property: PropertyDetails,
   ): string {
     if (!this.comparedKeys().has(attr.key)) return '';
 

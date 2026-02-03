@@ -18,14 +18,21 @@
                   cdkFocusInitial
                   placeholder="Ingresá el nombre del inmueble..."
                 />
-                @if (nameControl?.invalid && nameControl?.touched &&
-                nameControl?.errors?.['required']) {
-                <mat-error>El nombre es requerido</mat-error>
-                } @if (nameControl?.invalid && nameControl?.touched &&
-                nameControl?.errors?.['minlength']) {
-                <mat-error
-                  >El nombre debe tener al menos 5 caracteres</mat-error
-                >
+                @if (
+                  nameControl?.invalid &&
+                  nameControl?.touched &&
+                  nameControl?.errors?.["required"]
+                ) {
+                  <mat-error>El nombre es requerido</mat-error>
+                }
+                @if (
+                  nameControl?.invalid &&
+                  nameControl?.touched &&
+                  nameControl?.errors?.["minlength"]
+                ) {
+                  <mat-error
+                    >El nombre debe tener al menos 5 caracteres</mat-error
+                  >
                 }
               </mat-form-field>
 
@@ -60,6 +67,7 @@
                 [maxLength]="400"
                 rows="3"
                 placeholder="Describí brevemente el inmueble..."
+                aria-expanded="false"
               ></textarea>
             </mat-form-field>
 
@@ -75,35 +83,43 @@
                   [maxLength]="100"
                   placeholder="Ingresá la dirección del inmueble..."
                 />
-                @if (addressControl?.invalid && addressControl?.touched &&
-                addressControl?.errors?.['required']) {
-                <mat-error>La dirección es requerida</mat-error>
-                } @if (addressControl?.invalid && addressControl?.touched &&
-                addressControl?.errors?.['minlength']) {
-                <mat-error
-                  >La dirección debe tener al menos 5 caracteres</mat-error
-                >
-                } @if (!addressControl?.dirty) {
-                <mat-hint
-                  >Formato: Calle, Número, Ciudad, Provincia. Ejemplo: Alberdi,
-                  493, Villa María, Córdoba</mat-hint
-                >
+                @if (
+                  addressControl?.invalid &&
+                  addressControl?.touched &&
+                  addressControl?.errors?.["required"]
+                ) {
+                  <mat-error>La dirección es requerida</mat-error>
+                }
+                @if (
+                  addressControl?.invalid &&
+                  addressControl?.touched &&
+                  addressControl?.errors?.["minlength"]
+                ) {
+                  <mat-error
+                    >La dirección debe tener al menos 5 caracteres</mat-error
+                  >
+                }
+                @if (!addressControl?.dirty) {
+                  <mat-hint
+                    >Formato: Calle, Número, Ciudad, Provincia. Ejemplo:
+                    Alberdi, 493, Villa María, Córdoba</mat-hint
+                  >
                 }
               </mat-form-field>
 
               <div class="address-actions">
                 @if (searchingAddress()) {
-                <mat-progress-spinner
-                  mode="indeterminate"
-                  diameter="30"
-                ></mat-progress-spinner>
+                  <mat-progress-spinner
+                    mode="indeterminate"
+                    diameter="30"
+                  ></mat-progress-spinner>
                 } @else {
-                <mat-button
-                  matTooltip="Buscar dirección"
-                  (click)="handleSearchAddress()"
-                >
-                  <mat-icon>search</mat-icon>
-                </mat-button>
+                  <mat-button
+                    matTooltip="Buscar dirección"
+                    (click)="handleSearchAddress()"
+                  >
+                    <mat-icon>search</mat-icon>
+                  </mat-button>
                 }
               </div>
             </div>
@@ -131,21 +147,24 @@
           ></image-loader>
 
           <div class="image-error-wrapper">
-            @if (imagesControl?.errors?.['required'] && imagesControl?.touched)
-            {
-            <mat-error class="image-error"
-              >Al menos una imagen es requerida</mat-error
-            >
-            } @if (imagesControl?.errors?.['maxSize'] && imagesControl?.touched)
-            {
-            <mat-error class="image-error"
-              >Las imágenes deben pesar como máximo 3MB</mat-error
-            >
-            } @if (imagesControl?.errors?.['allowedTypes'] &&
-            imagesControl?.touched) {
-            <mat-error class="image-error">
-              Las imágenes deben ser de tipo JPG, JPEG, PNG o WEBP
-            </mat-error>
+            @if (
+              imagesControl?.errors?.["required"] && imagesControl?.touched
+            ) {
+              <mat-error class="image-error"
+                >Al menos una imagen es requerida</mat-error
+              >
+            }
+            @if (imagesControl?.errors?.["maxSize"] && imagesControl?.touched) {
+              <mat-error class="image-error"
+                >Las imágenes deben pesar como máximo 3MB</mat-error
+              >
+            }
+            @if (
+              imagesControl?.errors?.["allowedTypes"] && imagesControl?.touched
+            ) {
+              <mat-error class="image-error">
+                Las imágenes deben ser de tipo JPG, JPEG, PNG o WEBP
+              </mat-error>
             }
           </div>
         </div>

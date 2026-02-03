@@ -1,0 +1,77 @@
+<mat-card class="property-card fade-in-up">
+  <mat-card-header>
+    <mat-card-title>{{ building()!.name || "Edificio" }}</mat-card-title>
+    <button mat-icon-button (click)="close.emit()" aria-label="Cerrar">
+      <mat-icon>close</mat-icon>
+    </button>
+  </mat-card-header>
+  <mat-card-content class="property-content">
+    <div class="property-description">
+      @if (building()!.description) {
+        <p>{{ building()!.description }}</p>
+      }
+    </div>
+    <div class="building-info">
+      <div class="info-section type">
+        <mat-icon>apartment</mat-icon>
+        <span>{{ building()!.buildingTypeName }}</span>
+      </div>
+      <div class="info-section owner">
+        <mat-icon>person</mat-icon>
+        <span>{{ building()!.userFullName }}</span>
+      </div>
+      <div class="info-section address full-width">
+        <mat-icon>location_on</mat-icon>
+        <span>{{ building()!.address || "Dirección no disponible" }}</span>
+      </div>
+    </div>
+    <app-image-section
+      [images]="building()!.imagesURL || []"
+      [showThumbnails]="false"
+    ></app-image-section>
+    <div class="home-property-overlay">
+      <div class="property-overlay-actions">
+        <button
+          mat-icon-button
+          matTooltip="Ver detalles"
+          (click)="goToBuildingDetails()"
+        >
+          <mat-icon>visibility</mat-icon>
+        </button>
+        @if (!isOwnerRetrieving()) {
+          @if (favoriteId()) {
+            <button
+              mat-icon-button
+              matTooltip="Desmarcar como favorito"
+              (click)="unmarkAsFavorite()"
+            >
+              <mat-icon>star</mat-icon>
+            </button>
+          } @else {
+            <button
+              mat-icon-button
+              matTooltip="Marcar como favorito"
+              (click)="markAsFavorite()"
+            >
+              <mat-icon>star_border</mat-icon>
+            </button>
+          }
+        } @else {
+          <button
+            mat-icon-button
+            matTooltip="Nueva propiedad"
+            (click)="newProperty()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+          <button mat-icon-button matTooltip="Editar" (click)="update()">
+            <mat-icon>edit</mat-icon>
+          </button>
+        }
+        <button mat-icon-button matTooltip="Compartir">
+          <mat-icon>share</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card-content>
+</mat-card>

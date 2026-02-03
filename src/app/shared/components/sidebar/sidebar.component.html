@@ -1,38 +1,48 @@
 <mat-sidenav-container class="sidenav-container">
-  <mat-sidenav
-    class="sidenav"
-    fixedInViewport
-    [mode]="'over'"
-    [opened]="this.isOpen() && this.config().enabled"
-    [style.width.px]="sidenavWidth()"
-  >
+  <mat-sidenav class="sidenav icon-only" fixedInViewport mode="side" opened>
     <mat-nav-list class="nav-list">
-      @for (item of config().items; track item.route) {
-      <div>
+      <mat-list-item
+        class="side-item"
+        [routerLink]="'/'"
+        routerLinkActive="active"
+        [routerLinkActiveOptions]="{ exact: true }"
+        matTooltip="Inicio"
+        matTooltipPosition="right"
+      >
+        <mat-icon>home</mat-icon>
+      </mat-list-item>
+      @if (userLogged()) {
+        @for (item of config().items; track item.route) {
+          <mat-list-item
+            class="side-item"
+            [routerLink]="item.route"
+            routerLinkActive="active"
+            [routerLinkActiveOptions]="{ exact: true }"
+            matTooltip="{{ item.label }}"
+            matTooltipPosition="right"
+          >
+            <mat-icon>{{ item.icon }}</mat-icon>
+          </mat-list-item>
+        }
+      }
+      <mat-list-item
+        class="side-item"
+        matTooltip="Ayuda"
+        matTooltipPosition="right"
+        routerLink="help"
+      >
+        <mat-icon>help</mat-icon>
+      </mat-list-item>
+      @if (userLogged()) {
         <mat-list-item
           class="side-item"
-          [class.collapsed]="!this.isOpen()"
-          (click)="navigate(item.route)"
-          (click)="onSidebarButtonClickCloseSidebar()"
+          matTooltip="Cerrar sesión"
+          matTooltipPosition="right"
+          (click)="logout()"
         >
-          <span>{{ item.label }}</span>
-          <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+          <mat-icon>logout</mat-icon>
         </mat-list-item>
-      </div>
       }
     </mat-nav-list>
-    <div class="sidenav-footer">
-      <mat-nav-list class="footer-nav-list">
-        <mat-list-item class="side-item">
-          <span>Ayuda</span>
-          <mat-icon matListItemIcon>help</mat-icon>
-        </mat-list-item>
-        <mat-list-item class="side-item" (click)="logout()">
-          <span>Cerrar sesión</span>
-          <mat-icon matListItemIcon>logout</mat-icon>
-        </mat-list-item>
-      </mat-nav-list>
-    </div>
   </mat-sidenav>
-  </mat-sidenav-container>
-  <ng-template #loading></ng-template>
+</mat-sidenav-container>

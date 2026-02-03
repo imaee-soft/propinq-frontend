@@ -1,9 +1,9 @@
 .compare-dialog-container {
   min-width: 80vw;
   max-width: 99vw;
-  background: #24273a;
-  border-radius: 18px;
-  box-shadow: 0 6px 32px rgba(30,40,60,.32);
+  background: #1a1e2b;
+  border-radius: 6px;
+  box-shadow: 0 6px 32px rgba(30, 40, 60, 0.32);
   color: #f5f5f7;
   padding: 0;
   overflow-x: auto;
@@ -15,7 +15,6 @@
   padding: 16px 24px 8px 24px;
   font-size: 1.25rem;
   font-weight: 700;
-  border-bottom: 1px solid #444d6b;
 }
 .compare-header button.mat-icon-button,
 .compare-header button.mat-mdc-icon-button {
@@ -46,7 +45,8 @@
   border-collapse: separate;
   border-spacing: 0;
 }
-.compare-table th, .compare-table td {
+.compare-table th,
+.compare-table td {
   padding: 10px 16px;
   text-align: center;
   vertical-align: middle;
@@ -104,11 +104,11 @@
   background: #ccc;
   border: 1.5px solid #222a;
   margin-bottom: 0;
-  box-shadow: 0 2px 8px rgba(30,40,60,.10);
+  box-shadow: 0 2px 8px rgba(30, 40, 60, 0.1);
 }
 
 .compare-title-large {
-  font-size: 1.10rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #e2e8f0;
   text-align: center;
@@ -118,9 +118,18 @@
   padding: 0 2px;
 }
 @media (max-width: 800px) {
-  .compare-dialog-container { min-width: 98vw; }
-  .compare-table th, .compare-table td { padding: 7px 4px; font-size: 0.93rem; }
-  .compare-table .compare-photo { width: 55px; height: 38px; }
+  .compare-dialog-container {
+    min-width: 98vw;
+  }
+  .compare-table th,
+  .compare-table td {
+    padding: 7px 4px;
+    font-size: 0.93rem;
+  }
+  .compare-table .compare-photo {
+    width: 55px;
+    height: 38px;
+  }
 }
 
 .compare-dialog-container {
@@ -128,7 +137,7 @@
   max-width: 99vw;
   background: #24273a;
   border-radius: 18px;
-  box-shadow: 0 6px 32px rgba(30,40,60,.32);
+  box-shadow: 0 6px 32px rgba(30, 40, 60, 0.32);
   color: #f5f5f7;
   padding: 0;
   overflow-x: auto;
@@ -171,7 +180,8 @@
   border-collapse: separate;
   border-spacing: 0;
 }
-.compare-table th, .compare-table td {
+.compare-table th,
+.compare-table td {
   padding: 10px 16px;
   text-align: center;
   vertical-align: middle;
@@ -229,11 +239,11 @@
   background: #ccc;
   border: 1.5px solid #222a;
   margin-bottom: 0;
-  box-shadow: 0 2px 8px rgba(30,40,60,.10);
+  box-shadow: 0 2px 8px rgba(30, 40, 60, 0.1);
 }
 
 .compare-title-large {
-  font-size: 1.10rem;
+  font-size: 1.1rem;
   font-weight: 600;
   color: #e2e8f0;
   text-align: center;
@@ -243,9 +253,18 @@
   padding: 0 2px;
 }
 @media (max-width: 800px) {
-  .compare-dialog-container { min-width: 98vw; }
-  .compare-table th, .compare-table td { padding: 7px 4px; font-size: 0.93rem; }
-  .compare-table .compare-photo { width: 55px; height: 38px; }
+  .compare-dialog-container {
+    min-width: 98vw;
+  }
+  .compare-table th,
+  .compare-table td {
+    padding: 7px 4px;
+    font-size: 0.93rem;
+  }
+  .compare-table .compare-photo {
+    width: 55px;
+    height: 38px;
+  }
 }
 
 .compare-header {
@@ -266,7 +285,7 @@ button[mat-icon-button] {
   transform: translateY(-50%);
   background: rgba(44, 48, 65, 0) !important;
   border-radius: 50% !important;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.10);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   z-index: 10;
   width: 44px !important;
   height: 44px !important;
@@ -279,13 +298,15 @@ button[mat-icon-button] {
   align-items: center !important;
   justify-content: center !important;
   outline: none !important;
-  transition: background 0.18s, box-shadow 0.18s;
+  transition:
+    background 0.18s,
+    box-shadow 0.18s;
 }
 
 button[mat-icon-button]:hover,
 button[mat-icon-button]:focus {
-  background: rgba(68,72,100,0.39) !important;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.16);
+  background: rgba(68, 72, 100, 0.39) !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.16);
   outline: none !important;
 }
 
@@ -322,7 +343,6 @@ button[mat-icon-button] .mat-icon {
   border-bottom-right-radius: 14px;
 }
 
-
 .compare-ver-mas {
   padding: 14px 8px !important;
   text-align: center !important;
@@ -334,7 +354,7 @@ button[mat-icon-button] .mat-icon {
 .compare-ver-mas .mat-mdc-stroked-button {
   --btn-accent: #5e35b1;
   --btn-border: #5e35b1;
-  --btn-bg: rgba(255,255,255,0.02);
+  --btn-bg: rgba(255, 255, 255, 0.02);
   min-width: 108px;
   padding: 8px 14px;
   border-radius: 10px;
@@ -345,8 +365,12 @@ button[mat-icon-button] .mat-icon {
   color: var(--btn-accent) !important;
   border: 1.6px solid var(--btn-border) !important;
   background: var(--btn-bg);
-  box-shadow: 0 2px 10px rgba(62,207,142,0.12);
-  transition: background .18s ease, color .18s ease, border-color .18s ease, box-shadow .18s ease;
+  box-shadow: 0 2px 10px rgba(62, 207, 142, 0.12);
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
 }
 
 .compare-ver-mas button[mat-stroked-button]:hover,
@@ -356,15 +380,15 @@ button[mat-icon-button] .mat-icon {
   color: #eafcf4 !important;
   border-color: var(--btn-accent) !important;
   background: linear-gradient(90deg, #673ab7 0%, #673ab7 100%);
-  box-shadow: 0 4px 18px rgba(103,58,183,0.22);
+  box-shadow: 0 4px 18px rgba(103, 58, 183, 0.22);
   outline: none;
 }
 
 .compare-ver-mas button[mat-stroked-button]:focus-visible,
 .compare-ver-mas .mat-mdc-stroked-button:focus-visible {
   box-shadow:
-    0 0 0 2px rgba(36,39,58,1),
-    0 0 0 4px rgba(103,58,183,0.75) !important;
+    0 0 0 2px rgba(36, 39, 58, 1),
+    0 0 0 4px rgba(103, 58, 183, 0.75) !important;
 }
 
 .compare-ver-mas .mat-mdc-button-ripple,

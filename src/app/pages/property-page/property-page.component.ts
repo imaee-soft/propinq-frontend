@@ -56,22 +56,6 @@ export class PropertyPageComponent implements OnInit {
     this.loadProperties();
   }
 
-  create() {
-    console.log('Creating property');
-    this._entityDialogService
-      .openNewEntityDialog(NewHouseDialogComponent, {
-        panelClass: 'generic-dialog',
-        backdropClass: 'dialog-backdrop',
-        entity: 'house',
-      })
-      .subscribe((wasSuccessful) => {
-        if (wasSuccessful) {
-          this.resetPage();
-          this.loadProperties();
-        }
-      });
-  }
-
   loadProperties() {
     if (!this.canQuery()) return;
     this._propertiesService
@@ -92,8 +76,23 @@ export class PropertyPageComponent implements OnInit {
     this.loadProperties();
   };
 
+  create() {
+    this._entityDialogService
+      .openNewEntityDialog(NewHouseDialogComponent, {
+        panelClass: 'generic-dialog',
+        backdropClass: 'dialog-backdrop',
+        entity: 'house',
+      })
+      .subscribe((wasSuccessful) => {
+        if (wasSuccessful) {
+          this.resetPage();
+          this.loadProperties();
+        }
+      });
+  }
+
   primaryAction = (id: string | number | undefined) => {
-    const property = this.properties().find((p) => p.propertyId === id);
+    const property = this.getProperty(id);
     if (!property) return;
     this.update(property);
   };
@@ -143,8 +142,7 @@ export class PropertyPageComponent implements OnInit {
       this._notificationService.success(
         'La vivienda fue eliminada correctamente',
       );
-      this.resetPage();
-      this.loadProperties();
+      this.updatePropertyDeletion(propertyId, true);
     });
   }
 
@@ -153,8 +151,7 @@ export class PropertyPageComponent implements OnInit {
       this._notificationService.success(
         'La vivienda fue restaurada correctamente',
       );
-      this.resetPage();
-      this.loadProperties();
+      this.updatePropertyDeletion(propertyId, false);
     });
   }
 
@@ -167,5 +164,11 @@ export class PropertyPageComponent implements OnInit {
     this.totalElements.set(0);
     this.pageIndex.set(0);
     this.canQuery.set(true);
+  }
+
+  private updatePropertyDeletion(propertyId: string, deleted: boolean) {
+    this.properties.update((props) =>
+      props.map((p) => (p.propertyId === propertyId ? { ...p, deleted } : p)),
+    );
   }
 }

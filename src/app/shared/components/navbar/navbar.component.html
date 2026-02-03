@@ -1,16 +1,5 @@
 <mat-toolbar color="primary" class="navbar" [class.disabled]="navbarDisabled()">
   <div class="nav-left">
-    @if (userLogged) {
-    <button
-      mat-icon-button
-      (click)="toggleSidebar()"
-      matTooltipPosition="below"
-      class="sidebar-toggle"
-    >
-      <mat-icon>{{ sidebarOpened() ? "menu_open" : "menu" }}</mat-icon>
-    </button>
-    }
-
     <div class="brand-container">
       <a routerLink="/" class="brand-link">
         <mat-icon>cottage</mat-icon>
@@ -22,94 +11,119 @@
   <div class="nav-center">
     <div class="nav-actions">
       @if (isOwner()) {
-      <a
-        class="nav-action-link nav-action-featured"
-        (click)="handlePublish()"
-        [matMenuTriggerFor]="publishMenu"
-      >
-        Publicar
-      </a>
+        <a
+          class="nav-action-link nav-action-featured"
+          (click)="handlePublish()"
+          [matMenuTriggerFor]="publishMenu"
+        >
+          Publicar
+        </a>
       }
-      <mat-menu #publishMenu="matMenu">
+      <mat-menu #publishMenu="matMenu" class="publish-menu">
         <div class="menu-content">
           <button mat-menu-item (click)="publishBuilding()">
             <mat-icon>apartment</mat-icon>
-            <span>Nuevo inmueble</span>
+            <span>Publicar nuevo inmueble</span>
           </button>
           <button mat-menu-item (click)="publishHouse()">
             <mat-icon>home</mat-icon>
-            <span>Nueva vivienda</span>
+            <span>Publicar nueva vivienda</span>
           </button>
         </div>
       </mat-menu>
       @for (item of items(); track $index) {
-      <a
-        [routerLink]="item.url"
-        class="nav-action-link"
-        [ngClass]="{ 'nav-action-featured': item.featured }"
-      >
-        {{ item.name }}
-      </a>
+        <a
+          [routerLink]="item.url"
+          class="nav-action-link"
+          [ngClass]="{ 'nav-action-featured': item.featured }"
+        >
+          {{ item.name }}
+        </a>
       }
     </div>
   </div>
 
-  <div
-    class="nav-right"
-    [ngStyle]="
-      userLogged
-        ? {
-            'border-radius': '40px',
-            'background-color': '#1a1e2b',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
-            padding: '0 8px'
+  <div class="nav-right">
+    <div
+      class="user-menu"
+      [ngStyle]="
+        userLogged
+          ? {
+              'border-radius': '40px',
+              'background-color': '#1a1e2b',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              padding: '0 8px',
+            }
+          : {}
+      "
+    >
+      @if (userLogged) {
+        <button
+          mat-icon-button
+          matTooltip="Notificaciones no leídas"
+          matTooltipPosition="below"
+          class="menu-trigger"
+          [matMenuTriggerFor]="notificationMenu"
+        >
+          <mat-icon [matBadge]="notificationNumber()">notifications</mat-icon>
+        </button>
+        <mat-menu #notificationMenu="matMenu" class="publish-menu">
+          @if (notifications().length > 0) {
+            <div class="menu-content">
+              @for (
+                notification of notifications() | slice: 0 : 6;
+                track $index
+              ) {
+                <menu-notification
+                  [notification]="notification"
+                ></menu-notification>
+              }
+            </div>
           }
-        : {}
-    "
-  >
-    @if (userLogged) {
-    <button
-      mat-icon-button
-      matTooltip="Notificaciones"
-      matTooltipPosition="below"
-      class="menu-trigger"
-      [matMenuTriggerFor]="notificationMenu"
-    >
-      <mat-icon [matBadge]="notificationNumber()">notifications</mat-icon>
-    </button>
-    <mat-menu #notificationMenu="matMenu">
-      @if (notifications().length > 0) {
-      <div class="menu-content notification-menu-content">
-        @for (notification of notifications(); track $index) {
-        <menu-notification [notification]="notification"></menu-notification>
-        }
-      </div>
-      }
-    </mat-menu>
-    <button
-      mat-icon-button
-      matTooltip="Mi cuenta"
-      matTooltipPosition="below"
-      class="menu-trigger"
-      [matMenuTriggerFor]="userMenu"
-    >
-      <mat-icon>account_circle</mat-icon>
-    </button>
-    <mat-menu #userMenu="matMenu">
-      <div class="menu-content">
-        <button mat-menu-item (click)="handleMyAccount()">
+          @if (notifications().length == 0) {
+            <div class="no-notifications">
+              <mat-icon>notifications_none</mat-icon>
+              <span class="no-notifications-text">
+                No tenés notificaciones nuevas
+              </span>
+            </div>
+          }
+          <div class="see-all-notifications">
+            <a routerLink="/notifications" class="see-all-notifications-link"
+              >Ver todas las notificaciones</a
+            >
+          </div>
+        </mat-menu>
+        <button
+          mat-icon-button
+          matTooltip="Mi cuenta"
+          matTooltipPosition="below"
+          class="menu-trigger"
+          [matMenuTriggerFor]="userMenu"
+        >
           <mat-icon>account_circle</mat-icon>
-          <span>{{ username }}</span>
         </button>
-        <button mat-menu-item (click)="handleLogout()">
-          <mat-icon>logout</mat-icon>
-          <span>Cerrar sesión</span>
-        </button>
-      </div>
-    </mat-menu>
-    } @else {
-    <a routerLink="/auth/signup" class="nav-action-link">Creá tu cuenta</a>
-    <a routerLink="/auth/login" class="nav-action-link">Ingresá</a>
+        <mat-menu #userMenu="matMenu" class="publish-menu">
+          <div class="menu-content">
+            <button mat-menu-item (click)="handleMyAccount()">
+              <mat-icon>account_circle</mat-icon>
+              <span>{{ username }}</span>
+            </button>
+            <button mat-menu-item (click)="handleLogout()">
+              <mat-icon>logout</mat-icon>
+              <span>Cerrar sesión</span>
+            </button>
+          </div>
+        </mat-menu>
+      } @else {
+        <a routerLink="/auth/signup" class="nav-action-link">Creá tu cuenta</a>
+        <a routerLink="/auth/login" class="nav-action-link">Ingresá</a>
+      }
+    </div>
+    @if (userLogged) {
+      <span class="card-status">
+        {{ userRole | titlecase }}
+      </span>
     }
   </div>
 </mat-toolbar>

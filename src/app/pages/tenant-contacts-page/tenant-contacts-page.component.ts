@@ -8,12 +8,6 @@ import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interfac
 import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
 import { NotificationService } from '../../shared/services/notification.service';
 
-const statusMap: Record<string, string> = {
-  CREATED: 'Pendiente',
-  REJECTED: 'Contactado',
-  ACCEPTED: 'Rechazado',
-};
-
 @Component({
   selector: 'app-tenant-contacts-page',
   imports: [CommonEntityPageComponent],
@@ -33,7 +27,7 @@ export class TenantContactsPageComponent implements OnInit {
   descriptor: CardDescriptor<ContactDetails> = {
     user: (p) => p.owner ?? '',
     name: (p) => p.propertyAddress,
-    date: (p) => new Date(),
+    date: (p) => new Date(p.contactDate),
     id: (p) => p.contactId,
     status: (p) => p.status,
     coordinates: (p) =>
@@ -69,13 +63,13 @@ export class TenantContactsPageComponent implements OnInit {
   primaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
-    this.navigateToProperty(contact);
+    this._router.navigate(['/contact-details', contact.contactId]);
   };
 
   secondaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
-    this._router.navigate(['/contact-details', contact.contactId]);
+    this.navigateToProperty(contact);
   };
 
   thirdActionLabel = (contactId: string | number | undefined): string => {

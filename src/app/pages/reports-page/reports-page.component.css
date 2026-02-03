@@ -15,7 +15,6 @@
   margin: 4px 16px;
 }
 
-
 .page-header {
   padding: 0 64px;
   display: flex;
@@ -30,14 +29,6 @@
   gap: 16px;
 }
 
-.page-title {
-    font-family: "Montserrat", sans-serif;
-  font-weight: 600;
-  color: #e2e8f0;
-  font-size: 1.5rem;
-}
-
-
 .status-message {
   padding: 3rem 1rem;
   text-align: center;
@@ -50,14 +41,11 @@
   margin: auto;
 }
 
-.status-message.error {
-  color: #f44336;
-}
-
 .back-button:hover {
   background-color: #374151;
   cursor: pointer;
 }
+
 .back-button {
   background-color: transparent;
   border-color: transparent;
@@ -69,5 +57,3 @@
   align-items: center;
   justify-content: center;
 }
-
-

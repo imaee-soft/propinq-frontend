@@ -7,23 +7,25 @@ export const OWNER_NAVBAR_ITEMS = [
     name: 'Contactos',
     url: '/owner-contacts',
   },
-  {
-    name: 'Inmuebles',
-    url: '/buildings',
-  },
-  {
-    name: 'Viviendas',
-    url: '/properties',
-  },
 ];
 
 export const OWNER_SIDEBAR_CONFIG = {
   enabled: true,
   items: [
     {
+      label: 'Mis notificaciones',
+      icon: 'notifications',
+      route: '/notifications',
+    },
+    {
       label: 'Mis alquileres',
-      icon: 'apartment',
+      icon: 'handshake',
       route: '/my-rentals',
+    },
+    {
+      label: 'Mis contactos',
+      icon: 'person',
+      route: '/owner-contacts',
     },
     {
       label: 'Mis inmuebles',
@@ -32,13 +34,8 @@ export const OWNER_SIDEBAR_CONFIG = {
     },
     {
       label: 'Mis viviendas',
-      icon: 'home',
+      icon: 'house',
       route: '/properties',
-    },
-    {
-      label: 'Mis contactos',
-      icon: 'person',
-      route: '/owner-contacts',
     },
     {
       label: 'Reportes y estadísticas',

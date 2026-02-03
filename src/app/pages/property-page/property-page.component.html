@@ -8,12 +8,14 @@
   [thirdActionLabel]="thirdActionLabel.bind(this)"
   [thirdAction]="thirdAction.bind(this)"
   [iconUrl]="'/property.png'"
-  [pageTitle]="'Mis Viviendas'"
-  [allLoadedLabel]="'Estas son todas las viviendas.'"
+  [pageTitle]="'Viviendas'"
+  [allLoadedLabel]="'Estas son todas tus viviendas.'"
   [hasMoreEntities]="canQuery()"
   [loadMoreLabel]="'Recuperar más viviendas'"
   [loadMoreEntities]="loadMore.bind(this)"
   [newEntityLabel]="'Nueva vivienda'"
   [newEntity]="create.bind(this)"
+  [zeroEntitiesLabel]="'Aún no tienes viviendas registradas.'"
+  [createFirstEntityLabel]="'Crear la primera vivienda'"
 >
 </common-entity-page>

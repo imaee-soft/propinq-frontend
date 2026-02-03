@@ -39,7 +39,7 @@ export class AuthService {
         const { accessToken, refreshToken } = this.getTokens();
         this._authState.set({ accessToken, refreshToken, user, status });
       },
-      error: (err) => {
+      error: () => {
         this.logout();
       },
     });
@@ -58,7 +58,7 @@ export class AuthService {
             status: AuthStatus.AUTHENTICATED,
           });
           this.setTokens(accessToken, refreshToken);
-        })
+        }),
       );
   }
 
@@ -72,7 +72,6 @@ export class AuthService {
 
   logout(): void {
     this.clearTokens();
-    window.location.reload();
   }
 
   private getTokens(): {
@@ -96,7 +95,7 @@ export class AuthService {
   }
 
   signup(
-    signupRequest: SignupRequest
+    signupRequest: SignupRequest,
   ): Observable<{ success: boolean; status: number }> {
     if (this.isLoading()) {
       return EMPTY;
@@ -118,7 +117,7 @@ export class AuthService {
           cuit: signupRequest.cuit,
           birthDate: signupRequest.birthDate,
         },
-        { responseType: 'text' as 'json' }
+        { responseType: 'text' as 'json' },
       )
       .pipe(finalize(() => this.isLoading.set(false)));
   }
@@ -142,7 +141,7 @@ export class AuthService {
             status: AuthStatus.AUTHENTICATED,
           });
           this.setTokens(accessToken, refreshToken);
-        })
+        }),
       );
   }
 }

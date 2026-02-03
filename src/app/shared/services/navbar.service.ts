@@ -43,7 +43,7 @@ export class NavbarService {
   userId = computed(() => this._authService.user()?.userId);
   isOwner = computed(() => {
     const user = this._authService.user();
-    return user?.role === Role.OWNER;
+    return user?.role.toString() === 'OWNER';
   });
 
   handleLogout() {

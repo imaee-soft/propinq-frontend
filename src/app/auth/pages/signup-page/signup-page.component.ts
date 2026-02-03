@@ -84,16 +84,12 @@ export class SignupPageComponent {
           Validators.required,
           Validators.pattern(FormUtils.addressPattern),
           Validators.minLength(3),
-          Validators.maxLength(20),
+          Validators.maxLength(50),
         ],
       ],
       phoneNumber: [
         '',
         [Validators.required, Validators.pattern(FormUtils.phoneNumberPattern)],
-      ],
-      dni: [
-        '',
-        [Validators.required, Validators.pattern(FormUtils.dniPattern)],
       ],
       birthDate: [
         '',
@@ -102,7 +98,7 @@ export class SignupPageComponent {
     },
     {
       validators: FormUtils.passwordMatchValidator,
-    }
+    },
   );
 
   hidePassword = signal(true);

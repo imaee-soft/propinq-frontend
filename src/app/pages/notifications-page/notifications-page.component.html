@@ -1,0 +1,110 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-content">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>Mis Notificaciones</h2>
+    </div>
+  </header>
+  @if (notificationCount() === 0) {
+    <div class="no-entities-container">
+      <div class="no-entities-card">
+        <div class="no-entities-icon">
+          <mat-icon>inbox</mat-icon>
+        </div>
+        <p class="no-entities-message">Aún no tienes notificaciones.</p>
+      </div>
+    </div>
+  } @else {
+    <div class="notifications-table-wrapper">
+      <table
+        mat-table
+        [dataSource]="notificationList()"
+        class="notifications-table"
+      >
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="notifications-cell-header">
+              <mat-icon>calendar_today</mat-icon>
+              Fecha
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ formatDateWrapper(element.createdAt) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="notifier">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="notifications-cell-header">
+              <mat-icon>person</mat-icon>
+              Notificante
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.notifierFullName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="title">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="notifications-cell-header">
+              <mat-icon>description</mat-icon>
+              Descripción
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">{{ element.title }}</td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="notifications-cell-header">
+              <mat-icon>settings</mat-icon>
+              Acciones
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              mat-icon-button
+              [matTooltip]="'Ir al enlace'"
+              (click)="openLink(element)"
+            >
+              <mat-icon>link</mat-icon>
+            </button>
+            @if (isSeen(element)) {
+              <button
+                mat-icon-button
+                [matTooltip]="'Marcar como no leída'"
+                (click)="markAsUnseen(element)"
+              >
+                <mat-icon>visibility_off</mat-icon>
+              </button>
+            } @else {
+              <button
+                mat-icon-button
+                [matTooltip]="'Marcar como leída'"
+                (click)="markAsSeen(element)"
+              >
+                <mat-icon>visibility</mat-icon>
+              </button>
+            }
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <div class="paginator-wrapper">
+      <mat-paginator
+        class="notifications-paginator"
+        [length]="notificationCount()"
+        [pageSize]="6"
+        [showFirstLastButtons]="true"
+        (page)="page($event)"
+      >
+      </mat-paginator>
+    </div>
+  }
+</div>

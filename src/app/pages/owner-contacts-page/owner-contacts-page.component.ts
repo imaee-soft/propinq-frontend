@@ -1,9 +1,12 @@
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { ContactsService } from '../../contacts/contacts.service';
 import { ContactDetails } from '../../contacts/interfaces/contact-details.interface';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
-import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
+import {
+  ChipFilter,
+  CommonEntityPageComponent,
+} from '../../shared/pages/common-entity-page/common-entity-page.component';
 
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
@@ -28,10 +31,23 @@ export class OwnerContactsPageComponent implements OnInit {
   contacts = signal<ContactDetails[]>([]);
   totalElements = signal(0);
 
+  contactQueryStatus = signal<'all' | 'created' | 'rejected' | 'accepted'>(
+    'all',
+  );
+  chipFilters: ChipFilter[] = [
+    { id: 'all', label: 'Todas' },
+    { id: 'created', label: 'Pendientes' },
+    { id: 'rejected', label: 'Rechazadas' },
+    { id: 'accepted', label: 'En negociación ' },
+  ];
+  currentFilter = computed(() =>
+    this.chipFilters.find((f) => f.id === this.contactQueryStatus()),
+  );
+
   descriptor: CardDescriptor<ContactDetails> = {
     user: (p) => p.owner ?? '',
     name: (p) => p.propertyAddress,
-    date: (p) => new Date(),
+    date: (p) => p.contactDate,
     id: (p) => p.contactId,
     status: (p) => p.status,
     coordinates: (p) =>
@@ -47,7 +63,11 @@ export class OwnerContactsPageComponent implements OnInit {
   loadContacts() {
     if (!this.canQuery()) return;
     this._contactsService
-      .getOwnerContactsDetails(this.pageIndex())
+      .getOwnerContactsDetails(
+        this.pageIndex(),
+        undefined,
+        this.contactQueryStatus(),
+      )
       .pipe(
         tap((newContacts) => {
           this.contacts.set([...this.contacts(), ...newContacts.content]);
@@ -64,14 +84,18 @@ export class OwnerContactsPageComponent implements OnInit {
     this.loadContacts();
   };
 
+  changeContactState(type: ChipFilter) {
+    this.contactQueryStatus.set(
+      type.id as 'all' | 'created' | 'rejected' | 'accepted',
+    );
+    this.resetPage();
+    this.loadContacts();
+  }
+
   primaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
-    this._router.navigate(['/properties', contact.propertyId]);
-  };
-
-  thirdActionLabel = (contactId: string | number | undefined): string => {
-    return 'Responder';
+    this._router.navigate(['/contact-details', contact.contactId]);
   };
 
   canExecuteSecondaryAction = (contact: ContactDetails): boolean => {
@@ -81,11 +105,15 @@ export class OwnerContactsPageComponent implements OnInit {
   secondaryAction = (contactId: string | number | undefined) => {
     const contact = this.getContact(contactId);
     if (!contact) return;
-    this._router.navigate(['/contact-details', contact.contactId]);
+    this._router.navigate(['/properties', contact.propertyId]);
   };
 
   canExecuteThirdAction = (contact: ContactDetails): boolean => {
     return contact.status === 'CREATED';
+  };
+
+  thirdActionLabel = (contactId: string | number | undefined): string => {
+    return 'Responder';
   };
 
   thirdAction = (contactId: string | number | undefined) => {

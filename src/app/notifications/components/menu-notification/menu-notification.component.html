@@ -1,4 +1,6 @@
-<button mat-menu-item class="notification-item" (click)="openNotification()">
-  <mat-icon>{{ icon() }}</mat-icon>
-  <p>{{ text() }}</p>
-</button>
+<div class="notification-item-container">
+  <div mat-menu-item class="notification-item" (click)="openNotification()">
+    <mat-icon>{{ icon() }}</mat-icon>
+    <p>{{ text() }}</p>
+  </div>
+</div>

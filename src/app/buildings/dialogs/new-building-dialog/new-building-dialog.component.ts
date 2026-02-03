@@ -107,7 +107,7 @@ export class NewBuildingDialogComponent {
   searchingAddress = computed(
     () =>
       this._textAddressResource.isLoading() ||
-      this._coordinateAddressResource.isLoading()
+      this._coordinateAddressResource.isLoading(),
   );
 
   mapConfig = computed<MapConfig>(() => ({
@@ -122,7 +122,9 @@ export class NewBuildingDialogComponent {
       Validators.required,
       Validators.minLength(5),
     ]),
-    description: this._formBuilder.control<string>(''),
+    description: this._formBuilder.control<string>('', [
+      Validators.maxLength(400),
+    ]),
     type: this._formBuilder.control<string>('EDIFICIO', [Validators.required]),
     address: this._formBuilder.control<string>('', [
       Validators.required,
@@ -137,7 +139,7 @@ export class NewBuildingDialogComponent {
         Validators.required,
         ImageValidator.maxSize(3 * 1024 * 1024),
         ImageValidator.allowedTypes(['jpg', 'jpeg', 'png', 'webp']),
-      ]
+      ],
     ),
   });
 
@@ -205,9 +207,9 @@ export class NewBuildingDialogComponent {
     const { name, description, type, address, coordinate, images } = this.form
       .value as BuildingFormData;
 
-      if (!coordinate) {
-        return;
-      }
+    if (!coordinate) {
+      return;
+    }
     this._buildingRequest.set({
       type,
       name,

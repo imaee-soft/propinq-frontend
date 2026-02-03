@@ -4,16 +4,16 @@
       <button mat-icon-button class="back-button" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <div class="page-title">Reportes y Estadísticas</div>
+      <h2>Reportes y Estadísticas</h2>
     </div>
   </div>
 
-  <div class="content-wrapper" style="margin-top:2.5rem;">
+  <div class="content-wrapper" style="margin-top: 2.5rem">
     @if (isLoading()) {
       <div class="status-message loading">Cargando reportes...</div>
     }
     @if (error()) {
-      <div class="status-message error">{{ error() }}</div>
+      <div class="status-message">{{ error() }}</div>
     }
     @if (!isLoading() && !error() && metabaseIframeUrl()) {
       <iframe
@@ -23,7 +23,7 @@
         class="metabase-iframe"
         frameborder="0"
         allowfullscreen
-        style="margin:auto;display:block;border-radius:14px;"
+        style="margin: auto; display: block; border-radius: 14px"
       ></iframe>
     }
   </div>

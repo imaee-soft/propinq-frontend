@@ -1,24 +1,21 @@
-@if (buildingsDetailsResource.isLoading() && !page()) {
-<div class="status-message loading">Cargando inmuebles...</div>
-} @else if (buildingsDetailsResource.error()) {
-<div class="status-message error">Error al cargar los inmuebles.</div>
-} @else if (!page()) {
-<div class="status-message empty">No hay inmuebles registrados.</div>
-} @else if (page()!.content.length === 0) {
-<div class="status-message empty">No hay inmuebles registrados.</div>
-} @else {
 <common-entity-page
-  [elements]="page()?.content"
+  [elements]="buildings()"
   [descriptor]="descriptor"
-  [primaryAction]="openBuilding.bind(this)"
-  [secondaryAction]="deleteOrRestoreBuilding.bind(this)"
   [primaryActionLabel]="'Modificar'"
-  [allLoadedLabel]="'Estos son todos los inmuebles.'"
-  [loadMoreLabel]="'Recuperar más inmuebles.'"
+  [primaryAction]="primaryAction.bind(this)"
+  [secondaryActionLabel]="'Ver'"
+  [secondaryAction]="secondaryAction.bind(this)"
+  [thirdActionLabel]="thirdActionLabel.bind(this)"
+  [thirdAction]="thirdAction.bind(this)"
   [iconUrl]="'/building.png'"
-  [pageTitle]="'Mis Inmuebles'"
-  [newEntity]="onCreate.bind(this)"
+  [pageTitle]="'Inmuebles'"
+  [allLoadedLabel]="'Estos son todos tus inmuebles.'"
+  [hasMoreEntities]="canQuery()"
+  [loadMoreLabel]="'Recuperar más inmuebles'"
+  [loadMoreEntities]="loadMore.bind(this)"
   [newEntityLabel]="'Nuevo inmueble'"
+  [newEntity]="create.bind(this)"
+  [zeroEntitiesLabel]="'Aún no tienes inmuebles registrados.'"
+  [createFirstEntityLabel]="'Crear el primer inmueble'"
 >
 </common-entity-page>
-}

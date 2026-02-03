@@ -1,0 +1,79 @@
+<mat-dialog-content>
+  <div class="dialog-header">
+    <h1 mat-dialog-title>Propiedades a comparar</h1>
+    <button mat-icon-button (click)="closeDialog()">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  @if (properties().length === 0) {
+    <div class="no-entities-container">
+      <div class="no-entities-card">
+        <div class="no-entities-icon">
+          <mat-icon>inbox</mat-icon>
+        </div>
+        <p class="no-entities-message">
+          Aún no has seleccionado propiedades para comparar.
+        </p>
+      </div>
+    </div>
+  } @else {
+    <div class="properties-grid">
+      @for (property of properties(); track $index) {
+        <mat-card class="property-card">
+          <mat-card-header>
+            <div class="title-row">
+              <div class="entity-container">
+                <mat-icon>apartment</mat-icon>
+                <span class="span-title">
+                  {{ property.title }}
+                </span>
+              </div>
+              <div class="badges">
+                <span class="card-date">
+                  {{ formatDateWrapper(property.createdAt) }}
+                </span>
+                <button
+                  mat-icon-button
+                  color="warn"
+                  [matTooltip]="'Eliminar de la comparación'"
+                  (click)="removeFromComparativeList($index)"
+                >
+                  <mat-icon>delete</mat-icon>
+                </button>
+              </div>
+            </div>
+          </mat-card-header>
+          <mat-card-content>
+            <div class="image-slot">
+              <img
+                [src]="property.imagesURL[0]"
+                [attr.key]="property.imagesURL[0]"
+                class="main-image"
+              />
+            </div>
+          </mat-card-content>
+        </mat-card>
+      }
+    </div>
+    @if (properties().length < 2) {
+      <div class="end-zone">
+        <span class="end-text"
+          >Necesitas al menos dos propiedades para realizar la
+          comparación.</span
+        >
+      </div>
+    }
+  }
+</mat-dialog-content>
+<mat-dialog-actions>
+  @if (properties().length >= 2) {
+    <button mat-button [disabled]="properties().length === 0" (click)="clear()">
+      <mat-icon>clear</mat-icon>
+      <span>Limpiar</span>
+    </button>
+    <button mat-flat-button type="submit" (click)="compare()">
+      <mat-icon>compare</mat-icon>
+      <span>Comparar</span>
+    </button>
+  }
+</mat-dialog-actions>

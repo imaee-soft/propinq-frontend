@@ -1,9 +1,10 @@
 import { Component, computed, inject, input } from '@angular/core';
-import { MatDialog } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { ContactActionsDialogComponent } from '../../dialogs/contact-actions-dialog/contact-actions-dialog.component';
+import { Router } from '@angular/router';
 import { NotificationResponse } from '../../interfaces/notification-response.interface';
+import { NotificationsService } from '../../notifications.service';
 
 const TYPE_ICONS: Record<string, string> = {
   NEW_CONTACT_REQUEST: 'person_add',
@@ -19,12 +20,14 @@ const TYPE_TEXTS: Record<string, string> = {
 
 @Component({
   selector: 'menu-notification',
-  imports: [MatMenuModule, MatIconModule],
+  imports: [MatMenuModule, MatIconModule, MatButtonModule],
   templateUrl: './menu-notification.component.html',
   styleUrl: './menu-notification.component.css',
 })
 export class MenuNotificationComponent {
-  private _matDialog = inject(MatDialog);
+  private _router = inject(Router);
+  private _notificationsService = inject(NotificationsService);
+
   notification = input.required<NotificationResponse>();
 
   icon = computed(() => TYPE_ICONS[this.notification().type]);
@@ -32,19 +35,23 @@ export class MenuNotificationComponent {
     () =>
       `${this.notification().notifierFullName} ${
         TYPE_TEXTS[this.notification().type]
-      }`
+      }`,
   );
 
   openNotification() {
-    if (this.notification().type === 'NEW_CONTACT_REQUEST') {
-      this.openContactResponseDialog(this.notification());
-    }
+    const notification = this.notification();
+    this.markAsSeen(notification);
+    this._router.navigateByUrl(notification.url ?? '/');
   }
 
-  openContactResponseDialog(notification: NotificationResponse) {
-    this._matDialog.open(ContactActionsDialogComponent, {
-      panelClass: 'contact-dialog',
-      data: notification,
-    });
+  markAsSeen(notification: NotificationResponse) {
+    this._notificationsService
+      .markAsSeen(notification.notificationId)
+      .subscribe();
+  }
+
+  deleteNotification() {
+    const notification = this.notification();
+    this._notificationsService.deleteNotification(notification.notificationId);
   }
 }

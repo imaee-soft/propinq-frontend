@@ -4,7 +4,7 @@
       <button mat-icon-button class="back-button" (click)="goBack()">
         <mat-icon>arrow_back</mat-icon>
       </button>
-      <h2>{{ pageTitle() }}</h2>
+      <h2>Mis {{ " " + pageTitle() }}</h2>
     </div>
     @if (newEntity()) {
       <button
@@ -17,93 +17,129 @@
       </button>
     }
   </header>
-  <div class="scroll-zone">
-    <div class="grid-container">
-      @for (entity of cards(); track entity) {
-        <mat-card class="entity-card">
-          <mat-card-header>
-            <div class="title-row">
-              <div class="entity-container">
-                <mat-icon>person</mat-icon>
-                <span class="span-title">
-                  {{ descriptor()?.user(entity) }}
-                </span>
-              </div>
-
-              <div class="badges">
-                <span class="card-date">
-                  {{ formatDateWrapper(descriptor()?.date(entity)) }}
-                </span>
-
-                @if (getStatusConfig(entity); as status) {
-                  <span
-                    class="card-status"
-                    [ngStyle]="{
-                      color: status.color,
-                      background: status.background,
-                      border: status.border,
-                    }"
-                  >
-                    {{ status.label }}
-                  </span>
-                }
-              </div>
-            </div>
-          </mat-card-header>
-
-          <mat-card-content>
-            <p class="name">
-              {{ descriptor()?.name(entity) }}
-            </p>
-            <div class="map-slot">
-              <div class="map-wrapper">
-                <app-map [config]="loadMapConfig(entity)"></app-map>
-              </div>
-            </div>
-          </mat-card-content>
-
-          <mat-card-actions align="end">
-            <button
-              mat-flat-button
-              (click)="primaryAction()?.(descriptor()?.id(entity))"
-            >
-              {{ primaryActionLabel() }}
-            </button>
-
-            @if (canExecuteSecondaryAction()(entity)) {
-              <button
-                mat-button
-                (click)="secondaryAction()?.(descriptor()?.id(entity))"
-              >
-                {{ secondaryActionLabel() }}
-              </button>
-            }
-            @if (canExecuteThirdAction()(entity)) {
-              <button
-                mat-button
-                (click)="thirdAction()?.(descriptor()?.id(entity))"
-              >
-                {{ thirdActionLabel()(descriptor()?.id(entity)) }}
-              </button>
-            }
-          </mat-card-actions>
-        </mat-card>
-      }
-    </div>
-    <div class="pagination-zone">
-      @if (hasMoreEntities()) {
+  @if (chipFilters()) {
+    <div class="filter-pills-container">
+      @for (chip of chipFilters()!; track chip.id) {
         <button
-          mat-flat-button
-          class="load-more"
-          (click)="loadMoreEntities()?.()"
+          class="filter-pill"
+          [class.active]="chip.id === currentFilter()?.id"
+          (click)="changeFilter.emit(chip)"
         >
-          {{ loadMoreLabel() }}
+          {{ chip.label }}
         </button>
-      } @else {
-        <span class="all-loaded">
-          {{ allLoadedLabel() }}
-        </span>
       }
     </div>
-  </div>
+  }
+  @if (elements()?.length === 0) {
+    <div class="no-entities-container">
+      <div class="no-entities-card">
+        <div class="no-entities-icon">
+          <mat-icon>inbox</mat-icon>
+        </div>
+        <p class="no-entities-message">
+          {{ zeroEntitiesLabel() }}
+        </p>
+        @if (newEntity()) {
+          <button
+            mat-flat-button
+            class="create-first-entity-button"
+            (click)="newEntity()?.()"
+          >
+            <mat-icon>add</mat-icon>
+            {{ createFirstEntityLabel() }}
+          </button>
+        }
+      </div>
+    </div>
+  } @else {
+    <div class="scroll-zone">
+      <div class="grid-container">
+        @for (entity of cards(); track entity) {
+          <mat-card class="entity-card">
+            <mat-card-header>
+              <div class="title-row">
+                <div class="entity-container">
+                  <mat-icon>person</mat-icon>
+                  <span class="span-title">
+                    {{ descriptor()?.user(entity) }}
+                  </span>
+                </div>
+
+                <div class="badges">
+                  <span class="card-date">
+                    {{ formatDateWrapper(descriptor()?.date(entity)) }}
+                  </span>
+
+                  @if (getStatusConfig(entity); as status) {
+                    <span
+                      class="card-status"
+                      [ngStyle]="{
+                        color: status.color,
+                        background: status.background,
+                        border: status.border,
+                      }"
+                    >
+                      {{ status.label }}
+                    </span>
+                  }
+                </div>
+              </div>
+            </mat-card-header>
+
+            <mat-card-content>
+              <p class="name">
+                {{ descriptor()?.name(entity) }}
+              </p>
+              <div class="map-slot">
+                <div class="map-wrapper">
+                  <app-map [config]="loadMapConfig(entity)"></app-map>
+                </div>
+              </div>
+            </mat-card-content>
+
+            <mat-card-actions align="end">
+              <button
+                mat-flat-button
+                (click)="primaryAction()?.(descriptor()?.id(entity))"
+              >
+                {{ primaryActionLabel() }}
+              </button>
+
+              @if (secondaryAction() && canExecuteSecondaryAction()(entity)) {
+                <button
+                  mat-button
+                  (click)="secondaryAction()?.(descriptor()?.id(entity))"
+                >
+                  {{ secondaryActionLabel() }}
+                </button>
+              }
+              @if (thirdAction() && canExecuteThirdAction()(entity)) {
+                <button
+                  mat-button
+                  (click)="thirdAction()?.(descriptor()?.id(entity))"
+                >
+                  {{ thirdActionLabel()(descriptor()?.id(entity)) }}
+                </button>
+              }
+            </mat-card-actions>
+          </mat-card>
+        }
+      </div>
+      <div class="pagination-zone">
+        @if (hasMoreEntities()) {
+          <button
+            mat-flat-button
+            class="load-more"
+            (click)="loadMoreEntities()?.()"
+          >
+            {{ loadMoreLabel() }}
+          </button>
+        } @else {
+          <span class="all-loaded">
+            {{ allLoadedLabel() }}
+          </span>
+        }
+      </div>
+    </div>
+  }
 </div>

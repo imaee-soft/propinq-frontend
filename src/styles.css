@@ -79,8 +79,22 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   border-radius: 6px;
   max-width: 40vw !important;
   width: 40vw !important;
-
   background: #1a1e2b;
+}
+
+.comparision-preview-dialog {
+  padding: 10px;
+  border-radius: 6px;
+  max-width: 83vw !important;
+  width: 83vw !important;
+  height: 70vh !important;
+  max-height: 70vh !important;
+  background: #1a1e2b;
+}
+
+.comparision-preview-dialog .mat-mdc-dialog-surface {
+  background: transparent;
+  box-shadow: none;
 }
 
 @keyframes slideUp {
@@ -122,4 +136,15 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   background: rgba(103, 58, 183, 0.15) !important;
   color: #673ab7 !important;
   font-weight: 600 !important;
+}
+
+.publish-menu.mat-mdc-menu-panel {
+  background-color: #1a1e2b;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.45);
+}
+
+.mat-mdc-paginator-page-size,
+.mat-mdc-paginator-range-label {
+  display: none !important;
 }

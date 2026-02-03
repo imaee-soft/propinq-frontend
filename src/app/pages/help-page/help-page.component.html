@@ -1,0 +1,116 @@
+<div class="help-page-container">
+  <div class="help-content">
+    <div class="help-header">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <span class="material-icons">arrow_back</span>
+      </button>
+      <h2 class="help-title">Centro de Ayuda</h2>
+    </div>
+    <div class="accordion-list">
+      <div
+        class="accordion-item"
+        tabindex="0"
+        [class.open]="isOpen(0)"
+        (click)="toggleAccordion(0)"
+        (keydown.enter)="toggleAccordion(0)"
+        (keydown.space)="toggleAccordion(0)"
+      >
+        <div class="accordion-header">
+          <span class="icon material-icons">help_outline</span>
+          <span class="accordion-title">Preguntas frecuentes</span>
+          <span class="accordion-arrow material-icons">expand_more</span>
+        </div>
+        <div class="accordion-panel">
+          <ul>
+            <li>
+              <strong>¿Cómo busco una propiedad?</strong><br />Puedes buscar
+              desde la página principal aplicando los filtros en el panel de la
+              izquierda.
+            </li>
+            <li>
+              <strong>¿Cómo me contacto con un anunciante?</strong><br />Dentro
+              de la tarjeta de la propiedad, encontrarás un botón para
+              contactar.
+            </li>
+            <li>
+              <strong>¿Cómo puedo destacar una propiedad?</strong><br />Dentro
+              del mapa, selecciona la vivienda a destacar y dentro de la tarjeta
+              de la propiedad, elige la opción de agregar a favoritos.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="accordion-item"
+        tabindex="1"
+        [class.open]="isOpen(1)"
+        (click)="toggleAccordion(1)"
+        (keydown.enter)="toggleAccordion(1)"
+        (keydown.space)="toggleAccordion(1)"
+      >
+        <div class="accordion-header">
+          <span class="icon material-icons">support_agent</span>
+          <span class="accordion-title">Contactar a soporte técnico</span>
+          <span class="accordion-arrow material-icons">expand_more</span>
+        </div>
+        <div class="accordion-panel">
+          <p>
+            ¿Tienes problemas con la plataforma o necesitas ayuda?<br />
+            Escríbenos a
+            <a href="mailto:soporte@propinq.com">soporte&#64;propinq.com</a> y
+            serás contactado a la brevedad.
+          </p>
+        </div>
+      </div>
+      <div
+        class="accordion-item"
+        tabindex="2"
+        [class.open]="isOpen(2)"
+        (click)="toggleAccordion(2)"
+        (keydown.enter)="toggleAccordion(2)"
+        (keydown.space)="toggleAccordion(2)"
+      >
+        <div class="accordion-header">
+          <span class="icon material-icons">warning_amber</span>
+          <span class="accordion-title">Siento que me estafaron</span>
+          <span class="accordion-arrow material-icons">expand_more</span>
+        </div>
+        <div class="accordion-panel">
+          <p>Si sospechas de una estafa:</p>
+          <ul>
+            <li>
+              Reporta el anuncio o el usuario desde la tarjeta de la propiedad.
+            </li>
+            <li>
+              Contáctanos inmediatamente a
+              <a href="mailto:seguridad@propinq.com"
+                >seguridad&#64;propinq.com</a
+              >.
+            </li>
+          </ul>
+        </div>
+      </div>
+      <div
+        class="accordion-item"
+        tabindex="3"
+        [class.open]="isOpen(3)"
+        (click)="toggleAccordion(3)"
+        (keydown.enter)="toggleAccordion(3)"
+        (keydown.space)="toggleAccordion(3)"
+      >
+        <div class="accordion-header">
+          <span class="icon material-icons">menu_book</span>
+          <span class="accordion-title">Manual de usuario</span>
+          <span class="accordion-arrow material-icons">expand_more</span>
+        </div>
+        <div class="accordion-panel">
+          <p>
+            Puedes descargar el manual completo desde <a href="#">aquí</a>, o
+            visualizar guías rápidas en cada sección haciendo clic en el icono
+            <span class="sm-icon material-icons">help</span>.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

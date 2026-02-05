@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, output } from '@angular/core';
+import { Component, computed, input, output, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
@@ -64,6 +64,11 @@ export class CommonEntityPageComponent<T extends object> {
 
   currentFilter = input<ChipFilter | undefined>(undefined);
   changeFilter = output<ChipFilter>();
+
+  filterByText = input<boolean>(false);
+  filterChange = output<string>();
+
+  textFilter = signal('');
 
   cards = computed(() => this.elements() ?? []);
   private _mapConfigs = new WeakMap<T, MapConfig>();

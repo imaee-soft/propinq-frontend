@@ -30,6 +30,18 @@
       }
     </div>
   }
+  @if (filterByText()) {
+    <div class="text-filter-container">
+      <div class="search-box">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input
+          type="text"
+          placeholder="Buscar por apellido..."
+          [value]="textFilter()"
+        />
+      </div>
+    </div>
+  }
   @if (elements()?.length === 0) {
     <div class="no-entities-container">
       <div class="no-entities-card">

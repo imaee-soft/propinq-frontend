@@ -20,7 +20,7 @@ export const OWNER_SIDEBAR_CONFIG = {
     {
       label: 'Mis alquileres',
       icon: 'handshake',
-      route: '/my-rentals',
+      route: '/owner-rents',
     },
     {
       label: 'Mis contactos',

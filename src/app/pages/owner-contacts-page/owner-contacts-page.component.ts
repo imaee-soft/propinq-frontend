@@ -31,21 +31,23 @@ export class OwnerContactsPageComponent implements OnInit {
   contacts = signal<ContactDetails[]>([]);
   totalElements = signal(0);
 
-  contactQueryStatus = signal<'all' | 'created' | 'rejected' | 'accepted'>(
-    'all',
-  );
+  contactQueryStatus = signal<
+    'all' | 'created' | 'rejected' | 'accepted' | 'unsettled' | 'rented'
+  >('all');
   chipFilters: ChipFilter[] = [
     { id: 'all', label: 'Todas' },
     { id: 'created', label: 'Pendientes' },
     { id: 'rejected', label: 'Rechazadas' },
-    { id: 'accepted', label: 'En negociación ' },
+    { id: 'accepted', label: 'En negociación' },
+    { id: 'unsettled', label: 'No concretadas' },
+    { id: 'rented', label: 'Alquiladas' },
   ];
   currentFilter = computed(() =>
     this.chipFilters.find((f) => f.id === this.contactQueryStatus()),
   );
 
   descriptor: CardDescriptor<ContactDetails> = {
-    user: (p) => p.owner ?? '',
+    user: (p) => p.issuer ?? '',
     name: (p) => p.propertyAddress,
     date: (p) => p.contactDate,
     id: (p) => p.contactId,
@@ -86,7 +88,7 @@ export class OwnerContactsPageComponent implements OnInit {
 
   changeContactState(type: ChipFilter) {
     this.contactQueryStatus.set(
-      type.id as 'all' | 'created' | 'rejected' | 'accepted',
+      type.id as 'all' | 'created' | 'rejected' | 'accepted' | 'unsettled',
     );
     this.resetPage();
     this.loadContacts();

@@ -95,6 +95,51 @@
   box-shadow: 0 8px 22px rgba(79, 70, 229, 0.55);
 }
 
+.text-filter-container {
+  padding: 0 64px 16px;
+  display: flex;
+}
+
+.search-box {
+  position: relative;
+  width: 30.5%;
+  display: flex;
+  justify-content: start;
+  align-items: center;
+  padding: 8px 16px;
+  gap: 8px;
+  background: linear-gradient(
+    145deg,
+    rgba(255, 255, 255, 0.05),
+    rgba(255, 255, 255, 0.02)
+  );
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+}
+
+.search-box:focus-within {
+  border-color: rgba(124, 58, 237, 0.7);
+  box-shadow:
+    0 0 0 1px rgba(124, 58, 237, 0.35),
+    0 4px 14px rgba(79, 70, 229, 0.25);
+}
+
+.search-box input {
+  flex: 1;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e2e8f0;
+  font-size: 1rem;
+}
+
+.search-box input::placeholder {
+  color: #94a3b8;
+}
+
 .no-entities-container {
   flex: 1;
   display: flex;

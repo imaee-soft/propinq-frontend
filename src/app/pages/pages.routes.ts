@@ -102,6 +102,14 @@ export const routes: Routes = [
     canActivate: [OwnerGuard],
   },
   {
+    path: 'owner-rents',
+    loadComponent: () =>
+      import('./owner-rents-page/owner-rents-page.component').then(
+        (m) => m.OwnerRentsPageComponent,
+      ),
+    canActivate: [OwnerGuard],
+  },
+  {
     path: 'reports',
     loadComponent: () =>
       import('./reports-page/reports-page.component').then(

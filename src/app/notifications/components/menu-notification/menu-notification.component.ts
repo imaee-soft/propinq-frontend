@@ -10,12 +10,16 @@ const TYPE_ICONS: Record<string, string> = {
   NEW_CONTACT_REQUEST: 'person_add',
   CONTACT_ACCEPTED: 'person',
   CONTACT_REJECTED: 'person_off',
+  CONTACT_CANCELLED: 'person_off',
+  CONTACT_RENTED: 'person',
 };
 
 const TYPE_TEXTS: Record<string, string> = {
   NEW_CONTACT_REQUEST: 'envió una nueva solicitud de contacto.',
   CONTACT_ACCEPTED: 'aceptó la solicitud de contacto.',
   CONTACT_REJECTED: 'rechazó la solicitud de contacto.',
+  CONTACT_CANCELLED: 'dió de baja la solicitud de contacto.',
+  CONTACT_RENTED: 'dió de alta un alquiler a tu nombre.',
 };
 
 @Component({

@@ -8,10 +8,20 @@
     </div>
     @if (canRent$ | async) {
       <div class="contact-actions">
-        <button mat-fab class="fab-add" [matTooltip]="'Registrar alquiler'">
+        <button
+          mat-fab
+          class="fab-add"
+          [matTooltip]="'Registrar alquiler'"
+          (click)="rent()"
+        >
           <mat-icon>handshake</mat-icon>
         </button>
-        <button mat-fab class="fab-add" [matTooltip]="'Cancelar negociación'">
+        <button
+          mat-fab
+          class="fab-add"
+          [matTooltip]="'Cancelar negociación'"
+          (click)="reject()"
+        >
           <mat-icon>subtitles_off</mat-icon>
         </button>
       </div>
@@ -36,7 +46,29 @@
         </div>
         <div class="entity-container">
           <mat-icon>person</mat-icon>
-          <span class="span-title">{{ (contactDetails$ | async)?.owner }}</span>
+          @if (isOwner$ | async; as isOwner) {
+            @if (isOwner === true) {
+              <span class="span-title">{{
+                (contactDetails$ | async)?.issuer
+              }}</span>
+            }
+          } @else {
+            <span class="span-title">{{
+              (contactDetails$ | async)?.owner
+            }}</span>
+          }
+          @if (
+            (contactDetails$ | async)?.status === "ACCEPTED" ||
+            (contactDetails$ | async)?.status === "RENTED"
+          ) {
+            <button
+              mat-icon-button
+              [matTooltip]="'Abrir chat'"
+              (click)="goToWhatsAppChat()"
+            >
+              <mat-icon svgIcon="whatsapp"></mat-icon>
+            </button>
+          }
         </div>
       </div>
       <div class="badges">
@@ -55,6 +87,20 @@
           >
             {{ status.label }}
           </span>
+        }
+        @if ((contactDetails$ | async)?.status === "UNSETTLED") {
+          <button
+            mat-icon-button
+            [matTooltip]="'Ver motivo de cancelación'"
+            (click)="seeCancellation()"
+          >
+            <mat-icon>info</mat-icon>
+          </button>
+        }
+        @if ((contactDetails$ | async)?.status === "RENTED") {
+          <button mat-icon-button [matTooltip]="'Ver alquiler'">
+            <mat-icon>open_in_new</mat-icon>
+          </button>
         }
       </div>
     </div>

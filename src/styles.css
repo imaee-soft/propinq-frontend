@@ -82,6 +82,14 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   background: #1a1e2b;
 }
 
+.rent-dialog {
+  padding: 4px;
+  border-radius: 6px;
+  max-width: 86vw !important;
+  width: 86vw !important;
+  background: #1a1e2b;
+}
+
 .comparision-preview-dialog {
   padding: 10px;
   border-radius: 6px;

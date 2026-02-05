@@ -8,7 +8,7 @@
       (click)="fileInput.click()"
       type="button"
     >
-      Seleccionar imágenes
+      {{ buttonLabel() }}
     </button>
     <input
       #fileInput
@@ -23,17 +23,19 @@
 </div>
 
 <div class="image-preview-container">
-  @if (previewUrls().length > 0) { @for (image of previewUrls(); track $index) {
-  <div class="image-preview">
-    <img [src]="image" alt="Vista previa de imagen" />
-    <button
-      class="delete-button"
-      (click)="removeImage($index)"
-      type="button"
-      aria-label="Eliminar imagen"
-    >
-      𝗫
-    </button>
-  </div>
-  } }
+  @if (previewUrls().length > 0) {
+    @for (image of previewUrls(); track $index) {
+      <div class="image-preview">
+        <img [src]="image" alt="Vista previa de imagen" />
+        <button
+          class="delete-button"
+          (click)="removeImage($index)"
+          type="button"
+          aria-label="Eliminar imagen"
+        >
+          𝗫
+        </button>
+      </div>
+    }
+  }
 </div>

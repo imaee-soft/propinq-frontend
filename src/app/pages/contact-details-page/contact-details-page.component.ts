@@ -182,11 +182,10 @@ export class ContactDetailsPageComponent {
               issuerFullName: this.issuerFullName(),
             },
           })
-          .subscribe((changed: boolean) => {
+          .subscribe((rentId: string) => {
             this._queryParamsService.clearQueryParams();
-            if (changed) {
-              window.location.reload();
-              // TODO: Redirect to new rent
+            if (rentId) {
+              this._router.navigate(['rent-details', rentId]);
             }
           });
       });

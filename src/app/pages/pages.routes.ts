@@ -126,6 +126,14 @@ export const routes: Routes = [
     canActivate: [UserGuard],
   },
   {
+    path: 'rent-details/:rentId',
+    loadComponent: () =>
+      import('./rent-details-page/rent-details-page.component').then(
+        (m) => m.RentDetailsPageComponent,
+      ),
+    canActivate: [UserGuard],
+  },
+  {
     path: 'help',
     loadComponent: () =>
       import('./help-page/help-page.component').then(

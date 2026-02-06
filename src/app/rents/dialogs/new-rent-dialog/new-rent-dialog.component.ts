@@ -90,32 +90,6 @@ export class NewRentDialogComponent {
   issuerFullName = this._data.issuerFullName;
 
   form: FormGroup;
-  rentDurationOptions: RentDuration[] = [
-    {
-      id: 0.5,
-      label: '6 meses',
-    },
-    {
-      id: 1,
-      label: '1 año',
-    },
-    {
-      id: 1.5,
-      label: '1 año y medio',
-    },
-    {
-      id: 2,
-      label: '2 años',
-    },
-    {
-      id: 3,
-      label: '3 años',
-    },
-    {
-      id: 0,
-      label: 'Indefinida',
-    },
-  ];
   raiseIndexOptions: RaiseIndex[] = [
     {
       id: 'ICL',
@@ -140,9 +114,8 @@ export class NewRentDialogComponent {
       initialDate: this._formBuilder.control<Date>(new Date(), [
         Validators.required,
       ]),
-      duration: this._formBuilder.control<number>(0.5, [
+      finalDate: this._formBuilder.control<Date>(this.getDatePlusSixMonths(), [
         Validators.required,
-        Validators.min(0),
       ]),
       payday: this._formBuilder.control<number>(10, [
         Validators.required,
@@ -168,6 +141,12 @@ export class NewRentDialogComponent {
     });
   }
 
+  getDatePlusSixMonths(): Date {
+    const date = new Date();
+    date.setMonth(date.getMonth() + 6);
+    return date;
+  }
+
   handleDocumentUploaded(file: File) {
     this.uploadDocumentAndMarkTouchedControl(file);
   }
@@ -181,11 +160,11 @@ export class NewRentDialogComponent {
     const formValue = this.form.value;
     const request = this.buildRequest(formValue);
     const contract = formValue.document as File;
-    this._rentsService.createProperty(request, contract).subscribe({
-      next: () => {
+    this._rentsService.saveRent(request, contract).subscribe({
+      next: (rent) => {
         this.isLoading.set(false);
         this._notificationService.success(RENT_CREATED, 3000);
-        this._matDialogRef.close(true);
+        this._matDialogRef.close(rent.rentId);
       },
       error: (err) => {
         console.log(err);
@@ -203,7 +182,7 @@ export class NewRentDialogComponent {
     return {
       contactId: this.contactId as string,
       date: value.initialDate.toISOString().substring(0, 10),
-      yearsDuration: value.duration as number,
+      dueDate: value.finalDate.toISOString().substring(0, 10),
       payday: value.payday as number,
       price: value.price as number,
       raiseIndex: value.raiseIndex as string,

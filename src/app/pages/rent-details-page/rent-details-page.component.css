@@ -1,0 +1,243 @@
+:host {
+  width: 100%;
+  padding: 4px 16px;
+  display: block;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  box-sizing: border-box;
+  font-family: Inter, "Roboto", "Helvetica Neue", Arial, sans-serif;
+  margin-bottom: 30px;
+}
+
+.page-container {
+  max-width: 1350px;
+  margin: 0 auto;
+  align-items: start;
+  overflow: hidden;
+  background-color: #1a1e2b;
+  padding: 20px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.page-header {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.page-header > button {
+  margin-left: auto;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-right: 16px;
+}
+
+.loading {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.status-message {
+  padding: 3rem 1rem;
+  text-align: center;
+  font-size: 1.1rem;
+  color: #cbd5e1;
+  background-color: #1c2230;
+  border-radius: 12px;
+  border: 1px solid #374151;
+  width: 50%;
+  margin: auto;
+}
+
+.detail-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  gap: 12px;
+  width: 100%;
+  box-sizing: border-box;
+  padding: 30px;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: saturate(150%) blur(6px);
+  border-radius: 20px;
+}
+
+.entity-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.badges {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.card-date,
+.card-end-date {
+  color: #cbd5e1;
+  padding: 6px 24px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.card-date {
+  background: linear-gradient(
+    135deg,
+    rgba(79, 70, 229, 0.25),
+    rgba(124, 58, 237, 0.25)
+  );
+  border: 1px solid rgba(124, 58, 237, 0.4);
+  box-shadow: 0 0 0 1px rgba(124, 58, 237, 0.1) inset;
+}
+
+.card-end-date {
+  background: linear-gradient(
+    135deg,
+    rgba(239, 68, 68, 0.25),
+    rgba(220, 38, 38, 0.25)
+  );
+  border: 1px solid rgba(220, 38, 38, 0.4);
+  box-shadow: 0 0 0 1px rgba(220, 38, 38, 0.1) inset;
+}
+
+.main-features {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(150px, 1fr));
+  gap: 1.5rem;
+  margin-top: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.feature-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.feature-icon {
+  font-size: 35px;
+  width: 35px;
+  height: 35px;
+  color: var(--accent-mid);
+}
+
+.feature-label {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.feature-text {
+  font-size: 0.875rem;
+  color: var(--muted-contrast);
+  font-weight: 500;
+}
+
+.projection-container {
+  display: flex;
+  justify-content: end;
+  margin: 8px 0;
+}
+
+button[mat-flat-button] {
+  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.625rem 2.25rem !important;
+  box-shadow: 0 2px 4px rgba(79, 70, 229, 0.3) !important;
+}
+
+button[mat-flat-button]:disabled {
+  background: linear-gradient(135deg, #2a2e3f 0%, #2f3249 100%) !important;
+  color: #94a3b8 !important;
+  opacity: 0.6 !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.fab-add {
+  background: linear-gradient(45deg, #8b5cf6, #6366f1);
+  color: white;
+  transition: transform 0.3s ease;
+  cursor: pointer;
+}
+
+.fab-add:hover {
+  transform: scale(1.1) rotate(90deg);
+}
+
+.contract-header {
+  display: flex;
+  align-items: center;
+  padding: 0 4px;
+  gap: 16px;
+}
+
+.pdf-wrapper {
+  padding: 0 4px;
+  overflow: hidden;
+  max-height: 0;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    max-height 350ms ease,
+    opacity 250ms ease,
+    transform 250ms ease;
+}
+
+.pdf-wrapper.visible {
+  max-height: 900px;
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.pdf-container {
+  width: 100%;
+  height: 800px;
+  border-radius: 14px;
+  overflow: hidden;
+  background: rgba(255, 255, 255, 0.35);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow:
+    0 6px 18px rgba(0, 0, 0, 0.08),
+    inset 0 0 0 1px rgba(255, 255, 255, 0.25);
+  animation: pdfFadeIn 300ms ease;
+}
+
+.pdf-container iframe {
+  width: 100%;
+  height: 100%;
+  border: none;
+  display: block;
+}
+
+@keyframes pdfFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

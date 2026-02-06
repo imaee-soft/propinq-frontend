@@ -4,6 +4,8 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { LargePage } from '../shared/interfaces/page.interface';
 import { CreateRentRequest } from './interfaces/create-rent.interface';
+import { RentDetail } from './interfaces/rent-detail.interface';
+import { CreateRentResponse } from './interfaces/rent-id.interface';
 import { SimpleRent } from './interfaces/simple-rent.interface';
 
 @Injectable({ providedIn: 'root' })
@@ -11,10 +13,10 @@ export class RentService {
   private _http = inject(HttpClient);
   private _baseUrl = `${environment.apiUrl}/api/v1/rents`;
 
-  createProperty(
+  saveRent(
     rentRequest: CreateRentRequest,
     contract: File,
-  ): Observable<any> {
+  ): Observable<CreateRentResponse> {
     const formData = new FormData();
 
     formData.append(
@@ -25,15 +27,16 @@ export class RentService {
     );
 
     formData.append('contract', contract, contract.name);
-
-    return this._http.post(this._baseUrl, formData, {
-      observe: 'response',
-    });
+    return this._http.post<CreateRentResponse>(this._baseUrl, formData);
   }
 
   getOwnerRents(page = 0, size = 6): Observable<LargePage<SimpleRent>> {
     return this._http.get<LargePage<SimpleRent>>(`${this._baseUrl}/owner`, {
       params: { page, size },
     });
+  }
+
+  getRentDetails(rentId: string) {
+    return this._http.get<RentDetail>(`${this._baseUrl}/${rentId}`);
   }
 }

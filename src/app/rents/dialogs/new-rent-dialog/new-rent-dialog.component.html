@@ -17,25 +17,28 @@
             <mat-label>Fecha de inicio del contrato</mat-label>
             <input
               matInput
-              [matDatepicker]="picker"
+              [matDatepicker]="initialPicker"
               formControlName="initialDate"
               cdkFocusInitial
             />
             <mat-datepicker-toggle
               matIconSuffix
-              [for]="picker"
+              [for]="initialPicker"
             ></mat-datepicker-toggle>
-            <mat-datepicker #picker></mat-datepicker>
+            <mat-datepicker #initialPicker></mat-datepicker>
           </mat-form-field>
           <mat-form-field appearance="outline">
-            <mat-label>Duración del contrato</mat-label>
-            <mat-select formControlName="duration">
-              @for (rentDuration of rentDurationOptions; track rentDuration) {
-                <mat-option [value]="rentDuration.id">
-                  {{ rentDuration.label }}
-                </mat-option>
-              }
-            </mat-select>
+            <mat-label>Fecha de fin del contrato</mat-label>
+            <input
+              matInput
+              [matDatepicker]="duePicker"
+              formControlName="finalDate"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="duePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #duePicker></mat-datepicker>
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Día límite de pago</mat-label>

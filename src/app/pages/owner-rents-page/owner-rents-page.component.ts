@@ -60,7 +60,7 @@ export class OwnerRentsPageComponent {
   primaryAction = (rentId: string | number | undefined) => {
     const rent = this.getRent(rentId);
     if (!rent) return;
-    this._router.navigate(['/rents', rentId]);
+    this._router.navigate(['/rent-details', rentId]);
   };
 
   canExecuteSecondaryAction = (rent: SimpleRent): boolean => {

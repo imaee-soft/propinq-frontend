@@ -1,7 +1,7 @@
 export const OWNER_NAVBAR_ITEMS = [
   {
     name: 'Alquileres',
-    url: '/my-rentals',
+    url: '/owner-rents',
   },
   {
     name: 'Contactos',

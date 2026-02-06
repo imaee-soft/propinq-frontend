@@ -1,0 +1,115 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-content">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>Alquiler Concretado</h2>
+    </div>
+  </header>
+  @if (rentDetails$ | async; as rent) {
+    <div class="detail-card">
+      <div class="header-content with-margin">
+        <div class="entities">
+          <div class="entity-container">
+            <mat-icon>home</mat-icon>
+            <span class="span-title">{{ rent.propertyName }}</span>
+            <button
+              mat-icon-button
+              [matTooltip]="'Ver propiedad'"
+              (click)="goToProperty()"
+            >
+              <mat-icon>open_in_new</mat-icon>
+            </button>
+          </div>
+          <div class="entity-container">
+            <mat-icon>person</mat-icon>
+            @if (rent.isOwnerRetrieving) {
+              <span>{{ rent.tenantFullName }}</span>
+            } @else {
+              <span>{{ rent.ownerFullName }}</span>
+            }
+            <button
+              mat-icon-button
+              [matTooltip]="'Ver contacto'"
+              (click)="goToContact()"
+            >
+              <mat-icon>open_in_new</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="badges">
+          <span class="card-date">
+            {{ rent.rentDate | date: "dd/MM/yyyy" }}
+          </span>
+          —
+          <span class="card-end-date">
+            {{ rent.rentDueDate | date: "dd/MM/yyyy" }}
+          </span>
+        </div>
+      </div>
+      <div class="main-features">
+        <div class="feature-item">
+          <mat-icon class="feature-icon">local_atm</mat-icon>
+          <span class="feature-label">{{ rent.rentPrice }}</span>
+          <span class="feature-text">Precio base de alquiler</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">assignment</mat-icon>
+          <span class="feature-label">{{ rent.raiseIndex }}</span>
+          <span class="feature-text">Índice de aumento</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">calendar_view_week</mat-icon>
+          <span class="feature-label"
+            >{{ rent.raiseMonths }}
+            {{ rent.raiseMonths === 1 ? "mes" : "meses" }}</span
+          >
+          <span class="feature-text">Periodicidad de aumento</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">alarm</mat-icon>
+          <span class="feature-label">Día {{ rent.payday }}</span>
+          <span class="feature-text">Límite de pago</span>
+        </div>
+      </div>
+      <div class="projection-container">
+        <button mat-flat-button>
+          <mat-icon>calculate</mat-icon>
+          Calcular aumento
+        </button>
+      </div>
+    </div>
+    <div class="detail-card">
+      <div class="contract-header">
+        <h2>Contrato digitalizado</h2>
+        <button
+          mat-icon-button
+          (click)="toggleShowPdf()"
+          [matTooltip]="showPdf() ? 'Ocultar' : 'Ver contrato'"
+        >
+          @if (showPdf()) {
+            <mat-icon>visibility_off</mat-icon>
+          } @else {
+            <mat-icon>visibility</mat-icon>
+          }
+        </button>
+      </div>
+      <div class="pdf-wrapper" [class.visible]="showPdf()">
+        <div class="pdf-container">
+          <iframe [src]="safePdfUrl" width="100%"> </iframe>
+        </div>
+      </div>
+    </div>
+  } @else {
+    @if (isLoading()) {
+      <div class="loading">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      </div>
+    } @else {
+      <div class="status-message">
+        ¡Ups! Ocurrió un error cargar la información del alquiler.
+      </div>
+    }
+  }
+</div>

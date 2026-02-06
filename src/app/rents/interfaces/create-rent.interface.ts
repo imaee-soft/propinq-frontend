@@ -1,7 +1,7 @@
 export interface CreateRentRequest {
   contactId: string;
   date: Date;
-  yearsDuration: number;
+  dueDate: Date;
   payday: number;
   price: number;
   raiseIndex: string;

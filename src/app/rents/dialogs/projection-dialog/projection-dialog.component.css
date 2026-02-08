@@ -1,0 +1,165 @@
+:host {
+  display: block;
+  background-color: #1a1e2b;
+  padding: 0.5rem 0.5rem;
+}
+
+mat-dialog-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: start;
+  overflow: hidden;
+}
+
+.dialog-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.85rem;
+  color: #e2e8f0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+}
+
+.main-features {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+}
+
+.projection {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  padding: 1.5rem;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.025);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.projection:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+}
+
+.date-chip {
+  width: 100%;
+  align-self: center;
+  padding: 12px;
+  border-radius: 14px;
+  font-size: 1.15rem;
+  letter-spacing: 0.4px;
+  font-weight: 700;
+  text-align: center;
+  text-transform: capitalize;
+  background: rgba(255, 255, 255, 0.08);
+  color: #cbd5e1;
+}
+
+.date-chip.accent {
+  background: rgba(99, 102, 241, 0.15);
+  color: #a5b4fc;
+}
+
+.price-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 18px;
+}
+
+.price-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.25rem;
+  margin-bottom: 0.5rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.currency {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.price-amount {
+  font-size: 2.7rem;
+  font-weight: 700;
+  color: #f1f5f9;
+  letter-spacing: -0.5px;
+}
+
+.price-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: var(--muted-contrast);
+  font-size: 0.875rem;
+  text-align: center;
+}
+
+.current-indicator,
+.increase-indicator {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.current-indicator mat-icon,
+.increase-indicator mat-icon {
+  font-size: 18px;
+  height: 18px;
+  width: 18px;
+}
+
+.increase-indicator {
+  color: #22c55e;
+}
+
+.estimated-warning {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #fbbf24;
+}
+
+.estimated-div-warning {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(255, 193, 7, 0.12);
+  border: 1px solid rgba(255, 193, 7, 0.35);
+  font-size: 0.9rem;
+  line-height: 1.35;
+  animation: fadeSlideIn 0.35s ease;
+}
+
+@keyframes fadeSlideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

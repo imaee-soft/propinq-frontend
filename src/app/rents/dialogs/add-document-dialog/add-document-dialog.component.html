@@ -1,0 +1,53 @@
+<form [formGroup]="form" (ngSubmit)="handleSubmit()">
+  <app-generic-dialog
+    [dialogTitle]="'Nuevo documento'"
+    [activeSaveButton]="form.valid"
+    [isLoading]="isLoading()"
+  >
+    <ng-template #content>
+      <div class="form-container">
+        <mat-form-field appearance="outline">
+          <mat-label>Nombre</mat-label>
+          <input
+            matInput
+            formControlName="name"
+            [maxLength]="50"
+            cdkFocusInitial
+            placeholder="Ingresá el nombre del documento..."
+          />
+          @if (
+            nameControl?.invalid &&
+            nameControl?.touched &&
+            nameControl?.errors?.["required"]
+          ) {
+            <mat-error>El nombre es requerido</mat-error>
+          }
+          @if (
+            nameControl?.invalid &&
+            nameControl?.touched &&
+            nameControl?.errors?.["minlength"]
+          ) {
+            <mat-error>El nombre debe tener al menos 5 caracteres</mat-error>
+          }
+        </mat-form-field>
+        <div class="document-section">
+          <app-document-loader
+            [title]="'Subí el documento correspondiente'"
+            [buttonLabel]="'Subir documento'"
+            (fileUploaded)="handleDocumentUploaded($event)"
+            (fileRemoved)="handleDocumentRemoved()"
+          ></app-document-loader>
+          <div class="document-error-wrapper">
+            @if (
+              documentControl?.errors?.["required"] && documentControl?.touched
+            ) {
+              <mat-error class="document-error"
+                >El documento es requerido</mat-error
+              >
+            }
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </app-generic-dialog>
+</form>

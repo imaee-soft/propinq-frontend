@@ -188,6 +188,7 @@ export class HomePageComponent {
         coordinate: { latitude: b.latitude, longitude: b.longitude },
         icon: { url: '/building.png' },
         type: 'building',
+        title: b.name,
       }));
       this._propertiesService.getProperties().subscribe((properties) => {
         const propertyMarkers = properties.map((p) => ({
@@ -195,6 +196,7 @@ export class HomePageComponent {
           coordinate: { latitude: p.latitude, longitude: p.longitude },
           icon: { url: '/property.png' },
           type: 'property',
+          title: p.title,
         }));
         this.markers.set([...buildingMarkers, ...propertyMarkers]);
       });

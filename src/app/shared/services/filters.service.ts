@@ -416,12 +416,14 @@ export class FiltersService {
       coordinate: { latitude: x.latitude, longitude: x.longitude },
       icon: { url: '/building.png' },
       type: 'building' as const,
+      title: x.name,
     }));
     const p = this.currentResults().properties.map((x) => ({
       id: x.propertyId,
       coordinate: { latitude: x.latitude, longitude: x.longitude },
       icon: { url: '/property.png' },
       type: 'property' as const,
+      title: x.title,
     }));
     return [...b, ...p];
   });

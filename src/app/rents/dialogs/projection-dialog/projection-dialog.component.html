@@ -1,0 +1,68 @@
+<mat-dialog-content>
+  <div class="dialog-header">
+    <h2>Aumento del alquiler</h2>
+    <button mat-icon-button [mat-dialog-close]="false">
+      <mat-icon>close</mat-icon>
+    </button>
+  </div>
+  <div class="main-features">
+    <div class="projection">
+      <div class="date-chip">
+        Hasta
+        {{ getPreviousMonth(nextProjection.date) | date: "MMMM" : "" : "es" }}
+      </div>
+      <div class="price-section">
+        <div class="price-container">
+          <span class="currency">$</span>
+          <span class="price-amount">{{
+            currentProjection.amount | number: "1.2-2"
+          }}</span>
+        </div>
+        <div class="current-indicator">
+          <mat-icon>info</mat-icon>
+          <span> Valor actual de la cuota </span>
+        </div>
+      </div>
+    </div>
+    <div class="projection next">
+      <div class="date-chip accent">
+        Desde {{ nextProjection.date | date: "MMMM" : "" : "es" }}
+      </div>
+      <div class="price-section">
+        <div class="price-container">
+          <span class="currency">$</span>
+          <span class="price-amount">
+            {{ nextProjection.amount | number: "1.2-2" }}
+          </span>
+        </div>
+        @if (nextProjection.dif) {
+          <div class="increase-indicator">
+            <mat-icon>trending_up</mat-icon>
+            <span>
+              {{ nextProjection.dif | number: "1.1-1" }}% desde el último ajuste
+            </span>
+          </div>
+        }
+        <div class="price-details">
+          @if (nextProjection.estimated) {
+            <div class="estimated-warning">
+              <mat-icon>warning_amber</mat-icon>
+              <span>Aproximado</span>
+            </div>
+          }
+        </div>
+      </div>
+    </div>
+  </div>
+  @if (nextProjection.estimated) {
+    <div class="estimated-div-warning">
+      <mat-icon>warning_amber</mat-icon>
+      <span>
+        <strong>ATENCIÓN:</strong>
+        Este valor es aproximado ya que aún no se publicó el valor del índice
+        correspondiente a
+        {{ nextProjection.date | date: "MMMM" : "" : "es" }}.
+      </span>
+    </div>
+  }
+</mat-dialog-content>

@@ -6,7 +6,25 @@ import { LargePage } from '../shared/interfaces/page.interface';
 import { CreateRentRequest } from './interfaces/create-rent.interface';
 import { RentDetail } from './interfaces/rent-detail.interface';
 import { CreateRentResponse } from './interfaces/rent-id.interface';
+import { RentProjection } from './interfaces/rent-projection.interface';
 import { SimpleRent } from './interfaces/simple-rent.interface';
+
+const projections = [
+  {
+    date: new Date('2026-02-06'),
+    value: 7122.24,
+    estimated: false,
+    dif: 0,
+    amount: 400000,
+  },
+  {
+    date: new Date('2026-05-06'),
+    value: 7694.01,
+    estimated: false,
+    dif: 11.775652871238805,
+    amount: 434130.78344548657,
+  },
+];
 
 @Injectable({ providedIn: 'root' })
 export class RentService {
@@ -38,5 +56,12 @@ export class RentService {
 
   getRentDetails(rentId: string) {
     return this._http.get<RentDetail>(`${this._baseUrl}/${rentId}`);
+  }
+
+  getRentProjection(rentId: string) {
+    // return of(projections).pipe(delay(3000));
+    return this._http.get<RentProjection[]>(
+      `${this._baseUrl}/${rentId}/projection`,
+    );
   }
 }

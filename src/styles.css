@@ -90,6 +90,14 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   background: #1a1e2b;
 }
 
+.projection-dialog {
+  padding: 10px;
+  border-radius: 6px;
+  max-width: 50vw !important;
+  width: 50vw !important;
+  background: #1a1e2b;
+}
+
 .comparision-preview-dialog {
   padding: 10px;
   border-radius: 6px;

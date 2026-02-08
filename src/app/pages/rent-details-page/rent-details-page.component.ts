@@ -1,13 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
+import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { shareReplay, tap } from 'rxjs';
+import { AddDocumentDialogComponent } from '../../rents/dialogs/add-document-dialog/add-document-dialog.component';
+import { ProjectionDialogComponent } from '../../rents/dialogs/projection-dialog/projection-dialog.component';
 import { RentService } from '../../rents/rents.service';
+import { EntityDialogService } from '../../shared/services/entity-dialog.service';
+import { NotificationService } from '../../shared/services/notification.service';
+import { QueryParamsService } from '../../shared/services/query-params.service';
 
 @Component({
   selector: 'app-rent-details-page',
@@ -17,6 +24,7 @@ import { RentService } from '../../rents/rents.service';
     CommonModule,
     MatTooltipModule,
     MatProgressSpinner,
+    MatListModule,
   ],
   templateUrl: './rent-details-page.component.html',
   styleUrl: './rent-details-page.component.css',
@@ -25,11 +33,16 @@ export class RentDetailsPageComponent {
   private _route = inject(ActivatedRoute);
   private _rentService = inject(RentService);
   private _router = inject(Router);
+  private _notificationService = inject(NotificationService);
+  private _matDialog = inject(MatDialog);
   private _sanitizer = inject(DomSanitizer);
+  private _entityDialogService = inject(EntityDialogService);
+  private _queryParamsService = inject(QueryParamsService);
 
   safePdfUrl!: SafeResourceUrl;
   showPdf = signal(true);
   isLoading = signal(true);
+  isLoadingProjection = signal(false);
 
   rentDetails$ = this._rentService
     .getRentDetails(this._route.snapshot.params['rentId'])
@@ -62,6 +75,28 @@ export class RentDetailsPageComponent {
     });
   }
 
+  seeProjection() {
+    this.isLoadingProjection.set(true);
+    this._rentService
+      .getRentProjection(this._route.snapshot.params['rentId'])
+      .subscribe({
+        next: (projection) => {
+          this.isLoadingProjection.set(false);
+          this._matDialog.open(ProjectionDialogComponent, {
+            data: projection,
+            panelClass: 'projection-dialog',
+            backdropClass: 'dialog-backdrop',
+          });
+        },
+        error: () => {
+          this._notificationService.error(
+            'Ocurrió un error al calcular el aumento del alquiler',
+          );
+          this.isLoadingProjection.set(false);
+        },
+      });
+  }
+
   buildPdfURL(base64: string) {
     const byteCharacters = atob(base64);
     const byteNumbers = new Array(byteCharacters.length);
@@ -75,6 +110,21 @@ export class RentDetailsPageComponent {
     });
     const url = URL.createObjectURL(blob);
     this.safePdfUrl = this._sanitizer.bypassSecurityTrustResourceUrl(url);
+  }
+
+  addDocument() {
+    this._entityDialogService
+      .openNewEntityDialog(AddDocumentDialogComponent, {
+        entity: 'document',
+        panelClass: 'contact-dialog',
+        backdropClass: 'dialog-backdrop',
+      })
+      .subscribe((changed: boolean) => {
+        this._queryParamsService.clearQueryParams();
+        if (changed) {
+          window.location.reload();
+        }
+      });
   }
 
   toggleShowPdf() {

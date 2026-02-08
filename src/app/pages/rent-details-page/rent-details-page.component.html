@@ -39,13 +39,16 @@
           </div>
         </div>
         <div class="badges">
-          <span class="card-date">
-            {{ rent.rentDate | date: "dd/MM/yyyy" }}
-          </span>
-          —
-          <span class="card-end-date">
-            {{ rent.rentDueDate | date: "dd/MM/yyyy" }}
-          </span>
+          <div class="date-badge start">
+            <mat-icon>calendar_month</mat-icon>
+            <span class="value">{{ rent.rentDate | date: "dd/MM/yyyy" }}</span>
+          </div>
+          <div class="date-badge end">
+            <mat-icon>event_busy</mat-icon>
+            <span class="value">{{
+              rent.rentDueDate | date: "dd/MM/yyyy"
+            }}</span>
+          </div>
         </div>
       </div>
       <div class="main-features">
@@ -74,30 +77,71 @@
         </div>
       </div>
       <div class="projection-container">
-        <button mat-flat-button>
-          <mat-icon>calculate</mat-icon>
-          Calcular aumento
+        <button
+          mat-flat-button
+          [disabled]="isLoadingProjection()"
+          (click)="seeProjection()"
+        >
+          <div class="button-content">
+            @if (isLoadingProjection()) {
+              <mat-progress-spinner
+                mode="indeterminate"
+                diameter="20"
+              ></mat-progress-spinner>
+            } @else {
+              <mat-icon>calculate</mat-icon>
+              Calcular aumento
+            }
+          </div>
         </button>
       </div>
     </div>
     <div class="detail-card">
       <div class="contract-header">
-        <h2>Contrato digitalizado</h2>
-        <button
-          mat-icon-button
-          (click)="toggleShowPdf()"
-          [matTooltip]="showPdf() ? 'Ocultar' : 'Ver contrato'"
-        >
-          @if (showPdf()) {
-            <mat-icon>visibility_off</mat-icon>
-          } @else {
-            <mat-icon>visibility</mat-icon>
+        <h2>Documentación</h2>
+        <div class="fabs">
+          @if (rent.isOwnerRetrieving) {
+            <button
+              mat-fab
+              class="fab-add"
+              [matTooltip]="'Agregar documento'"
+              (click)="addDocument()"
+            >
+              <mat-icon>upload_file</mat-icon>
+            </button>
           }
-        </button>
+          <button
+            mat-fab
+            class="fab-add"
+            (click)="toggleShowPdf()"
+            [matTooltip]="
+              showPdf() ? 'Ocultar documentación' : 'Ver documentación'
+            "
+          >
+            @if (showPdf()) {
+              <mat-icon>visibility_off</mat-icon>
+            } @else {
+              <mat-icon>visibility</mat-icon>
+            }
+          </button>
+        </div>
       </div>
-      <div class="pdf-wrapper" [class.visible]="showPdf()">
-        <div class="pdf-container">
-          <iframe [src]="safePdfUrl" width="100%"> </iframe>
+
+      <div class="documents-layout" [class.visible]="showPdf()">
+        <mat-nav-list class="documents-list">
+          <mat-list-item [activated]="true">
+            <mat-icon matListItemIcon>file_present</mat-icon>
+            <span matListItemLine>Contrato Digitalizado</span>
+          </mat-list-item>
+          <mat-list-item>
+            <mat-icon matListItemIcon>file_present</mat-icon>
+            <span matListItemLine>Factura del Agua</span>
+          </mat-list-item>
+        </mat-nav-list>
+        <div class="pdf-wrapper">
+          <div class="pdf-container">
+            <iframe [src]="safePdfUrl"></iframe>
+          </div>
         </div>
       </div>
     </div>

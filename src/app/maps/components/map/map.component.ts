@@ -21,7 +21,7 @@ import VectorLayer from 'ol/layer/Vector';
 import { fromLonLat } from 'ol/proj';
 import VectorSource from 'ol/source/Vector';
 import XYZ from 'ol/source/XYZ';
-import { Icon, Style } from 'ol/style';
+import { Fill, Icon, Stroke, Style, Text } from 'ol/style';
 import { debounceTime, EMPTY, Subject, switchMap, takeUntil } from 'rxjs';
 import { FiltersService } from '../../../shared/services/filters.service';
 import { CustomSnackbarService } from '../../../shared/services/snackbar.service';
@@ -76,6 +76,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         type: 'location',
         coordinate: this._userLocationService.getUserLocation(),
         icon: { url: '/location.png' },
+        title: 'Edificio',
       });
     }
 
@@ -306,17 +307,52 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       marker: { id, coordinate, title, type },
     });
 
-    if (icon)
+    if (icon) {
       feature.setStyle(
         new Style({
           image: new Icon({
             src: icon.url,
             scale: 1,
           }),
+          text: new Text({
+            text: this.wrapLabel(title, 14),
+            font: '500 13px Karla, sans-serif',
+            textAlign: 'center',
+            textBaseline: 'top',
+            offsetY: 20,
+            fill: new Fill({
+              color: '#000',
+            }),
+            stroke: new Stroke({
+              color: '#fff',
+              width: 3,
+            }),
+          }),
         }),
       );
+    }
 
     return feature;
+  }
+
+  private wrapLabel(text?: string, maxChars = 18): string {
+    if (!text) return '';
+
+    const words = text.split(' ');
+    let line = '';
+    const lines: string[] = [];
+
+    for (const word of words) {
+      if ((line + word).length > maxChars) {
+        lines.push(line.trim());
+        line = '';
+      }
+      line += word + ' ';
+    }
+
+    if (line) lines.push(line.trim());
+
+    return lines.join('\n'); // OpenLayers interpreta \n como salto de línea
   }
 
   private getPoiStyle(type?: string | null): Style {

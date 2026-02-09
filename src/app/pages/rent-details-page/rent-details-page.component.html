@@ -129,14 +129,15 @@
 
       <div class="documents-layout" [class.visible]="showPdf()">
         <mat-nav-list class="documents-list">
-          <mat-list-item [activated]="true">
-            <mat-icon matListItemIcon>file_present</mat-icon>
-            <span matListItemLine>Contrato Digitalizado</span>
-          </mat-list-item>
-          <mat-list-item>
-            <mat-icon matListItemIcon>file_present</mat-icon>
-            <span matListItemLine>Factura del Agua</span>
-          </mat-list-item>
+          @for (document of documents; track document) {
+            <mat-list-item
+              [activated]="document.selected!"
+              (click)="selectDocument(document.documentId)"
+            >
+              <mat-icon matListItemIcon>file_present</mat-icon>
+              <span matListItemLine>{{ document.name }}</span>
+            </mat-list-item>
+          }
         </mat-nav-list>
         <div class="pdf-wrapper">
           <div class="pdf-container">

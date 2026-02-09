@@ -27,6 +27,7 @@ export class OwnerRentsPageComponent {
     name: (p) => p.propertyName,
     date: (p) => p.rentDate,
     id: (p) => p.rentId,
+    status: (p) => 'CURRENT',
     coordinates: (p) =>
       p.latitude != null && p.longitude != null
         ? { latitude: p.latitude, longitude: p.longitude }

@@ -11,6 +11,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { shareReplay, tap } from 'rxjs';
 import { AddDocumentDialogComponent } from '../../rents/dialogs/add-document-dialog/add-document-dialog.component';
 import { ProjectionDialogComponent } from '../../rents/dialogs/projection-dialog/projection-dialog.component';
+import {
+  RentDetail,
+  RentDocument,
+} from '../../rents/interfaces/rent-detail.interface';
 import { RentService } from '../../rents/rents.service';
 import { EntityDialogService } from '../../shared/services/entity-dialog.service';
 import { NotificationService } from '../../shared/services/notification.service';
@@ -39,6 +43,7 @@ export class RentDetailsPageComponent {
   private _entityDialogService = inject(EntityDialogService);
   private _queryParamsService = inject(QueryParamsService);
 
+  documents!: RentDocument[];
   safePdfUrl!: SafeResourceUrl;
   showPdf = signal(true);
   isLoading = signal(true);
@@ -48,14 +53,14 @@ export class RentDetailsPageComponent {
     .getRentDetails(this._route.snapshot.params['rentId'])
     .pipe(
       tap((details) => {
-        this.buildPdfURL(details.contract);
+        this.buildDocuments(details);
         this.isLoading.set(false);
       }),
       shareReplay(1),
     );
 
   goBack() {
-    window.history.back();
+    this._router.navigate(['/owner-rents']);
   }
 
   goToProperty() {
@@ -97,6 +102,49 @@ export class RentDetailsPageComponent {
       });
   }
 
+  addDocument() {
+    this._entityDialogService
+      .openNewEntityDialog(AddDocumentDialogComponent, {
+        entity: 'document',
+        panelClass: 'contact-dialog',
+        backdropClass: 'dialog-backdrop',
+        data: {
+          rentId: this._route.snapshot.params['rentId'],
+        },
+      })
+      .subscribe((changed: boolean) => {
+        this._queryParamsService.clearQueryParams();
+        if (changed) {
+          window.location.reload();
+        }
+      });
+  }
+
+  toggleShowPdf() {
+    this.showPdf.update((v) => !v);
+  }
+
+  buildDocuments(details: RentDetail) {
+    const documents = details.extraDocuments;
+    this.documents = [
+      {
+        documentId: 'contract',
+        name: 'Contrato Digitalizado',
+        content: details.contract,
+      },
+      ...documents,
+    ];
+    this.selectDocument('contract');
+  }
+
+  selectDocument(id: string) {
+    this.documents.forEach((doc) => (doc.selected = false));
+    const document = this.documents.find((d) => d.documentId === id);
+    if (!document) return;
+    document.selected = true;
+    this.buildPdfURL(document.content);
+  }
+
   buildPdfURL(base64: string) {
     const byteCharacters = atob(base64);
     const byteNumbers = new Array(byteCharacters.length);
@@ -110,24 +158,5 @@ export class RentDetailsPageComponent {
     });
     const url = URL.createObjectURL(blob);
     this.safePdfUrl = this._sanitizer.bypassSecurityTrustResourceUrl(url);
-  }
-
-  addDocument() {
-    this._entityDialogService
-      .openNewEntityDialog(AddDocumentDialogComponent, {
-        entity: 'document',
-        panelClass: 'contact-dialog',
-        backdropClass: 'dialog-backdrop',
-      })
-      .subscribe((changed: boolean) => {
-        this._queryParamsService.clearQueryParams();
-        if (changed) {
-          window.location.reload();
-        }
-      });
-  }
-
-  toggleShowPdf() {
-    this.showPdf.update((v) => !v);
   }
 }

@@ -3,10 +3,11 @@
     <div class="map-wrapper">
       <app-map
         [config]="getMapConfig()"
+        [coordinateToGo]="coordinateToGo()"
+        [loadInfo]="true"
         (markerClick)="onMarkerClick($event)"
         (mapClick)="onMapClick($event)"
         (centerChanged)="onCenterChanged($event)"
-        [coordinateToGo]="coordinateToGo()"
       />
     </div>
     <app-building-component

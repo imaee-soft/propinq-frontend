@@ -17,7 +17,7 @@ export class ProjectionDialogComponent {
   nextProjection = this._data[1];
 
   getPreviousMonth(date: Date): Date {
-    return date;
-    // return new Date(date.getFullYear(), date.getMonth() - 1, 1);
+    const d = new Date(date);
+    return new Date(d.getFullYear(), d.getMonth() - 1, 1);
   }
 }

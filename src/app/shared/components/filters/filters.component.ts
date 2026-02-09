@@ -37,7 +37,7 @@ const POI_TYPES = [
     MatChipsModule,
     MatButtonModule,
     MatIconModule,
-  MatTooltipModule,
+    MatTooltipModule,
     MatInputModule,
     MatCheckboxModule,
     MatSelectModule,
@@ -60,6 +60,13 @@ export class FiltersComponent {
   localities = computed(() => this._filtersService.localities());
 
   selectedPropertyType = signal<string>('Todos');
+  selectedFurnishing = signal<boolean | null>(null);
+  selectedPets = signal<boolean | null>(null);
+  selectedExpenses = signal<boolean | null>(null);
+  selectedRooms = signal<number | null>(null);
+  selectedBathrooms = signal<number | null>(null);
+  selectedProvince = signal<ProvinceResponse | null>(null);
+  selectedLocality = signal<LocalityResponse | null>(null);
   selectedNearToOption = signal<string | null>(null);
 
   selectPropertyType(type: string) {
@@ -83,26 +90,38 @@ export class FiltersComponent {
     this._filtersService.onSelectPriceMax(isNaN(n) ? ('' as any) : n);
   }
 
-  // TODO: furniture and expenses
-  checkFeature(feature: string, checked: boolean) {
-    if (feature === 'pets') {
-      this._filtersService.onSelectAllowPets(checked);
-    }
+  selectFurnishing(checked: boolean) {
+    this.selectedFurnishing.set(checked);
+    // this._filtersService.onSelectFurnishing(checked);
+  }
+
+  selectPets(checked: boolean) {
+    this.selectedPets.set(checked);
+    this._filtersService.onSelectAllowPets(checked);
+  }
+
+  selectExpenses(checked: boolean) {
+    this.selectedExpenses.set(checked);
+    // this._filtersService.onSelectExpenses(checked);
   }
 
   selectRooms(rooms: number) {
+    this.selectedRooms.set(rooms);
     this._filtersService.onSelectRooms(rooms);
   }
 
   selectBaths(baths: number) {
+    this.selectedBathrooms.set(baths);
     this._filtersService.onSelectBathrooms(baths);
   }
 
   selectProvince(province: ProvinceResponse) {
+    this.selectedProvince.set(province);
     this._filtersService.onSelectProvince(province);
   }
 
   selectLocality(locality: LocalityResponse) {
+    this.selectedLocality.set(locality);
     this._filtersService.onSelectLocality(locality);
   }
 
@@ -127,6 +146,13 @@ export class FiltersComponent {
   clearFilters() {
     this._filtersService.clearFilters();
     this.selectedPropertyType.set('Todos');
+    this.selectedFurnishing.set(null);
+    this.selectedPets.set(null);
+    this.selectedExpenses.set(null);
+    this.selectedRooms.set(null);
+    this.selectedBathrooms.set(null);
+    this.selectedProvince.set(null);
+    this.selectedLocality.set(null);
     this.selectedNearToOption.set(null);
   }
 }

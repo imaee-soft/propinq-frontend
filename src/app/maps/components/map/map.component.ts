@@ -75,8 +75,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       markers.push({
         type: 'location',
         coordinate: this._userLocationService.getUserLocation(),
-        icon: { url: '/location.png' },
-        title: 'Edificio',
+        icon: { url: '/user-location.png' },
       });
     }
 

@@ -26,13 +26,12 @@
   min-width: 35px;
   background-color: #2c3346;
   color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .section-container {
   display: flex;
   flex-direction: column;
-  gap: 35px;
+  gap: 25px;
 }
 
 .section {
@@ -119,15 +118,16 @@
 
 .space-select {
   width: 4rem;
+  height: 25px;
   margin-left: 10px;
   border-radius: 4px;
   border: none;
-  padding: 6px 6px;
+  padding: 0 6px;
   background-color: #2c3346;
   color: white;
   cursor: pointer;
   outline: none;
-  font-size: 15px;
+  font-size: 14px;
   text-align: center;
 }
 

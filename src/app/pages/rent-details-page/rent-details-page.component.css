@@ -291,7 +291,7 @@ button[mat-flat-button]:disabled {
 }
 
 .pdf-wrapper {
-  padding: 0 2px;
+  padding: 0 4px;
   overflow: hidden;
 }
 

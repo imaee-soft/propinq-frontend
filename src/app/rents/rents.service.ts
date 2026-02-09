@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { LargePage } from '../shared/interfaces/page.interface';
+import { RentDocumentRequest } from './interfaces/create-document.interface';
 import { CreateRentRequest } from './interfaces/create-rent.interface';
 import { RentDetail } from './interfaces/rent-detail.interface';
 import { CreateRentResponse } from './interfaces/rent-id.interface';
@@ -59,9 +60,25 @@ export class RentService {
   }
 
   getRentProjection(rentId: string) {
-    // return of(projections).pipe(delay(3000));
     return this._http.get<RentProjection[]>(
       `${this._baseUrl}/${rentId}/projection`,
+    );
+  }
+
+  saveDocument(request: RentDocumentRequest, content: File) {
+    const formData = new FormData();
+
+    formData.append(
+      'document',
+      new Blob([JSON.stringify(request)], {
+        type: 'application/json',
+      }),
+    );
+
+    formData.append('content', content, content.name);
+    return this._http.post<CreateRentResponse>(
+      `${this._baseUrl}/document`,
+      formData,
     );
   }
 }

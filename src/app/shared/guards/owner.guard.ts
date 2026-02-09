@@ -1,28 +1,29 @@
 import { inject } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivateFn,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { CanActivateFn, Router } from '@angular/router';
+import { filter, map, take } from 'rxjs';
+import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { AuthService } from '../../auth/services/auth.service';
 
-export const OwnerGuard: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
-) => {
-  if (1 == 1) return true;
-
+export const OwnerGuard: CanActivateFn = () => {
   const router = inject(Router);
   const authService = inject(AuthService);
-  const user = authService.user();
-  if (!user) {
-    return router.createUrlTree(['/auth/login']);
-  }
 
-  if (user?.role.toString() !== 'OWNER') {
-    return router.createUrlTree(['/']);
-  }
+  return toObservable(authService.status).pipe(
+    filter((status) => status !== AuthStatus.PENDING),
+    take(1),
+    map(() => {
+      const user = authService.user();
 
-  return true;
+      if (!user) {
+        return router.createUrlTree(['/auth/login']);
+      }
+
+      if (user.role.toString() !== 'OWNER') {
+        return router.createUrlTree(['/']);
+      }
+
+      return true;
+    }),
+  );
 };

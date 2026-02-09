@@ -303,6 +303,7 @@
   display: flex;
   gap: 8px;
   align-items: center;
+  margin-right: 4px;
 }
 
 .card-date {

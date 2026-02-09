@@ -14,6 +14,13 @@ export interface RentDetail {
   latitude: number;
   longitude: number;
   contract: string;
-  extraDocuments: string[];
+  extraDocuments: RentDocument[];
   isOwnerRetrieving: boolean;
+}
+
+export interface RentDocument {
+  documentId: string;
+  name: string;
+  content: string;
+  selected?: boolean;
 }

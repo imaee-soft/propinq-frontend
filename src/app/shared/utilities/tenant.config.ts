@@ -22,9 +22,9 @@ export const TENANT_SIDEBAR_CONFIG = {
       route: '/notifications',
     },
     {
-      label: 'Mi alquiler',
+      label: 'Mis alquileres',
       icon: 'apartment',
-      route: '/my-rentals',
+      route: '/tenant-rents',
     },
     {
       label: 'Mis solicitudes de contacto',

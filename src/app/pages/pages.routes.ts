@@ -94,6 +94,14 @@ export const routes: Routes = [
     canActivate: [TenantGuard],
   },
   {
+    path: 'tenant-rents',
+    loadComponent: () =>
+      import('./tenant-rents-page/tenant-rents-page.component').then(
+        (m) => m.TenantRentsPageComponent,
+      ),
+    canActivate: [TenantGuard],
+  },
+  {
     path: 'owner-contacts',
     loadComponent: () =>
       import('./owner-contacts-page/owner-contacts-page.component').then(

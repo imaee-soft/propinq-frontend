@@ -55,6 +55,12 @@ export class RentService {
     });
   }
 
+  getTenantRents(page = 0, size = 6): Observable<LargePage<SimpleRent>> {
+    return this._http.get<LargePage<SimpleRent>>(`${this._baseUrl}/tenant`, {
+      params: { page, size },
+    });
+  }
+
   getRentDetails(rentId: string) {
     return this._http.get<RentDetail>(`${this._baseUrl}/${rentId}`);
   }

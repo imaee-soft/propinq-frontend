@@ -77,22 +77,26 @@
         </div>
       </div>
       <div class="projection-container">
+        @if (rent.isOwnerRetrieving) {
+          <button mat-fab class="fab-add" [matTooltip]="'Cancelar contrato'">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        }
         <button
-          mat-flat-button
+          mat-fab
+          class="fab-add"
           [disabled]="isLoadingProjection()"
           (click)="seeProjection()"
+          [matTooltip]="'Calcular aumento'"
         >
-          <div class="button-content">
-            @if (isLoadingProjection()) {
-              <mat-progress-spinner
-                mode="indeterminate"
-                diameter="20"
-              ></mat-progress-spinner>
-            } @else {
-              <mat-icon>calculate</mat-icon>
-              Calcular aumento
-            }
-          </div>
+          @if (isLoadingProjection()) {
+            <mat-progress-spinner
+              mode="indeterminate"
+              diameter="20"
+            ></mat-progress-spinner>
+          } @else {
+            <mat-icon>calculate</mat-icon>
+          }
         </button>
       </div>
     </div>

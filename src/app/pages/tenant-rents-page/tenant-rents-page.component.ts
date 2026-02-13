@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
 import { tap } from 'rxjs';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
@@ -8,12 +8,12 @@ import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interfac
 import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
 
 @Component({
-  selector: 'app-owner-rents-page',
+  selector: 'app-tenant-rents-page',
   imports: [CommonEntityPageComponent],
-  templateUrl: './owner-rents-page.component.html',
-  styleUrl: './owner-rents-page.component.css',
+  templateUrl: './tenant-rents-page.component.html',
+  styleUrl: './tenant-rents-page.component.css',
 })
-export class OwnerRentsPageComponent {
+export class TenantRentsPageComponent implements OnInit {
   private _rentsService = inject(RentService);
   private _router = inject(Router);
 
@@ -41,7 +41,7 @@ export class OwnerRentsPageComponent {
   loadRents() {
     if (!this.canQuery()) return;
     this._rentsService
-      .getOwnerRents(this.pageIndex())
+      .getTenantRents(this.pageIndex())
       .pipe(
         tap((newRents) => {
           this.rents.set([...this.rents(), ...newRents.content]);

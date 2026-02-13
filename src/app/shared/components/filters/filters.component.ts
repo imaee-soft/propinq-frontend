@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule, MatFabButton } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
@@ -7,7 +7,9 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { tap } from 'rxjs';
 import { LocalityResponse } from '../../../localities/interfaces/locality.interface';
+import { ParametersService } from '../../../parameters/parameters.service';
 import { ProvinceResponse } from '../../../provinces/interfaces/province.interface';
 import { FiltersService } from '../../services/filters.service';
 
@@ -45,10 +47,13 @@ const POI_TYPES = [
     MatFabButton,
   ],
 })
-export class FiltersComponent {
+export class FiltersComponent implements OnInit {
   private _filtersService = inject(FiltersService);
+  private _parametersService = inject(ParametersService);
 
   propertyTypes = signal(PROPERTY_TYPES);
+  minPrice = signal(0);
+  maxPrice = signal(999999);
   checkFeatures = signal(CHECK_FEATURES);
   roomOptions = signal(ROOM_OPTIONS);
   bathOptions = signal(BATH_OPTIONS);
@@ -68,6 +73,25 @@ export class FiltersComponent {
   selectedProvince = signal<ProvinceResponse | null>(null);
   selectedLocality = signal<LocalityResponse | null>(null);
   selectedNearToOption = signal<string | null>(null);
+
+  ngOnInit(): void {
+    this.loadMinPrice();
+    this.loadMaxPrice();
+  }
+
+  loadMinPrice() {
+    this._parametersService
+      .minPrice()
+      .pipe(tap((minPrice) => this.minPrice.set(minPrice)))
+      .subscribe();
+  }
+
+  loadMaxPrice() {
+    this._parametersService
+      .maxPrice()
+      .pipe(tap((minPrice) => this.maxPrice.set(minPrice)))
+      .subscribe();
+  }
 
   selectPropertyType(type: string) {
     this.selectedPropertyType.set(type);

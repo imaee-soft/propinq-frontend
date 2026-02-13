@@ -25,14 +25,15 @@
       </mat-chip-set>
     </div>
     <div class="section">
-      <span class="section-title">Precio por mes</span>
+      <span class="section-title">Precio de alquiler</span>
       <div class="price-inputs">
         <div class="wrapper">
           <span>$</span>
           <input
             matInput
             type="number"
-            value="10"
+            [value]="minPrice()"
+            [min]="minPrice()"
             placeholder="Mínimo"
             (input)="setMinPrice($any($event.target).value)"
           />
@@ -42,7 +43,8 @@
           <input
             matInput
             type="number"
-            value="800000"
+            [value]="maxPrice()"
+            [max]="maxPrice()"
             placeholder="Máximo"
             (input)="setMaxPrice($any($event.target).value)"
           />

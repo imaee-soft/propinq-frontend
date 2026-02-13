@@ -1,0 +1,16 @@
+<common-entity-page
+  [elements]="rents()"
+  [descriptor]="descriptor"
+  [primaryActionLabel]="'Ver alquiler'"
+  [primaryAction]="primaryAction.bind(this)"
+  [secondaryActionLabel]="'Ver propiedad'"
+  [secondaryAction]="secondaryAction.bind(this)"
+  [iconUrl]="'/location.png'"
+  [pageTitle]="'Alquileres'"
+  [allLoadedLabel]="'Estos son todos los alquileres.'"
+  [hasMoreEntities]="canQuery()"
+  [loadMoreLabel]="'Recuperar más alquileres'"
+  [loadMoreEntities]="loadMore.bind(this)"
+  [zeroEntitiesLabel]="'Aún no tienes alquileres registrados.'"
+>
+</common-entity-page>

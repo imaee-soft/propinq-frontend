@@ -1,0 +1,59 @@
+<app-generic-dialog
+  dialogTitle="Comenzar a publicar"
+  [activeSaveButton]="true"
+  [isLoading]="isLoading()"
+  [submitTitle]="'Solicitar'"
+>
+  <ng-template #content>
+    <div class="dialog-container">
+      <div class="context-text">
+        <p>
+          Para comenzar a publicar, deberás solicitar el cambio de tu perfil a
+          'PROPIETARIO'. La solicitud será evaluada por el equipo administrador.
+        </p>
+      </div>
+
+      <div class="role-transition">
+        <span class="role current">Usuario</span>
+        <mat-icon>arrow_right_alt</mat-icon>
+        <span class="role target">Propietario</span>
+      </div>
+
+      <div class="info-card neutral">
+        <mat-icon>admin_panel_settings</mat-icon>
+        <div>
+          <h4>Revisión por administradores</h4>
+          <p>
+            Los administradores se pondrán en contacto con vos para verificar
+            que sos un propietario real.
+          </p>
+        </div>
+      </div>
+
+      <div class="info-card warning">
+        <mat-icon>info</mat-icon>
+        <div>
+          <h4>Funciones que dejarás de tener</h4>
+          <ul>
+            <li>Guardar propiedades y edificios como favoritos</li>
+            <li>Solicitar contactos para alquilar propiedades</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="info-card success">
+        <mat-icon>check_circle</mat-icon>
+        <div>
+          <h4>Como propietario podrás</h4>
+          <ul>
+            <li>Publicar y modificar propiedades y edificios</li>
+            <li>
+              Gestionar solicitudes de contacto y alquileres de propiedades
+            </li>
+            <li>Consultar reportes y estadísticas</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</app-generic-dialog>

@@ -172,7 +172,6 @@ export class EditPropertyDialogComponent implements OnInit {
       payload: {
         title: formValue.title!,
         description: formValue.description!,
-        type: 'CASA',
         existingImagesURLS: this.existingImageUrls(),
         imageFiles: this.newImageFiles().map((img) => img.file),
         price: formValue.price!,

@@ -311,7 +311,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
         new Style({
           image: new Icon({
             src: icon.url,
-            scale: 1,
+            scale: 0.55,
           }),
           text: new Text({
             text: this.wrapLabel(title, 14),

@@ -19,6 +19,14 @@
           Publicar
         </a>
       }
+      @if (isTenant()) {
+        <a
+          class="nav-action-link nav-action-featured"
+          (click)="requestOwnerProfile()"
+        >
+          Publicar
+        </a>
+      }
       <mat-menu #publishMenu="matMenu" class="publish-menu">
         <div class="menu-content">
           <button mat-menu-item (click)="publishBuilding()">

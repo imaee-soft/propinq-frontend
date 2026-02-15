@@ -14,13 +14,13 @@
   >
     <div class="button-content">
       @if (isLoading()) {
-      <mat-progress-spinner
-        mode="indeterminate"
-        diameter="20"
-      ></mat-progress-spinner>
+        <mat-progress-spinner
+          mode="indeterminate"
+          diameter="20"
+        ></mat-progress-spinner>
       } @else {
-      <mat-icon>save</mat-icon>
-      <span>Guardar</span>
+        <mat-icon>save</mat-icon>
+        <span>{{ submitTitle() }}</span>
       }
     </div>
   </button>

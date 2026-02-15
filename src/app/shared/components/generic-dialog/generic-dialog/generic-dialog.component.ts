@@ -21,6 +21,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class GenericDialogComponent {
   dialogTitle = input.required<string>();
+  submitTitle = input<string>('Guardar');
   isLoading = input<boolean>(false);
   content = contentChild.required('content', { read: TemplateRef });
   activeSaveButton = input<boolean>(false);

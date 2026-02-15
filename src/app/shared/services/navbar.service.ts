@@ -1,6 +1,5 @@
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
-import { Role } from '../../auth/enums/role.enum';
 import { AuthService } from '../../auth/services/auth.service';
 import { NavElement } from '../interfaces/nav-element.interface';
 import { OWNER_NAVBAR_ITEMS } from '../utilities/owner.config';
@@ -44,6 +43,10 @@ export class NavbarService {
   isOwner = computed(() => {
     const user = this._authService.user();
     return user?.role.toString() === 'OWNER';
+  });
+  isTenant = computed(() => {
+    const user = this._authService.user();
+    return user?.role.toString() === 'TENANT';
   });
 
   handleLogout() {

@@ -157,6 +157,14 @@ export const routes: Routes = [
     canActivate: [UserGuard],
   },
   {
+    path: 'profile-changes',
+    loadComponent: () =>
+      import('./profile-changes-page/profile-changes-page.component').then(
+        (m) => m.ProfileChangesPageComponent,
+      ),
+    canActivate: [UserGuard],
+  },
+  {
     path: '**',
     redirectTo: '',
   },

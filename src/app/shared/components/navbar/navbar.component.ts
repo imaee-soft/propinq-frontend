@@ -85,6 +85,7 @@ export class NavbarComponent {
 
   isOwner = computed(() => this._navbarService.isOwner());
   isTenant = computed(() => this._navbarService.isTenant());
+  profileChange = computed(() => this._navbarService.profileChange());
 
   toggleSidebar() {
     this._sidebarService.toggle();
@@ -118,10 +119,13 @@ export class NavbarComponent {
   }
 
   requestOwnerProfile() {
-    this._matDialog.open(ChangeProfileDialogComponent, {
-      panelClass: 'change-profile-dialog',
-      backdropClass: 'dialog-backdrop',
-    });
+    this._matDialog
+      .open(ChangeProfileDialogComponent, {
+        panelClass: 'change-profile-dialog',
+        backdropClass: 'dialog-backdrop',
+      })
+      .afterClosed()
+      .subscribe();
   }
 
   handleMyAccount() {

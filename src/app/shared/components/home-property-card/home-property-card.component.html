@@ -50,7 +50,9 @@
     ></app-image-section>
     <div class="home-property-overlay">
       @if (
-        loggedUser()?.userId !== property()!.ownerId && !property()!.contactId
+        loggedUser()?.userId !== property()!.ownerId &&
+        !property()!.contactId &&
+        loggedUser()?.role?.toString() === "TENANT"
       ) {
         <button
           mat-button
@@ -77,7 +79,9 @@
         >
           <mat-icon>visibility</mat-icon>
         </button>
-        @if (!isOwnerRetrieving()) {
+        @if (
+          !isOwnerRetrieving() && loggedUser()?.role?.toString() === "TENANT"
+        ) {
           @if (favoriteId()) {
             <button
               mat-icon-button
@@ -95,7 +99,8 @@
               <mat-icon>star_border</mat-icon>
             </button>
           }
-        } @else {
+        }
+        @if (isOwnerRetrieving()) {
           <button mat-icon-button matTooltip="Editar" (click)="update()">
             <mat-icon>edit</mat-icon>
           </button>
@@ -106,9 +111,6 @@
           (click)="compared.emit(property()!)"
         >
           <mat-icon>balance</mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Compartir">
-          <mat-icon>share</mat-icon>
         </button>
       </div>
     </div>

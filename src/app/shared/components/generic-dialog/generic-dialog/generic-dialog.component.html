@@ -10,6 +10,7 @@
   <button
     mat-flat-button
     type="submit"
+    (click)="submit.emit()"
     [disabled]="!activeSaveButton() || isLoading()"
   >
     <div class="button-content">

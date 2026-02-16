@@ -19,7 +19,7 @@
           Publicar
         </a>
       }
-      @if (isTenant()) {
+      @if (isTenant() && !profileChange()?.profileChangeState) {
         <a
           class="nav-action-link nav-action-featured"
           (click)="requestOwnerProfile()"
@@ -131,6 +131,9 @@
     @if (userLogged) {
       <span class="card-status">
         {{ userRole | titlecase }}
+        @if (profileChange()?.profileChangeState === "PENDING") {
+          <mat-icon [matTooltip]="'Cambio de perfil solicitado'">info</mat-icon>
+        }
       </span>
     }
   </div>

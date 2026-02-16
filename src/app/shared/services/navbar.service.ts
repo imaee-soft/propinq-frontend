@@ -2,6 +2,7 @@ import { computed, inject, Injectable, signal } from '@angular/core';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { AuthService } from '../../auth/services/auth.service';
 import { NavElement } from '../interfaces/nav-element.interface';
+import { ADMIN_NAVBAR_ITEMS } from '../utilities/admin.config';
 import { OWNER_NAVBAR_ITEMS } from '../utilities/owner.config';
 import { TENANT_NAVBAR_ITEMS } from '../utilities/tenant.config';
 import { UNLOGGED_NAVBAR_ITEMS } from '../utilities/unlogged.config';
@@ -11,6 +12,7 @@ const NAVBAR_ITEMS: Record<string, NavElement[]> = {
   unlogged: UNLOGGED_NAVBAR_ITEMS,
   tenant_logged: TENANT_NAVBAR_ITEMS,
   owner_logged: OWNER_NAVBAR_ITEMS,
+  admin: ADMIN_NAVBAR_ITEMS,
 };
 
 @Injectable({ providedIn: 'root' })
@@ -20,6 +22,7 @@ export class NavbarService {
 
   user = this._authService.user;
   status = this._authService.status;
+  profileChange = this._authService.profileChange;
 
   filtersOpen = signal(true);
   config = computed((): NavElement[] => {
@@ -29,7 +32,9 @@ export class NavbarService {
       status === AuthStatus.AUTHENTICATED
         ? user?.role.toString() === 'OWNER'
           ? 'owner_logged'
-          : 'tenant_logged'
+          : user?.role.toString() === 'ADMIN'
+            ? 'admin'
+            : 'tenant_logged'
         : 'unlogged'
     ];
   });

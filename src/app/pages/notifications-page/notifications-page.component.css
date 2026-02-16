@@ -34,6 +34,10 @@
   gap: 8px;
 }
 
+.notifications-cell-header mat-icon {
+  margin-bottom: 2px;
+}
+
 .paginator-wrapper {
   margin: 4px 64px;
 }

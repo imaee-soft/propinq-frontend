@@ -3,6 +3,7 @@
   [activeSaveButton]="true"
   [isLoading]="isLoading()"
   [submitTitle]="'Solicitar'"
+  (submit)="handleSubmit()"
 >
   <ng-template #content>
     <div class="dialog-container">

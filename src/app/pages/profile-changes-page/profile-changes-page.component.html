@@ -1,0 +1,121 @@
+<div class="page-container">
+  <header class="page-header">
+    <div class="header-content">
+      <button mat-icon-button class="back-button" (click)="goBack()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <h2>Solicitudes de cambio de perfil</h2>
+    </div>
+  </header>
+  @if (profileChangesCount() === 0) {
+    <div class="no-entities-container">
+      <div class="no-entities-card">
+        <div class="no-entities-icon">
+          <mat-icon>inbox</mat-icon>
+        </div>
+        <p class="no-entities-message">
+          Aún no existen solicitudes de cambio de perfil.
+        </p>
+      </div>
+    </div>
+  } @else {
+    <div class="text-filter-container">
+      <div class="search-box">
+        <mat-icon class="search-icon">search</mat-icon>
+        <input type="text" placeholder="Buscá por apellido..." />
+      </div>
+    </div>
+    <div class="notifications-table-wrapper">
+      <table
+        mat-table
+        [dataSource]="profileChangesList()"
+        class="notifications-table"
+      >
+        <ng-container matColumnDef="date">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="notifications-cell-header">
+              <mat-icon>calendar_today</mat-icon>
+              Fecha y hora
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.createdAt | date: "dd/MM/yyyy HH:mm" }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="notifier">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="notifications-cell-header">
+              <mat-icon>person</mat-icon>
+              Usuario
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ element.userFullName }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="state">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="notifications-cell-header">
+              <mat-icon>view_timeline</mat-icon>
+              Estado
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ stateName(element.profileChangeState) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="role">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="notifications-cell-header">
+              <mat-icon>person</mat-icon>
+              Rol solicitado
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            {{ roleName(element.roleRequested) }}
+          </td>
+        </ng-container>
+
+        <ng-container matColumnDef="actions">
+          <th mat-header-cell *matHeaderCellDef>
+            <div class="notifications-cell-header">
+              <mat-icon>settings</mat-icon>
+              Acciones
+            </div>
+          </th>
+          <td mat-cell *matCellDef="let element">
+            <button
+              mat-icon-button
+              [matTooltip]="'Abrir chat'"
+              (click)="openChat(element)"
+            >
+              <mat-icon>chat</mat-icon>
+            </button>
+            <button mat-icon-button [matTooltip]="'Aceptar'">
+              <mat-icon>check</mat-icon>
+            </button>
+            <button mat-icon-button [matTooltip]="'Rechazar'">
+              <mat-icon>close</mat-icon>
+            </button>
+          </td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+      </table>
+    </div>
+    <div class="paginator-wrapper">
+      <mat-paginator
+        class="notifications-paginator"
+        [length]="profileChangesCount()"
+        [pageSize]="6"
+        [showFirstLastButtons]="true"
+        (page)="page($event)"
+      >
+      </mat-paginator>
+    </div>
+  }
+</div>

@@ -10,7 +10,7 @@
 }
 
 .page-container {
-  max-width: 1350px;
+  max-width: 1250px;
   margin: 0 auto;
   align-items: start;
   overflow: hidden;
@@ -273,7 +273,6 @@ button[mat-flat-button]:disabled {
 
 .documents-list .mat-mdc-list-item:hover {
   background: rgba(0, 0, 0, 0.04);
-  transform: translateX(2px);
 }
 
 .documents-list .mdc-list-item--activated {

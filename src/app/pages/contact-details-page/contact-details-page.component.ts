@@ -61,7 +61,7 @@ export class ContactDetailsPageComponent {
             latitude: contact.latitude,
             longitude: contact.longitude,
           },
-          icon: { url: '/location.png' },
+          icon: { url: '/property.png' },
         },
       ],
     })),

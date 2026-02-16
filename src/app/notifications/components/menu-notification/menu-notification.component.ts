@@ -12,6 +12,7 @@ const TYPE_ICONS: Record<string, string> = {
   CONTACT_REJECTED: 'person_off',
   CONTACT_CANCELLED: 'person_off',
   CONTACT_RENTED: 'person',
+  PROFILE_CHANGE_REQUEST: 'switch_account',
 };
 
 const TYPE_TEXTS: Record<string, string> = {
@@ -20,6 +21,7 @@ const TYPE_TEXTS: Record<string, string> = {
   CONTACT_REJECTED: 'rechazó la solicitud de contacto.',
   CONTACT_CANCELLED: 'dió de baja la solicitud de contacto.',
   CONTACT_RENTED: 'dió de alta un alquiler a tu nombre.',
+  PROFILE_CHANGE_REQUEST: 'solicitó un cambio de perfil.',
 };
 
 @Component({

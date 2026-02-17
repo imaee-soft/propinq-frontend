@@ -125,7 +125,9 @@ export class NavbarComponent {
         backdropClass: 'dialog-backdrop',
       })
       .afterClosed()
-      .subscribe();
+      .subscribe(() => {
+        window.location.reload();
+      });
   }
 
   handleMyAccount() {

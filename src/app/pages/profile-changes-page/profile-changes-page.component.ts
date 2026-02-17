@@ -76,6 +76,22 @@ export class ProfileChangesPageComponent implements OnInit {
     window.open(`https://wa.me/${profileChange.userPhoneNumber}`, '_blank');
   }
 
+  acceptChange(profileChange: ProfileChange) {
+    this._userProfileService
+      .acceptProfileChange(profileChange.profileChangeId)
+      .subscribe(() => {
+        this.loadProfileChanges();
+      });
+  }
+
+  rejectChange(profileChange: ProfileChange) {
+    this._userProfileService
+      .rejectProfileChange(profileChange.profileChangeId)
+      .subscribe(() => {
+        this.loadProfileChanges();
+      });
+  }
+
   page(event: PageEvent): void {
     this.pageNumber.set(event.pageIndex);
     this.loadProfileChanges();

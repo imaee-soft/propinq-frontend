@@ -94,12 +94,22 @@
             >
               <mat-icon>chat</mat-icon>
             </button>
-            <button mat-icon-button [matTooltip]="'Aceptar'">
-              <mat-icon>check</mat-icon>
-            </button>
-            <button mat-icon-button [matTooltip]="'Rechazar'">
-              <mat-icon>close</mat-icon>
-            </button>
+            @if (element.profileChangeState === "PENDING") {
+              <button
+                mat-icon-button
+                [matTooltip]="'Aceptar'"
+                (click)="acceptChange(element)"
+              >
+                <mat-icon>check</mat-icon>
+              </button>
+              <button
+                mat-icon-button
+                [matTooltip]="'Rechazar'"
+                (click)="rejectChange(element)"
+              >
+                <mat-icon>close</mat-icon>
+              </button>
+            }
           </td>
         </ng-container>
 

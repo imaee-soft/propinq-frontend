@@ -8,6 +8,7 @@ export interface UserAuth {
 }
 
 export interface ProfileChange {
+  profileChangeId: string;
   roleRequested: string;
   profileChangeState: 'PENDING' | 'ACCEPTED' | 'REJECTED';
   createdAt: Date;

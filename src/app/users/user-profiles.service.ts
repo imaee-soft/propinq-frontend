@@ -28,4 +28,24 @@ export class UserProfileService {
       `${this._baseUrl}/requests?page=${page}&size=${size}`,
     );
   }
+
+  acceptProfileChange(profileChangeId: string) {
+    return this._http.patch(
+      `${this._baseUrl}/requests/${profileChangeId}/accept`,
+      {},
+      {
+        observe: 'response',
+      },
+    );
+  }
+
+  rejectProfileChange(profileChangeId: string) {
+    return this._http.patch(
+      `${this._baseUrl}/requests/${profileChangeId}/reject`,
+      {},
+      {
+        observe: 'response',
+      },
+    );
+  }
 }

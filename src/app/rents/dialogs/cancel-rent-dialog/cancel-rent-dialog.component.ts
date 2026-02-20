@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import {
@@ -11,19 +11,18 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { NotificationService } from '../../../shared/services/notification.service';
-import { formatDate } from '../../../shared/utilities/date.pipes';
-import { ContactsService } from '../../contacts.service';
+import { RentService } from '../../rents.service';
 
-interface ContactWrapper {
-  contactId: string;
+interface RentWrapper {
+  rentId: string;
   issuerFullName: string;
-  contactDate: Date;
+  rentDate: Date;
 }
 
-const CONTACT_CANCELLED = 'La solicitud de contacto fue rechazada con éxito!';
+const RENT_CANCELLED = 'El contrato de alquiler fue dado de baja con éxito!';
 
 @Component({
-  selector: 'app-reject-contact-dialog',
+  selector: 'app-cancel-rent-dialog',
   imports: [
     MatDialogModule,
     MatIconModule,
@@ -34,37 +33,36 @@ const CONTACT_CANCELLED = 'La solicitud de contacto fue rechazada con éxito!';
     MatInputModule,
     MatButtonModule,
   ],
-  templateUrl: './reject-contact-dialog.component.html',
-  styleUrls: ['./reject-contact-dialog.component.css'],
+  templateUrl: './cancel-rent-dialog.component.html',
+  styleUrls: [
+    './cancel-rent-dialog.component.css',
+    '../../../contacts/dialogs/reject-contact-dialog/reject-contact-dialog.component.css',
+  ],
 })
-export class RejectContactDialogComponent {
-  private _contactsService = inject(ContactsService);
-  private _data: ContactWrapper = inject(MAT_DIALOG_DATA);
+export class CancelRentDialogComponent {
+  private _rentService = inject(RentService);
+  private _data: RentWrapper = inject(MAT_DIALOG_DATA);
   private _matDialogRef = inject(MatDialogRef);
   private _notificationService = inject(NotificationService);
 
-  contactId = computed(() => this._data.contactId);
-  issuerFullName = computed(() => this._data.issuerFullName);
-  contactDate = computed(() => this.formatDateWrapper(this._data.contactDate));
+  rentId = this._data.rentId;
+  issuerFullName = this._data.issuerFullName;
+  rentDate = this._data.rentDate;
 
   response = new FormControl<string>('');
   isLoading = signal(false);
 
-  formatDateWrapper(date: Date): string {
-    return formatDate(date);
-  }
-
   cancel() {
     this.isLoading.set(true);
-    this._contactsService
-      .rejectContact(this._data.contactId, {
-        answer: this.response.value ?? '',
+    this._rentService
+      .cancelRent(this.rentId, {
+        reason: this.response.value ?? '',
       })
       .subscribe({
         next: () => {
           this.isLoading.set(false);
           this._matDialogRef.close(true);
-          this._notificationService.success(CONTACT_CANCELLED);
+          this._notificationService.success(RENT_CANCELLED);
         },
         error: () => this.isLoading.set(false),
       });

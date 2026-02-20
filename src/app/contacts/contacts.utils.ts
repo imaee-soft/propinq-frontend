@@ -24,6 +24,12 @@ export const STATUS_MAP: { [key: string]: StatusConfig } = {
     background: 'rgba(239, 68, 68, 0.15)',
     border: '1px solid rgba(239, 68, 68, 0.4)',
   },
+  CANCELLED: {
+    label: 'Cancelado',
+    color: '#fca5a5',
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+  },
   UNSETTLED: {
     label: 'No concretada',
     color: '#fca5a5',

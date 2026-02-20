@@ -43,12 +43,22 @@
             <mat-icon>calendar_month</mat-icon>
             <span class="value">{{ rent.rentDate | date: "dd/MM/yyyy" }}</span>
           </div>
-          <div class="date-badge end">
-            <mat-icon>event_busy</mat-icon>
-            <span class="value">{{
-              rent.rentDueDate | date: "dd/MM/yyyy"
-            }}</span>
-          </div>
+          @if (getStatusConfig(rent.rentState); as status) {
+            <div
+              class="date-badge end"
+              [ngStyle]="{
+                background: status.background,
+                border: status.border,
+              }"
+            >
+              <mat-icon
+                [matTooltip]="getStatusInfo(rent)"
+                (click)="seeCancellation(rent)"
+                >info</mat-icon
+              >
+              <span class="value">{{ status.label }}</span>
+            </div>
+          }
         </div>
       </div>
       <div class="main-features">
@@ -76,35 +86,42 @@
           <span class="feature-text">Límite de pago</span>
         </div>
       </div>
-      <div class="projection-container">
-        @if (rent.isOwnerRetrieving) {
-          <button mat-fab class="fab-add" [matTooltip]="'Cancelar contrato'">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        }
-        <button
-          mat-fab
-          class="fab-add"
-          [disabled]="isLoadingProjection()"
-          (click)="seeProjection()"
-          [matTooltip]="'Calcular aumento'"
-        >
-          @if (isLoadingProjection()) {
-            <mat-progress-spinner
-              mode="indeterminate"
-              diameter="20"
-            ></mat-progress-spinner>
-          } @else {
-            <mat-icon>calculate</mat-icon>
+      @if (rent.rentState === "ACTIVE") {
+        <div class="projection-container">
+          @if (rent.isOwnerRetrieving) {
+            <button
+              mat-fab
+              class="fab-add"
+              [matTooltip]="'Cancelar contrato'"
+              (click)="cancel()"
+            >
+              <mat-icon>cancel</mat-icon>
+            </button>
           }
-        </button>
-      </div>
+          <button
+            mat-fab
+            class="fab-add"
+            [disabled]="isLoadingProjection()"
+            (click)="seeProjection()"
+            [matTooltip]="'Calcular aumento'"
+          >
+            @if (isLoadingProjection()) {
+              <mat-progress-spinner
+                mode="indeterminate"
+                diameter="20"
+              ></mat-progress-spinner>
+            } @else {
+              <mat-icon>calculate</mat-icon>
+            }
+          </button>
+        </div>
+      }
     </div>
     <div class="detail-card">
       <div class="contract-header">
         <h2>Documentación</h2>
         <div class="fabs">
-          @if (rent.isOwnerRetrieving) {
+          @if (rent.isOwnerRetrieving && rent.rentState === "ACTIVE") {
             <button
               mat-fab
               class="fab-add"

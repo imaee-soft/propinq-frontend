@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment.development';
 import { LargePage } from '../shared/interfaces/page.interface';
+import { CancelRentRequest } from './interfaces/cancel-rent.interface';
 import { RentDocumentRequest } from './interfaces/create-document.interface';
 import { CreateRentRequest } from './interfaces/create-rent.interface';
 import { RentDetail } from './interfaces/rent-detail.interface';
@@ -86,5 +87,9 @@ export class RentService {
       `${this._baseUrl}/document`,
       formData,
     );
+  }
+
+  cancelRent(rentId: string, answer: CancelRentRequest) {
+    return this._http.post(`${this._baseUrl}/${rentId}/cancel`, answer);
   }
 }

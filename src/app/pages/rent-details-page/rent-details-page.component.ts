@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,8 +9,11 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { shareReplay, tap } from 'rxjs';
+import { map, shareReplay, tap } from 'rxjs';
+import { STATUS_MAP, StatusConfig } from '../../contacts/contacts.utils';
+import { SeeCancellationDialogComponent } from '../../contacts/dialogs/see-cancellation-dialog/see-cancellation-dialog.component';
 import { AddDocumentDialogComponent } from '../../rents/dialogs/add-document-dialog/add-document-dialog.component';
+import { CancelRentDialogComponent } from '../../rents/dialogs/cancel-rent-dialog/cancel-rent-dialog.component';
 import { ProjectionDialogComponent } from '../../rents/dialogs/projection-dialog/projection-dialog.component';
 import {
   RentDetail,
@@ -59,6 +63,11 @@ export class RentDetailsPageComponent {
       shareReplay(1),
     );
 
+  issuerFullName = toSignal(
+    this.rentDetails$.pipe(map((rent) => rent.tenantFullName)),
+  );
+  rentDate = toSignal(this.rentDetails$.pipe(map((rent) => rent.rentDate)));
+
   goBack() {
     this._router.navigate(['/owner-rents']);
   }
@@ -78,6 +87,65 @@ export class RentDetailsPageComponent {
       ]);
       window.open(url.toString(), '_blank');
     });
+  }
+
+  getStatusConfig(status: string): StatusConfig {
+    return STATUS_MAP[status];
+  }
+
+  getStatusInfo(rent: RentDetail): string {
+    if (
+      rent.rentState === 'CANCELLED' &&
+      rent.cancellationDate &&
+      rent.cancellationReason
+    ) {
+      return `Cancelado el ${rent.cancellationDate.toString()}`;
+    }
+
+    if (rent.rentState === 'ACTIVE') {
+      return `Fin del contrato: ${rent.rentDueDate.toString()}`;
+    }
+
+    if (rent.rentState === 'DONE') {
+      return `Cumplido el ${rent.rentDueDate.toString()}`;
+    }
+
+    return '';
+  }
+
+  seeCancellation(rent: RentDetail) {
+    if (rent.rentState !== 'CANCELLED') return;
+    this._matDialog.open(SeeCancellationDialogComponent, {
+      panelClass: 'contact-dialog',
+      backdropClass: 'dialog-backdrop',
+      data: {
+        title: 'Cancelación del contrato',
+        cancellationDate: rent.cancellationDate,
+        cancellationReason: rent.cancellationReason,
+      },
+    });
+  }
+
+  cancel() {
+    this._entityDialogService
+      .openActionsDialog(CancelRentDialogComponent, {
+        panelClass: 'contact-dialog',
+        entity: 'rent',
+        action: 'cancel',
+        backdropClass: 'dialog-backdrop',
+        id: this._route.snapshot.params['rentId'],
+        data: {
+          rentId: this._route.snapshot.params['rentId'],
+          issuerFullName: this.issuerFullName(),
+          rentDate: this.rentDate(),
+        },
+      })
+      .subscribe((changed: boolean) => {
+        this._queryParamsService.clearQueryParams();
+        if (changed) {
+          window.location.reload();
+        }
+      });
   }
 
   seeProjection() {

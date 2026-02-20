@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 interface CancellationInfo {
+  title?: string;
   cancellationDate: Date;
   cancellationReason: string;
 }
@@ -24,6 +25,9 @@ interface CancellationInfo {
 })
 export class SeeCancellationDialogComponent {
   private _data: CancellationInfo = inject(MAT_DIALOG_DATA);
+  title = computed(
+    () => this._data.title || 'Cancelación de solicitud de contacto',
+  );
   cancellationDate = computed(() => this._data.cancellationDate);
   cancellationReason = computed(() => this._data.cancellationReason);
 }

@@ -16,6 +16,9 @@ export interface RentDetail {
   contract: string;
   extraDocuments: RentDocument[];
   isOwnerRetrieving: boolean;
+  rentState: 'ACTIVE' | 'CANCELLED' | 'DONE';
+  cancellationDate?: Date;
+  cancellationReason?: string;
 }
 
 export interface RentDocument {

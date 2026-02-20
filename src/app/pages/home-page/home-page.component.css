@@ -16,7 +16,7 @@
   position: fixed;
   top: calc(50px + (100vh - 50px - 30px) / 2);
   transform: translateY(-50%);
-  left: 110px;
+  left: 140px;
   width: 420px;
   background: transparent;
   border: none;

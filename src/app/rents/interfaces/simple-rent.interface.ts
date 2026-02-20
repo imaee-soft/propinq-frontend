@@ -7,4 +7,5 @@ export interface SimpleRent {
   propertyName: string;
   latitude: number;
   longitude: number;
+  state: 'ACTIVE' | 'CANCELLED' | 'DONE';
 }

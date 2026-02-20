@@ -27,7 +27,7 @@ export class TenantRentsPageComponent implements OnInit {
     name: (p) => p.propertyName,
     date: (p) => p.rentDate,
     id: (p) => p.rentId,
-    status: (p) => 'CURRENT',
+    status: (p) => p.state,
     coordinates: (p) =>
       p.latitude != null && p.longitude != null
         ? { latitude: p.latitude, longitude: p.longitude }

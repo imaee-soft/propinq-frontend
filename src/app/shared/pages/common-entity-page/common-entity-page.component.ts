@@ -1,10 +1,20 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, input, output, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  input,
+  OnDestroy,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltip } from '@angular/material/tooltip';
+import { debounceTime, distinctUntilChanged, Subject } from 'rxjs';
 import { STATUS_MAP, StatusConfig } from '../../../contacts/contacts.utils';
 import { MapComponent } from '../../../maps/components/map/map.component';
 import { MapConfig } from '../../../maps/interfaces/map-config.interface';
@@ -29,12 +39,16 @@ export interface ChipFilter {
     MapComponent,
     CommonModule,
     MatTooltip,
+    MatProgressSpinner,
   ],
 })
-export class CommonEntityPageComponent<T extends object> {
+export class CommonEntityPageComponent<T extends object>
+  implements OnInit, OnDestroy
+{
   elements = input<T[]>();
   descriptor = input<CardDescriptor<T>>();
   chipFilters = input<ChipFilter[]>();
+  isInitialLoading = input<boolean>(false);
 
   primaryActionLabel = input<string>('Acción 1');
   primaryAction = input<(id: string | number | undefined) => void>();
@@ -69,12 +83,31 @@ export class CommonEntityPageComponent<T extends object> {
   filterChange = output<string>();
 
   textFilter = signal('');
+  textChange = output<string>();
+  private _textSubject = new Subject<string>();
 
   cards = computed(() => this.elements() ?? []);
   private _mapConfigs = new WeakMap<T, MapConfig>();
 
+  ngOnInit(): void {
+    this._textSubject
+      .pipe(debounceTime(600), distinctUntilChanged())
+      .subscribe((value) => {
+        this.textChange.emit(value);
+      });
+  }
+
+  ngOnDestroy(): void {
+    this._textSubject.complete();
+  }
+
   goBack() {
     window.history.back();
+  }
+
+  onInputChange(event: Event): void {
+    const value = (event.target as HTMLInputElement).value;
+    this._textSubject.next(value);
   }
 
   formatDateWrapper(date: Date | undefined): string {

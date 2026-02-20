@@ -50,9 +50,14 @@ export class RentService {
     return this._http.post<CreateRentResponse>(this._baseUrl, formData);
   }
 
-  getOwnerRents(page = 0, size = 6): Observable<LargePage<SimpleRent>> {
+  getOwnerRents(
+    page = 0,
+    size = 6,
+    surname?: string,
+  ): Observable<LargePage<SimpleRent>> {
     return this._http.get<LargePage<SimpleRent>>(`${this._baseUrl}/owner`, {
-      params: { page, size },
+      params:
+        surname && surname !== '' ? { page, size, surname } : { page, size },
     });
   }
 

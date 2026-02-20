@@ -1,6 +1,9 @@
 <common-entity-page
   [elements]="rents()"
   [descriptor]="descriptor"
+  [chipFilters]="chipFilters"
+  [currentFilter]="currentFilter()"
+  [isInitialLoading]="isInitialLoading()"
   [primaryActionLabel]="'Ver alquiler'"
   [primaryAction]="primaryAction.bind(this)"
   [secondaryActionLabel]="'Ver propiedad'"
@@ -11,7 +14,8 @@
   [hasMoreEntities]="canQuery()"
   [loadMoreLabel]="'Recuperar más alquileres'"
   [loadMoreEntities]="loadMore.bind(this)"
-  [zeroEntitiesLabel]="'Aún no tienes alquileres registrados.'"
+  [zeroEntitiesLabel]="'No se han encontrado alquileres.'"
   [filterByText]="true"
+  (textChange)="changeText($event)"
 >
 </common-entity-page>

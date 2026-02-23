@@ -162,7 +162,6 @@
   align-items: center;
   gap: 4px;
   height: 30px;
-  flex-shrink: 1;
 }
 
 .slider-label,

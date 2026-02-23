@@ -126,12 +126,6 @@ export class HomePageComponent {
   propertyDetails = signal<PropertyDetails | null>(null);
   buildingProperties = signal<PropertyDetails[] | null>(null);
 
-  isFavorite = signal(false);
-  favoriteId = signal<string | null>(null);
-
-  // Lista local de favoritos de propiedades (objetos FavoriteResponse)
-  propertyFavoritesList = signal<FavoriteResponse[]>([]);
-
   showFilters = signal(true);
 
   isOwner = computed(() => this._authService.user()?.role === Role.OWNER);
@@ -151,9 +145,10 @@ export class HomePageComponent {
     this._filtersService.hasAnyFilterApplied(),
   );
 
-  comparativeList = signal<PropertyDetails[]>([]);
   comparativeDrawerOpen = signal(false);
   comparedProperties = computed(() => this._comparisionService.properties());
+
+  radiusCircle = signal<number | null>(null);
 
   constructor() {
     // Abre detalle de building desde query param ?building=ID
@@ -205,6 +200,10 @@ export class HomePageComponent {
 
   getMapConfig(): MapConfig {
     return this.mapConfig();
+  }
+
+  onRadiusChange(radius: number | null) {
+    this.radiusCircle.set(radius);
   }
 
   onMarkerClick(marker: MapMarker): void {

@@ -16,6 +16,7 @@ import { FeatureLike } from 'ol/Feature';
 import OlMap from 'ol/Map';
 import View from 'ol/View';
 import { Point } from 'ol/geom';
+import { circular } from 'ol/geom/Polygon';
 import TileLayer from 'ol/layer/Tile';
 import VectorLayer from 'ol/layer/Vector';
 import { fromLonLat } from 'ol/proj';
@@ -52,6 +53,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   height = input<string>('100%');
   coordinateToGo = input<MapCoordinate | null>(null);
   loadInfo = input<boolean>(false);
+  radiusCircle = input<number | null>(null);
 
   mapReady = output<OlMap>();
   mapClick = output<MapClickEvent>();
@@ -90,15 +92,19 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _vectorSource = new VectorSource();
   private _vectorLayer = new VectorLayer({
     source: this._vectorSource,
+    zIndex: 2,
     style: (feature, resolution) => this.getMarkerStyle(feature, resolution),
   });
+
+  private _rangeFeature: Feature | null = null;
+  private _rangeLayerSource = new VectorSource();
 
   private _poiSource = new VectorSource();
   private _poiLayer = new VectorLayer({
     source: this._poiSource,
+    zIndex: 1,
   });
   private _poiStyleCache = new Map<string, Style>();
-
   private _poiService = inject(PoiService);
 
   private _viewport$ = new Subject<void>();
@@ -106,10 +112,10 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initializeMap();
-
     if (this.loadInfo()) {
       this.initializeViewportListener();
     }
+    this.initRangeLayer();
   }
 
   ngOnDestroy(): void {
@@ -126,6 +132,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     effect(
       () => this._markers() && this._isMapInitialized() && this.updateMarkers(),
     );
+
     effect(
       () =>
         this._center() &&
@@ -138,6 +145,17 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       if (coord && this._isMapInitialized()) {
         this.goToCoordinate(coord);
       }
+    });
+
+    effect(() => {
+      const radius = this.radiusCircle();
+      if (!radius) {
+        this._rangeLayerSource.clear();
+        this._rangeFeature = null;
+        return;
+      }
+
+      this.createRangeCircle(radius);
     });
   }
 
@@ -172,8 +190,8 @@ export class MapComponent implements AfterViewInit, OnDestroy {
             maxZoom: 20,
           }),
         }),
-        this._vectorLayer,
         this._poiLayer,
+        this._vectorLayer,
       ],
       controls: enableControls ? undefined : [],
       view: new View({
@@ -360,6 +378,39 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     if (line) lines.push(line.trim());
 
     return lines.join('\n'); // OpenLayers interpreta \n como salto de línea
+  }
+
+  private initRangeLayer() {
+    const layer = new VectorLayer({
+      source: this._rangeLayerSource,
+      zIndex: 1,
+      style: new Style({
+        fill: new Fill({ color: 'rgba(0, 153, 255, 0.1)' }),
+        stroke: new Stroke({
+          color: 'rgba(0, 153, 255, 0.8)',
+          width: 2,
+          lineDash: [10, 10],
+        }),
+      }),
+    });
+    this._mapInstance()!.addLayer(layer);
+  }
+
+  private createRangeCircle(radiusInKm: number) {
+    const userLocation = this._userLocationService.getUserLocation();
+    const circleGeometry = circular(
+      [userLocation.longitude, userLocation.latitude],
+      radiusInKm * 1000,
+      128,
+    );
+    circleGeometry.transform('EPSG:4326', 'EPSG:3857');
+
+    if (!this._rangeFeature) {
+      this._rangeFeature = new Feature(circleGeometry);
+      this._rangeLayerSource.addFeature(this._rangeFeature);
+    } else {
+      this._rangeFeature.setGeometry(circleGeometry);
+    }
   }
 
   private getPoiStyle(type?: string | null): Style {

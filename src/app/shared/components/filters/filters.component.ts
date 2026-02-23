@@ -1,4 +1,11 @@
-import { Component, computed, inject, OnInit, signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  inject,
+  OnInit,
+  output,
+  signal,
+} from '@angular/core';
 import { MatButtonModule, MatFabButton } from '@angular/material/button';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
@@ -21,7 +28,7 @@ const CHECK_FEATURES = [
 ];
 const ROOM_OPTIONS = [1, 2, 3, 4, 5];
 const BATH_OPTIONS = [1, 2, 3];
-const NEAR_TO = ['Mi ubicación', 'Punto de interés'];
+const NEAR_TO = ['Mi ubicación'];
 const POI_TYPES = [
   { value: 'SHOP', label: 'Tienda' },
   { value: 'TOURISM', label: 'Turismo' },
@@ -50,6 +57,8 @@ const POI_TYPES = [
 export class FiltersComponent implements OnInit {
   private _filtersService = inject(FiltersService);
   private _parametersService = inject(ParametersService);
+
+  radiusChange = output<number | null>();
 
   propertyTypes = signal(PROPERTY_TYPES);
   minPrice = signal(0);
@@ -153,6 +162,7 @@ export class FiltersComponent implements OnInit {
     this.selectedNearToOption.set(option);
     if (option === 'Mi ubicación') {
       this._filtersService.onSelectMyLocation();
+      this.radiusChange.emit(this.radius());
     } else if (option === 'Punto de interés') {
       this._filtersService.onSelectPointOfInterestButton();
     }
@@ -162,9 +172,9 @@ export class FiltersComponent implements OnInit {
     this._filtersService.onSelectPointOfInterest(type);
   }
 
-  changeRadius(event: Event) {
-    // Delegamos al servicio para actualizar el radius y disparar recursos
+  changeRadius(event: any) {
     this._filtersService.onSliderChange(event);
+    this.radiusChange.emit(event.target.value as number);
   }
 
   clearFilters() {
@@ -178,5 +188,6 @@ export class FiltersComponent implements OnInit {
     this.selectedProvince.set(null);
     this.selectedLocality.set(null);
     this.selectedNearToOption.set(null);
+    this.radiusChange.emit(null);
   }
 }

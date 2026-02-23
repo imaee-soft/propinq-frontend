@@ -9,6 +9,7 @@ import { Building } from '../../buildings/interfaces/building.interface';
 import { LocalityResponse } from '../../localities/interfaces/locality.interface';
 import { LocalityService } from '../../localities/services/locality.service';
 import { MapCoordinate } from '../../maps/interfaces/map-coordinate.interface';
+import { UserLocationService } from '../../maps/services/user-location.service';
 import { Property } from '../../properties/interfaces/property.interface';
 import { PropertiesService } from '../../properties/properties.service';
 import { ProvinceResponse } from '../../provinces/interfaces/province.interface';
@@ -20,6 +21,7 @@ export class FiltersService {
   private _propertiesService = inject(PropertiesService);
   private _provinceService = inject(ProvinceService);
   private _localityService = inject(LocalityService);
+  private _userLocationService = inject(UserLocationService);
 
   private _coordinate = signal<MapCoordinate>({ latitude: 0, longitude: 0 });
   public readonly coordinateToGo = computed<MapCoordinate | null>(() => {
@@ -121,13 +123,14 @@ export class FiltersService {
           poiType: this.selectedPointOfInterest(),
         } as const;
       }
-      if (this.filterNearMyLocation() || this.filterNearPoint()) {
+      if (this.filterNearMyLocation()) {
+        const userLocation = this._userLocationService.getUserLocation();
         return {
           mode: 'location',
           typeSelection,
           attrs,
-          latitude: this._coordinate().latitude,
-          longitude: this._coordinate().longitude,
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
           radiusKm: this.radius(),
         } as const;
       }
@@ -214,13 +217,14 @@ export class FiltersService {
           poiType: this.selectedPointOfInterest(),
         } as const;
       }
-      if (this.filterNearMyLocation() || this.filterNearPoint()) {
+      if (this.filterNearMyLocation()) {
+        const userLocation = this._userLocationService.getUserLocation();
         return {
           mode: 'location',
           typeSelection,
           attrs,
-          latitude: this._coordinate().latitude,
-          longitude: this._coordinate().longitude,
+          latitude: userLocation.latitude,
+          longitude: userLocation.longitude,
           radiusKm: this.radius(),
         } as const;
       }
@@ -428,7 +432,6 @@ export class FiltersService {
     return [...b, ...p];
   });
 
-  // Selección explícita de "Todos": limpia ambos toggles
   onSelectAllTypes() {
     this.filterPropertyType.set(false);
     this.filterDepartmentType.set(false);

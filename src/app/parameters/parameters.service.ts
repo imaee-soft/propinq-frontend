@@ -15,4 +15,12 @@ export class ParametersService {
   minPrice(): Observable<number> {
     return this._http.get<number>(`${this._baseUrl}/min-price`);
   }
+
+  rooms(): Observable<number[]> {
+    return this._http.get<number[]>(`${this._baseUrl}/rooms`);
+  }
+
+  bathrooms(): Observable<number[]> {
+    return this._http.get<number[]>(`${this._baseUrl}/bathrooms`);
+  }
 }

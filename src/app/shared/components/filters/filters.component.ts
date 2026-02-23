@@ -86,6 +86,8 @@ export class FiltersComponent implements OnInit {
   ngOnInit(): void {
     this.loadMinPrice();
     this.loadMaxPrice();
+    this.loadRooms();
+    this.loadBathrooms();
   }
 
   loadMinPrice() {
@@ -99,6 +101,20 @@ export class FiltersComponent implements OnInit {
     this._parametersService
       .maxPrice()
       .pipe(tap((minPrice) => this.maxPrice.set(minPrice)))
+      .subscribe();
+  }
+
+  loadRooms() {
+    this._parametersService
+      .rooms()
+      .pipe(tap((rooms) => this.roomOptions.set(rooms)))
+      .subscribe();
+  }
+
+  loadBathrooms() {
+    this._parametersService
+      .bathrooms()
+      .pipe(tap((bathrooms) => this.bathOptions.set(bathrooms)))
       .subscribe();
   }
 

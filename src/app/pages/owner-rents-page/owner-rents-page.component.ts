@@ -57,7 +57,7 @@ export class OwnerRentsPageComponent {
   loadRents() {
     if (!this.canQuery()) return;
     this._rentsService
-      .getOwnerRents(this.pageIndex(), 6, this.surnameFilter())
+      .getOwnerRents(this.pageIndex(), 6, this.surnameFilter(), this.rentQueryStatus())
       .pipe(
         tap((newRents) => {
           this.isInitialLoading.set(false);
@@ -75,6 +75,18 @@ export class OwnerRentsPageComponent {
     this.loadRents();
   };
 
+  changeRentState(type: ChipFilter) {
+    this.rentQueryStatus.set(
+      type.id as 'all' | 'active' | 'cancelled' | 'done',
+    );
+    this.resetPageAndLoadRents();
+  }
+
+  changeText(text: string) {
+    this.surnameFilter.set(text);
+    this.resetPageAndLoadRents();
+  }
+
   primaryAction = (rentId: string | number | undefined) => {
     const rent = this.getRent(rentId);
     if (!rent) return;
@@ -90,11 +102,6 @@ export class OwnerRentsPageComponent {
     if (!rent) return;
     this._router.navigate(['/properties', rent.propertyId]);
   };
-
-  changeText(text: string) {
-    this.surnameFilter.set(text);
-    this.resetPageAndLoadRents();
-  }
 
   private getRent(rentId: string | number | undefined): SimpleRent | undefined {
     return this.rents().find((r) => r.rentId === rentId);

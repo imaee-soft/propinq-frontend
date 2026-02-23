@@ -18,17 +18,19 @@
             <mat-icon class="check-icon">{{
               property()!.furnishing ? "check" : "close"
             }}</mat-icon
-            >Amueblada</mat-chip
+            >Incluye Amueblamiento</mat-chip
           >
           <mat-chip selected>
             <mat-icon class="check-icon">{{
               property()!.petsAllowed ? "check" : "close"
             }}</mat-icon
-            >Mascotas</mat-chip
+            >Permite Mascotas</mat-chip
           >
           <mat-chip selected>
-            <mat-icon class="check-icon">check</mat-icon>Dueño
-            Verificado</mat-chip
+            <mat-icon class="check-icon">{{
+              property()!.expenses ? "check" : "close"
+            }}</mat-icon
+            >Incluye Cobro de Expensas</mat-chip
           >
         </mat-chip-set>
       </div>

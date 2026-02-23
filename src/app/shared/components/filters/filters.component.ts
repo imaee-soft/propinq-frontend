@@ -13,7 +13,7 @@ import { ParametersService } from '../../../parameters/parameters.service';
 import { ProvinceResponse } from '../../../provinces/interfaces/province.interface';
 import { FiltersService } from '../../services/filters.service';
 
-const PROPERTY_TYPES = ['Departamentos', 'Casas', 'Todos'];
+const PROPERTY_TYPES = ['Todos', 'Inmuebles', 'Casas'];
 const CHECK_FEATURES = [
   { label: 'Amueblado', value: 'furnished' },
   { label: 'Mascotas', value: 'pets' },
@@ -95,7 +95,7 @@ export class FiltersComponent implements OnInit {
 
   selectPropertyType(type: string) {
     this.selectedPropertyType.set(type);
-    if (type === 'Departamentos') {
+    if (type === 'Inmuebles') {
       this._filtersService.onSelectDepartmentType();
     } else if (type === 'Casas') {
       this._filtersService.onSelectPropertyType();

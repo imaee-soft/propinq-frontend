@@ -90,6 +90,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   private _vectorSource = new VectorSource();
   private _vectorLayer = new VectorLayer({
     source: this._vectorSource,
+    style: (feature, resolution) => this.getMarkerStyle(feature, resolution),
   });
 
   private _poiSource = new VectorSource();
@@ -297,41 +298,48 @@ export class MapComponent implements AfterViewInit, OnDestroy {
     icon,
     type,
   }: MapMarker): Feature {
-    const feature = new Feature({
+    return new Feature({
       geometry: new Point(
         fromLonLat([coordinate.longitude, coordinate.latitude]),
       ),
       id,
       title,
+      iconUrl: icon?.url,
       marker: { id, coordinate, title, type },
     });
+  }
 
-    if (icon) {
-      feature.setStyle(
-        new Style({
-          image: new Icon({
-            src: icon.url,
-            scale: 0.55,
+  private getMarkerStyle(feature: FeatureLike, resolution: number): Style {
+    const properties = feature.getProperties();
+    const showText = resolution < 5;
+
+    const style = new Style({
+      image: new Icon({
+        src: properties['iconUrl'],
+        scale: 0.65,
+      }),
+    });
+
+    if (showText) {
+      style.setText(
+        new Text({
+          text: this.wrapLabel(properties['title'], 14),
+          font: '500 13px Karla, sans-serif',
+          textAlign: 'center',
+          textBaseline: 'top',
+          offsetY: 25,
+          fill: new Fill({
+            color: '#000',
           }),
-          text: new Text({
-            text: this.wrapLabel(title, 14),
-            font: '500 13px Karla, sans-serif',
-            textAlign: 'center',
-            textBaseline: 'top',
-            offsetY: 20,
-            fill: new Fill({
-              color: '#000',
-            }),
-            stroke: new Stroke({
-              color: '#fff',
-              width: 3,
-            }),
+          stroke: new Stroke({
+            color: '#fff',
+            width: 3,
           }),
         }),
       );
     }
 
-    return feature;
+    return style;
   }
 
   private wrapLabel(text?: string, maxChars = 18): string {

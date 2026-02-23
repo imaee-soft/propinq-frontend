@@ -113,6 +113,19 @@ export class RentDetailsPageComponent {
     return '';
   }
 
+  getStatusLabel(rent: RentDetail): string {
+    if (rent.rentState === 'CANCELLED') {
+      return 'Cancelado';
+    }
+    if (rent.rentState === 'ACTIVE') {
+      return 'Activo';
+    }
+    if (rent.rentState === 'DONE') {
+      return 'Cumplido';
+    }
+    return '';
+  }
+
   seeCancellation(rent: RentDetail) {
     if (rent.rentState !== 'CANCELLED') return;
     this._matDialog.open(SeeCancellationDialogComponent, {

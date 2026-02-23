@@ -23,10 +23,14 @@ export class ContactsService {
   getOwnerContactsDetails(
     page = 0,
     size = 6,
+    surname?: string,
     status = 'all',
   ): Observable<ContactDetailsPage> {
     return this._http.get<ContactDetailsPage>(`${this._baseUrl}/owner`, {
-      params: { page, size, status },
+      params:
+        surname && surname !== ''
+          ? { page, size, surname, status }
+          : { page, size, status },
     });
   }
 

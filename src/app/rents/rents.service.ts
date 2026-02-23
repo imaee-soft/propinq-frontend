@@ -54,10 +54,13 @@ export class RentService {
     page = 0,
     size = 6,
     surname?: string,
+    status: 'all' | 'active' | 'cancelled' | 'done' = 'all',
   ): Observable<LargePage<SimpleRent>> {
     return this._http.get<LargePage<SimpleRent>>(`${this._baseUrl}/owner`, {
       params:
-        surname && surname !== '' ? { page, size, surname } : { page, size },
+        surname && surname !== ''
+          ? { page, size, surname, status }
+          : { page, size, status },
     });
   }
 

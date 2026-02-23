@@ -9,7 +9,7 @@
 }
 
 .info-section {
-  padding: 4px 0;
+  padding: 8px 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,7 +22,7 @@
 }
 
 .info-section span {
-  font-size: 0.9rem;
+  font-size: 1rem;
   font-weight: 500;
   color: var(--text-primary);
   text-align: center;

@@ -1,13 +1,13 @@
 <div class="filters-container">
   <div class="filters-container-header">
-    <h2>Filtros de búsqueda</h2>
+    <h2>Búsqueda detallada</h2>
     <button
       mat-fab
       class="action-fab"
       (click)="clearFilters()"
       matTooltip="Limpiar filtros"
     >
-      <mat-icon>clear_all</mat-icon>
+      <mat-icon>delete</mat-icon>
     </button>
   </div>
   <div class="section-container">
@@ -27,27 +27,33 @@
     <div class="section">
       <span class="section-title">Precio de alquiler</span>
       <div class="price-inputs">
-        <div class="wrapper">
-          <span>$</span>
-          <input
-            matInput
-            type="number"
-            [value]="minPrice()"
-            [min]="minPrice()"
-            placeholder="Mínimo"
-            (input)="setMinPrice($any($event.target).value)"
-          />
+        <div class="price-input">
+          <div class="wrapper">
+            <span>$</span>
+            <input
+              matInput
+              type="number"
+              [value]="minPrice()"
+              [min]="minPrice()"
+              placeholder="Mínimo"
+              (input)="setMinPrice($any($event.target).value)"
+            />
+          </div>
+          <mat-label>Mínimo</mat-label>
         </div>
-        <div class="wrapper">
-          <span>$</span>
-          <input
-            matInput
-            type="number"
-            [value]="maxPrice()"
-            [max]="maxPrice()"
-            placeholder="Máximo"
-            (input)="setMaxPrice($any($event.target).value)"
-          />
+        <div class="price-input">
+          <div class="wrapper">
+            <span>$</span>
+            <input
+              matInput
+              type="number"
+              [value]="maxPrice()"
+              [max]="maxPrice()"
+              placeholder="Máximo"
+              (input)="setMaxPrice($any($event.target).value)"
+            />
+          </div>
+          <mat-label>Máximo</mat-label>
         </div>
       </div>
     </div>

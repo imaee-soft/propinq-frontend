@@ -104,8 +104,24 @@ export class NewRentDialogComponent {
       label: 'Índice de CasaPropia / HogAr / Procrear',
     },
     {
+      id: 'CAC',
+      label: 'Cámara Argentina de la Construcción (CAC)',
+    },
+    {
+      id: 'CER',
+      label: 'Coeficiente de Estabilización de Referencia (CER)',
+    },
+    {
       id: 'IS',
       label: 'Índice de Salarios (IS)',
+    },
+    {
+      id: 'IPIM',
+      label: 'Índice de Precios Internos al por Mayor (IPIM)',
+    },
+    {
+      id: 'UVA',
+      label: 'Unidad de Valor Adquisitivo (UVA)',
     },
   ];
 

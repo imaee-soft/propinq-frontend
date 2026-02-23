@@ -15,6 +15,7 @@ const TYPE_ICONS: Record<string, string> = {
   PROFILE_CHANGE_REQUEST: 'switch_account',
   PROFILE_CHANGE_ACCEPTED: 'check_circle',
   PROFILE_CHANGE_REJECTED: 'cancel',
+  RENT_CANCELLED: 'cancel',
 };
 
 const TYPE_TEXTS: Record<string, string> = {
@@ -26,6 +27,7 @@ const TYPE_TEXTS: Record<string, string> = {
   PROFILE_CHANGE_REQUEST: 'solicitó un cambio de perfil.',
   PROFILE_CHANGE_ACCEPTED: 'aceptó tu solicitud de cambio de perfil.',
   PROFILE_CHANGE_REJECTED: 'rechazó tu solicitud de cambio de perfil.',
+  RENT_CANCELLED: 'canceló un alquiler a tu nombre.',
 };
 
 @Component({

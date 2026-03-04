@@ -15,13 +15,23 @@
           </h1>
         </div>
 
-        <div>
-          @if (deleted$ | async; as deleted) {
-            <mat-chip class="status-chip deleted"> No disponible </mat-chip>
-          } @else {
-            <mat-chip class="status-chip available"> Disponible </mat-chip>
-          }
-        </div>
+        @if (deleted$ | async; as deleted) {
+          <mat-label
+            class="building-state deleted"
+            [matTooltip]="'Estado del inmueble'"
+          >
+            <mat-icon>info</mat-icon>
+            No Disponible
+          </mat-label>
+        } @else {
+          <mat-label
+            class="building-state active"
+            [matTooltip]="'Estado del inmueble'"
+          >
+            <mat-icon>info</mat-icon>
+            Disponible
+          </mat-label>
+        }
       </div>
       <div class="building-location">
         <mat-icon class="location-icon">place</mat-icon>

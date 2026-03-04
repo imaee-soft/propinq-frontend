@@ -210,7 +210,7 @@ export class RentDetailsPageComponent {
     this.documents = [
       {
         documentId: 'contract',
-        name: 'Contrato Digitalizado',
+        name: 'Contrato',
         content: details.contract,
       },
       ...documents,
@@ -224,6 +224,10 @@ export class RentDetailsPageComponent {
     if (!document) return;
     document.selected = true;
     this.buildPdfURL(document.content);
+  }
+
+  deleteDocument(id: string) {
+    this.documents = this.documents.filter((doc) => doc.documentId !== id);
   }
 
   buildPdfURL(base64: string) {

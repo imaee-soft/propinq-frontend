@@ -22,6 +22,7 @@ import { GenericDialogComponent } from '../../../shared/components/generic-dialo
 import { NotificationService } from '../../../shared/services/notification.service';
 import { CreateRentRequest } from '../../interfaces/create-rent.interface';
 import { RentService } from '../../rents.service';
+import { MatTooltip } from "@angular/material/tooltip";
 
 const DD_MM_YYYY_FORMATS: MatDateFormats = {
   parse: {
@@ -68,7 +69,8 @@ interface RaiseIndex {
     MatSelectModule,
     MatDatepickerModule,
     DocumentLoaderComponent,
-  ],
+    MatTooltip
+],
   providers: [
     provideNativeDateAdapter(),
     { provide: MAT_DATE_FORMATS, useValue: DD_MM_YYYY_FORMATS },

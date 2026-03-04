@@ -17,19 +17,6 @@
       </button>
     }
   </header>
-  @if (chipFilters()) {
-    <div class="filter-pills-container">
-      @for (chip of chipFilters()!; track chip.id) {
-        <button
-          class="filter-pill"
-          [class.active]="chip.id === currentFilter()?.id"
-          (click)="changeFilter.emit(chip)"
-        >
-          {{ chip.label }}
-        </button>
-      }
-    </div>
-  }
   @if (filterByText()) {
     <div class="text-filter-container">
       <div class="search-box">
@@ -43,6 +30,20 @@
       </div>
     </div>
   }
+  @if (chipFilters()) {
+    <div class="filter-pills-container">
+      @for (chip of chipFilters()!; track chip.id) {
+        <button
+          class="filter-pill"
+          [class.active]="chip.id === currentFilter()?.id"
+          (click)="changeFilter.emit(chip)"
+        >
+          {{ chip.label }}
+        </button>
+      }
+    </div>
+  }
+
   @if (isInitialLoading()) {
     <div class="spinner-container">
       <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>

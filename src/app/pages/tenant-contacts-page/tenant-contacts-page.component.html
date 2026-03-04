@@ -1,7 +1,7 @@
 <common-entity-page
   [elements]="contacts()"
   [descriptor]="descriptor"
-  [primaryActionLabel]="'Ver contacto'"
+  [primaryActionLabel]="'Ver negociación'"
   [primaryAction]="primaryAction.bind(this)"
   [secondaryActionLabel]="'Ver propiedad'"
   [secondaryAction]="secondaryAction.bind(this)"
@@ -9,11 +9,11 @@
   [canExecuteThirdAction]="canExecuteThirdAction.bind(this)"
   [thirdAction]="thirdAction.bind(this)"
   [iconUrl]="'/property.png'"
-  [pageTitle]="'Solicitudes de Contacto'"
-  [allLoadedLabel]="'Estas son todas las solicitudes de contacto.'"
+  [pageTitle]="'Solicitudes de Negociación'"
+  [allLoadedLabel]="'Estas son todas las solicitudes de negociación.'"
   [hasMoreEntities]="canQuery()"
-  [loadMoreLabel]="'Recuperar más solicitudes de contacto'"
+  [loadMoreLabel]="'Recuperar más solicitudes de negociación'"
   [loadMoreEntities]="loadMore.bind(this)"
-  [zeroEntitiesLabel]="'Aún no tienes solicitudes de contacto registradas.'"
+  [zeroEntitiesLabel]="'Aún no tienes solicitudes de negociación registradas.'"
 >
 </common-entity-page>

@@ -14,7 +14,7 @@ import { PropertyDetails } from '../../../properties/interfaces/property-details
 import { NotificationService } from '../../../shared/services/notification.service';
 import { ContactsService } from '../../contacts.service';
 
-const CONTACT_CREATED = 'La solicitud de contacto fue enviada con éxito!';
+const CONTACT_CREATED = 'La solicitud de negociación fue enviada con éxito!';
 
 @Component({
   selector: 'new-contact-dialog',
@@ -38,7 +38,7 @@ export class NewContactDialogComponent {
   private _matDialogRef = inject(MatDialogRef);
 
   message = new FormControl<string>(
-    `Hola ${this._data.ownerFullName}! Estoy interesado en tu propiedad. \nMe gustaría que charláramos por algún medio para poder concretar un alquiler. ¡Muchas gracias!`
+    `Hola ${this._data.ownerFullName}! Estoy interesado en tu propiedad. \nMe gustaría que charláramos por algún medio para poder concretar un alquiler. ¡Muchas gracias!`,
   );
 
   title = computed(() => this._data.title);

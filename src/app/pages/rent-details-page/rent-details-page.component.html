@@ -1,32 +1,29 @@
 <div class="page-container">
-  <header class="page-header">
-    <div class="header-content">
-      <button mat-icon-button class="back-button" (click)="goBack()">
-        <mat-icon>arrow_back</mat-icon>
-      </button>
-      <h2>Alquiler Concretado</h2>
-    </div>
-  </header>
   @if (rentDetails$ | async; as rent) {
+    <header class="page-header">
+      <div class="header-content">
+        <button mat-icon-button class="back-button" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2>Alquiler en {{ rent.propertyName }}</h2>
+        <button
+          mat-icon-button
+          [matTooltip]="'Ver propiedad'"
+          (click)="goToProperty()"
+        >
+          <mat-icon>open_in_new</mat-icon>
+        </button>
+      </div>
+    </header>
     <div class="detail-card">
       <div class="header-content with-margin">
         <div class="entities">
           <div class="entity-container">
-            <mat-icon>home</mat-icon>
-            <span class="span-title">{{ rent.propertyName }}</span>
-            <button
-              mat-icon-button
-              [matTooltip]="'Ver propiedad'"
-              (click)="goToProperty()"
-            >
-              <mat-icon>open_in_new</mat-icon>
-            </button>
-          </div>
-          <div class="entity-container">
-            <mat-icon>person</mat-icon>
             @if (rent.isOwnerRetrieving) {
+              <mat-icon [matTooltip]="'Inquilino'">person</mat-icon>
               <span>{{ rent.tenantFullName }}</span>
             } @else {
+              <mat-icon [matTooltip]="'Propietario'">person</mat-icon>
               <span>{{ rent.ownerFullName }}</span>
             }
             <button
@@ -39,7 +36,10 @@
           </div>
         </div>
         <div class="badges">
-          <div class="date-badge start">
+          <div
+            class="date-badge start"
+            [matTooltip]="'Fecha de inicio del alquiler'"
+          >
             <mat-icon>calendar_month</mat-icon>
             <span class="value">{{ rent.rentDate | date: "dd/MM/yyyy" }}</span>
           </div>
@@ -50,12 +50,9 @@
                 background: status.background,
                 border: status.border,
               }"
+              [matTooltip]="getStatusInfo(rent)"
             >
-              <mat-icon
-                [matTooltip]="getStatusInfo(rent)"
-                (click)="seeCancellation(rent)"
-                >info</mat-icon
-              >
+              <mat-icon (click)="seeCancellation(rent)">info</mat-icon>
               <span class="value">{{ getStatusLabel(rent) }}</span>
             </div>
           }
@@ -157,6 +154,29 @@
             >
               <mat-icon matListItemIcon>file_present</mat-icon>
               <span matListItemLine>{{ document.name }}</span>
+              @if (document.documentId !== "contract") {
+                <div class="document-actions" matListItemMeta>
+                  <button
+                    mat-icon-button
+                    [matTooltip]="'Eliminar documento'"
+                    (click)="
+                      deleteDocument(document.documentId);
+                      $event.stopPropagation()
+                    "
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              } @else {
+                <button
+                  mat-icon-button
+                  matListItemMeta
+                  [matTooltip]="'Resubir contrato digitalizado'"
+                  (click)="$event.stopPropagation()"
+                >
+                  <mat-icon>edit</mat-icon>
+                </button>
+              }
             </mat-list-item>
           }
         </mat-nav-list>

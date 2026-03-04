@@ -186,8 +186,6 @@ export class ContactDetailsPageComponent {
             this._queryParamsService.clearQueryParams();
             if (rentId) {
               this._router.navigate(['rent-details', rentId]);
-            } else {
-              window.location.reload();
             }
           });
       });

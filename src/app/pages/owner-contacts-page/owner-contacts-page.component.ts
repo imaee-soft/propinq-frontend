@@ -37,9 +37,9 @@ export class OwnerContactsPageComponent implements OnInit {
   >('all');
   chipFilters: ChipFilter[] = [
     { id: 'all', label: 'Todas' },
-    { id: 'created', label: 'Pendientes' },
+    { id: 'created', label: 'Creadas' },
     { id: 'rejected', label: 'Rechazadas' },
-    { id: 'accepted', label: 'En negociación' },
+    { id: 'accepted', label: 'En curso' },
     { id: 'unsettled', label: 'No concretadas' },
     { id: 'rented', label: 'Alquiladas' },
   ];

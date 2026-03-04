@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -31,6 +32,7 @@ import { formatDate } from '../../shared/utilities/date.pipes';
     MatChipsModule,
     MatTooltipModule,
     ImageSectionComponent,
+    MatLabel,
   ],
   templateUrl: './building-details-page.component.html',
   styleUrls: ['./building-details-page.component.css'],

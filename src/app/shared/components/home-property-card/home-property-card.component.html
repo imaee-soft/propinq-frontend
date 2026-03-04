@@ -62,15 +62,15 @@
           (click)="contactOwner()"
         >
           <mat-icon>contacts_product</mat-icon>
-          Contactar Dueño
+          Solicitar Negociación
         </button>
       }
       @if (
         loggedUser()?.userId !== property()!.ownerId && property()!.contactId
       ) {
         <button mat-button class="contacted-action" (click)="goToContact()">
-          <mat-icon>check_small</mat-icon>
-          Ver Contacto
+          <mat-icon>handshake</mat-icon>
+          Ver Negociación
         </button>
       }
       <div class="property-overlay-actions">

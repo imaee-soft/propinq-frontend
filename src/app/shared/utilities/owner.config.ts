@@ -4,7 +4,7 @@ export const OWNER_NAVBAR_ITEMS = [
     url: '/owner-rents',
   },
   {
-    name: 'Contactos',
+    name: 'Negociaciones',
     url: '/owner-contacts',
   },
 ];
@@ -23,7 +23,7 @@ export const OWNER_SIDEBAR_CONFIG = {
       route: '/owner-rents',
     },
     {
-      label: 'Mis contactos',
+      label: 'Mis negociaciones',
       icon: 'person',
       route: '/owner-contacts',
     },

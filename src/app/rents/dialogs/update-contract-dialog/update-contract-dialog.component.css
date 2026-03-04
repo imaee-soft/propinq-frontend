@@ -1,0 +1,53 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.95rem;
+  padding: 1rem 1.25rem;
+  box-sizing: border-box;
+}
+
+.document-section {
+  display: block;
+  flex-direction: column;
+}
+
+.document-error-wrapper {
+  min-height: 1.5rem;
+}
+
+.document-error {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  animation: fadeInError 0.25s ease-out;
+}
+
+.current-contract {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.75rem;
+  background-color: #f5f5f5;
+  border-radius: 4px;
+}
+
+.label {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.contract-name {
+  font-weight: 500;
+  color: #333;
+}
+
+@keyframes fadeInError {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

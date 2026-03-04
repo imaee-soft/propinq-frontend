@@ -100,4 +100,14 @@ export class RentService {
   cancelRent(rentId: string, answer: CancelRentRequest) {
     return this._http.post(`${this._baseUrl}/${rentId}/cancel`, answer);
   }
+
+  updateContract(rentId: string, content: File) {
+    const formData = new FormData();
+    formData.append('contract', content, content.name);
+    return this._http.patch(`${this._baseUrl}/${rentId}/contract`, formData);
+  }
+
+  deleteDocument(documentId: string) {
+    return this._http.delete(`${this._baseUrl}/document/${documentId}`);
+  }
 }

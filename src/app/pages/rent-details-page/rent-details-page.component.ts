@@ -14,7 +14,9 @@ import { STATUS_MAP, StatusConfig } from '../../contacts/contacts.utils';
 import { SeeCancellationDialogComponent } from '../../contacts/dialogs/see-cancellation-dialog/see-cancellation-dialog.component';
 import { AddDocumentDialogComponent } from '../../rents/dialogs/add-document-dialog/add-document-dialog.component';
 import { CancelRentDialogComponent } from '../../rents/dialogs/cancel-rent-dialog/cancel-rent-dialog.component';
+import { DeleteDocumentDialogComponent } from '../../rents/dialogs/delete-document-dialog/delete-document-dialog.component';
 import { ProjectionDialogComponent } from '../../rents/dialogs/projection-dialog/projection-dialog.component';
+import { UpdateContractDialogComponent } from '../../rents/dialogs/update-contract-dialog/update-contract-dialog.component';
 import {
   RentDetail,
   RentDocument,
@@ -201,6 +203,26 @@ export class RentDetailsPageComponent {
       });
   }
 
+  updateContract() {
+    this.rentDetails$.subscribe((rent) => {
+      this._matDialog
+        .open(UpdateContractDialogComponent, {
+          panelClass: 'contact-dialog',
+          backdropClass: 'dialog-backdrop',
+          data: {
+            rentId: this._route.snapshot.params['rentId'],
+            currentContractName: 'Contrato',
+          },
+        })
+        .afterClosed()
+        .subscribe((updated: File) => {
+          if (updated) {
+            window.location.reload();
+          }
+        });
+    });
+  }
+
   toggleShowPdf() {
     this.showPdf.update((v) => !v);
   }
@@ -227,7 +249,27 @@ export class RentDetailsPageComponent {
   }
 
   deleteDocument(id: string) {
-    this.documents = this.documents.filter((doc) => doc.documentId !== id);
+    const document = this.documents.find((d) => d.documentId === id);
+    if (!document) return;
+
+    this._matDialog
+      .open(DeleteDocumentDialogComponent, {
+        panelClass: 'contact-dialog',
+        backdropClass: 'dialog-backdrop',
+        data: {
+          documentId: id,
+          documentName: document.name,
+        },
+      })
+      .afterClosed()
+      .subscribe((confirmed: boolean) => {
+        if (confirmed) {
+          this.documents = this.documents.filter((doc) => doc.documentId !== id);
+          if (this.documents.length > 0) {
+            this.selectDocument(this.documents[0].documentId);
+          }
+        }
+      });
   }
 
   buildPdfURL(base64: string) {

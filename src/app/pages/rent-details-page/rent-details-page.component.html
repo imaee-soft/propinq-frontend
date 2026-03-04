@@ -167,15 +167,21 @@
                     <mat-icon>delete</mat-icon>
                   </button>
                 </div>
-              } @else {
-                <button
-                  mat-icon-button
-                  matListItemMeta
-                  [matTooltip]="'Resubir contrato digitalizado'"
-                  (click)="$event.stopPropagation()"
-                >
-                  <mat-icon>edit</mat-icon>
-                </button>
+              }
+              @if (
+                document.documentId === "contract" &&
+                rent.isOwnerRetrieving &&
+                rent.rentState === "ACTIVE"
+              ) {
+                <div class="document-actions" matListItemMeta>
+                  <button
+                    mat-icon-button
+                    [matTooltip]="'Actualizar contrato'"
+                    (click)="updateContract(); $event.stopPropagation()"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                </div>
               }
             </mat-list-item>
           }

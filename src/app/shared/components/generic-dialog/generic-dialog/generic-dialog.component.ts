@@ -32,4 +32,6 @@ export class GenericDialogComponent {
   content = contentChild.required('content', { read: TemplateRef });
   activeSaveButton = input<boolean>(false);
   submit = output<void>();
+
+  actions = contentChild<TemplateRef<unknown>>('actions');
 }

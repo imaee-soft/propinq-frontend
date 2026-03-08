@@ -58,7 +58,7 @@
                 (click)="goToContact()"
               >
                 <mat-icon>check_small</mat-icon>
-                Ver Contacto
+                Ver contacto
               </button>
             }
             @if (propertyDetailsResource.value()!.favoriteId) {
@@ -116,13 +116,23 @@
           </h1>
         </div>
 
-        <div class="property-status">
-          @if (propertyDetailsResource.value()!.deleted) {
-            <mat-chip class="status-chip deleted"> No disponible </mat-chip>
-          } @else {
-            <mat-chip class="status-chip available"> Disponible </mat-chip>
-          }
-        </div>
+        @if (propertyDetailsResource.value()!.deleted) {
+          <span
+            class="card-date deleted"
+            [matTooltip]="'Estado de la propiedad'"
+          >
+            <mat-icon>info</mat-icon>
+            No Disponible
+          </span>
+        } @else {
+          <span
+            class="card-date active"
+            [matTooltip]="'Estado de la propiedad'"
+          >
+            <mat-icon>info</mat-icon>
+            Disponible
+          </span>
+        }
       </div>
 
       @if (propertyDetailsResource.value()!.buildingId) {

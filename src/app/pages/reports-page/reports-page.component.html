@@ -8,7 +8,7 @@
     </div>
   </div>
 
-  <div class="content-wrapper" style="margin-top: 2.5rem">
+  <div class="content-wrapper">
     @if (isLoading()) {
       <div class="status-message loading">Cargando reportes...</div>
     }
@@ -18,12 +18,12 @@
     @if (!isLoading() && !error() && metabaseIframeUrl()) {
       <iframe
         [src]="metabaseIframeUrl()"
+        class="metabase-iframe"
         width="1700"
         height="650"
-        class="metabase-iframe"
+        }
         frameborder="0"
         allowfullscreen
-        style="margin: auto; display: block; border-radius: 14px"
       ></iframe>
     }
   </div>

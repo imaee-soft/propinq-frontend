@@ -18,17 +18,19 @@
             <mat-icon class="check-icon">{{
               property()!.furnishing ? "check" : "close"
             }}</mat-icon
-            >Amueblada</mat-chip
+            >Incluye Amueblamiento</mat-chip
           >
           <mat-chip selected>
             <mat-icon class="check-icon">{{
               property()!.petsAllowed ? "check" : "close"
             }}</mat-icon
-            >Mascotas</mat-chip
+            >Permite Mascotas</mat-chip
           >
           <mat-chip selected>
-            <mat-icon class="check-icon">check</mat-icon>Dueño
-            Verificado</mat-chip
+            <mat-icon class="check-icon">{{
+              property()!.expenses ? "check" : "close"
+            }}</mat-icon
+            >Incluye Cobro de Expensas</mat-chip
           >
         </mat-chip-set>
       </div>
@@ -50,7 +52,9 @@
     ></app-image-section>
     <div class="home-property-overlay">
       @if (
-        loggedUser()?.userId !== property()!.ownerId && !property()!.contactId
+        loggedUser()?.userId !== property()!.ownerId &&
+        !property()!.contactId &&
+        loggedUser()?.role?.toString() === "TENANT"
       ) {
         <button
           mat-button
@@ -58,15 +62,15 @@
           (click)="contactOwner()"
         >
           <mat-icon>contacts_product</mat-icon>
-          Contactar Dueño
+          Solicitar Negociación
         </button>
       }
       @if (
         loggedUser()?.userId !== property()!.ownerId && property()!.contactId
       ) {
         <button mat-button class="contacted-action" (click)="goToContact()">
-          <mat-icon>check_small</mat-icon>
-          Ver Contacto
+          <mat-icon>handshake</mat-icon>
+          Ver Negociación
         </button>
       }
       <div class="property-overlay-actions">
@@ -77,7 +81,9 @@
         >
           <mat-icon>visibility</mat-icon>
         </button>
-        @if (!isOwnerRetrieving()) {
+        @if (
+          !isOwnerRetrieving() && loggedUser()?.role?.toString() === "TENANT"
+        ) {
           @if (favoriteId()) {
             <button
               mat-icon-button
@@ -95,7 +101,8 @@
               <mat-icon>star_border</mat-icon>
             </button>
           }
-        } @else {
+        }
+        @if (isOwnerRetrieving()) {
           <button mat-icon-button matTooltip="Editar" (click)="update()">
             <mat-icon>edit</mat-icon>
           </button>
@@ -106,9 +113,6 @@
           (click)="compared.emit(property()!)"
         >
           <mat-icon>balance</mat-icon>
-        </button>
-        <button mat-icon-button matTooltip="Compartir">
-          <mat-icon>share</mat-icon>
         </button>
       </div>
     </div>

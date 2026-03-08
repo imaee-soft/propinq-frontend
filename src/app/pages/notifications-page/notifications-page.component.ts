@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,7 +10,6 @@ import { AuthService } from '../../auth/services/auth.service';
 import { NotificationResponse } from '../../notifications/interfaces/notification-response.interface';
 import { NotificationsService } from '../../notifications/notifications.service';
 import { LargePage } from '../../shared/interfaces/page.interface';
-import { formatDate } from '../../shared/utilities/date.pipes';
 
 @Component({
   selector: 'app-notifications-page',
@@ -20,6 +20,7 @@ import { formatDate } from '../../shared/utilities/date.pipes';
     MatIconModule,
     MatTooltip,
     MatPaginatorModule,
+    DatePipe,
   ],
   templateUrl: './notifications-page.component.html',
   styleUrls: [
@@ -112,10 +113,6 @@ export class NotificationsPageComponent implements OnInit {
 
   goBack(): void {
     window.history.back();
-  }
-
-  formatDateWrapper(date: Date): string {
-    return formatDate(date);
   }
 
   isSeen(notification: NotificationResponse): boolean {

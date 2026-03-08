@@ -1,6 +1,6 @@
 export interface Building {
   buildingId: string;
-  latitude:   number;
-  longitude:  number;
+  latitude: number;
+  longitude: number;
+  name: string;
 }
-

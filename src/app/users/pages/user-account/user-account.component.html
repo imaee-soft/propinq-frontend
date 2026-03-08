@@ -1,105 +1,114 @@
 <div class="user-account-page">
   @if (user; as u) {
-  <header class="user-header">
-    <mat-card class="header-content">
-      <mat-icon>account_circle</mat-icon>
-      <div class="user-name">
-        <h1>{{ u.firstName + " " + u.lastName }}</h1>
-        <p class="subtitle">{{ u.email }}</p>
-      </div>
-    </mat-card>
-  </header>
+    <header class="user-header">
+      <mat-card class="header-content">
+        <mat-icon>account_circle</mat-icon>
+        <div class="user-name">
+          <h1>{{ u.firstName + " " + u.lastName }}</h1>
+          <p class="subtitle">{{ u.email }}</p>
+        </div>
+      </mat-card>
+    </header>
 
-  <section class="user-info">
-    <mat-label class="user-info-title">Información de la cuenta</mat-label>
-    <mat-card class="user-info-card">
-      @if (u.firstName) {
-      <div class="info-row">
-        <mat-label>Nombre</mat-label>
-        @if (firstNameClicked()) {
-        <app-dynamic-input
-          [initialValue]="u.firstName"
-          (submittedValue)="onValueSubmitted('firstName', $event)"
-        ></app-dynamic-input>
-        } @else {
-        <span (click)="onFirstNameClicked()">{{ u.firstName }}</span>
+    <section class="user-info">
+      <mat-label class="user-info-title">Información de la cuenta</mat-label>
+      <mat-card class="user-info-card">
+        @if (u.firstName) {
+          <div class="info-row">
+            <mat-label>Nombre</mat-label>
+            @if (firstNameClicked()) {
+              <app-dynamic-input
+                [initialValue]="u.firstName"
+                (submittedValue)="onValueSubmitted('firstName', $event)"
+              ></app-dynamic-input>
+            } @else {
+              <span (click)="onFirstNameClicked()">{{ u.firstName }}</span>
+            }
+          </div>
         }
-      </div>
-      } @if (u.lastName) {
-      <div class="info-row">
-        <mat-label>Apellido</mat-label>
-        @if (lastNameClicked()) {
-        <app-dynamic-input
-          [initialValue]="u.lastName"
-          (submittedValue)="onValueSubmitted('lastName', $event)"
-        ></app-dynamic-input>
-        } @else {
-        <span (click)="onLastNameClicked()">{{ u.lastName }}</span>
+        @if (u.lastName) {
+          <div class="info-row">
+            <mat-label>Apellido</mat-label>
+            @if (lastNameClicked()) {
+              <app-dynamic-input
+                [initialValue]="u.lastName"
+                (submittedValue)="onValueSubmitted('lastName', $event)"
+              ></app-dynamic-input>
+            } @else {
+              <span (click)="onLastNameClicked()">{{ u.lastName }}</span>
+            }
+          </div>
         }
-      </div>
-      } @if (u.dni) {
-      <div class="info-row">
-        <mat-label>Número de documento</mat-label>
-        @if (documentClicked()) {
-        <app-dynamic-input
-          [initialValue]="u.dni"
-          (submittedValue)="onValueSubmitted('dni', $event)"
-        ></app-dynamic-input>
-        } @else {
-        <span (click)="onNumeroDocumentoClicked()">{{ u.dni }}</span>
+        @if (u.dni) {
+          <div class="info-row">
+            <mat-label>Número de documento</mat-label>
+            @if (documentClicked()) {
+              <app-dynamic-input
+                [initialValue]="u.dni"
+                (submittedValue)="onValueSubmitted('dni', $event)"
+              ></app-dynamic-input>
+            } @else {
+              <span (click)="onNumeroDocumentoClicked()">{{ u.dni }}</span>
+            }
+          </div>
         }
-      </div>
-      } @if (u.phoneNumber) {
-      <div class="info-row">
-        <mat-label>Teléfono</mat-label>
-        @if (phoneClicked()) {
-        <app-dynamic-input
-          [initialValue]="u.phoneNumber"
-          (submittedValue)="onValueSubmitted('phoneNumber', $event)"
-        ></app-dynamic-input>
-        } @else {
-        <span (click)="onPhoneClicked()">{{
-          u.phoneNumber | phone : "AR"
-        }}</span>
+        @if (u.phoneNumber) {
+          <div class="info-row">
+            <mat-label>Teléfono</mat-label>
+            @if (phoneClicked()) {
+              <app-dynamic-input
+                [initialValue]="u.phoneNumber"
+                (submittedValue)="onValueSubmitted('phoneNumber', $event)"
+              ></app-dynamic-input>
+            } @else {
+              <span (click)="onPhoneClicked()">{{
+                u.phoneNumber | phone: "AR"
+              }}</span>
+            }
+          </div>
         }
-      </div>
-      } @if (u.address) {
-      <div class="info-row">
-        <mat-label>Dirección</mat-label>
-        @if (addressClicked()) {
-        <app-dynamic-input
-          [initialValue]="u.address"
-          (submittedValue)="onValueSubmitted('address', $event)"
-        ></app-dynamic-input>
-        } @else {
-        <span (click)="onAddressClicked()">{{ u.address }}</span>
+        @if (u.address) {
+          <div class="info-row">
+            <mat-label>Dirección</mat-label>
+            @if (addressClicked()) {
+              <app-dynamic-input
+                [initialValue]="u.address"
+                (submittedValue)="onValueSubmitted('address', $event)"
+              ></app-dynamic-input>
+            } @else {
+              <span (click)="onAddressClicked()">{{ u.address }}</span>
+            }
+          </div>
         }
-      </div>
-      }
-    </mat-card>
-  </section>
+      </mat-card>
+    </section>
   }
   <section class="user-preferences">
-  <mat-label class="user-preferences-title">Preferencias del usuario</mat-label>
-  <mat-card class="user-preferences-card">
-    <table class="preferences-table">
-      <thead>
-        <tr>
-          <th>Criterio</th>
-          <th>¿Usar para comparar?</th>
-        </tr>
-      </thead>
-      <tbody>
-        @for(attribute of comparisonAttributes(); track $index) {
+    <mat-label class="user-preferences-title"
+      >Preferencias del usuario</mat-label
+    >
+    <mat-card class="user-preferences-card">
+      <table class="preferences-table">
+        <thead>
           <tr>
-            <td>{{ attribute.label }}</td>
-            <td>
-              <mat-checkbox [(ngModel)]="attribute.enabled" (change)="onComparisonAttributesChanged()"></mat-checkbox>
-            </td>
-        </tr>
-      }
-      </tbody>
-    </table>
-  </mat-card>
-</section>
+            <th>Criterio</th>
+            <th>¿Usar para comparar?</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (attribute of comparisonAttributes(); track $index) {
+            <tr>
+              <td>{{ attribute.label }}</td>
+              <td>
+                <mat-checkbox
+                  [(ngModel)]="attribute.enabled"
+                  (change)="onComparisonAttributesChanged()"
+                ></mat-checkbox>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </mat-card>
+  </section>
 </div>

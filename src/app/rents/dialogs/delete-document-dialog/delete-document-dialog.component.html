@@ -1,0 +1,40 @@
+<app-generic-dialog
+  [dialogTitle]="'Eliminar documento'"
+  [activeSaveButton]="true"
+  [isLoading]="isLoading()"
+  [submitTitle]="'Eliminar'"
+>
+  <ng-template #content>
+    <div class="form-container">
+      <div class="warning-message">
+        <mat-icon class="warning-icon">warning</mat-icon>
+        <p>
+          ¿Estás seguro de que deseas eliminar el documento
+          <strong>"{{ documentName }}"</strong>? Esta acción no se puede
+          deshacer.
+        </p>
+      </div>
+    </div>
+  </ng-template>
+  <ng-template #actions>
+    <mat-dialog-actions>
+      <button mat-button class="close-btn" [mat-dialog-close]="false">
+        Cancelar
+      </button>
+      <button
+        mat-flat-button
+        class="delete-btn"
+        type="button"
+        [disabled]="isLoading()"
+        (click)="delete()"
+      >
+        @if (isLoading()) {
+          <mat-icon class="spinner">sync</mat-icon>
+        } @else {
+          <mat-icon>delete</mat-icon>
+        }
+        Eliminar
+      </button>
+    </mat-dialog-actions>
+  </ng-template>
+</app-generic-dialog>

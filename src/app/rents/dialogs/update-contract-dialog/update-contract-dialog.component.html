@@ -1,0 +1,30 @@
+<form [formGroup]="form" (ngSubmit)="handleSubmit()">
+  <app-generic-dialog
+    [dialogTitle]="'Actualizar contrato'"
+    [activeSaveButton]="form.valid"
+    [isLoading]="isLoading()"
+    [submitTitle]="'Actualizar'"
+  >
+    <ng-template #content>
+      <div class="form-container">
+        <div class="document-section">
+          <app-document-loader
+            [title]="'Subí el nuevo contrato'"
+            [buttonLabel]="'Subir nuevo contrato'"
+            (fileUploaded)="handleDocumentUploaded($event)"
+            (fileRemoved)="handleDocumentRemoved()"
+          ></app-document-loader>
+          <div class="document-error-wrapper">
+            @if (
+              documentControl?.errors?.["required"] && documentControl?.touched
+            ) {
+              <mat-error class="document-error"
+                >El documento es requerido</mat-error
+              >
+            }
+          </div>
+        </div>
+      </div>
+    </ng-template>
+  </app-generic-dialog>
+</form>

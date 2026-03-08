@@ -4,6 +4,7 @@ import { NavigationEnd, Router } from '@angular/router';
 import { filter, map, startWith } from 'rxjs';
 import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { AuthService } from '../../auth/services/auth.service';
+import { ADMIN_SIDEBAR_CONFIG } from '../utilities/admin.config';
 import { OWNER_SIDEBAR_CONFIG } from '../utilities/owner.config';
 import { TENANT_SIDEBAR_CONFIG } from '../utilities/tenant.config';
 import { UNLOGGED_SIDEBAR_CONFIG } from '../utilities/unlogged.config';
@@ -13,6 +14,7 @@ const SIDEBAR_ITEMS: Record<string, SideConfig> = {
   unlogged: UNLOGGED_SIDEBAR_CONFIG,
   tenant_logged: TENANT_SIDEBAR_CONFIG,
   owner_logged: OWNER_SIDEBAR_CONFIG,
+  admin: ADMIN_SIDEBAR_CONFIG,
 };
 
 @Injectable({ providedIn: 'root' })
@@ -28,7 +30,9 @@ export class SidebarService {
       status === AuthStatus.AUTHENTICATED
         ? user?.role.toString() === 'OWNER'
           ? 'owner_logged'
-          : 'tenant_logged'
+          : user?.role.toString() === 'ADMIN'
+            ? 'admin'
+            : 'tenant_logged'
         : 'unlogged'
     ];
   });
@@ -43,9 +47,9 @@ export class SidebarService {
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),
       map(() => this.router.url),
-      startWith(this.router.url)
+      startWith(this.router.url),
     ),
-    { initialValue: this.router.url }
+    { initialValue: this.router.url },
   );
 
   isDashboardPage = computed(() => {

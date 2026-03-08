@@ -49,13 +49,13 @@ mat-form-field {
   margin-right: auto;
   width: 80%;
   margin-top: 1.5rem;
-  gap: 8px;
+  gap: 16px;
 }
 
 .decision-btn {
   flex: 1;
   height: 46px;
-  border-radius: 14px;
+  border-radius: 8px;
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.03);
   color: #94a3b8;

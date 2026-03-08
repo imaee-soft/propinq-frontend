@@ -16,7 +16,7 @@
   position: fixed;
   top: calc(50px + (100vh - 50px - 30px) / 2);
   transform: translateY(-50%);
-  left: 110px;
+  left: 140px;
   width: 420px;
   background: transparent;
   border: none;
@@ -116,7 +116,6 @@ mat-card-header {
   position: relative;
   padding: 16px 8px 16px 16px;
   flex-shrink: 0;
-  background: linear-gradient(to right, #1a1e2b, #232a3b);
   color: white;
   z-index: 10;
   border-radius: 16px 16px 0 0;

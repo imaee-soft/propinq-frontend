@@ -1,0 +1,34 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.95rem;
+  padding: 1rem 1.25rem;
+  box-sizing: border-box;
+}
+
+.document-section {
+  display: block;
+  flex-direction: column;
+}
+
+.document-error-wrapper {
+  min-height: 1.5rem;
+}
+
+.doocument-error {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  animation: fadeInError 0.25s ease-out;
+}
+
+@keyframes fadeInError {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

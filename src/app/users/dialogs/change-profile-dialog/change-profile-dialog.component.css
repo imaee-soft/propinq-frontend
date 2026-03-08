@@ -1,0 +1,81 @@
+.dialog-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding: 24px;
+  margin: 1rem;
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: saturate(150%) blur(6px);
+  border-radius: 20px;
+}
+
+.context-text {
+  color: #cbd5e1;
+  text-align: center;
+  letter-spacing: 0.05em;
+}
+
+.role-transition {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.role {
+  padding: 6px 14px;
+  border-radius: 999px;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+}
+
+.role.current {
+  background: rgba(255, 255, 255, 0.06);
+  color: #cbd5e1;
+  padding: 8px 48px;
+}
+
+.role.target {
+  padding: 8px 48px;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  color: white;
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.4);
+}
+
+.info-card {
+  display: flex;
+  gap: 24px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.info-card h4 {
+  margin: 0 0 6px 0;
+  font-weight: 600;
+  color: #e2e8f0;
+}
+
+.info-card p,
+.info-card li {
+  color: #94a3b8;
+}
+
+.info-card ul {
+  margin: 0;
+  padding-left: 1rem;
+}
+
+.info-card.neutral mat-icon {
+  color: #818cf8;
+}
+
+.info-card.warning mat-icon {
+  color: #f59e0b;
+}
+
+.info-card.success mat-icon {
+  color: #22c55e;
+}

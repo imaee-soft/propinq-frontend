@@ -1,5 +1,5 @@
 <mat-dialog-content>
-  <h2 mat-dialog-title>Nueva solicitud de contacto</h2>
+  <h2 mat-dialog-title>Nueva solicitud de negociación</h2>
   <mat-label>
     <mat-icon>home</mat-icon>
     {{ title() }}
@@ -32,13 +32,13 @@
   >
     <div class="button-content">
       @if (isLoading()) {
-      <mat-progress-spinner
-        mode="indeterminate"
-        diameter="20"
-      ></mat-progress-spinner>
+        <mat-progress-spinner
+          mode="indeterminate"
+          diameter="20"
+        ></mat-progress-spinner>
       } @else {
-      <mat-icon>save</mat-icon>
-      <span>Contactar</span>
+        <mat-icon>save</mat-icon>
+        <span>Contactar</span>
       }
     </div>
   </button>

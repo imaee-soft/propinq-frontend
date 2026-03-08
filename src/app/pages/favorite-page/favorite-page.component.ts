@@ -42,6 +42,7 @@ export class FavoritePageComponent implements OnInit {
   pageIndex = signal(0);
   favorites = signal<FavoriteEntity[]>([]);
   totalElements = signal(0);
+  iconUrl = signal<'/building.png' | '/property.png'>('/building.png');
 
   favoriteQueryType = signal<'properties' | 'buildings'>('buildings');
   chipFilters: ChipFilter[] = [
@@ -71,8 +72,10 @@ export class FavoritePageComponent implements OnInit {
   loadFavorites() {
     if (!this.canQuery()) return;
     if (this.favoriteQueryType() === 'properties') {
+      this.iconUrl.set('/property.png');
       this.loadProperties();
     } else {
+      this.iconUrl.set('/building.png');
       this.loadBuildings();
     }
   }

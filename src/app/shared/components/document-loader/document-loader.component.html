@@ -1,0 +1,41 @@
+<div class="image-upload">
+  <mat-label>{{ title() }}</mat-label>
+
+  <div class="file-input-wrapper">
+    <button
+      mat-raised-button
+      class="custom-upload-button"
+      (click)="fileInput.click()"
+      type="button"
+    >
+      {{ buttonLabel() }}
+    </button>
+
+    <input
+      #fileInput
+      type="file"
+      accept="application/pdf"
+      (change)="onFileSelected($event)"
+      hidden
+    />
+  </div>
+</div>
+
+<div class="file-preview-container">
+  @if (fileName()) {
+    <div class="file-preview">
+      <mat-icon class="file-icon">picture_as_pdf</mat-icon>
+      <span class="file-name">
+        {{ fileName() }}
+      </span>
+      <button
+        mat-icon-button
+        (click)="removeFile()"
+        type="button"
+        aria-label="Eliminar archivo"
+      >
+        <mat-icon class="delete-button">close</mat-icon>
+      </button>
+    </div>
+  }
+</div>

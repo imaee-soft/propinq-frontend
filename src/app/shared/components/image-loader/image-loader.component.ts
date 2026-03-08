@@ -9,6 +9,7 @@ import { MatLabel } from '@angular/material/form-field';
 })
 export class ImageLoaderComponent {
   title = input<string>('Subir imágenes');
+  buttonLabel = input<string>('Seleccionar imágenes');
   images = input<File[] | null>(null);
   imageUploaded = output<File[]>();
   imageRemoved = output<number>();

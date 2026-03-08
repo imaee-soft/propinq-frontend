@@ -67,7 +67,9 @@ export class HomePropertyCardComponent {
         backdropClass: 'dialog-backdrop',
         data: this.property(),
       })
-      .subscribe();
+      .subscribe(() => {
+        this.closed.emit();
+      });
   }
 
   update() {

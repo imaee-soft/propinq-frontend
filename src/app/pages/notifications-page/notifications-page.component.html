@@ -31,7 +31,7 @@
             </div>
           </th>
           <td mat-cell *matCellDef="let element">
-            {{ formatDateWrapper(element.createdAt) }}
+            {{ element.createdAt | date: "dd/MM/yyyy HH:mm" }}
           </td>
         </ng-container>
 

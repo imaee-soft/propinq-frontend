@@ -1,0 +1,207 @@
+<div class="page-container">
+  @if (rentDetails$ | async; as rent) {
+    <header class="page-header">
+      <div class="header-content">
+        <button mat-icon-button class="back-button" (click)="goBack()">
+          <mat-icon>arrow_back</mat-icon>
+        </button>
+        <h2>Alquiler en {{ rent.propertyName }}</h2>
+        <button
+          mat-icon-button
+          [matTooltip]="'Ver propiedad'"
+          (click)="goToProperty()"
+        >
+          <mat-icon>open_in_new</mat-icon>
+        </button>
+      </div>
+    </header>
+    <div class="detail-card">
+      <div class="header-content with-margin">
+        <div class="entities">
+          <div class="entity-container">
+            @if (rent.isOwnerRetrieving) {
+              <mat-icon [matTooltip]="'Inquilino'">person</mat-icon>
+              <span>{{ rent.tenantFullName }}</span>
+            } @else {
+              <mat-icon [matTooltip]="'Propietario'">person</mat-icon>
+              <span>{{ rent.ownerFullName }}</span>
+            }
+            <button
+              mat-icon-button
+              [matTooltip]="'Ver contacto'"
+              (click)="goToContact()"
+            >
+              <mat-icon>open_in_new</mat-icon>
+            </button>
+          </div>
+        </div>
+        <div class="badges">
+          <div
+            class="date-badge start"
+            [matTooltip]="'Fecha de inicio del alquiler'"
+          >
+            <mat-icon>calendar_month</mat-icon>
+            <span class="value">{{ rent.rentDate | date: "dd/MM/yyyy" }}</span>
+          </div>
+          @if (getStatusConfig(rent.rentState); as status) {
+            <div
+              class="date-badge end"
+              [ngStyle]="{
+                background: status.background,
+                border: status.border,
+              }"
+              [matTooltip]="getStatusInfo(rent)"
+            >
+              <mat-icon (click)="seeCancellation(rent)">info</mat-icon>
+              <span class="value">{{ getStatusLabel(rent) }}</span>
+            </div>
+          }
+        </div>
+      </div>
+      <div class="main-features">
+        <div class="feature-item">
+          <mat-icon class="feature-icon">local_atm</mat-icon>
+          <span class="feature-label">{{ rent.rentPrice }}</span>
+          <span class="feature-text">Precio base de alquiler</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">assignment</mat-icon>
+          <span class="feature-label">{{ rent.raiseIndex }}</span>
+          <span class="feature-text">Índice de aumento</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">calendar_view_week</mat-icon>
+          <span class="feature-label"
+            >{{ rent.raiseMonths }}
+            {{ rent.raiseMonths === 1 ? "mes" : "meses" }}</span
+          >
+          <span class="feature-text">Periodicidad de aumento</span>
+        </div>
+        <div class="feature-item">
+          <mat-icon class="feature-icon">alarm</mat-icon>
+          <span class="feature-label">Día {{ rent.payday }}</span>
+          <span class="feature-text">Límite de pago</span>
+        </div>
+      </div>
+      @if (rent.rentState === "ACTIVE") {
+        <div class="projection-container">
+          @if (rent.isOwnerRetrieving) {
+            <button
+              mat-fab
+              class="fab-add"
+              [matTooltip]="'Cancelar contrato'"
+              (click)="cancel()"
+            >
+              <mat-icon>cancel</mat-icon>
+            </button>
+          }
+          <button
+            mat-fab
+            class="fab-add"
+            [disabled]="isLoadingProjection()"
+            (click)="seeProjection()"
+            [matTooltip]="'Calcular aumento'"
+          >
+            @if (isLoadingProjection()) {
+              <mat-progress-spinner
+                mode="indeterminate"
+                diameter="20"
+              ></mat-progress-spinner>
+            } @else {
+              <mat-icon>calculate</mat-icon>
+            }
+          </button>
+        </div>
+      }
+    </div>
+    <div class="detail-card">
+      <div class="contract-header">
+        <h2>Documentación</h2>
+        <div class="fabs">
+          @if (rent.isOwnerRetrieving && rent.rentState === "ACTIVE") {
+            <button
+              mat-fab
+              class="fab-add"
+              [matTooltip]="'Agregar documento'"
+              (click)="addDocument()"
+            >
+              <mat-icon>upload_file</mat-icon>
+            </button>
+          }
+          <button
+            mat-fab
+            class="fab-add"
+            (click)="toggleShowPdf()"
+            [matTooltip]="
+              showPdf() ? 'Ocultar documentación' : 'Ver documentación'
+            "
+          >
+            @if (showPdf()) {
+              <mat-icon>visibility_off</mat-icon>
+            } @else {
+              <mat-icon>visibility</mat-icon>
+            }
+          </button>
+        </div>
+      </div>
+
+      <div class="documents-layout" [class.visible]="showPdf()">
+        <mat-nav-list class="documents-list">
+          @for (document of documents; track document) {
+            <mat-list-item
+              [activated]="document.selected!"
+              (click)="selectDocument(document.documentId)"
+            >
+              <mat-icon matListItemIcon>file_present</mat-icon>
+              <span matListItemLine>{{ document.name }}</span>
+              @if (document.documentId !== "contract") {
+                <div class="document-actions" matListItemMeta>
+                  <button
+                    mat-icon-button
+                    [matTooltip]="'Eliminar documento'"
+                    (click)="
+                      deleteDocument(document.documentId);
+                      $event.stopPropagation()
+                    "
+                  >
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
+              @if (
+                document.documentId === "contract" &&
+                rent.isOwnerRetrieving &&
+                rent.rentState === "ACTIVE"
+              ) {
+                <div class="document-actions" matListItemMeta>
+                  <button
+                    mat-icon-button
+                    [matTooltip]="'Actualizar contrato'"
+                    (click)="updateContract(); $event.stopPropagation()"
+                  >
+                    <mat-icon>edit</mat-icon>
+                  </button>
+                </div>
+              }
+            </mat-list-item>
+          }
+        </mat-nav-list>
+        <div class="pdf-wrapper">
+          <div class="pdf-container">
+            <iframe [src]="safePdfUrl"></iframe>
+          </div>
+        </div>
+      </div>
+    </div>
+  } @else {
+    @if (isLoading()) {
+      <div class="loading">
+        <mat-progress-spinner mode="indeterminate"></mat-progress-spinner>
+      </div>
+    } @else {
+      <div class="status-message">
+        ¡Ups! Ocurrió un error cargar la información del alquiler.
+      </div>
+    }
+  }
+</div>

@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, contentChild, input, TemplateRef } from '@angular/core';
+import {
+  Component,
+  contentChild,
+  input,
+  output,
+  TemplateRef,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatIcon } from '@angular/material/icon';
@@ -21,7 +27,11 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 })
 export class GenericDialogComponent {
   dialogTitle = input.required<string>();
+  submitTitle = input<string>('Guardar');
   isLoading = input<boolean>(false);
   content = contentChild.required('content', { read: TemplateRef });
   activeSaveButton = input<boolean>(false);
+  submit = output<void>();
+
+  actions = contentChild<TemplateRef<unknown>>('actions');
 }

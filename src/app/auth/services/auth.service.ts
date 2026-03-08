@@ -28,6 +28,7 @@ export class AuthService {
   status = computed(() => this._authState().status);
   accessToken = computed(() => this._authState().accessToken);
   refreshToken = computed(() => this._authState().refreshToken);
+  profileChange = computed(() => this.user()?.profileChange);
   isLoading = signal(false);
 
   constructor() {

@@ -19,6 +19,14 @@
           Publicar
         </a>
       }
+      @if (isTenant() && !profileChange()?.profileChangeState) {
+        <a
+          class="nav-action-link nav-action-featured"
+          (click)="requestOwnerProfile()"
+        >
+          Publicar
+        </a>
+      }
       <mat-menu #publishMenu="matMenu" class="publish-menu">
         <div class="menu-content">
           <button mat-menu-item (click)="publishBuilding()">
@@ -123,6 +131,9 @@
     @if (userLogged) {
       <span class="card-status">
         {{ userRole | titlecase }}
+        @if (profileChange()?.profileChangeState === "PENDING") {
+          <mat-icon [matTooltip]="'Cambio de perfil solicitado'">info</mat-icon>
+        }
       </span>
     }
   </div>

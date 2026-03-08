@@ -3,10 +3,12 @@
     <div class="map-wrapper">
       <app-map
         [config]="getMapConfig()"
+        [coordinateToGo]="coordinateToGo()"
+        [loadInfo]="true"
+        [radiusCircle]="radiusCircle()"
         (markerClick)="onMarkerClick($event)"
         (mapClick)="onMapClick($event)"
         (centerChanged)="onCenterChanged($event)"
-        [coordinateToGo]="coordinateToGo()"
       />
     </div>
     <app-building-component
@@ -103,7 +105,7 @@
   }
   @if (showFilters()) {
     <div class="filters-floating-panel" [class.shifted]="sidebarOpened()">
-      <app-filters />
+      <app-filters (radiusChange)="onRadiusChange($event)" />
     </div>
   }
 }

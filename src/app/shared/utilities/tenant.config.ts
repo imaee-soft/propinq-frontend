@@ -1,6 +1,6 @@
 export const TENANT_NAVBAR_ITEMS = [
   {
-    name: 'Contactos',
+    name: 'Negociaciones',
     url: '/tenant-contacts',
   },
   {
@@ -22,13 +22,13 @@ export const TENANT_SIDEBAR_CONFIG = {
       route: '/notifications',
     },
     {
-      label: 'Mi alquiler',
+      label: 'Mis alquileres',
       icon: 'apartment',
-      route: '/my-rentals',
+      route: '/tenant-rents',
     },
     {
-      label: 'Mis solicitudes de contacto',
-      icon: 'chat',
+      label: 'Mis solicitudes de negociación',
+      icon: 'person',
       route: '/tenant-contacts',
     },
     {

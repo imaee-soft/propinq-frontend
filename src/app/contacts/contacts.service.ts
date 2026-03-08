@@ -7,6 +7,7 @@ import { ContactDetailsPage } from './interfaces/contact-details-page.interface'
 import { ContactDetails } from './interfaces/contact-details.interface';
 import { ContactRequest } from './interfaces/contact-request.interface';
 import { ContactResponse } from './interfaces/contact-response.interface';
+import { RejectContactRequest } from './interfaces/reject-contact-request.interface';
 
 @Injectable({ providedIn: 'root' })
 export class ContactsService {
@@ -22,10 +23,14 @@ export class ContactsService {
   getOwnerContactsDetails(
     page = 0,
     size = 6,
+    surname?: string,
     status = 'all',
   ): Observable<ContactDetailsPage> {
     return this._http.get<ContactDetailsPage>(`${this._baseUrl}/owner`, {
-      params: { page, size, status },
+      params:
+        surname && surname !== ''
+          ? { page, size, surname, status }
+          : { page, size, status },
     });
   }
 
@@ -41,6 +46,10 @@ export class ContactsService {
 
   answerContact(contactId: string, answer: AnswerContactRequest) {
     return this._http.patch(`${this._baseUrl}/${contactId}/answer`, answer);
+  }
+
+  rejectContact(contactId: string, answer: RejectContactRequest) {
+    return this._http.patch(`${this._baseUrl}/${contactId}/cancel`, answer);
   }
 
   deleteContact(contactId: string) {

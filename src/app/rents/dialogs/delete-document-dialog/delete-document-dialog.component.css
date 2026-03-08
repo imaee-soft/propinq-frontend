@@ -1,0 +1,92 @@
+.form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 0.95rem;
+  padding: 1rem 1.25rem;
+  box-sizing: border-box;
+}
+
+.warning-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 60%;
+  gap: 0.5rem;
+  font-size: 1rem;
+}
+
+.warning-icon {
+  color: #f44336;
+  font-size: 60px;
+  width: 60px;
+  height: 60px;
+}
+
+.warning-message p {
+  margin: 0;
+  color: #e2e8f0;
+}
+
+.warning-text {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+
+.delete-btn {
+  background: linear-gradient(135deg, #dc2626 0%, #b91c1c 100%) !important;
+  color: white !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 0.625rem 2.25rem !important;
+  font-weight: 700 !important;
+  font-size: 0.875rem !important;
+  text-transform: none !important;
+  transition: all 0.2s ease !important;
+  width: 150px !important;
+  box-shadow: 0 2px 4px rgba(220, 38, 38, 0.3) !important;
+}
+
+.delete-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%) !important;
+  box-shadow: 0 4px 8px rgba(220, 38, 38, 0.4) !important;
+  transform: translateY(-1px) !important;
+}
+
+.delete-btn:disabled {
+  background: linear-gradient(135deg, #2a2e3f 0%, #2f3249 100%) !important;
+  color: #94a3b8 !important;
+  opacity: 0.6 !important;
+  box-shadow: none !important;
+  cursor: not-allowed !important;
+  transform: none !important;
+}
+
+.close-btn {
+  background: transparent !important;
+  color: #94a3b8 !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 8px !important;
+  padding: 0.625rem 2.25rem !important;
+  font-weight: 600 !important;
+  font-size: 0.875rem !important;
+  text-transform: none !important;
+  transition: all 0.2s ease !important;
+  min-width: 80px !important;
+  height: 40px !important;
+}
+
+.close-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.05) !important;
+  color: #cbd5e1 !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+  transform: translateY(-1px) !important;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2) !important;
+}
+
+.close-btn:active:not(:disabled) {
+  transform: translateY(0) !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}

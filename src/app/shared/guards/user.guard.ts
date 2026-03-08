@@ -1,22 +1,25 @@
 import { inject } from '@angular/core';
-import {
-  ActivatedRouteSnapshot,
-  CanActivateFn,
-  Router,
-  RouterStateSnapshot,
-} from '@angular/router';
+import { toObservable } from '@angular/core/rxjs-interop';
+import { CanActivateFn, Router } from '@angular/router';
+import { filter, map, take } from 'rxjs';
+import { AuthStatus } from '../../auth/enums/auth-status.enum';
 import { AuthService } from '../../auth/services/auth.service';
 
-export const UserGuard: CanActivateFn = (
-  route: ActivatedRouteSnapshot,
-  state: RouterStateSnapshot,
-) => {
+export const UserGuard: CanActivateFn = () => {
   const router = inject(Router);
   const authService = inject(AuthService);
-  const user = authService.user();
-  if (!user) {
-    router.navigate(['/auth/login']);
-    return false;
-  }
-  return true;
+
+  return toObservable(authService.status).pipe(
+    filter((status) => status !== AuthStatus.PENDING),
+    take(1),
+    map(() => {
+      const user = authService.user();
+
+      if (!user) {
+        return router.createUrlTree(['/auth/login']);
+      }
+
+      return true;
+    }),
+  );
 };

@@ -10,12 +10,24 @@ const TYPE_ICONS: Record<string, string> = {
   NEW_CONTACT_REQUEST: 'person_add',
   CONTACT_ACCEPTED: 'person',
   CONTACT_REJECTED: 'person_off',
+  CONTACT_CANCELLED: 'person_off',
+  CONTACT_RENTED: 'person',
+  PROFILE_CHANGE_REQUEST: 'switch_account',
+  PROFILE_CHANGE_ACCEPTED: 'check_circle',
+  PROFILE_CHANGE_REJECTED: 'cancel',
+  RENT_CANCELLED: 'cancel',
 };
 
 const TYPE_TEXTS: Record<string, string> = {
-  NEW_CONTACT_REQUEST: 'envió una nueva solicitud de contacto.',
-  CONTACT_ACCEPTED: 'aceptó la solicitud de contacto.',
-  CONTACT_REJECTED: 'rechazó la solicitud de contacto.',
+  NEW_CONTACT_REQUEST: 'envió una nueva solicitud de negociación.',
+  CONTACT_ACCEPTED: 'aceptó la solicitud de negociación.',
+  CONTACT_REJECTED: 'rechazó la solicitud de negociación.',
+  CONTACT_CANCELLED: 'dió de baja la solicitud de negociación.',
+  CONTACT_RENTED: 'dió de alta un alquiler a tu nombre.',
+  PROFILE_CHANGE_REQUEST: 'solicitó un cambio de perfil.',
+  PROFILE_CHANGE_ACCEPTED: 'aceptó tu solicitud de cambio de perfil.',
+  PROFILE_CHANGE_REJECTED: 'rechazó tu solicitud de cambio de perfil.',
+  RENT_CANCELLED: 'canceló un alquiler a tu nombre.',
 };
 
 @Component({

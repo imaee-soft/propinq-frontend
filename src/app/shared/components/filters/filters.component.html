@@ -1,13 +1,13 @@
 <div class="filters-container">
   <div class="filters-container-header">
-    <h2>Filtros de búsqueda</h2>
+    <h2>Búsqueda detallada</h2>
     <button
       mat-fab
       class="action-fab"
       (click)="clearFilters()"
       matTooltip="Limpiar filtros"
     >
-      <mat-icon>delete</mat-icon>
+      <mat-icon>delete_sweep</mat-icon>
     </button>
   </div>
   <div class="section-container">
@@ -25,40 +25,56 @@
       </mat-chip-set>
     </div>
     <div class="section">
-      <span class="section-title">Precio por mes</span>
+      <span class="section-title">Precio de alquiler</span>
       <div class="price-inputs">
-        <div class="wrapper">
-          <span>$</span>
-          <input
-            matInput
-            type="number"
-            value="10"
-            placeholder="Mínimo"
-            (input)="setMinPrice($any($event.target).value)"
-          />
+        <div class="price-input">
+          <div class="wrapper">
+            <span>$</span>
+            <input
+              matInput
+              type="number"
+              [value]="minPrice()"
+              [min]="minPrice()"
+              placeholder="Mínimo"
+              (input)="setMinPrice($any($event.target).value)"
+            />
+          </div>
+          <mat-label>Mínimo</mat-label>
         </div>
-        <span class="price-separator">–</span>
-        <div class="wrapper">
-          <span>$</span>
-          <input
-            matInput
-            type="number"
-            value="800000"
-            placeholder="Máximo"
-            (input)="setMaxPrice($any($event.target).value)"
-          />
+        <div class="price-input">
+          <div class="wrapper">
+            <span>$</span>
+            <input
+              matInput
+              type="number"
+              [value]="maxPrice()"
+              [max]="maxPrice()"
+              placeholder="Máximo"
+              (input)="setMaxPrice($any($event.target).value)"
+            />
+          </div>
+          <mat-label>Máximo</mat-label>
         </div>
       </div>
     </div>
     <div class="section">
       <span class="section-title">Características</span>
       <div class="features-list">
-        @for (feature of checkFeatures(); track feature) {
-          <mat-checkbox
-            (change)="checkFeature(feature.value, $event.checked)"
-            >{{ feature.label }}</mat-checkbox
-          >
-        }
+        <mat-checkbox
+          [checked]="selectedFurnishing() ?? false"
+          (change)="selectFurnishing($event.checked)"
+          >Amueblado</mat-checkbox
+        >
+        <mat-checkbox
+          [checked]="selectedPets() ?? false"
+          (change)="selectPets($event.checked)"
+          >Mascotas</mat-checkbox
+        >
+        <mat-checkbox
+          [checked]="selectedExpenses() ?? false"
+          (change)="selectExpenses($event.checked)"
+          >Expensas</mat-checkbox
+        >
       </div>
     </div>
     <div class="section">
@@ -69,13 +85,14 @@
             <mat-icon>hotel</mat-icon>
             <span>Habitaciones</span>
           </span>
-          <mat-select class="space-select" required>
+          <mat-select
+            class="space-select"
+            required
+            [value]="selectedRooms()"
+            (selectionChange)="selectRooms($event.value)"
+          >
             @for (room of roomOptions(); track room) {
-              <mat-option
-                [value]="room"
-                (onSelectionChange)="selectRooms(room)"
-                >{{ room }}</mat-option
-              >
+              <mat-option [value]="room">{{ room }}</mat-option>
             }
           </mat-select>
         </div>
@@ -84,13 +101,14 @@
             <mat-icon>bathtub</mat-icon>
             <span>Baños</span>
           </span>
-          <mat-select class="space-select" required>
+          <mat-select
+            class="space-select"
+            required
+            [value]="selectedBathrooms()"
+            (selectionChange)="selectBaths($event.value)"
+          >
             @for (bath of bathOptions(); track bath) {
-              <mat-option
-                [value]="bath"
-                (onSelectionChange)="selectBaths(bath)"
-                >{{ bath }}</mat-option
-              >
+              <mat-option [value]="bath">{{ bath }}</mat-option>
             }
           </mat-select>
         </div>
@@ -107,6 +125,7 @@
           <mat-select
             class="space-select geo-select"
             required
+            [value]="selectedProvince()"
             (selectionChange)="selectProvince($event.value)"
           >
             @for (province of provinces(); track province) {
@@ -122,6 +141,7 @@
           <mat-select
             class="space-select geo-select"
             required
+            [value]="selectedLocality()"
             (selectionChange)="selectLocality($event.value)"
           >
             @for (locality of localities(); track locality) {
@@ -167,14 +187,14 @@
         <mat-slider
           min="1"
           max="10"
-          step="1"
+          step="0.05"
           [attr.value]="radius()"
-          (change)="changeRadius($event)"
+          [disabled]="!selectedNearToOption()"
         >
           <input
             matSliderThumb
             [value]="radius()"
-            (change)="changeRadius($event)"
+            (input)="changeRadius($event)"
           />
         </mat-slider>
         <span class="slider-value">{{ radius() }} km</span>

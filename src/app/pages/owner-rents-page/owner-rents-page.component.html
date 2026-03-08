@@ -1,0 +1,22 @@
+<common-entity-page
+  [elements]="rents()"
+  [descriptor]="descriptor"
+  [chipFilters]="chipFilters"
+  [currentFilter]="currentFilter()"
+  (changeFilter)="changeRentState($event)"
+  [isInitialLoading]="isInitialLoading()"
+  [filterByText]="true"
+  (textChange)="changeText($event)"
+  [primaryActionLabel]="'Ver alquiler'"
+  [primaryAction]="primaryAction.bind(this)"
+  [secondaryActionLabel]="'Ver propiedad'"
+  [secondaryAction]="secondaryAction.bind(this)"
+  [iconUrl]="'/property.png'"
+  [pageTitle]="'Alquileres'"
+  [allLoadedLabel]="'Estos son todos los alquileres.'"
+  [hasMoreEntities]="canQuery()"
+  [loadMoreLabel]="'Recuperar más alquileres'"
+  [loadMoreEntities]="loadMore.bind(this)"
+  [zeroEntitiesLabel]="'No se han encontrado alquileres.'"
+>
+</common-entity-page>

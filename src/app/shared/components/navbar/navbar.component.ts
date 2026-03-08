@@ -3,6 +3,7 @@ import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { MatBadgeModule } from '@angular/material/badge';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialog } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,6 +17,7 @@ import { NewBuildingDialogComponent } from '../../../buildings/dialogs/new-build
 import { MenuNotificationComponent } from '../../../notifications/components/menu-notification/menu-notification.component';
 import { NotificationsService } from '../../../notifications/notifications.service';
 import { NewHouseDialogComponent } from '../../../properties/dialogs/new-house-dialog/new-house-dialog.component';
+import { ChangeProfileDialogComponent } from '../../../users/dialogs/change-profile-dialog/change-profile-dialog.component';
 import { EntityDialogService } from '../../services/entity-dialog.service';
 import { SidebarService } from '../../services/sidebar.service';
 import { NavbarService } from './../../services/navbar.service';
@@ -43,6 +45,7 @@ export class NavbarComponent {
   private _navbarService = inject(NavbarService);
   private _sidebarService = inject(SidebarService);
   private _entityDialogService = inject(EntityDialogService);
+  private _matDialog = inject(MatDialog);
   private _router = inject(Router);
   private _notificationsService = inject(NotificationsService);
 
@@ -81,6 +84,8 @@ export class NavbarComponent {
   );
 
   isOwner = computed(() => this._navbarService.isOwner());
+  isTenant = computed(() => this._navbarService.isTenant());
+  profileChange = computed(() => this._navbarService.profileChange());
 
   toggleSidebar() {
     this._sidebarService.toggle();
@@ -111,6 +116,20 @@ export class NavbarComponent {
         entity: 'house',
       })
       .subscribe();
+  }
+
+  requestOwnerProfile() {
+    this._matDialog
+      .open(ChangeProfileDialogComponent, {
+        panelClass: 'change-profile-dialog',
+        backdropClass: 'dialog-backdrop',
+      })
+      .afterClosed()
+      .subscribe((closedCorrectly) => {
+        if (closedCorrectly) {
+          window.location.reload();
+        }
+      });
   }
 
   handleMyAccount() {

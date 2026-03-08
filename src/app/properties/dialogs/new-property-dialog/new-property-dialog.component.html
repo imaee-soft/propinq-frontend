@@ -10,52 +10,79 @@
           <mat-form-field appearance="outline">
             <mat-label>Número</mat-label>
             <input matInput formControlName="number" cdkFocusInitial />
-            @if (numberControl?.invalid && numberControl?.touched &&
-            numberControl?.errors?.['required']) {
-            <mat-error>El número es requerido</mat-error>
-            } @if (numberControl?.invalid && numberControl?.touched &&
-            numberControl?.errors?.['numberTaken']) {
-            <mat-error>El número de la propiedad ya está en uso</mat-error>
+            @if (
+              numberControl?.invalid &&
+              numberControl?.touched &&
+              numberControl?.errors?.["required"]
+            ) {
+              <mat-error>El número es requerido</mat-error>
+            }
+            @if (
+              numberControl?.invalid &&
+              numberControl?.touched &&
+              numberControl?.errors?.["numberTaken"]
+            ) {
+              <mat-error>El número de la propiedad ya está en uso</mat-error>
             }
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Precio total de alquiler (por mes)</mat-label>
             <input matInput formControlName="price" />
-            @if (priceControl?.invalid && priceControl?.touched &&
-            priceControl?.errors?.['required']) {
-            <mat-error>El precio es requerido</mat-error>
-            } @if (priceControl?.invalid && priceControl?.touched &&
-            priceControl?.errors?.['min']) {
-            <mat-error>El precio no puede ser negativo</mat-error>
+            @if (
+              priceControl?.invalid &&
+              priceControl?.touched &&
+              priceControl?.errors?.["required"]
+            ) {
+              <mat-error>El precio es requerido</mat-error>
+            }
+            @if (
+              priceControl?.invalid &&
+              priceControl?.touched &&
+              priceControl?.errors?.["min"]
+            ) {
+              <mat-error>El precio no puede ser negativo</mat-error>
             }
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Piso</mat-label>
             <input matInput formControlName="floor" cdkFocusInitial />
-            @if (floorControl?.invalid && floorControl?.touched &&
-            floorControl?.errors?.['required']) {
-            <mat-error>El piso es requerido</mat-error>
-            } @if (floorControl?.invalid && floorControl?.touched &&
-            floorControl?.errors?.['min']) {
-            <mat-error>El número de piso no puede ser negativo</mat-error>
+            @if (
+              floorControl?.invalid &&
+              floorControl?.touched &&
+              floorControl?.errors?.["required"]
+            ) {
+              <mat-error>El piso es requerido</mat-error>
+            }
+            @if (
+              floorControl?.invalid &&
+              floorControl?.touched &&
+              floorControl?.errors?.["min"]
+            ) {
+              <mat-error>El número de piso no puede ser negativo</mat-error>
             }
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Habitaciones</mat-label>
             <input matInput type="number" formControlName="bedrooms" />
-            @if (bedroomsControl?.invalid && bedroomsControl?.touched &&
-            bedroomsControl?.errors?.['min']) {
-            <mat-error
-              >El número de habitaciones no puede ser menor a 1</mat-error
-            >
+            @if (
+              bedroomsControl?.invalid &&
+              bedroomsControl?.touched &&
+              bedroomsControl?.errors?.["min"]
+            ) {
+              <mat-error
+                >El número de habitaciones no puede ser menor a 1</mat-error
+              >
             }
           </mat-form-field>
           <mat-form-field appearance="outline">
             <mat-label>Baños</mat-label>
             <input matInput formControlName="bathrooms" />
-            @if (bathroomsControl?.invalid && bathroomsControl?.touched &&
-            bathroomsControl?.errors?.['min']) {
-            <mat-error>El número de baños no puede ser menor a 1</mat-error>
+            @if (
+              bathroomsControl?.invalid &&
+              bathroomsControl?.touched &&
+              bathroomsControl?.errors?.["min"]
+            ) {
+              <mat-error>El número de baños no puede ser menor a 1</mat-error>
             }
           </mat-form-field>
         </div>
@@ -93,21 +120,24 @@
           ></image-loader>
 
           <div class="image-error-wrapper">
-            @if (imagesControl?.errors?.['required'] && imagesControl?.touched)
-            {
-            <mat-error class="image-error"
-              >Al menos una imagen es requerida</mat-error
-            >
-            } @if (imagesControl?.errors?.['maxSize'] && imagesControl?.touched)
-            {
-            <mat-error class="image-error"
-              >Las imágenes deben pesar como máximo 3MB</mat-error
-            >
-            } @if (imagesControl?.errors?.['allowedTypes'] &&
-            imagesControl?.touched) {
-            <mat-error class="image-error">
-              Las imágenes deben ser de tipo JPG, JPEG, PNG o WEBP
-            </mat-error>
+            @if (
+              imagesControl?.errors?.["required"] && imagesControl?.touched
+            ) {
+              <mat-error class="image-error"
+                >Al menos una imagen es requerida</mat-error
+              >
+            }
+            @if (imagesControl?.errors?.["maxSize"] && imagesControl?.touched) {
+              <mat-error class="image-error"
+                >Las imágenes deben pesar como máximo 3MB</mat-error
+              >
+            }
+            @if (
+              imagesControl?.errors?.["allowedTypes"] && imagesControl?.touched
+            ) {
+              <mat-error class="image-error">
+                Las imágenes deben ser de tipo JPG, JPEG, PNG o WEBP
+              </mat-error>
             }
           </div>
         </div>

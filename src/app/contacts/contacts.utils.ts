@@ -7,7 +7,7 @@ export interface StatusConfig {
 
 export const STATUS_MAP: { [key: string]: StatusConfig } = {
   CREATED: {
-    label: 'Creada',
+    label: 'Pendiente',
     color: '#fde68a',
     background: 'rgba(245, 158, 11, 0.15)',
     border: '1px solid rgba(245, 158, 11, 0.4)',
@@ -24,14 +24,38 @@ export const STATUS_MAP: { [key: string]: StatusConfig } = {
     background: 'rgba(239, 68, 68, 0.15)',
     border: '1px solid rgba(239, 68, 68, 0.4)',
   },
+  CANCELLED: {
+    label: 'Cancelado',
+    color: '#fca5a5',
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+  },
+  UNSETTLED: {
+    label: 'No concretada',
+    color: '#fca5a5',
+    background: 'rgba(239, 68, 68, 0.15)',
+    border: '1px solid rgba(239, 68, 68, 0.4)',
+  },
   ACCEPTED: {
-    label: 'En negociación',
+    label: 'En curso',
+    color: '#6ee7b7',
+    background: 'rgba(16, 185, 129, 0.15)',
+    border: '1px solid rgba(16, 185, 129, 0.4)',
+  },
+  RENTED: {
+    label: 'Alquilada',
     color: '#6ee7b7',
     background: 'rgba(16, 185, 129, 0.15)',
     border: '1px solid rgba(16, 185, 129, 0.4)',
   },
   ACTIVE: {
     label: 'Activa',
+    color: '#6ee7b7',
+    background: 'rgba(16, 185, 129, 0.15)',
+    border: '1px solid rgba(16, 185, 129, 0.4)',
+  },
+  CURRENT: {
+    label: 'Vigente',
     color: '#6ee7b7',
     background: 'rgba(16, 185, 129, 0.15)',
     border: '1px solid rgba(16, 185, 129, 0.4)',

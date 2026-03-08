@@ -30,22 +30,26 @@ export class OwnerContactsPageComponent implements OnInit {
   pageIndex = signal(0);
   contacts = signal<ContactDetails[]>([]);
   totalElements = signal(0);
+  isInitialLoading = signal(true);
 
-  contactQueryStatus = signal<'all' | 'created' | 'rejected' | 'accepted'>(
-    'all',
-  );
+  contactQueryStatus = signal<
+    'all' | 'created' | 'rejected' | 'accepted' | 'unsettled' | 'rented'
+  >('all');
   chipFilters: ChipFilter[] = [
     { id: 'all', label: 'Todas' },
-    { id: 'created', label: 'Pendientes' },
+    { id: 'created', label: 'Creadas' },
     { id: 'rejected', label: 'Rechazadas' },
-    { id: 'accepted', label: 'En negociación ' },
+    { id: 'accepted', label: 'En curso' },
+    { id: 'unsettled', label: 'No concretadas' },
+    { id: 'rented', label: 'Alquiladas' },
   ];
   currentFilter = computed(() =>
     this.chipFilters.find((f) => f.id === this.contactQueryStatus()),
   );
+  surnameFilter = signal<string | undefined>(undefined);
 
   descriptor: CardDescriptor<ContactDetails> = {
-    user: (p) => p.owner ?? '',
+    user: (p) => p.issuer ?? '',
     name: (p) => p.propertyAddress,
     date: (p) => p.contactDate,
     id: (p) => p.contactId,
@@ -65,11 +69,13 @@ export class OwnerContactsPageComponent implements OnInit {
     this._contactsService
       .getOwnerContactsDetails(
         this.pageIndex(),
-        undefined,
+        6,
+        this.surnameFilter(),
         this.contactQueryStatus(),
       )
       .pipe(
         tap((newContacts) => {
+          this.isInitialLoading.set(false);
           this.contacts.set([...this.contacts(), ...newContacts.content]);
           this.totalElements.set(newContacts.totalElements);
           if (newContacts.totalElements === this.contacts().length)
@@ -86,10 +92,20 @@ export class OwnerContactsPageComponent implements OnInit {
 
   changeContactState(type: ChipFilter) {
     this.contactQueryStatus.set(
-      type.id as 'all' | 'created' | 'rejected' | 'accepted',
+      type.id as
+        | 'all'
+        | 'created'
+        | 'rejected'
+        | 'accepted'
+        | 'unsettled'
+        | 'rented',
     );
-    this.resetPage();
-    this.loadContacts();
+    this.resetPageAndLoadContacts();
+  }
+
+  changeText(text: string) {
+    this.surnameFilter.set(text);
+    this.resetPageAndLoadContacts();
   }
 
   primaryAction = (contactId: string | number | undefined) => {
@@ -146,6 +162,15 @@ export class OwnerContactsPageComponent implements OnInit {
 
   private getContact(contactId: string | number | undefined) {
     return this.contacts().find((c) => c.contactId === contactId);
+  }
+
+  private resetPageAndLoadContacts() {
+    this.pageIndex.set(0);
+    this.contacts.set([]);
+    this.totalElements.set(0);
+    this.isInitialLoading.set(true);
+    this.canQuery.set(true);
+    this.loadContacts();
   }
 
   private resetPage() {

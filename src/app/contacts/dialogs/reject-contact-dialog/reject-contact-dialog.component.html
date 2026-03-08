@@ -1,0 +1,48 @@
+<mat-dialog-content>
+  <h2 mat-dialog-title>Cancelación de solicitud de negociación</h2>
+  <div class="info-line">
+    <mat-icon>person</mat-icon>
+    {{ issuerFullName() }}
+  </div>
+
+  <div class="info-line">
+    <mat-icon>calendar_today</mat-icon>
+    <span class="info-text">{{ contactDate() }}</span>
+  </div>
+
+  <mat-form-field appearance="outline">
+    <mat-label>Motivo</mat-label>
+    <textarea
+      matInput
+      [formControl]="response"
+      [maxLength]="400"
+      rows="5"
+      placeholder="Explicá por qué no se concretó el alquiler..."
+    ></textarea>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button mat-flat-button class="close-btn" [mat-dialog-close]="false">
+    <mat-icon>close</mat-icon>
+    Cerrar
+  </button>
+  <button
+    mat-flat-button
+    class="submit-btn"
+    type="submit"
+    [disabled]="isLoading() || response.invalid"
+    (click)="cancel()"
+  >
+    <div class="button-content">
+      @if (isLoading()) {
+        <mat-progress-spinner
+          mode="indeterminate"
+          diameter="20"
+        ></mat-progress-spinner>
+      } @else {
+        <mat-icon>subtitles_off</mat-icon>
+        <span>Cancelar</span>
+      }
+    </div>
+  </button>
+</mat-dialog-actions>

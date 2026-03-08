@@ -4,6 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
 import { MatChipsModule } from '@angular/material/chips';
+import { MatLabel } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
@@ -12,6 +13,7 @@ import { BehaviorSubject, combineLatest, map, shareReplay, tap } from 'rxjs';
 import { AuthService } from '../../auth/services/auth.service';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { EditBuildingDialogComponent } from '../../buildings/dialogs/edit-building-dialog/edit-building-dialog.component';
+import { ComparisionService } from '../../comparision/comparision.service';
 import { FavoriteService } from '../../favorites/services/favorite-service';
 import { NewPropertyDialogComponent } from '../../properties/dialogs/new-property-dialog/new-property-dialog.component';
 import { PropertyDetails } from '../../properties/interfaces/property-details.interface';
@@ -30,6 +32,7 @@ import { formatDate } from '../../shared/utilities/date.pipes';
     MatChipsModule,
     MatTooltipModule,
     ImageSectionComponent,
+    MatLabel,
   ],
   templateUrl: './building-details-page.component.html',
   styleUrls: ['./building-details-page.component.css'],
@@ -41,6 +44,7 @@ export class BuildingDetailsPageComponent {
   private _entityDialogService = inject(EntityDialogService);
   private _favoriteService = inject(FavoriteService);
   private _router = inject(Router);
+  private _comparisionService = inject(ComparisionService);
 
   private buildingSource$ = this._buildingsService
     .getBuildingDetails(this._activatedRoute.snapshot.params['buildingId'])
@@ -156,5 +160,9 @@ export class BuildingDetailsPageComponent {
 
   goToProperty(property: PropertyDetails) {
     this._router.navigate(['/properties', property.propertyId]);
+  }
+
+  compareProperty(property: PropertyDetails) {
+    this._comparisionService.addToComparativeList(property);
   }
 }

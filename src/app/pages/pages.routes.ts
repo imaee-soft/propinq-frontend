@@ -94,10 +94,26 @@ export const routes: Routes = [
     canActivate: [TenantGuard],
   },
   {
+    path: 'tenant-rents',
+    loadComponent: () =>
+      import('./tenant-rents-page/tenant-rents-page.component').then(
+        (m) => m.TenantRentsPageComponent,
+      ),
+    canActivate: [TenantGuard],
+  },
+  {
     path: 'owner-contacts',
     loadComponent: () =>
       import('./owner-contacts-page/owner-contacts-page.component').then(
         (m) => m.OwnerContactsPageComponent,
+      ),
+    canActivate: [OwnerGuard],
+  },
+  {
+    path: 'owner-rents',
+    loadComponent: () =>
+      import('./owner-rents-page/owner-rents-page.component').then(
+        (m) => m.OwnerRentsPageComponent,
       ),
     canActivate: [OwnerGuard],
   },
@@ -118,6 +134,14 @@ export const routes: Routes = [
     canActivate: [UserGuard],
   },
   {
+    path: 'rent-details/:rentId',
+    loadComponent: () =>
+      import('./rent-details-page/rent-details-page.component').then(
+        (m) => m.RentDetailsPageComponent,
+      ),
+    canActivate: [UserGuard],
+  },
+  {
     path: 'help',
     loadComponent: () =>
       import('./help-page/help-page.component').then(
@@ -129,6 +153,14 @@ export const routes: Routes = [
     loadComponent: () =>
       import('./notifications-page/notifications-page.component').then(
         (m) => m.NotificationsPageComponent,
+      ),
+    canActivate: [UserGuard],
+  },
+  {
+    path: 'profile-changes',
+    loadComponent: () =>
+      import('./profile-changes-page/profile-changes-page.component').then(
+        (m) => m.ProfileChangesPageComponent,
       ),
     canActivate: [UserGuard],
   },

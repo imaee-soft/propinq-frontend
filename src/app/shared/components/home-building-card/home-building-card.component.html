@@ -38,39 +38,38 @@
         >
           <mat-icon>visibility</mat-icon>
         </button>
-        @if (!isOwnerRetrieving()) {
-          @if (favoriteId()) {
-            <button
-              mat-icon-button
-              matTooltip="Desmarcar como favorito"
-              (click)="unmarkAsFavorite()"
-            >
-              <mat-icon>star</mat-icon>
-            </button>
+        @if (loggedUser()) {
+          @if (!isOwnerRetrieving()) {
+            @if (favoriteId()) {
+              <button
+                mat-icon-button
+                matTooltip="Desmarcar como favorito"
+                (click)="unmarkAsFavorite()"
+              >
+                <mat-icon>star</mat-icon>
+              </button>
+            } @else {
+              <button
+                mat-icon-button
+                matTooltip="Marcar como favorito"
+                (click)="markAsFavorite()"
+              >
+                <mat-icon>star_border</mat-icon>
+              </button>
+            }
           } @else {
             <button
               mat-icon-button
-              matTooltip="Marcar como favorito"
-              (click)="markAsFavorite()"
+              matTooltip="Nueva propiedad"
+              (click)="newProperty()"
             >
-              <mat-icon>star_border</mat-icon>
+              <mat-icon>add</mat-icon>
+            </button>
+            <button mat-icon-button matTooltip="Editar" (click)="update()">
+              <mat-icon>edit</mat-icon>
             </button>
           }
-        } @else {
-          <button
-            mat-icon-button
-            matTooltip="Nueva propiedad"
-            (click)="newProperty()"
-          >
-            <mat-icon>add</mat-icon>
-          </button>
-          <button mat-icon-button matTooltip="Editar" (click)="update()">
-            <mat-icon>edit</mat-icon>
-          </button>
         }
-        <button mat-icon-button matTooltip="Compartir">
-          <mat-icon>share</mat-icon>
-        </button>
       </div>
     </div>
   </mat-card-content>

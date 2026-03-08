@@ -1,0 +1,98 @@
+<form [formGroup]="form" (ngSubmit)="handleSubmit()">
+  <app-generic-dialog
+    [dialogTitle]="'Nuevo alquiler: ' + propertyName"
+    [activeSaveButton]="form.valid"
+    [isLoading]="isLoading()"
+  >
+    <ng-template #content>
+      <div class="form-container">
+        <div class="rent-header">
+          <div class="info-line">
+            <mat-icon [matTooltip]="'Futuro inquilino'">person</mat-icon>
+            {{ issuerFullName }}
+          </div>
+        </div>
+        <div class="rent-fields">
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de inicio del contrato</mat-label>
+            <input
+              matInput
+              [matDatepicker]="initialPicker"
+              formControlName="initialDate"
+              cdkFocusInitial
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="initialPicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #initialPicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Fecha de fin del contrato</mat-label>
+            <input
+              matInput
+              [matDatepicker]="duePicker"
+              formControlName="finalDate"
+            />
+            <mat-datepicker-toggle
+              matIconSuffix
+              [for]="duePicker"
+            ></mat-datepicker-toggle>
+            <mat-datepicker #duePicker></mat-datepicker>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Día límite de pago</mat-label>
+            <mat-select formControlName="payday">
+              @for (
+                day of [
+                  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18,
+                  19, 20, 21, 22, 23, 24, 25, 26, 27, 28,
+                ];
+                track day
+              ) {
+                <mat-option [value]="day">Día {{ day }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="rent-fields">
+          <mat-form-field appearance="outline">
+            <mat-label>Precio inicial de alquiler</mat-label>
+            <input matInput type="number" formControlName="price" />
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Índice de aumento</mat-label>
+            <mat-select formControlName="raiseIndex">
+              @for (raiseIndex of raiseIndexOptions; track raiseIndex) {
+                <mat-option [value]="raiseIndex.id">
+                  {{ raiseIndex.label }}
+                </mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field appearance="outline">
+            <mat-label>Cada cuánto se actualiza</mat-label>
+            <mat-select formControlName="raiseMonths">
+              @for (
+                month of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+                track month
+              ) {
+                <mat-option [value]="month"
+                  >{{ month }} {{ month === 1 ? "mes" : "meses" }}</mat-option
+                >
+              }
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="image-section">
+          <app-document-loader
+            [title]="'Subí el contrato del alquiler'"
+            [buttonLabel]="'Subir documento'"
+            (fileUploaded)="handleDocumentUploaded($event)"
+            (fileRemoved)="handleDocumentRemoved()"
+          ></app-document-loader>
+        </div>
+      </div>
+    </ng-template>
+  </app-generic-dialog>
+</form>

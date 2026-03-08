@@ -13,4 +13,7 @@ export interface ContactDetails {
   latitude: number;
   longitude: number;
   isOwnerRetrieving: boolean;
+  issuerPhoneNumber: string;
+  cancellationDate: Date;
+  cancellationReason: string;
 }

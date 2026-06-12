@@ -23,9 +23,7 @@ export class ErrorInterceptor implements HttpInterceptor {
           error.error?.message ||
           error.error?.detail ||
           'Ocurrió un error inesperado. Contacte a un administrador.';
-        if (error.status !== 401 && error.status !== 403) {
-          this._injector.get(NotificationService).error(errorMessage, 3000);
-        }
+        this._injector.get(NotificationService).error(errorMessage, 3000);
         return throwError(() => error);
       }),
     );

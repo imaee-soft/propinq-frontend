@@ -1,21 +1,30 @@
 import {
   ChangeDetectionStrategy,
   Component,
-  effect,
   inject,
   OnInit,
   signal,
 } from '@angular/core';
-import { rxResource } from '@angular/core/rxjs-interop';
-import { MatIcon } from '@angular/material/icon';
-import { ActivatedRoute, RouterLink } from '@angular/router';
-import { EMPTY } from 'rxjs';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 import { CustomSnackbarService } from '../../../shared/services/snackbar.service';
 import { UserService } from '../../../../users/services/user.service';
 
 @Component({
   selector: 'app-verify-email-page',
-  imports: [MatIcon, RouterLink],
+  imports: [
+    ReactiveFormsModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatProgressSpinnerModule,
+    RouterLink,
+  ],
   templateUrl: './verify-email-page.component.html',
   styleUrls: ['./verify-email-page.component.css'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,39 +32,35 @@ import { UserService } from '../../../../users/services/user.service';
 export class VerifyEmailPageComponent implements OnInit {
   private userService = inject(UserService);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
+  private formBuilder = inject(FormBuilder);
   private snackbarService = inject(CustomSnackbarService);
 
-  maxResends = signal(3);
-  resendCount = signal(0);
-  email = signal<string>('');
-  ngOnInit() {
-    this.route.queryParams.subscribe((params) => {
-      this.email.set(params['email'] || '');
-    });
-  }
-  private executeResend = signal<string | null>(null);
-
-  private resendResource = rxResource({
-    request: () => this.executeResend(),
-    loader: ({ request }) => {
-      if (!request) return EMPTY;
-      return this.userService.resendActivationEmail(request);
-    },
+  resendForm = this.formBuilder.group({
+    email: ['', [Validators.required, Validators.email]],
   });
 
+  isLoading = signal(false);
+  resendCount = signal(0);
+  maxResends = signal(3);
+
+  ngOnInit() {
+    this.route.queryParams.subscribe((params) => {
+      const email = params['email'] || '';
+
+      if (email) {
+        this.resendForm.patchValue({ email });
+      }
+    });
+  }
+
   onResendEmail() {
-    this.resendCount.update((count) => count + 1);
-    if (!this.email()) {
-      this.snackbarService.show({
-        message: 'No se pudo obtener el email registrado',
-        type: 'error',
-        duration: 5000,
-        position: 'bottom-center',
-      });
+    if (this.resendForm.invalid) {
+      this.resendForm.markAllAsTouched();
       return;
     }
 
-    if (this.userService.isLoading()) {
+    if (this.isLoading()) {
       return;
     }
 
@@ -69,23 +74,38 @@ export class VerifyEmailPageComponent implements OnInit {
       return;
     }
 
-    this.executeResend.set(this.email());
-  }
+    const email = this.resendForm.value.email?.trim();
+    if (!email) {
+      this.snackbarService.show({
+        message: 'No se pudo obtener el email registrado',
+        type: 'error',
+        duration: 5000,
+        position: 'bottom-center',
+      });
+      return;
+    }
 
-  constructor() {
-    effect(() => {
-      const result = this.resendResource.value();
-      const request = this.executeResend();
+    this.isLoading.set(true);
+    this.resendCount.update((count) => count + 1);
+    this.userService
+      .resendActivationEmail(email)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: () => {
+          this.snackbarService.show({
+            message: 'Código enviado correctamente',
+            type: 'success',
+            duration: 5000,
+            position: 'bottom-center',
+          });
 
-      if (request && result !== undefined) {
-        this.snackbarService.show({
-          message: 'Email de verificación reenviado correctamente',
-          type: 'success',
-          duration: 5000,
-          position: 'bottom-center',
-        });
-        this.executeResend.set(null);
-      }
-    });
+          this.router.navigate(['/auth/activate'], {
+            queryParams: { email },
+          });
+        },
+        error: (error) => {
+          console.error('Error reenviando email:', error);
+        },
+      });
   }
 }

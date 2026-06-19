@@ -1,7 +1,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { map, Observable, throwError } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { buildFilterHttpParams } from '../shared/utilities/http-params.builder';
 import { CreatePropertyRequest } from './interfaces/create-property-request.interface';
 import { PropertyDetailsPage } from './interfaces/property-details-page.interface';

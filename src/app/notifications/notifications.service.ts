@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/services/auth.service';
 import { LargePage } from '../shared/interfaces/page.interface';
 import { NotificationResponse } from './interfaces/notification-response.interface';

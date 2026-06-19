@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { AnswerContactRequest } from './interfaces/answer-contact-request.interface';
 import { ContactDetailsPage } from './interfaces/contact-details-page.interface';
 import { ContactDetails } from './interfaces/contact-details.interface';

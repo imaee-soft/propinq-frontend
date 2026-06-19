@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { environment } from "../../../environments/environment.development";
+import { environment } from "../../../environments/environment";
 import { PoiViewportResult } from "../interfaces/poi-viewport-result.interface";
 import { PoiWithinQuery } from "../interfaces/poi-within-request";
 import { PoiType } from "../interfaces/poi-type.interface";

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { LargePage } from '../shared/interfaces/page.interface';
 import { CancelRentRequest } from './interfaces/cancel-rent.interface';
 import { RentDocumentRequest } from './interfaces/create-document.interface';

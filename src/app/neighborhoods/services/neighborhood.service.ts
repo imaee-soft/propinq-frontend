@@ -7,7 +7,7 @@ import { NeighborhoodRequest, NeighborhoodResponse } from '../interfaces/neighbo
 @Injectable({ providedIn: 'root' })
 export class NeighborhoodService {
   private http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/neighborhoods`;
+  private readonly baseUrl = `${environment.apiUrl}/api/v1/neighborhoods`;
 
   getNeighborhoods(): Observable<NeighborhoodResponse[]> {
     return this.http.get<NeighborhoodResponse[]>(`${this.baseUrl}`);

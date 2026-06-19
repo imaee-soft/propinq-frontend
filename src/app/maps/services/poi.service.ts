@@ -1,6 +1,6 @@
 import { HttpClient, HttpParams } from "@angular/common/http";
 import { inject, Injectable } from "@angular/core";
-import { environment } from "../../../environments/environment.development";
+import { environment } from "../../../environments/environment";
 import { PoiViewportResult } from "../interfaces/poi-viewport-result.interface";
 import { PoiWithinQuery } from "../interfaces/poi-within-request";
 import { PoiType } from "../interfaces/poi-type.interface";
@@ -10,7 +10,7 @@ import { transformExtent } from 'ol/proj';
 @Injectable({ providedIn: 'root' })
 export class PoiService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/pois`;
+  private _baseUrl = `${environment.apiUrl}/pois`;
 
   getPoisWithin(query: PoiWithinQuery) {
     let params = new HttpParams()

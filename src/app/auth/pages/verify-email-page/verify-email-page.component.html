@@ -1,60 +1,32 @@
-<section class="activation-page-container">
-  <div class="activation-content">
-    <div class="success-icon">
-      <mat-icon class="check-icon">mark_email_read</mat-icon>
-    </div>
+<section class="verify-page-container">
+  <div class="verify-bg-half">
+    <img src="PropInq.png" alt="Logo" />
+  </div>
 
-    <h1 class="activation-title">¡Registro Exitoso!</h1>
+  <div class="verify-form-half">
+    <form autocomplete="off" [formGroup]="resendForm" (ngSubmit)="onResendEmail()" class="verify-form">
+      <h1>Verifica tu email</h1>
+      <p class="description">Ingresa tu correo y te enviaremos el codigo para activar tu cuenta.</p>
 
-    <div class="activation-message">
-      <p class="main-message">
-        Se ha enviado un correo electrónico de verificación a tu dirección de email.
-      </p>
-      <p class="sub-message">
-        Por favor, revisa tu bandeja de entrada y haz clic en el enlace de verificación
-        para activar tu cuenta.
-      </p>
-    </div>
+      <mat-form-field class="input-field" appearance="outline">
+        <mat-label>Correo electrónico</mat-label>
+        <input matInput formControlName="email" type="email" autocomplete="email" />
+        @if (resendForm.get('email')?.invalid && resendForm.get('email')?.touched) {
+          <mat-error>Ingresa un correo válido</mat-error>
+        }
+      </mat-form-field>
 
-    <div class="info-box">
-      <mat-icon class="info-icon">info</mat-icon>
-      <div class="info-content">
-        <p><strong>¿No encuentras el correo?</strong></p>
-        <ul>
-          <li>Revisa tu carpeta de spam o correo no deseado</li>
-          <li>Asegúrate de que la dirección de email sea correcta</li>
-          <li>El enlace de verificación expira en 24 horas</li>
-        </ul>
+      <div class="verify-actions">
+        @if (isLoading()) {
+          <mat-progress-spinner mode="indeterminate" diameter="30"></mat-progress-spinner>
+        } @else {
+          <button mat-raised-button color="primary" type="submit" class="verify-button" [disabled]="resendForm.invalid || isLoading()">
+            Enviar código
+          </button>
+        }
       </div>
-    </div>
 
-    <div class="action-buttons">
-      <button
-        mat-raised-button
-        color="primary"
-        routerLink="/"
-        class="home-button">
-        <mat-icon>home</mat-icon>
-        Volver a Inicio
-      </button>
-
-      <button
-        mat-stroked-button
-        color="accent"
-        routerLink="/auth/login"
-        class="login-button">
-        <mat-icon>login</mat-icon>
-        Ir a Iniciar Sesión
-      </button>
-    </div>
-
-    <div class="resend-section">
-      <p class="resend-text">
-        ¿No recibiste el correo?
-        <button mat-button color="primary" class="resend-link" (click)="onResendEmail()">
-          Reenviar correo de verificación
-        </button>
-      </p>
-    </div>
+      <a routerLink="/auth/login" class="alt-link">Volver al login</a>
+    </form>
   </div>
 </section>

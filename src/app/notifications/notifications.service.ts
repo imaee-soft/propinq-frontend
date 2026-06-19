@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { effect, inject, Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { AuthService } from '../auth/services/auth.service';
 import { LargePage } from '../shared/interfaces/page.interface';
 import { NotificationResponse } from './interfaces/notification-response.interface';
@@ -9,7 +9,7 @@ import { NotificationResponse } from './interfaces/notification-response.interfa
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/notifications`;
+  private _baseUrl = `${environment.apiUrl}/notifications`;
   private _authService = inject(AuthService);
 
   loggedUserNotifications = signal<NotificationResponse[]>([]);

@@ -1,14 +1,14 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { ProfileChange } from '../auth/interfaces/user-auth.interface';
 import { LargePage } from '../shared/interfaces/page.interface';
 
 @Injectable({ providedIn: 'root' })
 export class UserProfileService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/user-profiles`;
+  private _baseUrl = `${environment.apiUrl}/user-profiles`;
 
   saveOwnerProfileRequest(): Observable<any> {
     return this._http.post(

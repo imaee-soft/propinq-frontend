@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { catchError, map, Observable, of, tap } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { NotificationService } from '../../shared/services/notification.service';
 import { Address } from '../adapters/address.adapter';
 import { MapCoordinate } from '../interfaces/map-coordinate.interface';

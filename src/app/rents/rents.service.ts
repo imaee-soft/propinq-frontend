@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { LargePage } from '../shared/interfaces/page.interface';
 import { CancelRentRequest } from './interfaces/cancel-rent.interface';
 import { RentDocumentRequest } from './interfaces/create-document.interface';
@@ -31,7 +31,7 @@ const projections = [
 @Injectable({ providedIn: 'root' })
 export class RentService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/rents`;
+  private _baseUrl = `${environment.apiUrl}/rents`;
 
   saveRent(
     rentRequest: CreateRentRequest,

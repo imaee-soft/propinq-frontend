@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment';
 import { AnswerContactRequest } from './interfaces/answer-contact-request.interface';
 import { ContactDetailsPage } from './interfaces/contact-details-page.interface';
 import { ContactDetails } from './interfaces/contact-details.interface';
@@ -12,7 +12,7 @@ import { RejectContactRequest } from './interfaces/reject-contact-request.interf
 @Injectable({ providedIn: 'root' })
 export class ContactsService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/contacts`;
+  private _baseUrl = `${environment.apiUrl}/contacts`;
 
   getTenantContactsDetails(page = 0, size = 6): Observable<ContactDetailsPage> {
     return this._http.get<ContactDetailsPage>(`${this._baseUrl}/tenant`, {

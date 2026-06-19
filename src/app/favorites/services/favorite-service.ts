@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import {
   FavoriteEntityPage,
   FavoriteResponse,
@@ -9,7 +9,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class FavoriteService {
-  private apiUrl = `${environment.apiUrl}/api/v1/favorites`;
+  private apiUrl = `${environment.apiUrl}/favorites`;
   private http = inject(HttpClient);
 
   getFavoriteBuildings(

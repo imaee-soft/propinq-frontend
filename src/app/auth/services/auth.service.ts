@@ -48,7 +48,7 @@ export class AuthService {
 
   login(credentials: LoginRequest): Observable<AuthResponse> {
     return this._http
-      .post<AuthResponse>(`${environment.apiUrl}/api/v1/auth/login`, credentials)
+      .post<AuthResponse>(`${environment.apiUrl}/auth/login`, credentials)
       .pipe(
         tap((response) => {
           const { accessToken, refreshToken, user } = response;
@@ -66,7 +66,7 @@ export class AuthService {
   checkStatus(): Observable<UserAuth | null> {
     const accessToken = this._storage.get<string>('accessToken');
     if (!accessToken) return of(null);
-    return this._http.post<UserAuth>(`${environment.apiUrl}/api/v1/auth/check-token`, {
+    return this._http.post<UserAuth>(`${environment.apiUrl}/auth/check-token`, {
       accessToken,
     });
   }
@@ -106,7 +106,7 @@ export class AuthService {
 
     return this.http
       .post<{ success: boolean; status: number }>(
-        `${environment.apiUrl}/api/v1/auth/signup`,
+        `${environment.apiUrl}/auth/signup`,
         {
           dni: signupRequest.dni,
           firstName: signupRequest.firstName,
@@ -129,7 +129,7 @@ export class AuthService {
       return throwError(() => new Error('Refresh token no disponible'));
     }
     return this._http
-      .post<AuthResponse>(`${environment.apiUrl}/api/v1/auth/refresh-token`, {
+      .post<AuthResponse>(`${environment.apiUrl}/auth/refresh-token`, {
         refreshToken,
       })
       .pipe(

@@ -6,7 +6,7 @@ import { environment } from '../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class ParametersService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/parameters`;
+  private _baseUrl = `${environment.apiUrl}/parameters`;
 
   maxPrice(): Observable<number> {
     return this._http.get<number>(`${this._baseUrl}/max-price`);

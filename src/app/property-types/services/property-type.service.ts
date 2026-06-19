@@ -7,7 +7,7 @@ import { PropertyTypeResponse, PropertyTypeRequest } from '../interfaces/propert
 @Injectable({ providedIn: 'root' })
 export class PropertyTypeService {
   private http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/api/v1/propertyTypes`;
+  private readonly baseUrl = `${environment.apiUrl}/propertyTypes`;
 
   getPropertyTypes(): Observable<PropertyTypeResponse[]> {
     return this.http.get<PropertyTypeResponse[]>(`${this.baseUrl}/all`);

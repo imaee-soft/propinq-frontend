@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 @Injectable({ providedIn: 'root' })
 export class ReportsEmbedService {
 
-  private _baseUrl = `${environment.apiUrl}/api/v1/reports`;
+  private _baseUrl = `${environment.apiUrl}/reports`;
 
   private _http = inject(HttpClient);
 

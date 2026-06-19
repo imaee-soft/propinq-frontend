@@ -6,7 +6,7 @@ import { environment } from '../../../environments/environment';
 
 @Injectable({ providedIn: 'root' })
 export class FavoriteService {
-  private apiUrl = `${environment.apiUrl}/api/v1/favorites`;
+  private apiUrl = `${environment.apiUrl}/favorites`;
 
   constructor(private http: HttpClient) {}
 

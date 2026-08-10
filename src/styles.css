@@ -172,3 +172,85 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
 .mat-mdc-paginator-range-label {
   display: none !important;
 }
+
+/* === AUTH FORM CONTRAST (light cards) === */
+/* Magenta-violet theme is light-on-dark; auth cards are white. */
+.login-form,
+.signup-form {
+  color: #1e293b;
+
+  --mdc-outlined-text-field-label-text-color: #475569;
+  --mdc-outlined-text-field-hover-label-text-color: #334155;
+  --mdc-outlined-text-field-focused-label-text-color: #1e293b;
+  --mdc-outlined-text-field-input-text-color: #1e293b;
+  --mdc-outlined-text-field-caret-color: #1e293b;
+  --mdc-outlined-text-field-outline-color: #cbd5e1;
+  --mdc-outlined-text-field-hover-outline-color: #94a3b8;
+  --mdc-outlined-text-field-focus-outline-color: #334155;
+  --mdc-outlined-text-field-disabled-label-text-color: #94a3b8;
+  --mdc-outlined-text-field-disabled-input-text-color: #64748b;
+  --mat-form-field-outlined-input-text-placeholder-color: #64748b;
+  --mat-form-field-trailing-icon-color: #64748b;
+  --mat-form-field-focus-select-arrow-color: #1e293b;
+  --mat-form-field-enabled-select-arrow-color: #64748b;
+}
+
+.login-form h1,
+.signup-form h1 {
+  color: #1e293b;
+}
+
+.login-form .mdc-floating-label,
+.signup-form .mdc-floating-label,
+.login-form .mat-mdc-floating-label,
+.signup-form .mat-mdc-floating-label {
+  color: #475569 !important;
+}
+
+.login-form .mat-mdc-input-element,
+.signup-form .mat-mdc-input-element {
+  color: #1e293b !important;
+}
+
+.login-form .mat-mdc-input-element::placeholder,
+.signup-form .mat-mdc-input-element::placeholder {
+  color: #64748b !important;
+  opacity: 1 !important;
+}
+
+.login-form .mat-mdc-form-field-required-marker,
+.signup-form .mat-mdc-form-field-required-marker {
+  color: #64748b !important;
+}
+
+.login-form .login-button,
+.login-form .submit-btn,
+.signup-form .login-button,
+.signup-form .submit-btn {
+  background: linear-gradient(135deg, #1e293b 0%, #334155 50%, #1e293b 100%) !important;
+  color: #ffffff !important;
+  --mdc-protected-button-container-color: #1e293b;
+  --mdc-protected-button-label-text-color: #ffffff;
+  --mdc-filled-button-container-color: #1e293b;
+  --mdc-filled-button-label-text-color: #ffffff;
+  --mat-button-protected-container-color: #1e293b;
+  --mat-button-protected-label-text-color: #ffffff;
+  --mat-button-filled-container-color: #1e293b;
+  --mat-button-filled-label-text-color: #ffffff;
+}
+
+.login-form .login-button:disabled,
+.login-form .submit-btn:disabled,
+.signup-form .login-button:disabled,
+.signup-form .submit-btn:disabled,
+.login-form .login-button.mat-mdc-button-disabled,
+.signup-form .login-button.mat-mdc-button-disabled {
+  background: linear-gradient(135deg, #475569 0%, #64748b 50%, #475569 100%) !important;
+  color: #ffffff !important;
+  opacity: 0.72 !important;
+}
+
+.login-form button[mat-icon-button] mat-icon,
+.signup-form button[mat-icon-button] mat-icon {
+  color: #64748b !important;
+}

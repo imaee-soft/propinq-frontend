@@ -28,7 +28,7 @@ describe('ParametersService', () => {
     });
 
     const req = httpMock.expectOne(
-      `${environment.apiUrl}/api/v1/parameters/max-price`,
+      `${environment.apiUrl}/parameters/max-price`,
     );
     expect(req.request.method).toBe('GET');
     req.flush(100);
@@ -40,7 +40,7 @@ describe('ParametersService', () => {
     });
 
     const req = httpMock.expectOne(
-      `${environment.apiUrl}/api/v1/parameters/min-price`,
+      `${environment.apiUrl}/parameters/min-price`,
     );
     expect(req.request.method).toBe('GET');
     req.flush(10);
@@ -52,7 +52,7 @@ describe('ParametersService', () => {
     });
 
     const req = httpMock.expectOne(
-      `${environment.apiUrl}/api/v1/parameters/rooms`,
+      `${environment.apiUrl}/parameters/rooms`,
     );
     expect(req.request.method).toBe('GET');
     req.flush([1, 2, 3]);
@@ -64,7 +64,7 @@ describe('ParametersService', () => {
     });
 
     const req = httpMock.expectOne(
-      `${environment.apiUrl}/api/v1/parameters/bathrooms`,
+      `${environment.apiUrl}/parameters/bathrooms`,
     );
     expect(req.request.method).toBe('GET');
     req.flush([1, 2]);

@@ -15,7 +15,7 @@ export class UserService {
     this.isLoading.set(true);
     return this.http
       .post<{ success: boolean; status: number }>(
-        `${environment.apiUrl}/api/v1/users/resend-activation-email`,
+        `${environment.apiUrl}/users/resend-activation-email`,
         { email },
       )
       .pipe(
@@ -37,7 +37,7 @@ export class UserService {
     this.isLoading.set(true);
     return this.http
       .post<{ success: boolean; status: number }>(
-        `${environment.apiUrl}/api/v1/users/${userId}/activate`,
+        `${environment.apiUrl}/users/${userId}/activate`,
         { activationToken },
       )
       .pipe(
@@ -55,7 +55,7 @@ export class UserService {
     }
     this.isLoading.set(true);
     return this.http
-      .post<void>(`${environment.apiUrl}/api/v1/users/recover-password/send-email`, {
+      .post<void>(`${environment.apiUrl}/users/recover-password/send-email`, {
         email,
       })
       .pipe(
@@ -77,7 +77,7 @@ export class UserService {
     }
     this.isLoading.set(true);
     return this.http
-      .post<void>(`${environment.apiUrl}/api/v1/users/recover-password`, {
+      .post<void>(`${environment.apiUrl}/users/recover-password`, {
         password,
         confirmPassword,
         recoverPasswordToken,

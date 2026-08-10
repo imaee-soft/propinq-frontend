@@ -35,8 +35,6 @@ export class AuthInterceptor implements HttpInterceptor {
       setHeaders: { Authorization: `Bearer ${accessToken}` },
     });
 
-    // Dev logging removido
-
     return next.handle(authReq).pipe(
       catchError((error: HttpErrorResponse) => {
         if (error.status === 401) {
@@ -62,10 +60,14 @@ export class AuthInterceptor implements HttpInterceptor {
   private isApiRequest(url: string): boolean {
     try {
       const target = new URL(url, window.location.origin);
+      // Relative apiUrl like '/api/v1' has no origin — treat as same-origin API
+      if (environment.apiUrl.startsWith('/')) {
+        return target.pathname.startsWith(environment.apiUrl) ||
+          target.pathname.startsWith('/api/');
+      }
       const apiBase = new URL(environment.apiUrl);
       return target.origin === apiBase.origin;
     } catch {
-      // Relative URL case
       return url.startsWith('/api/') || url.startsWith('api/');
     }
   }
@@ -74,11 +76,11 @@ export class AuthInterceptor implements HttpInterceptor {
     try {
       const path = new URL(url, window.location.origin).pathname;
       return this._EXCLUDED_BEARER_ROUTES.some((route) =>
-        path.startsWith(route)
+        path.includes(route)
       );
     } catch {
       return this._EXCLUDED_BEARER_ROUTES.some((route) =>
-        url.startsWith(route)
+        url.includes(route)
       );
     }
   }

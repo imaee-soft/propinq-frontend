@@ -31,7 +31,7 @@ const projections = [
 @Injectable({ providedIn: 'root' })
 export class RentService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/rents`;
+  private _baseUrl = `${environment.apiUrl}/rents`;
 
   saveRent(
     rentRequest: CreateRentRequest,

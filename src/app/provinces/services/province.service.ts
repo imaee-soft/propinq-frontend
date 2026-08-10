@@ -7,7 +7,7 @@ import { ProvinceResponse } from '../interfaces/province.interface';
 @Injectable({ providedIn: 'root' })
 export class ProvinceService {
   private http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/api/v1/provinces`;
+  private readonly baseUrl = `${environment.apiUrl}/provinces`;
 
   getProvinces(): Observable<ProvinceResponse[]> {
     return this.http.get<ProvinceResponse[]>(this.baseUrl);

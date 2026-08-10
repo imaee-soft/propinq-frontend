@@ -28,7 +28,7 @@ describe('PropertiesService', () => {
     });
 
     const req = httpMock.expectOne(
-      `${environment.apiUrl}/api/v1/properties`,
+      `${environment.apiUrl}/properties`,
     );
     expect(req.request.method).toBe('GET');
     req.flush([]);

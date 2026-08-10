@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, PLATFORM_ID, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID, signal, WritableSignal } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -13,7 +13,6 @@ import { NotificationService } from '../../../shared/services/notification.servi
 import { environment } from '../../../../environments/environment.development';
 
 declare var grecaptcha: any;
-
 
 @Component({
   selector: 'app-login-form',
@@ -40,6 +39,8 @@ export class LoginFormComponent implements OnInit {
   hidePassword: WritableSignal<boolean> = signal(true);
 
   private readonly siteKey = environment.reCAPTCHA_SiteKey;
+  readonly captchaEnabled =
+    (environment as { reCAPTCHA_enabled?: boolean }).reCAPTCHA_enabled !== false;
   private platformId = inject(PLATFORM_ID);
 
   constructor(
@@ -54,7 +55,7 @@ export class LoginFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.captchaEnabled && isPlatformBrowser(this.platformId)) {
       this.loadRecaptchaScript();
     }
   }
@@ -70,7 +71,6 @@ export class LoginFormComponent implements OnInit {
     script.defer = true;
     document.body.appendChild(script);
   }
-
 
   get email() {
     return this.loginForm.get('email');
@@ -88,28 +88,30 @@ export class LoginFormComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    if (isPlatformBrowser(this.platformId) && (window as any).grecaptcha) {
+    if (
+      this.captchaEnabled &&
+      isPlatformBrowser(this.platformId) &&
+      (window as any).grecaptcha
+    ) {
       grecaptcha.ready(() => {
-        grecaptcha.execute(this.siteKey, { action: 'login' }).then((token: string) => {
-
-          this.notificationService.success('reCAPTCHA validado correctamente');
-          this.processLogin(token);
-        }, (error: any) => {
-          this.notificationService.error('Error de seguridad con reCAPTCHA. Intente nuevamente.');
-
-          this.isLoading.set(false);
-        });
+        grecaptcha.execute(this.siteKey, { action: 'login' }).then(
+          (token: string) => this.processLogin(token),
+          () => {
+            // Dominio no registrado / fallo: continuar sin token (API no lo exige hoy)
+            this.processLogin(null);
+          },
+        );
       });
     } else {
-      this.notificationService.error('No se pudo cargar el sistema de seguridad. Intentando acceso directo...');
       this.processLogin(null);
     }
   }
+
   private processLogin(recaptchaToken: string | null) {
     const credentials = {
       ...this.loginForm.value,
       recaptchaToken: recaptchaToken
-      };
+    };
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
@@ -119,7 +121,11 @@ export class LoginFormComponent implements OnInit {
         this.router.navigateByUrl('/');
       },
       error: (error) => {
-        this.errorMessage.set(error?.error?.message || 'Error al iniciar sesión');
+        this.errorMessage.set(
+          error?.error?.message ||
+            error?.message ||
+            'Error al iniciar sesión',
+        );
         this.isLoading.set(false);
       },
       complete: () => {

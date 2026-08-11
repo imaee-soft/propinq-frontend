@@ -1,34 +1,35 @@
-<mat-card class="property-card fade-in-up">
+<mat-card class="building-card fade-in-up">
   <mat-card-header>
     <mat-card-title>{{ building()!.name || "Edificio" }}</mat-card-title>
-    <button mat-icon-button (click)="close.emit()" aria-label="Cerrar">
+    <mat-card-subtitle>{{ building()!.buildingTypeName }}</mat-card-subtitle>
+    <button
+      mat-icon-button
+      class="close-button"
+      (click)="close.emit()"
+      aria-label="Cerrar"
+    >
       <mat-icon>close</mat-icon>
     </button>
   </mat-card-header>
-  <mat-card-content class="property-content">
-    <div class="property-description">
+  <mat-card-content class="scrolled">
+    @if (building()!.imagesURL.length > 0) {
+      <app-image-section
+        [images]="building()!.imagesURL || []"
+        [showThumbnails]="false"
+      ></app-image-section>
+    }
+    <div class="building-details">
       @if (building()!.description) {
-        <p>{{ building()!.description }}</p>
+        <p>
+          <strong>Descripción: </strong>{{ building()!.description }}
+        </p>
       }
+      <p>
+        <strong>Dirección: </strong>
+        {{ building()!.address || "Dirección no disponible" }}
+      </p>
+      <p><strong>Dueño: </strong> {{ building()!.userFullName }}</p>
     </div>
-    <div class="building-info">
-      <div class="info-section type">
-        <mat-icon>apartment</mat-icon>
-        <span>{{ building()!.buildingTypeName }}</span>
-      </div>
-      <div class="info-section owner">
-        <mat-icon>person</mat-icon>
-        <span>{{ building()!.userFullName }}</span>
-      </div>
-      <div class="info-section address full-width">
-        <mat-icon>location_on</mat-icon>
-        <span>{{ building()!.address || "Dirección no disponible" }}</span>
-      </div>
-    </div>
-    <app-image-section
-      [images]="building()!.imagesURL || []"
-      [showThumbnails]="false"
-    ></app-image-section>
     <div class="home-property-overlay">
       <div class="property-overlay-actions">
         <button
@@ -69,6 +70,82 @@
               <mat-icon>edit</mat-icon>
             </button>
           }
+        }
+      </div>
+    </div>
+    <div class="content-divider"></div>
+    <div class="properties-section">
+      <div class="properties-header">
+        <h3>Propiedades</h3>
+        @if (isAuthenticated()) {
+          <button
+            mat-icon-button
+            color="primary"
+            matTooltip="Agregar nueva propiedad"
+            (click)="newProperty()"
+          >
+            <mat-icon>add</mat-icon>
+          </button>
+        }
+      </div>
+      <div class="property-grid">
+        @for (property of propertiesList(); track $index) {
+          <div class="property-item">
+            <img
+              [src]="
+                property.imagesURL && property.imagesURL.length > 0
+                  ? property.imagesURL[0]
+                  : 'https://placehold.co/400x300?text=Propiedad'
+              "
+              alt="Imagen propiedad"
+              class="property-image"
+            />
+            <div class="property-overlay">
+              <button
+                mat-icon-button
+                class="property-action"
+                matTooltip="{{
+                  isPropertyFavorite(property)
+                    ? 'Quitar favorito'
+                    : 'Marcar como favorita'
+                }}"
+                (click)="
+                  togglePropertyFavorite(property); $event.stopPropagation()
+                "
+              >
+                <mat-icon>{{
+                  isPropertyFavorite(property)
+                    ? "favorite"
+                    : "favorite_border"
+                }}</mat-icon>
+              </button>
+
+              <button
+                mat-icon-button
+                class="property-action"
+                matTooltip="Ver imágenes"
+                (click)="goToProperty(property.propertyId)"
+              >
+                <mat-icon>image</mat-icon>
+              </button>
+              <button
+                mat-button
+                class="property-action property-action-more"
+                matTooltip="Visualizar detalles"
+                (click)="goToProperty(property.propertyId)"
+              >
+                Ver Más
+              </button>
+              <button
+                mat-icon-button
+                class="property-action"
+                (click)="addToComparativeList(property)"
+                matTooltip="Agregar a la comparación"
+              >
+                <mat-icon>balance</mat-icon>
+              </button>
+            </div>
+          </div>
         }
       </div>
     </div>

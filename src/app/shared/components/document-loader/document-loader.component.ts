@@ -1,11 +1,11 @@
-import { Component, input, output, signal } from '@angular/core';
-import { MatIconButton } from '@angular/material/button';
+import { Component, ElementRef, input, output, signal, ViewChild } from '@angular/core';
+import { MatButton, MatIconButton } from '@angular/material/button';
 import { MatLabel } from '@angular/material/form-field';
 import { MatIcon } from '@angular/material/icon';
 
 @Component({
   selector: 'app-document-loader',
-  imports: [MatIcon, MatLabel, MatIconButton],
+  imports: [MatIcon, MatLabel, MatIconButton, MatButton],
   templateUrl: './document-loader.component.html',
   styleUrl: './document-loader.component.css',
 })
@@ -16,7 +16,15 @@ export class DocumentLoaderComponent {
   fileUploaded = output<File>();
   fileRemoved = output<void>();
 
+  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+
   fileName = signal<string | null>(null);
+
+  triggerClick(): void {
+    if (this.fileInputRef) {
+      this.fileInputRef.nativeElement.click();
+    }
+  }
 
   onFileSelected(event: Event): void {
     const input = event.target as HTMLInputElement;

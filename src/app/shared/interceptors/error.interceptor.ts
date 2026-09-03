@@ -21,11 +21,12 @@ export class ErrorInterceptor implements HttpInterceptor {
       catchError((error: HttpErrorResponse) => {
         const errorMessage =
           error.error?.message ||
+          error.error?.detail ||
           'Ocurrió un error inesperado. Contacte a un administrador.';
-        if (error.status !== 401 && error.status !== 403) {
-          this._injector.get(NotificationService).error(errorMessage, 3000);
-        }
-        return throwError(() => new Error(errorMessage));
+        // Mostrar también 401/403 (login, auth) — PROPINQ-114
+        this._injector.get(NotificationService).error(errorMessage, 4000);
+        // Preservar HttpErrorResponse para que los forms lean error.error.message
+        return throwError(() => error);
       }),
     );
   }

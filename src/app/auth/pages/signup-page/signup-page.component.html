@@ -12,7 +12,7 @@
       <h1>Tu Camino a Casa</h1>
       <br />
       <div class="row-fields">
-        <mat-form-field class="input-field" appearance="outline">
+        <mat-form-field class="input-field" appearance="outline" floatLabel="always">
           <mat-label>Nombre</mat-label>
           <input
             matInput
@@ -27,7 +27,7 @@
           }
         </mat-form-field>
 
-        <mat-form-field class="input-field" appearance="outline">
+        <mat-form-field class="input-field" appearance="outline" floatLabel="always">
           <mat-label>Apellido</mat-label>
           <input
             matInput
@@ -42,7 +42,7 @@
           }
         </mat-form-field>
       </div>
-      <mat-form-field class="input-field" appearance="outline">
+      <mat-form-field class="input-field" appearance="outline" floatLabel="always">
         <mat-label>Correo electrónico</mat-label>
         <input matInput type="email" formControlName="email" required />
         @if (formUtils.isValidField(myForm, "email")) {
@@ -50,7 +50,7 @@
         }
       </mat-form-field>
       <div class="row-fields">
-        <mat-form-field class="input-field" appearance="outline">
+        <mat-form-field class="input-field" appearance="outline" floatLabel="always">
           <mat-label>Contraseña</mat-label>
           <input
             matInput
@@ -74,7 +74,7 @@
             }}</mat-error>
           }
         </mat-form-field>
-        <mat-form-field class="input-field" appearance="outline">
+        <mat-form-field class="input-field" appearance="outline" floatLabel="always">
           <mat-label>Confirmar contraseña</mat-label>
           <input
             matInput
@@ -100,7 +100,7 @@
         </mat-form-field>
       </div>
       <div class="row-fields">
-        <mat-form-field class="input-field" appearance="outline">
+        <mat-form-field class="input-field" appearance="outline" floatLabel="always">
           <mat-label>Dirección</mat-label>
           <input
             matInput
@@ -114,7 +114,7 @@
             }}</mat-error>
           }
         </mat-form-field>
-        <mat-form-field class="input-field" appearance="outline">
+        <mat-form-field class="input-field" appearance="outline" floatLabel="always">
           <mat-label>Teléfono</mat-label>
           <input
             matInput
@@ -129,7 +129,7 @@
           }
         </mat-form-field>
       </div>
-      <mat-form-field class="input-field" appearance="outline">
+      <mat-form-field class="input-field" appearance="outline" floatLabel="always">
         <mat-label>Fecha de nacimiento</mat-label>
         <input matInput type="date" formControlName="birthDate" required />
         @if (formUtils.isValidField(myForm, "birthDate")) {

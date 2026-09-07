@@ -5,6 +5,7 @@ import {
 } from '@angular/common/http';
 import {
   ApplicationConfig,
+  APP_INITIALIZER,
   importProvidersFrom,
   provideZoneChangeDetection,
 } from '@angular/core';
@@ -17,6 +18,7 @@ import { AuthInterceptor } from './shared/interceptors/auth.interceptor';
 import { ErrorInterceptor } from './shared/interceptors/error.interceptor';
 import { ClientStorageService } from './shared/services/client-storage.service.abstract';
 import { LocalStorageService } from './shared/services/local-storage.service';
+import { RuntimeConfigService } from './shared/services/runtime-config.service';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -25,6 +27,13 @@ export const appConfig: ApplicationConfig = {
     provideHttpClient(withInterceptorsFromDi()),
     provideAnimations(),
   importProvidersFrom(MatSnackBarModule, ReactiveFormsModule),
+    {
+      provide: APP_INITIALIZER,
+      useFactory: (runtimeConfig: RuntimeConfigService) => () =>
+        runtimeConfig.load(),
+      deps: [RuntimeConfigService],
+      multi: true,
+    },
     {
       provide: HTTP_INTERCEPTORS,
       useClass: ErrorInterceptor,

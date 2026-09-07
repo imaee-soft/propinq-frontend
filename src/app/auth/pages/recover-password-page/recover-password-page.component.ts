@@ -16,6 +16,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { UserService } from '../../../../users/services/user.service';
 import { NotificationService } from '../../../shared/services/notification.service';
+import { RecaptchaLegalNoticeComponent } from '../../../shared/components/recaptcha-legal-notice/recaptcha-legal-notice.component';
 
 function passwordsMatch(group: AbstractControl): ValidationErrors | null {
   const password = group.get('password')?.value;
@@ -37,6 +38,7 @@ function passwordsMatch(group: AbstractControl): ValidationErrors | null {
     MatIconModule,
     MatProgressSpinnerModule,
     RouterLink,
+    RecaptchaLegalNoticeComponent,
   ],
   templateUrl: './recover-password-page.component.html',
   styleUrls: ['./recover-password-page.component.css'],

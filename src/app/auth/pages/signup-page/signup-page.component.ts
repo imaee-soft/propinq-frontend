@@ -17,6 +17,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { Router, RouterLink } from '@angular/router';
 import { of } from 'rxjs';
 import { SignupRequest } from '../../interfaces/signupRequest.interface';
+import { RecaptchaLegalNoticeComponent } from '../../../shared/components/recaptcha-legal-notice/recaptcha-legal-notice.component';
 
 @Component({
   imports: [
@@ -27,7 +28,7 @@ import { SignupRequest } from '../../interfaces/signupRequest.interface';
     RouterLink,
     MatProgressSpinnerModule,
     MatButton,
-    MatProgressSpinnerModule,
+    RecaptchaLegalNoticeComponent,
   ],
   templateUrl: './signup-page.component.html',
   styleUrls: ['./signup-page.component.css'],

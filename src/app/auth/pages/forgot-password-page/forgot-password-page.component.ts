@@ -13,6 +13,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { RouterLink } from '@angular/router';
 import { UserService } from '../../../../users/services/user.service';
 import { NotificationService } from '../../../shared/services/notification.service';
+import { RecaptchaLegalNoticeComponent } from '../../../shared/components/recaptcha-legal-notice/recaptcha-legal-notice.component';
 
 @Component({
   selector: 'app-forgot-password-page',
@@ -25,6 +26,7 @@ import { NotificationService } from '../../../shared/services/notification.servi
     MatButtonModule,
     MatProgressSpinnerModule,
     RouterLink,
+    RecaptchaLegalNoticeComponent,
   ],
   templateUrl: './forgot-password-page.component.html',
   styleUrls: ['./forgot-password-page.component.css'],

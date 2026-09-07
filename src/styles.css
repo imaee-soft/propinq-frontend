@@ -254,3 +254,12 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
 .signup-form button[mat-icon-button] mat-icon {
   color: #64748b !important;
 }
+
+/* reCAPTCHA v3: oculto en app; visible solo en pantallas auth */
+.grecaptcha-badge {
+  visibility: hidden !important;
+}
+
+body.auth-page .grecaptcha-badge {
+  visibility: visible !important;
+}

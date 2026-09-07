@@ -1,7 +1,7 @@
 #!/bin/sh
 set -eu
 
-enabled="${MAP_POIS_ENABLED:-true}"
+enabled="${MAP_POIS_ENABLED:-false}"
 case "$(echo "$enabled" | tr '[:upper:]' '[:lower:]')" in
   true|1|yes|on) map_pois_enabled=true ;;
   *) map_pois_enabled=false ;;

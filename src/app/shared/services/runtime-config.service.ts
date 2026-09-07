@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
 
 export interface RuntimeConfig {
   mapPoisEnabled: boolean;
@@ -7,7 +6,7 @@ export interface RuntimeConfig {
 
 @Injectable({ providedIn: 'root' })
 export class RuntimeConfigService {
-  private _config: RuntimeConfig | null = null;
+  private _mapPoisEnabled = false;
 
   async load(): Promise<void> {
     try {
@@ -15,14 +14,15 @@ export class RuntimeConfigService {
         cache: 'no-store',
       });
       if (response.ok) {
-        this._config = await response.json();
+        const config: RuntimeConfig = await response.json();
+        this._mapPoisEnabled = config.mapPoisEnabled === true;
       }
     } catch {
-      // Sin runtime-config (p. ej. ng serve sin assets): usar environment.
+      // Sin runtime-config: POIs desactivados (MAP_POIS_ENABLED=false por defecto).
     }
   }
 
   get mapPoisEnabled(): boolean {
-    return this._config?.mapPoisEnabled ?? environment.mapPoisEnabled;
+    return this._mapPoisEnabled;
   }
 }

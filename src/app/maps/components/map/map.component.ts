@@ -40,7 +40,7 @@ import {
   MIN_POI_ZOOM,
   transformFromMap,
 } from '../../utils/constants';
-import { RuntimeConfigService } from '../../../shared/services/runtime-config.service';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-map',
@@ -107,14 +107,13 @@ export class MapComponent implements AfterViewInit, OnDestroy {
   });
   private _poiStyleCache = new Map<string, Style>();
   private _poiService = inject(PoiService);
-  private _runtimeConfig = inject(RuntimeConfigService);
 
   private _viewport$ = new Subject<void>();
   private _destroy$ = new Subject<void>();
 
   ngAfterViewInit(): void {
     this.initializeMap();
-    if (this.loadInfo() && this._runtimeConfig.mapPoisEnabled) {
+    if (this.loadInfo() && environment.mapPoisEnabled) {
       this.initializeViewportListener();
     }
     this.initRangeLayer();

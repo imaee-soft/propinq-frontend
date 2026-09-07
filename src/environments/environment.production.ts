@@ -5,4 +5,5 @@ export const environment = {
   apiUrl: '/api/v1',
   reCAPTCHA_enabled: true,
   reCAPTCHA_SiteKey: '6LftrYAtAAAAALQbATwf4IXYb4JKdVfCWnp5TUCw',
+  mapPoisEnabled: false,
 };

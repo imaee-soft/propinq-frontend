@@ -255,11 +255,8 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   color: #64748b !important;
 }
 
-/* reCAPTCHA v3: oculto en app; visible solo en pantallas auth */
+/* reCAPTCHA v3: badge siempre visible y por encima del footer/nav */
 .grecaptcha-badge {
-  visibility: hidden !important;
-}
-
-body.auth-page .grecaptcha-badge {
   visibility: visible !important;
+  z-index: 10000 !important;
 }

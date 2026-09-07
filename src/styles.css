@@ -255,8 +255,8 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   color: #64748b !important;
 }
 
-/* reCAPTCHA v3: badge siempre visible y por encima del footer/nav */
+/* reCAPTCHA v3: badge visible; z-index alto pero fuera del área de enlaces del footer */
 .grecaptcha-badge {
   visibility: visible !important;
-  z-index: 10000 !important;
+  z-index: 1000 !important;
 }

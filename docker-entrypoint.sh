@@ -7,6 +7,7 @@ case "$(echo "$enabled" | tr '[:upper:]' '[:lower:]')" in
   *) map_pois_enabled=false ;;
 esac
 
+mkdir -p /usr/share/nginx/html/assets
 cat > /usr/share/nginx/html/assets/runtime-config.json <<EOF
 {"mapPoisEnabled":${map_pois_enabled}}
 EOF

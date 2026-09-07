@@ -15,7 +15,7 @@ import { NewHouseDialogComponent } from '../../properties/dialogs/new-house-dial
 
 import { MatIconModule } from '@angular/material/icon';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { CardDescriptor } from '../../shared/interfaces/card-descriptor.interface';
 import { CommonEntityPageComponent } from '../../shared/pages/common-entity-page/common-entity-page.component';
@@ -39,6 +39,7 @@ export class PropertyPageComponent implements OnInit {
   pageIndex = signal(0);
   properties = signal<PropertyDetails[]>([]);
   totalElements = signal(0);
+  isInitialLoading = signal(true);
 
   descriptor: CardDescriptor<PropertyDetails> = {
     user: (p) => p.ownerFullName ?? '',
@@ -67,6 +68,7 @@ export class PropertyPageComponent implements OnInit {
           if (newProperties.totalElements === this.properties().length)
             this.canQuery.set(false);
         }),
+        finalize(() => this.isInitialLoading.set(false)),
       )
       .subscribe();
   }
@@ -164,6 +166,7 @@ export class PropertyPageComponent implements OnInit {
     this.totalElements.set(0);
     this.pageIndex.set(0);
     this.canQuery.set(true);
+    this.isInitialLoading.set(true);
   }
 
   private updatePropertyDeletion(propertyId: string, deleted: boolean) {

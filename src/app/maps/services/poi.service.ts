@@ -10,7 +10,7 @@ import { transformExtent } from 'ol/proj';
 @Injectable({ providedIn: 'root' })
 export class PoiService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/pois`;
+  private _baseUrl = `${environment.apiUrl}/pois`;
 
   getPoisWithin(query: PoiWithinQuery) {
     let params = new HttpParams()

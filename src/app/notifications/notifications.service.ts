@@ -9,7 +9,7 @@ import { NotificationResponse } from './interfaces/notification-response.interfa
 @Injectable({ providedIn: 'root' })
 export class NotificationsService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/notifications`;
+  private _baseUrl = `${environment.apiUrl}/notifications`;
   private _authService = inject(AuthService);
 
   loggedUserNotifications = signal<NotificationResponse[]>([]);

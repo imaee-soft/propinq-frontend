@@ -1,9 +1,10 @@
-import { Component, input, output, signal } from '@angular/core';
+import { Component, ElementRef, input, output, signal, ViewChild } from '@angular/core';
+import { MatButton } from '@angular/material/button';
 import { MatLabel } from '@angular/material/form-field';
 
 @Component({
   selector: 'image-loader',
-  imports: [MatLabel],
+  imports: [MatLabel, MatButton],
   templateUrl: './image-loader.component.html',
   styleUrl: './image-loader.component.css',
 })
@@ -14,7 +15,15 @@ export class ImageLoaderComponent {
   imageUploaded = output<File[]>();
   imageRemoved = output<number>();
 
+  @ViewChild('fileInput') fileInputRef!: ElementRef<HTMLInputElement>;
+
   previewUrls = signal<(string | ArrayBuffer | null)[]>([]);
+
+  triggerClick(): void {
+    if (this.fileInputRef) {
+      this.fileInputRef.nativeElement.click();
+    }
+  }
 
   onImagesSelected(event: Event): void {
     const input = event.target as HTMLInputElement;

@@ -1,31 +1,52 @@
+/* Estilos propios mínimos; building-card / scrolled / property-grid vienen de home-page.component.css */
+
 .building-info {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-.info-section.full-width {
-  grid-column: 1 / -1;
+/* Overlay de cada depto: versión previa al refactor (0002a52^) */
+.property-item .property-overlay {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 48px;
+  padding: 0 8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  z-index: 2;
+  border-radius: 0 0 8px 8px;
+  pointer-events: auto;
+  background: linear-gradient(
+    180deg,
+    rgba(20, 24, 34, 0) 0%,
+    rgba(20, 24, 34, 0.75) 100%
+  );
 }
 
-.info-section {
-  padding: 8px 0;
+.property-item .property-action {
+  color: #fff !important;
+  margin: 0 2px;
+  border-radius: 16px;
+  background: transparent;
+  transition: background 0.2s;
+}
+
+.property-item .property-action:hover {
+  background: rgba(150, 150, 150, 0.4) !important;
+}
+
+.property-item .property-action-more {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: var(--shadow-soft);
-  backdrop-filter: saturate(120%) blur(6px);
-}
-
-.info-section span {
-  font-size: 1rem;
-  font-weight: 500;
-  color: var(--text-primary);
-  text-align: center;
-  line-height: 1.3;
-  word-break: break-word;
+  font-weight: 600;
+  min-width: 88px;
+  height: 36px;
+  padding: 0 12px;
+  border-radius: 18px;
 }

@@ -6,7 +6,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { Router, RouterModule } from '@angular/router';
-import { tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { FavoriteEntity } from '../../favorites/interfaces/favorite-interface';
 import { FavoriteService } from '../../favorites/services/favorite-service';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
@@ -42,6 +42,7 @@ export class FavoritePageComponent implements OnInit {
   pageIndex = signal(0);
   favorites = signal<FavoriteEntity[]>([]);
   totalElements = signal(0);
+  isInitialLoading = signal(true);
   iconUrl = signal<'/building.png' | '/property.png'>('/building.png');
 
   favoriteQueryType = signal<'properties' | 'buildings'>('buildings');
@@ -90,6 +91,7 @@ export class FavoritePageComponent implements OnInit {
           if (newFavorites.totalElements === this.favorites().length)
             this.canQuery.set(false);
         }),
+        finalize(() => this.isInitialLoading.set(false)),
       )
       .subscribe();
   }
@@ -104,6 +106,7 @@ export class FavoritePageComponent implements OnInit {
           if (newFavorites.totalElements === this.favorites().length)
             this.canQuery.set(false);
         }),
+        finalize(() => this.isInitialLoading.set(false)),
       )
       .subscribe();
   }
@@ -159,5 +162,6 @@ export class FavoritePageComponent implements OnInit {
     this.totalElements.set(0);
     this.pageIndex.set(0);
     this.canQuery.set(true);
+    this.isInitialLoading.set(true);
   }
 }

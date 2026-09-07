@@ -6,7 +6,7 @@ import {
   signal,
 } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { BuildingsService } from '../../buildings/buildings.service';
 import { EditBuildingDialogComponent } from '../../buildings/dialogs/edit-building-dialog/edit-building-dialog.component';
 import { NewBuildingDialogComponent } from '../../buildings/dialogs/new-building-dialog/new-building-dialog.component';
@@ -33,6 +33,7 @@ export class BuildingPageComponent implements OnInit {
   pageIndex = signal(0);
   buildings = signal<BuildingDetails[]>([]);
   totalElements = signal(0);
+  isInitialLoading = signal(true);
 
   descriptor: CardDescriptor<BuildingDetails> = {
     user: (b) => b.userFullName,
@@ -63,6 +64,7 @@ export class BuildingPageComponent implements OnInit {
           if (newBuildings.totalElements === this.buildings().length)
             this.canQuery.set(false);
         }),
+        finalize(() => this.isInitialLoading.set(false)),
       )
       .subscribe();
   }
@@ -161,6 +163,7 @@ export class BuildingPageComponent implements OnInit {
     this.totalElements.set(0);
     this.pageIndex.set(0);
     this.canQuery.set(true);
+    this.isInitialLoading.set(true);
   }
 
   private updateBuildingDeletion(buildingId: string, deleted: boolean) {

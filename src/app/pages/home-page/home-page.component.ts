@@ -267,6 +267,7 @@ export class HomePageComponent {
     if (this.buildingDetails() !== null || this.propertyDetails() !== null) {
       this.buildingMarkerQueried.set(null);
       this.buildingDetails.set(null);
+      this.buildingProperties.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
     }
@@ -280,6 +281,7 @@ export class HomePageComponent {
     if (this.buildingDetails() !== null || this.propertyDetails() !== null) {
       this.buildingMarkerQueried.set(null);
       this.buildingDetails.set(null);
+      this.buildingProperties.set(null);
       this.propertyMarkerQueried.set(null);
       this.propertyDetails.set(null);
     }

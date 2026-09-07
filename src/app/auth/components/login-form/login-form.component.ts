@@ -1,4 +1,4 @@
-import { Component, inject, OnInit, PLATFORM_ID, Signal, signal, WritableSignal } from '@angular/core';
+import { Component, inject, OnInit, PLATFORM_ID, signal, WritableSignal } from '@angular/core';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -9,11 +9,13 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { NotificationService } from '../../../shared/services/notification.service';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment';
+import { RecaptchaLegalNoticeComponent } from '../../../shared/components/recaptcha-legal-notice/recaptcha-legal-notice.component';
 
-declare var grecaptcha: any;
-
+declare const grecaptcha: {
+  ready: (callback: () => void) => void;
+  execute: (siteKey: string, options: { action: string }) => Promise<string>;
+};
 
 @Component({
   selector: 'app-login-form',
@@ -26,20 +28,21 @@ declare var grecaptcha: any;
     MatIconModule,
     MatButtonModule,
     MatProgressSpinnerModule,
-    RouterLink
+    RouterLink,
+    RecaptchaLegalNoticeComponent,
   ],
   templateUrl: './login-form.component.html',
   styleUrls: ['./login-form.component.css']
 })
 export class LoginFormComponent implements OnInit {
-  private notificationService = inject(NotificationService);
-
   loginForm: FormGroup;
   isLoading: WritableSignal<boolean> = signal(false);
   errorMessage: WritableSignal<string | null> = signal(null);
   hidePassword: WritableSignal<boolean> = signal(true);
+  recaptchaReady: WritableSignal<boolean> = signal(false);
 
   private readonly siteKey = environment.reCAPTCHA_SiteKey;
+  readonly captchaEnabled = environment.reCAPTCHA_enabled === true;
   private platformId = inject(PLATFORM_ID);
 
   constructor(
@@ -54,13 +57,14 @@ export class LoginFormComponent implements OnInit {
   }
 
   ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
+    if (this.captchaEnabled && isPlatformBrowser(this.platformId)) {
       this.loadRecaptchaScript();
     }
   }
 
   loadRecaptchaScript() {
     if (document.getElementById('recaptcha-script')) {
+      this.markRecaptchaReady();
       return;
     }
     const script = document.createElement('script');
@@ -68,9 +72,21 @@ export class LoginFormComponent implements OnInit {
     script.src = `https://www.google.com/recaptcha/api.js?render=${this.siteKey}`;
     script.async = true;
     script.defer = true;
+    script.onload = () => this.markRecaptchaReady();
+    script.onerror = () => {
+      this.errorMessage.set(
+        'No se pudo cargar reCAPTCHA. Revisá tu conexión o recargá la página.',
+      );
+    };
     document.body.appendChild(script);
   }
 
+  private markRecaptchaReady() {
+    if (!isPlatformBrowser(this.platformId) || typeof grecaptcha === 'undefined') {
+      return;
+    }
+    grecaptcha.ready(() => this.recaptchaReady.set(true));
+  }
 
   get email() {
     return this.loginForm.get('email');
@@ -88,38 +104,48 @@ export class LoginFormComponent implements OnInit {
     this.isLoading.set(true);
     this.errorMessage.set(null);
 
-    if (isPlatformBrowser(this.platformId) && (window as any).grecaptcha) {
+    if (this.captchaEnabled && isPlatformBrowser(this.platformId)) {
+      if (typeof grecaptcha === 'undefined') {
+        this.errorMessage.set('reCAPTCHA aún no está listo. Esperá un momento e intentá de nuevo.');
+        this.isLoading.set(false);
+        return;
+      }
       grecaptcha.ready(() => {
-        grecaptcha.execute(this.siteKey, { action: 'login' }).then((token: string) => {
-
-          this.notificationService.success('reCAPTCHA validado correctamente');
-          this.processLogin(token);
-        }, (error: any) => {
-          this.notificationService.error('Error de seguridad con reCAPTCHA. Intente nuevamente.');
-
-          this.isLoading.set(false);
-        });
+        grecaptcha
+          .execute(this.siteKey, { action: 'login' })
+          .then((token: string) => this.processLogin(token))
+          .catch(() => {
+            this.errorMessage.set(
+              'No se pudo verificar reCAPTCHA. Si estás en local, confirmá que localhost está permitido en Google reCAPTCHA.',
+            );
+            this.isLoading.set(false);
+          });
       });
-    } else {
-      this.notificationService.error('No se pudo cargar el sistema de seguridad. Intentando acceso directo...');
-      this.processLogin(null);
+      return;
     }
+
+    this.processLogin(null);
   }
+
   private processLogin(recaptchaToken: string | null) {
     const credentials = {
       ...this.loginForm.value,
-      recaptchaToken: recaptchaToken
-      };
+      recaptchaToken,
+    };
 
     this.authService.login(credentials).subscribe({
       next: (response) => {
-        if (response && response.user && response.user.userId) {
+        if (response?.user?.userId) {
           localStorage.setItem('userId', response.user.userId);
         }
         this.router.navigateByUrl('/');
       },
       error: (error) => {
-        this.errorMessage.set(error?.error?.message || 'Error al iniciar sesión');
+        this.errorMessage.set(
+          error?.error?.message ||
+            error?.message ||
+            'Error al iniciar sesión',
+        );
         this.isLoading.set(false);
       },
       complete: () => {

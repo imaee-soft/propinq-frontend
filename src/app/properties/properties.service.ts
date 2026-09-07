@@ -13,7 +13,7 @@ import { UpdatePropertyRequest } from './interfaces/update-property-request.inte
 @Injectable({ providedIn: 'root' })
 export class PropertiesService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/properties`;
+  private _baseUrl = `${environment.apiUrl}/properties`;
 
   getProperties(filter?: PropertyFilterRequest | null): Observable<Property[]> {
     if (filter === null) {
@@ -21,7 +21,7 @@ export class PropertiesService {
     }
     const params = buildFilterHttpParams(filter ?? undefined);
     return this._http.get<Property[]>(
-      `${environment.apiUrl}/api/v1/properties`,
+      `${environment.apiUrl}/properties`,
       { params },
     );
   }
@@ -34,7 +34,7 @@ export class PropertiesService {
     }
 
     return this._http.get<PropertyDetails>(
-      `${environment.apiUrl}/api/v1/properties/${propertyQueried}`,
+      `${environment.apiUrl}/properties/${propertyQueried}`,
     );
   }
 
@@ -44,7 +44,7 @@ export class PropertiesService {
   ): Observable<PropertyDetailsPage> {
     return this._http
       .get<PropertyDetailsPage>(
-        `${environment.apiUrl}/api/v1/properties/details`,
+        `${environment.apiUrl}/properties/details`,
         {
           params: { page, size: pageSize },
         },
@@ -88,7 +88,7 @@ export class PropertiesService {
     radiusKm: number,
   ): Observable<Property[]> {
     return this._http.get<Property[]>(
-      `${environment.apiUrl}/api/v1/properties/nearby`,
+      `${environment.apiUrl}/properties/nearby`,
       {
         params: {
           latitude: latitude,
@@ -116,7 +116,7 @@ export class PropertiesService {
     if (limit != null) params = params.set('limit', limit);
 
     return this._http.get<Property[]>(
-      `${environment.apiUrl}/api/v1/properties/nearby/poi`,
+      `${environment.apiUrl}/properties/nearby/poi`,
       { params },
     );
   }

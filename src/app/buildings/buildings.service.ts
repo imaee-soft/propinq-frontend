@@ -14,7 +14,7 @@ import { BuildingDetailsPage } from './interfaces/buildings-details-page.interfa
 @Injectable({ providedIn: 'root' })
 export class BuildingsService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/buildings`;
+  private _baseUrl = `${environment.apiUrl}/buildings`;
 
   createBuilding(buildingRequest: BuildingRequest) {
     const formData = new FormData();
@@ -50,14 +50,14 @@ export class BuildingsService {
       return throwError(() => new Error('Invalid buildingQueried: null'));
     }
     return this._http.get<BuildingDetails>(
-      `${environment.apiUrl}/api/v1/buildings/${buildingQueried}`,
+      `${environment.apiUrl}/buildings/${buildingQueried}`,
     );
   }
 
   getBuildingsDetails(page = 0, pageSize = 6): Observable<BuildingDetailsPage> {
     return this._http
       .get<BuildingDetailsPage>(
-        `${environment.apiUrl}/api/v1/buildings/details`,
+        `${environment.apiUrl}/buildings/details`,
         {
           params: { page, size: pageSize },
         },

@@ -8,7 +8,7 @@ import { UserResponse } from './interfaces/user-response';
 @Injectable({ providedIn: 'root' })
 export class UsersService {
   private readonly _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/users`;
+  private _baseUrl = `${environment.apiUrl}/users`;
 
   getUserProfile(userId: string): Observable<UserResponse> {
     return this._http.get<UserResponse>(`${this._baseUrl}/${userId}`);

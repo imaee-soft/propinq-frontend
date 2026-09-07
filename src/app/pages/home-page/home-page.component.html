@@ -40,9 +40,11 @@
     >
       <app-home-building-card
         [building]="buildingDetails()!"
+        [properties]="buildingProperties()"
         (close)="onCloseDetails()"
         (markedAsFavorite)="markBuildingAsFavorite($event)"
         (unmarkedAsFavorite)="unmarkBuildingAsFavorite()"
+        (compared)="addToComparativeList($event)"
       />
     </mat-drawer>
   }

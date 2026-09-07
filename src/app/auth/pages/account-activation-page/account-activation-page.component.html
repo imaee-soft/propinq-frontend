@@ -1,21 +1,46 @@
 <div class="activation-bg">
   <div class="activation-card">
-<div class="activation-icon">
-  <svg width="72" height="72" viewBox="0 0 72 72" fill="none">
-    <circle cx="36" cy="36" r="36" fill="#EAFBF3"/>
-    <path d="M24 37L33 46L48 30" stroke="#22a06b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
-  </svg>
-</div>
-    <h1>¡Cuenta Activada!</h1>
-    <p class="activation-message">
-      Tu cuenta ha sido activada exitosamente.<br>
-      Ya puedes cerrar esta página o continuar utilizando la aplicación.
-    </p>
-    <div class="activation-actions">
-      <button class="activation-btn" routerLink="/">Volver al inicio</button>
-      <button class="activation-btn secondary" routerLink="/auth/login">
-        <span class="material-icons">login</span>
-        Iniciar sesión
-      </button>
-    </div>
+    @if (status() === 'loading' || status() === 'idle') {
+      <div class="activation-icon activation-icon--pending" aria-hidden="true">
+        <div class="activation-spinner"></div>
+      </div>
+      <h1>Activando tu cuenta…</h1>
+      <p class="activation-message">Estamos validando el enlace. Esto solo toma un momento.</p>
+    } @else if (status() === 'success') {
+      <div class="activation-icon">
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+          <circle cx="36" cy="36" r="36" fill="#EAFBF3"/>
+          <path d="M24 37L33 46L48 30" stroke="#22a06b" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h1>¡Cuenta Activada!</h1>
+      <p class="activation-message">
+        Tu cuenta ha sido activada exitosamente.<br>
+        Ya puedes cerrar esta página o continuar utilizando la aplicación.
+      </p>
+      <div class="activation-actions">
+        <button class="activation-btn" routerLink="/">Volver al inicio</button>
+        <button class="activation-btn secondary" routerLink="/auth/login">
+          <span class="material-icons">login</span>
+          Iniciar sesión
+        </button>
+      </div>
+    } @else {
+      <div class="activation-icon">
+        <svg width="72" height="72" viewBox="0 0 72 72" fill="none" aria-hidden="true">
+          <circle cx="36" cy="36" r="36" fill="#FDECEC"/>
+          <path d="M36 22v22M36 50h.01" stroke="#d64545" stroke-width="7" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1>No se pudo activar</h1>
+      <p class="activation-message">{{ errorMessage() }}</p>
+      <div class="activation-actions">
+        <button class="activation-btn" routerLink="/">Volver al inicio</button>
+        <button class="activation-btn secondary" routerLink="/auth/login">
+          <span class="material-icons">login</span>
+          Iniciar sesión
+        </button>
+      </div>
+    }
   </div>
+</div>

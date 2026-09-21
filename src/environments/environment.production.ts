@@ -6,4 +6,5 @@ export const environment = {
   metabaseDashboardId: 34,
   reCAPTCHA_enabled: true,
   reCAPTCHA_SiteKey: '6LftrYAtAAAAALQbATwf4IXYb4JKdVfCWnp5TUCw',
+  mapPoisEnabled: false,
 };

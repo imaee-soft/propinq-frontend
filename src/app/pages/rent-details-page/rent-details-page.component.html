@@ -2,12 +2,13 @@
   @if (rentDetails$ | async; as rent) {
     <header class="page-header">
       <div class="header-content">
-        <button mat-icon-button class="back-button" (click)="goBack()">
+        <button mat-icon-button class="back-button" (click)="goBack()" aria-label="Volver">
           <mat-icon>arrow_back</mat-icon>
         </button>
         <h2>Alquiler en {{ rent.propertyName }}</h2>
         <button
           mat-icon-button
+          class="open-property-btn"
           [matTooltip]="'Ver propiedad'"
           (click)="goToProperty()"
         >

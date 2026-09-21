@@ -50,3 +50,15 @@
   padding: 0 12px;
   border-radius: 18px;
 }
+
+@media (max-width: 768px) {
+  .building-info {
+    grid-template-columns: 1fr;
+  }
+
+  .property-item .property-action-more {
+    min-width: 72px;
+    font-size: 0.85rem;
+    padding: 0 8px;
+  }
+}

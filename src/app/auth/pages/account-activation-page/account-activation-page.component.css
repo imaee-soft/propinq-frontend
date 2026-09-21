@@ -106,3 +106,33 @@ h1 {
     transform: rotate(360deg);
   }
 }
+
+@media (max-width: 768px) {
+  .activation-bg {
+    padding: 16px;
+    box-sizing: border-box;
+  }
+
+  .activation-card {
+    padding: 2rem 1.5rem;
+    max-width: 100%;
+    border-radius: 12px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  .activation-message {
+    font-size: 1rem;
+  }
+
+  .activation-actions {
+    flex-direction: column;
+  }
+
+  .activation-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}

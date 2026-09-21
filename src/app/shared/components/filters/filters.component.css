@@ -170,3 +170,20 @@
   color: rgba(255, 255, 255, 0.9);
   flex-shrink: 0;
 }
+
+@media (max-width: 768px) {
+  .filters-container {
+    width: 100%;
+    box-shadow: none;
+    padding-left: 0;
+    padding-bottom: 0;
+  }
+
+  .filters-container-header {
+    padding-right: 0;
+  }
+
+  .section-container {
+    gap: 16px;
+  }
+}

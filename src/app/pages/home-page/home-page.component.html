@@ -30,42 +30,77 @@
     }
   </mat-drawer-content>
 
-  @if (buildingDetails() !== null && propertyDetails() == null) {
-    <mat-drawer
-      position="end"
-      mode="side"
-      opened
-      class="details-panel"
-      [disableClose]="true"
-    >
-      <app-home-building-card
-        [building]="buildingDetails()!"
-        [properties]="buildingProperties()"
-        (close)="onCloseDetails()"
-        (markedAsFavorite)="markBuildingAsFavorite($event)"
-        (unmarkedAsFavorite)="unmarkBuildingAsFavorite()"
-        (compared)="addToComparativeList($event)"
-      />
-    </mat-drawer>
-  }
-  @if (propertyDetails() !== null && buildingDetails() == null) {
-    <mat-drawer
-      position="end"
-      mode="side"
-      opened
-      class="details-panel"
-      [disableClose]="true"
-    >
-      <app-home-property-card
-        [property]="propertyDetails()!"
-        (closed)="onCloseDetails()"
-        (markedAsFavorite)="markPropertyAsFavorite($event)"
-        (unmarkedAsFavorite)="unmarkPropertyAsFavorite()"
-        (compared)="addToComparativeList($event)"
-      />
-    </mat-drawer>
+  @if (!isMobile()) {
+    @if (buildingDetails() !== null && propertyDetails() == null) {
+      <mat-drawer
+        position="end"
+        mode="side"
+        opened
+        class="details-panel"
+        [disableClose]="true"
+      >
+        <app-home-building-card
+          [building]="buildingDetails()!"
+          [properties]="buildingProperties()"
+          (close)="onCloseDetails()"
+          (markedAsFavorite)="markBuildingAsFavorite($event)"
+          (unmarkedAsFavorite)="unmarkBuildingAsFavorite()"
+          (compared)="addToComparativeList($event)"
+        />
+      </mat-drawer>
+    }
+    @if (propertyDetails() !== null && buildingDetails() == null) {
+      <mat-drawer
+        position="end"
+        mode="side"
+        opened
+        class="details-panel"
+        [disableClose]="true"
+      >
+        <app-home-property-card
+          [property]="propertyDetails()!"
+          (closed)="onCloseDetails()"
+          (markedAsFavorite)="markPropertyAsFavorite($event)"
+          (unmarkedAsFavorite)="unmarkPropertyAsFavorite()"
+          (compared)="addToComparativeList($event)"
+        />
+      </mat-drawer>
+    }
   }
 </mat-drawer-container>
+
+@if (isMobile()) {
+  @if (buildingDetails() !== null && propertyDetails() == null) {
+    <div class="mobile-details-sheet">
+      <div class="mobile-sheet-backdrop" (click)="onCloseDetails()"></div>
+      <div class="mobile-sheet-content">
+        <app-home-building-card
+          [building]="buildingDetails()!"
+          [properties]="buildingProperties()"
+          (close)="onCloseDetails()"
+          (markedAsFavorite)="markBuildingAsFavorite($event)"
+          (unmarkedAsFavorite)="unmarkBuildingAsFavorite()"
+          (compared)="addToComparativeList($event)"
+        />
+      </div>
+    </div>
+  }
+  @if (propertyDetails() !== null && buildingDetails() == null) {
+    <div class="mobile-details-sheet">
+      <div class="mobile-sheet-backdrop" (click)="onCloseDetails()"></div>
+      <div class="mobile-sheet-content">
+        <app-home-property-card
+          [property]="propertyDetails()!"
+          (closed)="onCloseDetails()"
+          (markedAsFavorite)="markPropertyAsFavorite($event)"
+          (unmarkedAsFavorite)="unmarkPropertyAsFavorite()"
+          (compared)="addToComparativeList($event)"
+        />
+      </div>
+    </div>
+  }
+}
+
 @if (!comparativeDrawerOpen()) {
   @if (buildingDetails() == null && propertyDetails() == null) {
     <div class="fab-container">
@@ -106,8 +141,27 @@
     </div>
   }
   @if (showFilters()) {
-    <div class="filters-floating-panel" [class.shifted]="sidebarOpened()">
-      <app-filters (radiusChange)="onRadiusChange($event)" />
-    </div>
+    @if (isMobile()) {
+      <div class="filters-mobile-modal">
+        <div class="filters-mobile-header">
+          <h2>Filtros de búsqueda</h2>
+          <button mat-icon-button (click)="toggleFilters()" aria-label="Cerrar filtros">
+            <mat-icon>close</mat-icon>
+          </button>
+        </div>
+        <div class="filters-mobile-body">
+          <app-filters (radiusChange)="onRadiusChange($event)" />
+        </div>
+        <div class="filters-mobile-footer">
+          <button mat-flat-button class="filters-apply-btn" (click)="toggleFilters()">
+            Aplicar filtros
+          </button>
+        </div>
+      </div>
+    } @else {
+      <div class="filters-floating-panel" [class.shifted]="sidebarOpened()">
+        <app-filters (radiusChange)="onRadiusChange($event)" />
+      </div>
+    }
   }
 }

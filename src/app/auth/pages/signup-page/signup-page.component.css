@@ -214,17 +214,29 @@ button[mat-icon-button][matSuffix] .mat-mdc-button-persistent-ripple {
 @media (max-width: 768px) {
   .signup-page-container {
     flex-direction: column;
+    min-height: 100vh;
+    min-height: 100dvh;
   }
 
-  .signup-bg-half,
+  .signup-bg-half {
+    display: none;
+  }
+
   .signup-form-half {
     width: 100vw;
-    height: 50vh;
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: auto;
+    padding: 16px;
+    box-sizing: border-box;
+    overflow-y: auto;
   }
 
   .signup-form {
-    max-width: 90%;
-    padding: 32px 24px;
+    max-width: 100%;
+    width: 100%;
+    padding: 28px 20px;
+    box-sizing: border-box;
   }
 
   .row-fields {

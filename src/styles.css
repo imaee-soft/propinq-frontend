@@ -5,6 +5,13 @@ body {
   margin: 0;
   overflow: hidden;
 }
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
 body {
   background-color: #232a3b;
   color: #f0f0f0;
@@ -259,4 +266,18 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
 .grecaptcha-badge {
   visibility: visible !important;
   z-index: 1000 !important;
+}
+
+@media (max-width: 768px) {
+  .contact-dialog,
+  .change-profile-dialog,
+  .projection-dialog {
+    max-width: 95vw !important;
+    width: 95vw !important;
+  }
+
+  .generic-dialog {
+    max-width: 96vw !important;
+    width: 96vw !important;
+  }
 }

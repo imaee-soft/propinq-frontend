@@ -1,22 +1,29 @@
 :host {
+  flex: 1;
   width: 100%;
-  display: block;
+  max-width: 100%;
   min-height: 0;
+  height: 100%;
+  display: block;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
 }
 
 .page-container {
   display: flex;
   flex-direction: column;
   background-color: #1a1e2b;
-  padding: 20px 4px;
+  padding: 20px 16px 40px;
   border-radius: 24px;
-  height: 90%;
-  min-height: 0;
   margin: 4px 16px;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
 .page-header {
-  padding: 0 64px;
+  padding: 0 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -25,8 +32,15 @@
 .header-content {
   display: flex;
   align-items: center;
-  justify-content: center;
   gap: 16px;
+}
+
+.header-content h2 {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 2rem;
 }
 
 .status-message {
@@ -37,7 +51,7 @@
   background-color: #1c2230;
   border-radius: 12px;
   border: 1px solid #374151;
-  width: 50%;
+  width: min(100%, 640px);
   margin: auto;
 }
 
@@ -59,13 +73,29 @@
 }
 
 .content-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding: 16px 64px;
+  flex: 1 0 auto;
+  width: 100%;
+  max-width: 100%;
+  padding: 16px 16px 32px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+.iframe-shell {
+  width: 100%;
+  max-width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  background: #1a1e2b;
 }
 
 .metabase-iframe {
-  border-radius: 12px;
-  border: 1px solid #374151;
+  display: block;
+  /* Evita overflow horizontal con iframeResizer */
+  width: 1px;
+  min-width: 100%;
+  max-width: 100%;
+  min-height: 1200px;
+  border: none;
+  background: #1a1e2b;
 }

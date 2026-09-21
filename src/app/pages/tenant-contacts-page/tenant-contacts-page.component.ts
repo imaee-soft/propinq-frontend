@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { ContactsService } from '../../contacts/contacts.service';
 import { ContactDetails } from '../../contacts/interfaces/contact-details.interface';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
@@ -23,6 +23,7 @@ export class TenantContactsPageComponent implements OnInit {
   pageIndex = signal(0);
   contacts = signal<ContactDetails[]>([]);
   totalElements = signal(0);
+  isInitialLoading = signal(true);
 
   descriptor: CardDescriptor<ContactDetails> = {
     user: (p) => p.owner ?? '',
@@ -51,6 +52,7 @@ export class TenantContactsPageComponent implements OnInit {
           if (newContacts.totalElements === this.contacts().length)
             this.canQuery.set(false);
         }),
+        finalize(() => this.isInitialLoading.set(false)),
       )
       .subscribe();
   }
@@ -116,5 +118,6 @@ export class TenantContactsPageComponent implements OnInit {
     this.totalElements.set(0);
     this.pageIndex.set(0);
     this.canQuery.set(true);
+    this.isInitialLoading.set(true);
   }
 }

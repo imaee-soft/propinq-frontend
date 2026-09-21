@@ -9,6 +9,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../../auth/services/auth.service';
+import { BreakpointService } from '../../services/breakpoint.service';
+import { NavbarService } from '../../services/navbar.service';
 import { SidebarService } from '../../services/sidebar.service';
 
 @Component({
@@ -32,18 +34,27 @@ export class SidebarComponent {
   private _router = inject(Router);
   private _sidebarService = inject(SidebarService);
   private _authService = inject(AuthService);
+  private _navbarService = inject(NavbarService);
+  private _breakpointService = inject(BreakpointService);
 
   userLogged = computed(() => this._authService.user());
   config = computed(() => this._sidebarService.config());
-  sidenavWidth = computed(() => (this._sidebarService.isOpen() ? 320 : 0));
-  isDashboardPage = computed(() => this._sidebarService.isDashboardPage());
+  navbarItems = computed(() => this._navbarService.config());
+  menuOpen = computed(() => this._sidebarService.isOpen());
+  isMobile = this._breakpointService.isMobile;
 
   navigate(route: string) {
     this._router.navigateByUrl(route);
+    this._sidebarService.close();
   }
 
   logout() {
     this._authService.logout();
+    this._sidebarService.close();
     this._router.navigate(['/auth/login']);
+  }
+
+  closeMenu() {
+    this._sidebarService.close();
   }
 }

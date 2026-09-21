@@ -7,7 +7,7 @@ import { LocalityRequest, LocalityResponse } from '../interfaces/locality.interf
 @Injectable({ providedIn: 'root' })
 export class LocalityService {
   private http = inject(HttpClient);
-  private readonly baseUrl = `${environment.apiUrl}/api/v1/localities`;
+  private readonly baseUrl = `${environment.apiUrl}/localities`;
 
   getLocalities(): Observable<LocalityResponse[]> {
     return this.http.get<LocalityResponse[]>(`${this.baseUrl}`);

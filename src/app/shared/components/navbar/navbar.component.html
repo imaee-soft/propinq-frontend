@@ -1,5 +1,13 @@
 <mat-toolbar color="primary" class="navbar" [class.disabled]="navbarDisabled()">
   <div class="nav-left">
+    <button
+      mat-icon-button
+      class="hamburger-btn"
+      aria-label="Abrir menú"
+      (click)="toggleSidebar()"
+    >
+      <mat-icon>menu</mat-icon>
+    </button>
     <div class="brand-container">
       <a routerLink="/" class="brand-link">
         <mat-icon>cottage</mat-icon>

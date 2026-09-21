@@ -185,6 +185,108 @@
   text-align: center;
 }
 
-body {
-  overflow-y: scroll;
+@media (max-width: 768px) {
+  :host {
+    margin: 0;
+    padding: 12px 0 40px;
+    border-radius: 0;
+    height: auto;
+    min-height: 100%;
+    background-color: transparent;
+  }
+
+  .user-account-page {
+    padding: 12px 14px;
+    gap: 1.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    align-items: stretch;
+  }
+
+  .user-header {
+    width: 100%;
+  }
+
+  .header-content {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 12px 14px;
+    gap: 14px;
+    box-sizing: border-box;
+    align-items: center;
+  }
+
+  .header-content mat-icon {
+    font-size: 3rem;
+    height: 3rem;
+    width: 3rem;
+    flex-shrink: 0;
+  }
+
+  .user-name {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .header-content h1 {
+    font-size: 1.4rem;
+    word-break: break-word;
+  }
+
+  .header-content .subtitle {
+    font-size: 0.95rem;
+    word-break: break-all;
+  }
+
+  .user-info,
+  .user-preferences {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .user-info-title,
+  .user-preferences-title {
+    font-size: 1.15rem;
+  }
+
+  .user-info-card,
+  .user-preferences-card {
+    min-width: 0 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: 16px 14px;
+    box-sizing: border-box;
+  }
+
+  .info-row {
+    padding: 0.75rem 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .info-row mat-label {
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .info-row span {
+    margin-left: 0;
+    font-size: 1rem;
+    word-break: break-word;
+  }
+
+  .user-preferences-card {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .preferences-table {
+    min-width: 320px;
+  }
+
+  .preferences-table th,
+  .preferences-table td {
+    padding: 0.6rem 0.5rem;
+    font-size: 0.88rem;
+  }
 }

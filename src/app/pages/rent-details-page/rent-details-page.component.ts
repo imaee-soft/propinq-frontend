@@ -9,7 +9,7 @@ import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-import { map, shareReplay, tap } from 'rxjs';
+import { map, Observable, shareReplay, take, tap } from 'rxjs';
 import { STATUS_MAP, StatusConfig } from '../../contacts/contacts.utils';
 import { SeeCancellationDialogComponent } from '../../contacts/dialogs/see-cancellation-dialog/see-cancellation-dialog.component';
 import { AddDocumentDialogComponent } from '../../rents/dialogs/add-document-dialog/add-document-dialog.component';
@@ -21,6 +21,7 @@ import {
   RentDetail,
   RentDocument,
 } from '../../rents/interfaces/rent-detail.interface';
+import { RentProjection } from '../../rents/interfaces/rent-projection.interface';
 import { RentService } from '../../rents/rents.service';
 import { EntityDialogService } from '../../shared/services/entity-dialog.service';
 import { NotificationService } from '../../shared/services/notification.service';
@@ -164,25 +165,60 @@ export class RentDetailsPageComponent {
   }
 
   seeProjection() {
+    this.openProjectionDialog(
+      this._rentService.getRentProjection(
+        this._route.snapshot.params['rentId'],
+      ),
+    );
+  }
+
+  seeProjectionMock() {
+    this.openProjectionDialog(
+      this.rentDetails$.pipe(
+        take(1),
+        map((rent): RentProjection[] => {
+          const currentAmount = rent.rentPrice;
+          const nextDate = new Date(rent.rentDate);
+          nextDate.setMonth(nextDate.getMonth() + rent.raiseMonths);
+          return [
+            {
+              date: new Date(rent.rentDate),
+              value: 0,
+              estimated: false,
+              dif: 0,
+              amount: currentAmount,
+            },
+            {
+              date: nextDate,
+              value: 0,
+              estimated: false,
+              dif: 32,
+              amount: currentAmount * 1.32,
+            },
+          ];
+        }),
+      ),
+    );
+  }
+
+  private openProjectionDialog(projection$: Observable<RentProjection[]>) {
     this.isLoadingProjection.set(true);
-    this._rentService
-      .getRentProjection(this._route.snapshot.params['rentId'])
-      .subscribe({
-        next: (projection) => {
-          this.isLoadingProjection.set(false);
-          this._matDialog.open(ProjectionDialogComponent, {
-            data: projection,
-            panelClass: 'projection-dialog',
-            backdropClass: 'dialog-backdrop',
-          });
-        },
-        error: () => {
-          this._notificationService.error(
-            'Ocurrió un error al calcular el aumento del alquiler',
-          );
-          this.isLoadingProjection.set(false);
-        },
-      });
+    projection$.subscribe({
+      next: (projection) => {
+        this.isLoadingProjection.set(false);
+        this._matDialog.open(ProjectionDialogComponent, {
+          data: projection,
+          panelClass: 'projection-dialog',
+          backdropClass: 'dialog-backdrop',
+        });
+      },
+      error: () => {
+        this._notificationService.error(
+          'Ocurrió un error al calcular el aumento del alquiler',
+        );
+        this.isLoadingProjection.set(false);
+      },
+    });
   }
 
   addDocument() {

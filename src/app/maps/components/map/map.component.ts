@@ -40,6 +40,7 @@ import {
   MIN_POI_ZOOM,
   transformFromMap,
 } from '../../utils/constants';
+import { environment } from '../../../../environments/environment';
 
 @Component({
   selector: 'app-map',
@@ -112,7 +113,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
 
   ngAfterViewInit(): void {
     this.initializeMap();
-    if (this.loadInfo()) {
+    if (this.loadInfo() && environment.mapPoisEnabled) {
       this.initializeViewportListener();
     }
     this.initRangeLayer();
@@ -185,7 +186,7 @@ export class MapComponent implements AfterViewInit, OnDestroy {
       layers: [
         new TileLayer({
           source: new XYZ({
-            url: 'https://{1-4}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+            url: 'https://{1-4}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png?key=cb1_2zjz_1_2a770766d8bad1c660ba92e6',
             attributions: '©OpenStreetMap, ©CARTO',
             maxZoom: 20,
           }),

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { computed, inject, Injectable, signal } from '@angular/core';
 import { EMPTY, finalize, Observable, of, tap, throwError } from 'rxjs';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment';
 import { ClientStorageService } from '../../shared/services/client-storage.service.abstract';
 import { AuthStatus } from '../enums/auth-status.enum';
 import { AuthResponse } from '../interfaces/auth-response.interface';

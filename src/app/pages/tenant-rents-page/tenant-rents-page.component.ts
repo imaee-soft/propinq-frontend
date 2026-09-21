@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { Router } from '@angular/router';
-import { tap } from 'rxjs';
+import { finalize, tap } from 'rxjs';
 import { DEFAULT_CENTER } from '../../maps/utils/constants';
 import { SimpleRent } from '../../rents/interfaces/simple-rent.interface';
 import { RentService } from '../../rents/rents.service';
@@ -21,6 +21,7 @@ export class TenantRentsPageComponent implements OnInit {
   pageIndex = signal(0);
   rents = signal<SimpleRent[]>([]);
   totalElements = signal(0);
+  isInitialLoading = signal(true);
 
   descriptor: CardDescriptor<SimpleRent> = {
     user: (p) => p.tenantFullName ?? '',
@@ -49,6 +50,7 @@ export class TenantRentsPageComponent implements OnInit {
           if (newRents.totalElements === this.rents().length)
             this.canQuery.set(false);
         }),
+        finalize(() => this.isInitialLoading.set(false)),
       )
       .subscribe();
   }

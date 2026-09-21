@@ -8,7 +8,7 @@ import { LargePage } from '../shared/interfaces/page.interface';
 @Injectable({ providedIn: 'root' })
 export class UserProfileService {
   private _http = inject(HttpClient);
-  private _baseUrl = `${environment.apiUrl}/api/v1/user-profiles`;
+  private _baseUrl = `${environment.apiUrl}/user-profiles`;
 
   saveOwnerProfileRequest(): Observable<any> {
     return this._http.post(

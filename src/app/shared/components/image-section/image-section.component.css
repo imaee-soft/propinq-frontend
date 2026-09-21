@@ -171,3 +171,31 @@
     transform: scale(1);
   }
 }
+
+@media (max-width: 768px) {
+  .main-image-container {
+    height: 300px;
+    border-radius: 12px;
+  }
+
+  .thumbnails-container {
+    padding: 0.4rem 0;
+    gap: 0.5rem;
+  }
+
+  .thumbnail-btn {
+    width: 68px;
+    height: 50px;
+  }
+}
+
+@media (max-width: 480px) {
+  .main-image-container {
+    height: 250px;
+  }
+
+  .thumbnail-btn {
+    width: 58px;
+    height: 44px;
+  }
+}

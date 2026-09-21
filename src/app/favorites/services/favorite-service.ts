@@ -9,7 +9,7 @@ import {
 
 @Injectable({ providedIn: 'root' })
 export class FavoriteService {
-  private apiUrl = `${environment.apiUrl}/api/v1/favorites`;
+  private apiUrl = `${environment.apiUrl}/favorites`;
   private http = inject(HttpClient);
 
   getFavoriteBuildings(

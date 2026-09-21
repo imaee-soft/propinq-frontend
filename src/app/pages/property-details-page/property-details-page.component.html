@@ -107,32 +107,33 @@
 
     <div class="property-info-section">
       <div class="property-header">
-        <div class="header-content">
-          <button mat-icon-button class="back-button" (click)="goBack()">
+        <div class="header-top-row">
+          <button mat-icon-button class="back-button" (click)="goBack()" aria-label="Volver">
             <mat-icon>arrow_back</mat-icon>
           </button>
-          <h1 class="property-title">
-            {{ propertyDetailsResource.value()!.title }}
-          </h1>
         </div>
-
-        @if (propertyDetailsResource.value()!.deleted) {
-          <span
-            class="card-date deleted"
-            [matTooltip]="'Estado de la propiedad'"
-          >
-            <mat-icon>info</mat-icon>
-            No Disponible
-          </span>
-        } @else {
-          <span
-            class="card-date active"
-            [matTooltip]="'Estado de la propiedad'"
-          >
-            <mat-icon>info</mat-icon>
-            Disponible
-          </span>
-        }
+        <h1 class="property-title">
+          {{ propertyDetailsResource.value()!.title }}
+        </h1>
+        <div class="header-status">
+          @if (propertyDetailsResource.value()!.deleted) {
+            <span
+              class="card-date deleted"
+              [matTooltip]="'Estado de la propiedad'"
+            >
+              <mat-icon>info</mat-icon>
+              No Disponible
+            </span>
+          } @else {
+            <span
+              class="card-date active"
+              [matTooltip]="'Estado de la propiedad'"
+            >
+              <mat-icon>info</mat-icon>
+              Disponible
+            </span>
+          }
+        </div>
       </div>
 
       @if (propertyDetailsResource.value()!.buildingId) {
@@ -143,6 +144,7 @@
           }}</span>
           <button
             mat-icon-button
+            class="open-building-btn"
             [matTooltip]="'Ver inmueble'"
             (click)="goToBuilding()"
           >

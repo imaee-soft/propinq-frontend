@@ -16,15 +16,17 @@
       <div class="status-message">{{ error() }}</div>
     }
     @if (!isLoading() && !error() && metabaseIframeUrl()) {
-      <iframe
-        [src]="metabaseIframeUrl()"
-        class="metabase-iframe"
-        width="1700"
-        height="650"
-        }
-        frameborder="0"
-        allowfullscreen
-      ></iframe>
+      <div class="iframe-shell">
+        <iframe
+          #metabaseIframe
+          [src]="metabaseIframeUrl()"
+          class="metabase-iframe"
+          frameborder="0"
+          allowfullscreen
+          title="Reportes y estadísticas"
+          (load)="onIframeLoad(metabaseIframe)"
+        ></iframe>
+      </div>
     }
   </div>
 </div>

@@ -128,7 +128,7 @@ export class HomePageComponent {
   propertyDetails = signal<PropertyDetails | null>(null);
   buildingProperties = signal<PropertyDetails[] | null>(null);
 
-  showFilters = signal(true);
+  showFilters = signal(false);
 
   isOwner = computed(() => this._authService.user()?.role === Role.OWNER);
   coordinateToGo = computed(() => this._filtersService.coordinateToGo());

@@ -358,14 +358,14 @@ mat-grid-list {
 
 .filters-fab {
   transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 18px rgba(30, 40, 90, 0.24);
   border-radius: 8px;
   background: #23263b;
 }
 
 .filters-fab:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 8px 20px rgba(30, 40, 90, 0.3);
 }
 
 .filters-fab-active {
@@ -584,10 +584,14 @@ mat-grid-list.mat-grid-list > div {
   .fab-container {
     top: 60px;
     right: 12px;
-    gap: 10px;
+    gap: 8px;
+    align-items: center;
   }
 
-  .filters-fab,
+  .filters-fab-label {
+    font-size: 12px;
+  }
+
   .comparative-fab {
     transform: scale(0.85);
   }
@@ -681,13 +685,17 @@ mat-grid-list.mat-grid-list > div {
 .filters-mobile-body {
   flex: 1;
   overflow-y: auto;
-  padding: 16px;
+  -webkit-overflow-scrolling: touch;
+  padding: 14px 14px 24px;
 }
 
 .filters-mobile-body .filters-container {
   width: 100%;
+  box-sizing: border-box;
   box-shadow: none;
-  padding: 0;
+  background-color: #232a3b;
+  border-radius: 16px;
+  padding: 18px 16px;
 }
 
 .filters-mobile-footer {

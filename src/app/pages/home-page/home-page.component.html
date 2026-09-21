@@ -106,15 +106,15 @@
     <div class="fab-container">
       <button
         mat-fab
-        color="accent"
+        color="primary"
         class="filters-fab fade-in-up"
         [class.filters-fab-active]="showFilters()"
         aria-label="Filtros de búsqueda"
         (click)="toggleFilters()"
-        matTooltip="{{ showFilters() ? 'Ocultar filtros' : 'Mostrar filtros' }}"
+        matTooltip="{{ showFilters() ? 'Ocultar filtros' : 'Filtrar propiedades' }}"
         matTooltipPosition="below"
       >
-        <mat-icon>{{ showFilters() ? "search_off" : "search" }}</mat-icon>
+        <mat-icon>search</mat-icon>
       </button>
       <button
         mat-fab

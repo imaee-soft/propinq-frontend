@@ -170,3 +170,69 @@
   color: rgba(255, 255, 255, 0.9);
   flex-shrink: 0;
 }
+
+@media (max-width: 768px) {
+  .filters-container {
+    width: 100%;
+    box-sizing: border-box;
+    box-shadow: none;
+    padding: 18px 14px;
+    border-radius: 14px;
+  }
+
+  .filters-container-header {
+    padding-right: 0;
+    margin-bottom: 4px;
+  }
+
+  .section-container {
+    gap: 20px;
+  }
+
+  .section-title {
+    font-size: 17px;
+  }
+
+  .features-list {
+    flex-wrap: wrap;
+    gap: 8px 14px;
+  }
+
+  .price-inputs {
+    width: 100%;
+    gap: 12px;
+  }
+
+  .price-input {
+    flex: 1;
+    align-items: stretch;
+  }
+
+  .price-input .wrapper {
+    width: 100%;
+  }
+
+  .price-input input {
+    width: 100%;
+  }
+
+  .price-input mat-label {
+    width: 100%;
+    text-align: center;
+  }
+
+  .spaces-inputs {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .geo-select {
+    width: 100%;
+  }
+
+  .chip-slider {
+    width: 100%;
+    gap: 8px;
+    height: auto;
+  }
+}

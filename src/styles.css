@@ -5,6 +5,13 @@ body {
   margin: 0;
   overflow: hidden;
 }
+
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+}
 body {
   background-color: #232a3b;
   color: #f0f0f0;
@@ -255,8 +262,40 @@ mat-dialog-content::-webkit-scrollbar-thumb:hover {
   color: #64748b !important;
 }
 
-/* reCAPTCHA v3: badge visible; z-index alto pero fuera del área de enlaces del footer */
+/* Position reCAPTCHA floating badge above footer */
 .grecaptcha-badge {
-  visibility: visible !important;
+  bottom: 38px !important;
   z-index: 1000 !important;
+  transition: bottom 0.2s ease, right 0.3s ease;
+}
+
+@media (max-width: 768px) {
+  .grecaptcha-badge {
+    bottom: 34px !important;
+  }
+
+  .contact-dialog,
+  .change-profile-dialog,
+  .projection-dialog {
+    max-width: 95vw !important;
+    width: 95vw !important;
+  }
+
+  .generic-dialog {
+    max-width: 96vw !important;
+    width: 96vw !important;
+  }
+
+  .comparision-preview-dialog {
+    max-width: 96vw !important;
+    width: 96vw !important;
+    height: auto !important;
+    max-height: 88vh !important;
+    padding: 6px !important;
+  }
+
+  .compare-dialog-panel {
+    max-width: 98vw !important;
+    width: 98vw !important;
+  }
 }

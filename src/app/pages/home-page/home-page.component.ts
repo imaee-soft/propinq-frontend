@@ -44,6 +44,7 @@ import { HomeBuildingCardComponent } from '../../shared/components/home-building
 import { HomePropertyCardComponent } from '../../shared/components/home-property-card/home-property-card.component';
 import { EntityDialogService } from '../../shared/services/entity-dialog.service';
 import { FiltersService } from '../../shared/services/filters.service';
+import { BreakpointService } from '../../shared/services/breakpoint.service';
 import { SidebarService } from '../../shared/services/sidebar.service';
 import { AuthService } from './../../auth/services/auth.service';
 
@@ -89,6 +90,7 @@ export class HomePageComponent {
   private _buildingsService = inject(BuildingsService);
   private _filtersService = inject(FiltersService);
   private _sidebarService = inject(SidebarService);
+  private _breakpointService = inject(BreakpointService);
   private _userLocationService = inject(UserLocationService);
   private _comparisionService = inject(ComparisionService);
   private _matDialog = inject(MatDialog);
@@ -126,7 +128,7 @@ export class HomePageComponent {
   propertyDetails = signal<PropertyDetails | null>(null);
   buildingProperties = signal<PropertyDetails[] | null>(null);
 
-  showFilters = signal(true);
+  showFilters = signal(false);
 
   isOwner = computed(() => this._authService.user()?.role === Role.OWNER);
   coordinateToGo = computed(() => this._filtersService.coordinateToGo());
@@ -135,6 +137,7 @@ export class HomePageComponent {
   );
   loggedUser = computed(() => this._authService.user());
   sidebarOpened = computed(() => this._sidebarService.isOpen());
+  isMobile = this._breakpointService.isMobile;
 
   // Public flags for template conditions (centralizadas en FiltersService)
   isFiltersModeActive = computed(() =>

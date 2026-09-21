@@ -1,48 +1,115 @@
-<mat-sidenav-container class="sidenav-container">
-  <mat-sidenav class="sidenav icon-only" fixedInViewport mode="side" opened>
-    <mat-nav-list class="nav-list">
-      <mat-list-item
-        class="side-item"
-        [routerLink]="'/'"
-        routerLinkActive="active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        matTooltip="Inicio"
-        matTooltipPosition="right"
-      >
-        <mat-icon>home</mat-icon>
-      </mat-list-item>
-      @if (userLogged()) {
-        @for (item of config().items; track item.route) {
+@if (!isMobile()) {
+  <mat-sidenav-container class="sidenav-container desktop">
+    <mat-sidenav class="sidenav icon-only" fixedInViewport mode="side" opened>
+      <mat-nav-list class="nav-list">
+        <mat-list-item
+          class="side-item"
+          [routerLink]="'/'"
+          routerLinkActive="active"
+          [routerLinkActiveOptions]="{ exact: true }"
+          matTooltip="Inicio"
+          matTooltipPosition="right"
+        >
+          <mat-icon>home</mat-icon>
+        </mat-list-item>
+        @if (userLogged()) {
+          @for (item of config().items; track item.route) {
+            <mat-list-item
+              class="side-item"
+              [routerLink]="item.route"
+              routerLinkActive="active"
+              [routerLinkActiveOptions]="{ exact: true }"
+              matTooltip="{{ item.label }}"
+              matTooltipPosition="right"
+            >
+              <mat-icon>{{ item.icon }}</mat-icon>
+            </mat-list-item>
+          }
+        }
+        <mat-list-item
+          class="side-item"
+          matTooltip="Ayuda"
+          matTooltipPosition="right"
+          routerLink="help"
+        >
+          <mat-icon>help</mat-icon>
+        </mat-list-item>
+        @if (userLogged()) {
           <mat-list-item
             class="side-item"
-            [routerLink]="item.route"
-            routerLinkActive="active"
-            [routerLinkActiveOptions]="{ exact: true }"
-            matTooltip="{{ item.label }}"
+            matTooltip="Cerrar sesión"
             matTooltipPosition="right"
+            (click)="logout()"
           >
-            <mat-icon>{{ item.icon }}</mat-icon>
+            <mat-icon>logout</mat-icon>
+          </mat-list-item>
+        }
+      </mat-nav-list>
+    </mat-sidenav>
+  </mat-sidenav-container>
+} @else {
+  @if (menuOpen()) {
+    <div
+      class="mobile-nav-backdrop"
+      (click)="closeMenu()"
+      aria-hidden="true"
+    ></div>
+  }
+  <nav class="mobile-nav-drawer" [class.open]="menuOpen()">
+    <div class="mobile-nav-header">
+      <span class="mobile-nav-title">Menú</span>
+      <button mat-icon-button (click)="closeMenu()" aria-label="Cerrar menú">
+        <mat-icon>close</mat-icon>
+      </button>
+    </div>
+
+    <mat-nav-list class="mobile-nav-list">
+      <mat-list-item class="mobile-nav-item" (click)="navigate('/')">
+        <mat-icon matListItemIcon>home</mat-icon>
+        <span matListItemTitle>Inicio</span>
+      </mat-list-item>
+
+      @for (item of navbarItems(); track item.url) {
+        <mat-list-item class="mobile-nav-item" (click)="navigate(item.url)">
+          <mat-icon matListItemIcon>link</mat-icon>
+          <span matListItemTitle>{{ item.name }}</span>
+        </mat-list-item>
+      }
+
+      @if (userLogged()) {
+        @for (item of config().items; track item.route) {
+          <mat-list-item class="mobile-nav-item" (click)="navigate(item.route)">
+            <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+            <span matListItemTitle>{{ item.label }}</span>
           </mat-list-item>
         }
       }
-      <mat-list-item
-        class="side-item"
-        matTooltip="Ayuda"
-        matTooltipPosition="right"
-        routerLink="help"
-      >
-        <mat-icon>help</mat-icon>
+
+      <mat-list-item class="mobile-nav-item" (click)="navigate('/help')">
+        <mat-icon matListItemIcon>help</mat-icon>
+        <span matListItemTitle>Ayuda</span>
       </mat-list-item>
-      @if (userLogged()) {
+
+      @if (!userLogged()) {
+        <mat-divider class="mobile-nav-divider"></mat-divider>
         <mat-list-item
-          class="side-item"
-          matTooltip="Cerrar sesión"
-          matTooltipPosition="right"
-          (click)="logout()"
+          class="mobile-nav-item"
+          (click)="navigate('/auth/signup')"
         >
-          <mat-icon>logout</mat-icon>
+          <mat-icon matListItemIcon>person_add</mat-icon>
+          <span matListItemTitle>Creá tu cuenta</span>
+        </mat-list-item>
+        <mat-list-item class="mobile-nav-item" (click)="navigate('/auth/login')">
+          <mat-icon matListItemIcon>login</mat-icon>
+          <span matListItemTitle>Ingresá</span>
+        </mat-list-item>
+      } @else {
+        <mat-divider class="mobile-nav-divider"></mat-divider>
+        <mat-list-item class="mobile-nav-item mobile-nav-logout" (click)="logout()">
+          <mat-icon matListItemIcon>logout</mat-icon>
+          <span matListItemTitle>Cerrar sesión</span>
         </mat-list-item>
       }
     </mat-nav-list>
-  </mat-sidenav>
-</mat-sidenav-container>
+  </nav>
+}

@@ -1,31 +1,78 @@
 :host {
   display: block;
-  height: 90%;
+  height: 100%;
   min-height: 0;
   width: 100%;
+  max-width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  box-sizing: border-box;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  background-color: #1a1e2b;
+  padding: 20px 16px 40px;
+  border-radius: 24px;
+  margin: 4px 16px;
+  box-sizing: border-box;
+}
+
+.page-header {
+  padding: 0 16px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-content h2 {
+  margin: 0;
+  font-family: "Montserrat", sans-serif;
+  font-weight: 600;
+  color: #e2e8f0;
+  font-size: 1.75rem;
 }
 
 .notifications-table-wrapper {
-  display: flex;
-  justify-content: center;
-  width: inherit;
-  margin: 4px 64px;
-  border-radius: 10px;
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  margin: 4px 0 16px;
+  border-radius: 12px;
   border: 1px solid rgba(255, 255, 255, 0.08);
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background: #1a1e2b;
+  box-sizing: border-box;
 }
 
 .notifications-table {
-  text-align: center;
-  padding: 10px 32px;
+  width: 100%;
+  min-width: 600px;
+  text-align: left;
   background: inherit;
+  border-collapse: collapse;
 }
 
 .notifications-table .mat-mdc-cell,
 .notifications-table .mat-mdc-header-cell {
-  border-bottom: none !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
   font-size: 0.9rem;
   color: #cbd5e1;
-  padding: 12px 32px;
+  padding: 14px 20px;
+}
+
+.notifications-table .mat-mdc-header-cell {
+  color: #f1f5f9;
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.03);
 }
 
 .notifications-cell-header {
@@ -35,14 +82,61 @@
 }
 
 .notifications-cell-header mat-icon {
-  margin-bottom: 2px;
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  color: #818cf8;
 }
 
 .paginator-wrapper {
-  margin: 4px 64px;
+  margin: 12px 0;
+  display: flex;
+  justify-content: center;
 }
 
 .notifications-paginator {
-  text-align: center;
-  background: inherit;
+  background: transparent;
+  color: #cbd5e1;
+}
+
+@media (max-width: 768px) {
+  :host {
+    margin: 0;
+    padding: 0;
+  }
+
+  .page-container {
+    margin: 0;
+    padding: 16px 10px 48px;
+    border-radius: 0;
+    background-color: transparent;
+  }
+
+  .page-header {
+    padding: 0 4px;
+    margin-bottom: 12px;
+  }
+
+  .header-content h2 {
+    font-size: 1.25rem;
+  }
+
+  .notifications-table-wrapper {
+    margin: 4px 0 12px;
+    border-radius: 8px;
+  }
+
+  .notifications-table {
+    min-width: 520px;
+  }
+
+  .notifications-table .mat-mdc-cell,
+  .notifications-table .mat-mdc-header-cell {
+    padding: 10px 12px;
+    font-size: 0.84rem;
+  }
+
+  .paginator-wrapper {
+    margin: 8px 0;
+  }
 }

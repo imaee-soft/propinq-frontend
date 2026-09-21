@@ -220,3 +220,52 @@
   width: 16px;
   height: 16px;
 }
+
+.hamburger-btn {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .navbar {
+    padding: 0 12px;
+    grid-template-columns: auto 1fr auto;
+    margin-left: 0;
+  }
+
+  .hamburger-btn {
+    display: inline-flex;
+  }
+
+  .nav-center {
+    display: none;
+  }
+
+  .nav-left {
+    justify-content: flex-start;
+    gap: 4px;
+  }
+
+  .nav-right {
+    justify-content: flex-end;
+    gap: 4px;
+  }
+
+  .card-status {
+    display: none;
+  }
+
+  .user-menu .nav-action-link {
+    font-size: 13px;
+    padding: 4px 6px;
+  }
+
+  .brand-text {
+    font-size: 18px;
+  }
+}
+
+@media (max-width: 400px) {
+  .user-menu .nav-action-link:first-of-type {
+    display: none;
+  }
+}

@@ -43,6 +43,10 @@ export class SidebarService {
     this._isOpen.set(!this._isOpen());
   }
 
+  close() {
+    this._isOpen.set(false);
+  }
+
   urlSignal = toSignal(
     this.router.events.pipe(
       filter((e) => e instanceof NavigationEnd),

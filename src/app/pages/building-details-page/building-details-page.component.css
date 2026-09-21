@@ -431,6 +431,7 @@ mat-card-actions button[mat-flat-button]:hover:not(:disabled),
     margin-right: 0;
     padding: 1rem;
     width: 100%;
+    box-sizing: border-box;
   }
 
   .gallery-section {
@@ -464,9 +465,18 @@ mat-card-actions button[mat-flat-button]:hover:not(:disabled),
 
   .actions-section {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
   }
 
+  .primary-action,
+  .secondary-action,
   .new-property-action {
     width: 100% !important;
+  }
+
+  .properties-grid {
+    grid-template-columns: 1fr;
   }
 }

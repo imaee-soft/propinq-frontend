@@ -30,43 +30,33 @@
     }
   </mat-drawer-content>
 
-  @if (!isMobile()) {
+  <mat-drawer
+    position="end"
+    mode="side"
+    class="details-panel"
+    [opened]="desktopDetailsOpen()"
+    [disableClose]="true"
+  >
     @if (buildingDetails() !== null && propertyDetails() == null) {
-      <mat-drawer
-        position="end"
-        mode="side"
-        opened
-        class="details-panel"
-        [disableClose]="true"
-      >
-        <app-home-building-card
-          [building]="buildingDetails()!"
-          [properties]="buildingProperties()"
-          (close)="onCloseDetails()"
-          (markedAsFavorite)="markBuildingAsFavorite($event)"
-          (unmarkedAsFavorite)="unmarkBuildingAsFavorite()"
-          (compared)="addToComparativeList($event)"
-        />
-      </mat-drawer>
+      <app-home-building-card
+        [building]="buildingDetails()!"
+        [properties]="buildingProperties()"
+        (close)="onCloseDetails()"
+        (markedAsFavorite)="markBuildingAsFavorite($event)"
+        (unmarkedAsFavorite)="unmarkBuildingAsFavorite()"
+        (compared)="addToComparativeList($event)"
+      />
     }
     @if (propertyDetails() !== null && buildingDetails() == null) {
-      <mat-drawer
-        position="end"
-        mode="side"
-        opened
-        class="details-panel"
-        [disableClose]="true"
-      >
-        <app-home-property-card
-          [property]="propertyDetails()!"
-          (closed)="onCloseDetails()"
-          (markedAsFavorite)="markPropertyAsFavorite($event)"
-          (unmarkedAsFavorite)="unmarkPropertyAsFavorite()"
-          (compared)="addToComparativeList($event)"
-        />
-      </mat-drawer>
+      <app-home-property-card
+        [property]="propertyDetails()!"
+        (closed)="onCloseDetails()"
+        (markedAsFavorite)="markPropertyAsFavorite($event)"
+        (unmarkedAsFavorite)="unmarkPropertyAsFavorite()"
+        (compared)="addToComparativeList($event)"
+      />
     }
-  }
+  </mat-drawer>
 </mat-drawer-container>
 
 @if (isMobile()) {

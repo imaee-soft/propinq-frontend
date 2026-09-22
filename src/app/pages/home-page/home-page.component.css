@@ -564,6 +564,10 @@ mat-grid-list.mat-grid-list > div {
 }
 
 @media (max-width: 768px) {
+  .details-panel {
+    display: none !important;
+  }
+
   .home-page-container {
     height: calc(100vh - 80px);
     width: 100vw;

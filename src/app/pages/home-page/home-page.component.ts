@@ -138,6 +138,12 @@ export class HomePageComponent {
   loggedUser = computed(() => this._authService.user());
   sidebarOpened = computed(() => this._sidebarService.isOpen());
   isMobile = this._breakpointService.isMobile;
+  desktopDetailsOpen = computed(
+    () =>
+      !this.isMobile() &&
+      ((this.buildingDetails() !== null && this.propertyDetails() == null) ||
+        (this.propertyDetails() !== null && this.buildingDetails() == null)),
+  );
 
   // Public flags for template conditions (centralizadas en FiltersService)
   isFiltersModeActive = computed(() =>
